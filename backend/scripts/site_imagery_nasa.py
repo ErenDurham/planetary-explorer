@@ -37,7 +37,8 @@ from PIL import Image
 BACKEND = Path(__file__).resolve().parents[1]
 IMG = BACKEND / "data" / "imagery"
 ASSETS = IMG / "assets"
-ALLOWLIST = ["images-assets.nasa.gov", "images-api.nasa.gov", "astro.arcgis.com", "trek.nasa.gov", "photojournal.jpl.nasa.gov", "science.nasa.gov"]
+ALLOWLIST = ["images-assets.nasa.gov", "images-api.nasa.gov", "astro.arcgis.com", "trek.nasa.gov", "photojournal.jpl.nasa.gov", "science.nasa.gov",
+             "gibs.earthdata.nasa.gov", "upload.wikimedia.org", "thumb.wikimedia.org", "commons.wikimedia.org"]
 MAX_BYTES = 6_000_000
 UA = "PlanetaryExplorer/0.1 (hackathon; contact via repository)"
 TODAY = date.today().isoformat()
@@ -140,6 +141,116 @@ NASA_PRODUCTS: list[dict] = [
 ]
 
 
+# ---- Earth field photographs ------------------------------------------------
+# NASA Image and Video Library products (official): same pipeline as Mars.
+EARTH_NASA_PRODUCTS: list[dict] = [
+    dict(entry_id="haughton_hmp_k10_survey", site_id="haughton_crater", nasa_id="ARC-2007-ACD07-0170-005", view="surface", image_type="surface_image", instrument="Field photograph (NASA Ames)", mission="Haughton-Mars Project 2007",
+         acquisition_date="2007-07-19", acquisition_note="Library date_created 2007-07-19 during the HMP 2007 field season; caption credits Matt Deans (NASA).", relationship="candidate_region", distance_km=None,
+         coverage="Caption: K-10 rovers conducting a site survey at Haughton Crater, Devon Island; the exact spot within the ~23 km crater relative to the candidate centre is not stated.",
+         relevance="Ground view of the Haughton polar-desert terrain used for rover trials - what the crater floor actually looks like.", appearance="Ordinary daylight photograph; shows rovers and people for scale."),
+    dict(entry_id="haughton_hmp_k10_fortress", site_id="haughton_crater", nasa_id="ARC-2007-ACD09-0255-001", view="surface", image_type="surface_image", instrument="Field photograph (NASA Ames)", mission="Haughton-Mars Project 2007",
+         acquisition_date="2007-07-15", acquisition_note="Library date_created 2007-07-15; caption credits NASA/Lorenzo Fluckiger.", relationship="candidate_region", distance_km=None,
+         coverage="Caption: K-10 Red driving near 'The Fortress' formation at Haughton Crater, Devon Island; position within the crater not stated.",
+         relevance="Impact-breccia outcrop and rubble terrain inside the crater, with a rover for scale.", appearance="Ordinary daylight photograph."),
+    dict(entry_id="holuhraun_artemis_training", site_id="holuhraun_iceland", nasa_id="jsc2024e055198", view="surface", image_type="surface_image", instrument="Field photograph (NASA JSC, Robert Markowitz)", mission="Artemis II crew geology training, 2024",
+         acquisition_date=None, acquisition_note="Library date_created 2024-08-01; the exact day is not stated in the caption.", relationship="nearby_scene", distance_km=None,
+         coverage="Caption: a view of the Holuhraun lava field from the Bárðarbunga volcano; the camera stands on the volcano looking toward the lava field, not inside the candidate footprint.",
+         relevance="What the rubbly basaltic lava flow looks like from the ground, partially buried by wind-blown sediment.", appearance="Ordinary daylight photograph taken from a distance; foreground is the volcano flank."),
+]
+# Wikimedia Commons products: US-government (public domain) or Creative Commons files.
+# Licence, author and credit are read from the file's extmetadata at build time and recorded verbatim.
+COMMONS_PRODUCTS: list[dict] = [
+    dict(entry_id="mcmurdo_beacon_valley_nsf", site_id="mcmurdo_dry_valleys", title="File:Beacon Valley 2019-02-04 01.jpg", view="surface", image_type="surface_image", instrument="Field photograph (NSF / USAP photo library)", mission="US Antarctic Program",
+         acquisition_date="2019-02-04", acquisition_note="Commons DateTimeOriginal 2019-02-04; source is the USAP photo library.", relationship="nearby_scene", distance_km=8.0,
+         coverage="Beacon Valley is the main trunk valley; University Valley (the candidate centre) is a hanging valley on its south side a few kilometres away.",
+         relevance="The Dry Valleys surface as it is: rock-mantled, ice-cemented ground with no vegetation, instrumented for weathering studies.", appearance="Ordinary daylight photograph."),
+    dict(entry_id="mcmurdo_beacon_valley_nasa", site_id="mcmurdo_dry_valleys", title="File:Beacon Valley.jpg", view="surface", image_type="surface_image", instrument="Field photograph (Alfonso Davila, NASA)", mission="NASA Ames Antarctic analog field work",
+         acquisition_date=None, acquisition_note="Commons records the date as unknown.", relationship="nearby_scene", distance_km=8.0,
+         coverage="Beacon Valley, adjacent to the University Valley candidate centre.", relevance="Wide view of the rocky valley floor over buried glacial ice, the permafrost analog terrain.", appearance="Ordinary daylight photograph."),
+    dict(entry_id="death_valley_badwater_salt_nps", site_id="death_valley", title="File:Salt detail, Badwater Basin.JPG", view="surface", image_type="surface_image", instrument="Field photograph (National Park Service)", mission="Death Valley National Park",
+         acquisition_date="2006-11-28", acquisition_note="Commons DateTimeOriginal 28 November 2006 (from EXIF).", relationship="nearby_scene", distance_km=25.0,
+         coverage="Badwater Basin lies about 25 km south of the candidate footprint centre, within the same valley floor.", relevance="Evaporite salt crust of the valley floor - the playa surface the candidate footprint includes.", appearance="Close-up daylight photograph; not a landscape view."),
+    dict(entry_id="death_valley_mesquite_dunes_nps", site_id="death_valley", title="File:Mesquite Flat Sand Dunes.jpg", view="surface", image_type="surface_image", instrument="Field photograph (National Park Service)", mission="Death Valley National Park",
+         acquisition_date="2006-12-06", acquisition_note="Commons DateTimeOriginal 6 December 2006 (from EXIF).", relationship="nearby_scene", distance_km=20.0,
+         coverage="Mesquite Flat near Stovepipe Wells, in central Death Valley, roughly 20 km north-west of the candidate footprint centre.", relevance="Dune field and basin-and-range backdrop typical of the valley floor.", appearance="Ordinary daylight photograph."),
+    dict(entry_id="mauna_kea_summit_usgs", site_id="mauna_kea_summit", title="File:Mauna Kea Summit in Winter.jpg", view="surface", image_type="surface_image", instrument="Field photograph (USGS)", mission="USGS",
+         acquisition_date="2011-08-09", acquisition_note="Commons DateTimeOriginal 2011-08-09.", relationship="exact_location", distance_km=0.0,
+         coverage="The summit region, which is the candidate footprint centre.", relevance="Cinder cones of the summit region (here under snow): the tephra and basalt slopes used for ISRU and rover trials.", appearance="Small (800x400) daylight photograph with seasonal snow, which the analog tests avoid."),
+    dict(entry_id="mauna_kea_puu_cc", site_id="mauna_kea_summit", title="File:Pu'u on Mauna Kea.jpg", view="surface", image_type="surface_image", instrument="Field photograph (Commons contributor)", mission=None,
+         acquisition_date="2025-06-11", acquisition_note="Commons DateTimeOriginal 2025-06-11.", relationship="candidate_region", distance_km=None,
+         coverage="A cinder cone (pu'u) on Mauna Kea's upper slopes; exact position relative to the summit not stated.", relevance="Close view of the reddish tephra cone surfaces that make the upper mountain a Mars analog.", appearance="Ordinary daylight photograph."),
+    dict(entry_id="mdrs_bdj_landscape", site_id="mdrs_utah", title="File:Mars Desert Research Station (10.3897-BDJ.8.e55063) Figure 1 a.jpeg", view="surface", image_type="surface_image", instrument="Field photograph (Sokoloff et al. 2020, Biodiversity Data Journal, CC BY 4.0)", mission="MDRS biodiversity survey",
+         acquisition_date=None, acquisition_note="Figure from a 2020 open-access paper; the photograph date is not stated on Commons.", relationship="exact_location", distance_km=0.0,
+         coverage="Landscape at the Mars Desert Research Station, which is the candidate footprint centre.", relevance="The badland terrain around the station: Jurassic-Cretaceous mudstone and sandstone slopes.", appearance="Ordinary daylight photograph."),
+    dict(entry_id="mdrs_station_2020", site_id="mdrs_utah", title="File:Mars Desert Research Station 2020.jpg", view="surface", image_type="surface_image", instrument="Field photograph (The Mars Society / MDRS, CC BY-SA 4.0)", mission="Mars Desert Research Station",
+         acquisition_date="2020-10-07", acquisition_note="Commons DateTimeOriginal 2020-10-07.", relationship="exact_location", distance_km=0.0,
+         coverage="The station itself, which is the candidate footprint centre.", relevance="The habitat and the surrounding desert terrain where crewed simulations run.", appearance="Ordinary daylight photograph; the structures are the station, not natural features."),
+    dict(entry_id="haughton_devon_aerial_hmp", site_id="haughton_crater", title="File:Flying over Devon Island (2665527817).jpg", view="orbital", image_type="orbital_image", instrument="Aerial photograph (Haughton-Mars Project)", mission="Haughton-Mars Project",
+         acquisition_date=None, acquisition_note="Commons gives only 'taken on' without a verified date.", relationship="candidate_region", distance_km=None,
+         coverage="Low-altitude aerial view over Devon Island near the crater; the frame's position relative to the crater centre is not stated.", relevance="Oblique aerial context of the polar desert surface (not an orbital map; no georeferencing).", appearance="Oblique aerial photograph, not nadir imagery."),
+    dict(entry_id="holuhraun_landsat8_eo", site_id="holuhraun_iceland", title="File:Holuhraun Natural Color OLI Landsat 8.jpg", view="orbital", image_type="orbital_image", instrument="Landsat 8 OLI (NASA Earth Observatory)", mission="Landsat 8",
+         acquisition_date="2014-09-06", acquisition_note="Commons DateTimeOriginal 2014-09-06, during the 2014-15 eruption.", relationship="candidate_region", distance_km=None,
+         coverage="Natural-colour Landsat 8 scene of the Holuhraun eruption and lava field; frame extent and georeferencing are not supplied with the JPEG.", relevance="The fresh lava field forming, seen from orbit at the time of emplacement.", appearance="Natural-colour satellite image with plume; no scale bar available."),
+]
+
+
+def commons_info(title: str) -> dict:
+    """File URL, licence and author from Commons extmetadata (paced: the API rate-limits bursts)."""
+    import urllib.parse
+    u = ("https://commons.wikimedia.org/w/api.php?action=query&format=json&titles=" + urllib.parse.quote(title)
+         + "&prop=imageinfo&iiprop=url|extmetadata|size|mime&iiurlwidth=1600")
+    for attempt in range(5):
+        try:
+            d = _get(u)
+            break
+        except Exception as e:  # noqa: BLE001 - 429 or transient
+            time.sleep(3 + 3 * attempt)
+            if attempt == 4:
+                raise
+    p = list(d["query"]["pages"].values())[0]
+    if "imageinfo" not in p:
+        raise FileNotFoundError(f"Commons file not found: {title}")
+    ii = p["imageinfo"][0]
+    em = ii.get("extmetadata", {})
+    g = lambda k: re.sub(r"<[^>]+>", "", em.get(k, {}).get("value", "") or "").strip()  # noqa: E731
+    return {"title": p["title"], "page": ii["descriptionurl"], "url": (ii.get("thumburl") if ii.get("width", 0) > 1600 else ii["url"]).split("?")[0],
+            "width": ii["width"], "height": ii["height"], "mime": ii["mime"], "license": g("LicenseShortName"), "license_url": g("LicenseUrl"),
+            "artist": g("Artist"), "credit": g("Credit"), "description": g("ImageDescription")}
+
+
+def earth_context_entries(cands: dict[str, dict]) -> list[dict]:
+    p = IMG / "earth_context.json"
+    if not p.exists():
+        return []
+    ctx = json.loads(p.read_text())
+    out = []
+    for key, m in ctx.items():
+        site_id, level = key.rsplit("_gibs_", 1)
+        c = cands[site_id]
+        weld = m["source_used"] == "weld"
+        out.append(dict(
+            entry_id=key, site_id=site_id, view="orbital", image_type="orbital_mosaic",
+            title=f"{m['layer_title']}, {'regional' if level == 'regional' else 'local'} context ({m['width_km_ns']} km across) centred on {c['name']}",
+            institution="NASA Global Imagery Browse Services (GIBS)" + (" / USGS-NASA Landsat WELD" if weld else " / MODIS LANCE"),
+            credit=m["credit"], license="NASA / USGS imagery: public domain, credit requested (GIBS usage policy)",
+            instrument="Landsat 7 ETM+ (WELD annual composite)" if weld else "MODIS Terra", mission="Landsat 7" if weld else "Terra",
+            source_page_url="https://www.earthdata.nasa.gov/data/tools/global-imagery-browse-services-gibs",
+            asset_url=f"https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/{m['layer']}/default/{m['time']}/ (tiles, level {m['zoom']})",
+            local_asset=m["file"], mime_type="image/jpeg", width_px=m["width_px"], height_px=m["height_px"], bytes=m["bytes"],
+            acquisition_date=None if weld else m["time"], acquisition_note=m["acquisition_note"], release_date=None,
+            spatial_resolution_m_per_px=m["px_m_ns"], resolution_note=f"Tile pixel {m['px_m_ns']} m N-S ({m['px_m_ew']} m E-W at this latitude).",
+            bounds=dict(**m["bounds"]),
+            coverage_evidence=f"Bounds computed exactly from the GIBS EPSG:4326 tile grid at level {m['zoom']}; the candidate coordinate ({c['lat']}, {c['lon_east']}) lies inside the block.",
+            relationship="candidate_region" if level == "regional" else "exact_location", distance_from_site_km=0.0,
+            relevance=("Covers roughly the analysis footprint; the harmonised regional slope and relief describe this area." if level == "regional"
+                       else "A few tens of kilometres around the candidate coordinate at ~30 m per pixel; vegetation, water and seasonal snow are visible where present."),
+            appearance_note=("Landsat true colour composited over a year (2000), so clouds are suppressed and seasonal states mixed." if weld
+                             else "Single-day MODIS true colour at 250 m, chosen for austral summer; coarse and may include cloud."),
+            verified_on=m["verified_on"],
+        ))
+    return out
+
+
 def _get(url: str, binary: bool = False, timeout: int = 60):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=timeout) as r:
@@ -213,8 +324,9 @@ def ctx_entries(sites: dict[str, dict]) -> list[dict]:
 def main() -> int:
     ASSETS.mkdir(parents=True, exist_ok=True)
     sites = {s["id"]: s for s in json.loads((BACKEND / "data" / "mars" / "sites.json").read_text())["sites"]}
-    entries: list[dict] = ctx_entries(sites)
-    for spec in NASA_PRODUCTS:
+    earth = {c["id"]: c for c in json.loads((BACKEND / "data" / "earth" / "candidates.json").read_text())["candidates"]}
+    entries: list[dict] = ctx_entries(sites) + earth_context_entries(earth)
+    for spec in NASA_PRODUCTS + EARTH_NASA_PRODUCTS:
         meta, assets = nasa_metadata(spec["nasa_id"])
         asset_url = pick_asset(assets)
         fn = f"{spec['entry_id']}.jpg"
@@ -235,14 +347,37 @@ def main() -> int:
         ))
         print(f"{spec['entry_id']:<30} {meta['title'][:50]:<52} {w}x{h} {nbytes:>8} B", flush=True)
         time.sleep(0.5)
+    for spec in COMMONS_PRODUCTS:
+        try:
+            info = commons_info(spec["title"])
+        except FileNotFoundError as e:
+            print(f"SKIP {spec['entry_id']}: {e}", flush=True)   # recorded as a gap, never invented
+            continue
+        fn = f"{spec['entry_id']}.jpg"
+        mime, nbytes, w, h = download(info["url"], ASSETS / fn)
+        entries.append(dict(
+            entry_id=spec["entry_id"], site_id=spec["site_id"], view=spec["view"], image_type=spec["image_type"],
+            title=info["title"].replace("File:", "").rsplit(".", 1)[0], institution="Wikimedia Commons (" + (info["artist"] or "author not stated") + ")",
+            credit=(info["artist"] or "author not stated") + (f" via {info['credit']}" if info["credit"] and not info["credit"].startswith("http") else ""),
+            license=(info["license"] or "licence not stated") + (f" ({info['license_url']})" if info["license_url"] else ""),
+            instrument=spec["instrument"], mission=spec["mission"], source_page_url=info["page"], asset_url=info["url"], local_asset=fn,
+            mime_type=mime, width_px=w, height_px=h, bytes=nbytes, acquisition_date=spec["acquisition_date"], acquisition_note=spec["acquisition_note"],
+            release_date=None, spatial_resolution_m_per_px=None, resolution_note="Photograph; no ground sampling applies.", bounds=None,
+            coverage_evidence=spec["coverage"] + (f" Commons description: {info['description'][:200]}" if info["description"] else ""),
+            relationship=spec["relationship"], distance_from_site_km=spec["distance_km"], relevance=spec["relevance"], appearance_note=spec["appearance"], verified_on=TODAY,
+        ))
+        print(f"{spec['entry_id']:<30} {info['license']:<16} {w}x{h} {nbytes:>8} B", flush=True)
+        time.sleep(2.0)
     by_site: dict[str, dict] = {}
-    for sid, s in sites.items():
+    all_locations = {**{k: {"body": "mars", **v} for k, v in sites.items()}, **{k: {"body": "earth", **v} for k, v in earth.items()}}
+    for sid, s in all_locations.items():
         es = [e for e in entries if e["site_id"] == sid]
         views = {e["view"] for e in es}
         notes = []
         if "surface" not in views:
-            notes.append("No landed mission has imaged this candidate from the ground, so no surface view exists; orbital views only.")
-        by_site[sid] = dict(site_id=sid, entries=es, missing_views=[v for v in ("orbital", "surface") if v not in views], notes=notes)
+            notes.append("No landed mission has imaged this candidate from the ground, so no surface view exists; orbital views only." if s["body"] == "mars"
+                         else "No field photograph with a documented licence and location could be verified for this site; orbital context only.")
+        by_site[sid] = dict(site_id=sid, body=s["body"], entries=es, missing_views=[v for v in ("orbital", "surface") if v not in views], notes=notes)
     manifest = dict(version="v1", generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"), allowlist=ALLOWLIST, sites=by_site)
     (IMG / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print("wrote manifest with", len(entries), "entries")

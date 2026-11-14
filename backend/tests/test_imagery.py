@@ -1,6 +1,7 @@
 """Site imagery manifest and asset proxy: schema, coverage honesty, allowlist
 and failure states. No network: the proxy's fetch is monkeypatched."""
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -17,10 +18,16 @@ def _manifest() -> ImageryManifest:
     return ImageryManifest.model_validate_json(MANIFEST.read_text())
 
 
+def _all_locations() -> dict[str, dict]:
+    mars = {s["id"]: {**s, "body": "mars"} for s in json.loads((MANIFEST.parents[1] / "mars" / "sites.json").read_text())["sites"]}
+    earth = {c["id"]: {**c, "body": "earth"} for c in json.loads((MANIFEST.parents[1] / "earth" / "candidates.json").read_text())["candidates"]}
+    return {**mars, **earth}
+
+
 def test_manifest_validates_and_covers_every_site_with_verified_fields():
     m = _manifest()
-    sites = json.loads((MANIFEST.parents[1] / "mars" / "sites.json").read_text())["sites"]
-    assert set(m.sites) == {s["id"] for s in sites}
+    locations = _all_locations()
+    assert {sid for sid in m.sites if m.sites[sid].body == "mars"} == {k for k, v in locations.items() if v["body"] == "mars"}
     for sid, site in m.sites.items():
         assert site.entries, sid
         for e in site.entries:
@@ -42,16 +49,17 @@ def test_oxia_has_no_surface_view_and_says_so():
     assert "surface" in site.missing_views and site.notes and "No landed mission" in site.notes[0]
 
 
-def test_ctx_mosaic_bounds_contain_the_site_and_are_regional_or_local():
+def test_georeferenced_mosaic_bounds_contain_the_site_and_are_regional_or_local():
     m = _manifest()
-    sites = {s["id"]: s for s in json.loads((MANIFEST.parents[1] / "mars" / "sites.json").read_text())["sites"]}
+    locations = _all_locations()
     for sid, site in m.sites.items():
         for e in site.entries:
             if e.bounds:
-                s = sites[sid]
+                s = locations[sid]
                 assert e.bounds.west <= s["lon_east"] <= e.bounds.east and e.bounds.south <= s["lat"] <= e.bounds.north
-                width_km = (e.bounds.east - e.bounds.west) * 59.27
-                assert 5 < width_km < 80
+                km_per_deg = 59.27 if s["body"] == "mars" else 111.19
+                width_km = (e.bounds.east - e.bounds.west) * km_per_deg
+                assert 5 < width_km < (80 if s["body"] == "mars" else 300)
 
 
 def test_cached_assets_exist_and_match_recorded_size():
@@ -88,3 +96,28 @@ def test_proxy_refuses_non_allowlisted_hosts_and_non_images(monkeypatch, tmp_pat
     with pytest.raises(HTTPException) as ex2:
         ir._fetch_to_cache("https://images-assets.nasa.gov/image/x.jpg", tmp_path / "y.jpg", ["images-assets.nasa.gov"])
     assert ex2.value.detail["code"] == "asset_rejected" and not (tmp_path / "y.jpg").exists()
+
+
+def test_earth_locations_have_imagery_records_with_body_and_licences():
+    m = _manifest()
+    earth_ids = {c["id"] for c in json.loads((MANIFEST.parents[1] / "earth" / "candidates.json").read_text())["candidates"]}
+    if not earth_ids <= set(m.sites):
+        pytest.skip("Earth imagery not built into this manifest yet")
+    for sid in earth_ids:
+        site = m.sites[sid]
+        assert site.body == "earth" and site.entries, sid
+        assert any(e.view == "orbital" and e.bounds is not None for e in site.entries), f"{sid} lacks a georeferenced orbital context"
+        for e in site.entries:
+            assert e.license and e.credit and e.source_page_url.startswith("https://")
+            assert re.sub(r"^https?://([^/]+).*$", r"\1", e.asset_url.split(" ")[0]) in m.allowlist or e.asset_url.startswith("https://gibs")
+            if e.view == "surface":
+                assert e.image_type in ("surface_image", "surface_panorama") and e.relationship in ("exact_location", "candidate_region", "nearby_scene")
+    # honesty: a site with no verifiable field photo says so
+    at = m.sites["atacama_yungay"]
+    if not any(e.view == "surface" for e in at.entries):
+        assert "surface" in at.missing_views and at.notes
+
+
+def test_mars_records_declare_body_mars():
+    m = _manifest()
+    assert all(site.body == "mars" for sid, site in m.sites.items() if sid in {"jezero_crater", "gale_crater", "oxia_planum"})

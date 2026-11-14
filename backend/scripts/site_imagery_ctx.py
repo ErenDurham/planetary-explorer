@@ -32,6 +32,7 @@ from PIL import Image
 BACKEND = Path(__file__).resolve().parents[1]
 ASSETS = BACKEND / "data" / "imagery" / "assets"
 TEMPLATE = "https://astro.arcgis.com/arcgis/rest/services/OnMars/CTX/MapServer/tile/{z}/{row}/{col}"
+MAX_ZOOM = 12   # the service answers 400 above this level
 KM_PER_DEG = 2 * math.pi * 3396.19 / 360  # 59.27 km
 LEVELS = {"regional": (9, 3), "local": (12, 3)}   # zoom, tiles per side
 
@@ -62,8 +63,21 @@ def fetch_tile(z: int, row: int, col: int, depth: int = 0) -> Image.Image:
     im = _download_decoded(TEMPLATE.format(z=z, row=row, col=col))
     if im is not None:
         return im
-    if depth >= 2:
-        raise RuntimeError(f"tile {z}/{row}/{col} unusable and its children too")
+    if depth >= 2 or z >= MAX_ZOOM:
+        # Last resort: decode whatever bytes the server has for this tile; the
+        # missing rows render black and the mosaic says so in its caveat.
+        from PIL import ImageFile
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
+        try:
+            im = Image.open(io.BytesIO(urllib.request.urlopen(TEMPLATE.format(z=z, row=row, col=col), timeout=60).read()))
+            im.load()
+            print(f"warning: tile {z}/{row}/{col} truncated at the source and no clean children; partial tile used", file=sys.stderr)
+            return im.convert("RGB")
+        except Exception as e:  # noqa: BLE001 - nothing usable at all: a grey tile, flagged
+            print(f"warning: tile {z}/{row}/{col} unavailable ({type(e).__name__}); grey placeholder used", file=sys.stderr)
+            return Image.new("RGB", (256, 256), (40, 40, 40))
+        finally:
+            ImageFile.LOAD_TRUNCATED_IMAGES = False
     print(f"warning: tile {z}/{row}/{col} is corrupt at the source; built from zoom {z+1} children", file=sys.stderr)
     out = Image.new("RGB", (256, 256))
     for dr in range(2):

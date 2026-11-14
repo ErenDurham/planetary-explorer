@@ -40,6 +40,7 @@ from datetime import datetime, timezone
 from app.models import InterpretRequest, InterpretResponse, WeightSuggestion
 from app.services import llm_client
 from app.services.scoring_engine import load_spec
+from app.services.task_interpreter import interpret_task
 
 log = logging.getLogger(__name__)
 
@@ -267,7 +268,7 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
     return InterpretResponse(objective=text, objective_hash=objective_hash(text), generated_by="rule_based", model=None, suggestions=suggestions,
                              rationale=rationale, tradeoffs=tradeoffs, unsupported_needs=unsupported, clarifying_questions=questions[:2],
                              confidence=confidence, confidence_note=note, validation_notes=notes, scoring_spec_version=load_spec()["version"],
-                             cached=False, generated_at=_now())
+                             task_interpretation=interpret_task(text), cached=False, generated_at=_now())
 
 
 # --------------------------------------------------------------------------
@@ -354,7 +355,7 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
                                 suggestions=suggestions, rationale=rationale, tradeoffs=tradeoffs, unsupported_needs=unsupported,
                                 clarifying_questions=[str(q) for q in data.get("clarifying_questions") or []][:2], confidence=conf,
                                 confidence_note="Confidence describes how clearly the language model could map the text onto the five criteria; it is not a judgement of any site. Weights were validated deterministically (ids, 0-100, data availability, positive total).",
-                                validation_notes=notes, scoring_spec_version=load_spec()["version"], cached=False, generated_at=_now())
+                                validation_notes=notes, scoring_spec_version=load_spec()["version"], task_interpretation=interpret_task(req.objective), cached=False, generated_at=_now())
     except Exception as e:  # noqa: BLE001 - any model/parse/validation failure degrades to the rule reader
         llm_client.record_error(e)
         out = rule_based(req)

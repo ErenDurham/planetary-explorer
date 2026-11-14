@@ -36,6 +36,16 @@ Captured 2026-11-14 from the running app (headless Chrome, backend on committed 
 |---|---|
 | ![Analyze](docs/screenshots/analyze.jpg) | ![Compare](docs/screenshots/compare.jpg) |
 
+## Earth–Mars release (in progress)
+
+The current release adds a real Earth globe (NASA Blue Marble Next Generation), analog matching in
+both directions (`POST /api/v1/analogs/rank`: Earth candidates ranked against a Mars reference, or Mars
+candidates against an Earth reference, on a common feature basis), a task reader for objectives
+(landing screening vs analog-site selection, focus body vs mission destination, named reference
+sites), and verified imagery for Earth sites (Landsat WELD orbital context via NASA GIBS, field
+photographs with recorded licences). Landing suitability stays Mars-only and is never merged with
+analog similarity. The Moon is deferred: its catalogue data is isolated and unused in navigation.
+
 ## Quick start
 
 ```bash

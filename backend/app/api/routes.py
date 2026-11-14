@@ -26,6 +26,8 @@ from app.models import (
     SiteListResponse,
     SiteWithProfile,
 )
+from app.models import AnalogRankRequest, AnalogRankResponse
+from app.services import analog_rank_engine
 from app.services import analog_engine, explanation_engine, guidance_engine, objective_engine, ranking_engine, scoring_engine
 from app.services.data_loader import DataError, get_store
 from app.services.retrieval_engine import get_retriever
@@ -147,3 +149,16 @@ def priority_guidance(req: GuidanceRequest) -> GuidanceResponse:
     before/after, de-emphasised factors, rank deltas and missing data, all
     computed by the scoring engine; a model may only phrase them."""
     return guidance_engine.guide(req, get_store())
+
+
+@router.post("/analogs/rank", response_model=AnalogRankResponse, responses=ERR)
+def rank_analogs(req: AnalogRankRequest) -> AnalogRankResponse:
+    """Body-aware analog ranking: every candidate on one body ranked against a
+    reference on the other, on a common positive-weight feature basis. The
+    pairwise maths is the same as /analogs/match (unchanged)."""
+    try:
+        return analog_rank_engine.rank_pool(req, get_store())
+    except KeyError as e:
+        raise _not_found("location", str(e).strip("'")) from e
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail={"code": "validation_error", "message": str(e), "details": None}) from e

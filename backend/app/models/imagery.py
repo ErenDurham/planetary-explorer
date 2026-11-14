@@ -63,6 +63,7 @@ class ImageryEntry(BaseModel):
 
 class SiteImagery(BaseModel):
     site_id: str
+    body: Literal["mars", "earth"] = "mars"
     entries: list[ImageryEntry]
     missing_views: list[ViewKind] = Field(default_factory=list, description="Views with no verified imagery for this site")
     notes: list[str] = Field(default_factory=list)
@@ -72,4 +73,4 @@ class ImageryManifest(BaseModel):
     version: str
     generated_at: str
     allowlist: list[str] = Field(..., description="Hosts the backend may fetch assets from")
-    sites: dict[str, SiteImagery]
+    sites: dict[str, SiteImagery] = Field(..., description="Keyed by location id; Mars sites and Earth analog candidates share the map")

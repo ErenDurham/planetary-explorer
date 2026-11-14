@@ -111,3 +111,16 @@ overwriting v1, and the harmonised baseline is stated on every terrain metric.
 - [TEAM_WORKSTREAMS.md](TEAM_WORKSTREAMS.md): ownership, checkpoints, deployment.
 - [SCIENTIFIC_METHOD.md](SCIENTIFIC_METHOD.md): formulas, assumptions, known limitations.
 - [DATA_SOURCES.md](DATA_SOURCES.md): provenance for every dataset.
+
+## Earth–Mars release (2026-11-14, in progress)
+
+| Area | Status |
+|---|---|
+| Typed mission/view state (task, destination, selection body, viewed body, per-body selection, analog preferences separate from landing priorities) | frontend, in progress |
+| Real Earth globe (NASA Blue Marble NG via GIBS, same texture convention as Mars; verified by landmark pixels) | texture built; viewer generalisation in progress |
+| Bidirectional analog ranking on a common feature basis (`POST /analogs/rank`) | done, tested (pair similarity identical in both directions) |
+| Objective task reading (landing vs analog, focus vs destination, named references, ambiguity → direction options, analog-preference proposal) | done, tested; proposal review UI in progress |
+| ROYGBIV rank palette over the full ranked pool, unrankable excluded | frontend, in progress |
+| Compare: two linked Earth/Mars columns with side-by-side orbital/field imagery, scale linking only for georeferenced orbital pairs | frontend, in progress |
+| Earth imagery manifest (GIBS Landsat WELD/MODIS orbital context with exact bounds; NASA-library and Commons field photographs with recorded licences) | built; Atacama has no verifiable field photo |
+| Moon | deferred; catalogue data isolated, removed from Compare navigation |
