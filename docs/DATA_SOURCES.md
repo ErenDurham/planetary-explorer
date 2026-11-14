@@ -1,0 +1,330 @@
+# Data sources
+
+Every number the application serves traces to one of the sources on this
+page. In the data files each measurement carries a `source_id` that resolves
+to a `Provenance` record in the profile's `sources` map
+(`backend/app/models/common.py`); this page is the human-readable version of
+those records plus the detail the JSON does not hold.
+
+Dates: all downloads and checks recorded here were made on **2026-11-14**.
+"Verified reachable" means an unauthenticated HTTPS request succeeded on that
+day; it is not a guarantee about any other day, which is why the processed
+outputs are committed and the app never fetches at request time
+([ARCHITECTURE.md](ARCHITECTURE.md), principle 2).
+
+Contents
+
+1. [Mars topography: MOLA MEGDR 16 ppd](#1-mars-topography-mola-megdr-16-ppd)
+2. [Earth topography: Copernicus DEM GLO-90](#2-earth-topography-copernicus-dem-glo-90)
+3. [Earth climate: NASA POWER climatology](#3-earth-climate-nasa-power-climatology)
+4. [Mars globe texture: NASA Trek Viking MDIM 2.1](#4-mars-globe-texture-nasa-solar-system-treks-viking-mdim-21)
+5. [Derived: top-of-atmosphere insolation](#5-derived-top-of-atmosphere-insolation-model)
+6. [Agency web pages (coordinates, heritage, analog programmes)](#6-agency-web-pages)
+7. [Peer-reviewed literature (DOIs)](#7-peer-reviewed-literature)
+8. [Not used in V1, and why](#8-not-used-in-v1-and-why)
+9. [Data marked missing in V1](#9-data-marked-missing-in-v1)
+10. [Scientific document corpus](#10-scientific-document-corpus)
+11. [Demonstration fixtures](#11-demonstration-fixtures)
+12. [Licence and attribution summary](#12-licence-and-attribution-summary)
+
+---
+
+## 1. Mars topography: MOLA MEGDR 16 ppd
+
+`source_id`: `mola_megdr_16ppd`
+
+| Field | Value |
+|---|---|
+| Institution | NASA PDS Geosciences Node (Washington University in St. Louis), hosting the product of the MOLA Science Team, Goddard Space Flight Center (producer: David E. Smith) |
+| Original URL | https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/ (files `megt90n000eb.img`, `megt90n000eb.lbl`) |
+| Instrument | Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA) |
+| Dataset / product | `MGS-M-MOLA-5-MEGDR-L3-V1.0`, product `MEGT90N000EB.IMG`, `PRODUCT_VERSION_ID` 2.0, created 2003-04-03 |
+| What it is | Mission Experiment Gridded Data Record: a global grid of **median** MOLA topography per 0.0625 x 0.0625 degree bin, built from the MOLA PEDRs (nearly 600,000,000 nadir observations) |
+| Coverage | Global, 90 N to 90 S, 0 to 360 E |
+| Projection / CRS | Simple cylindrical; IAU2000 reference; body-fixed rotating **planetocentric** coordinates; `POSITIVE_LONGITUDE_DIRECTION = EAST`; `CENTER_LONGITUDE 180`, so grid column 0 is at 0 E (the label's `WESTERNMOST_LONGITUDE` is 0) |
+| Vertical datum | Areoid from the Goddard Mars potential model GMM3 (`mgm1025`) evaluated to degree and order 50. Topography = planetary radius minus areoid radius |
+| Reference radius | `A_AXIS_RADIUS = B = C = 3396.0 km` |
+| Resolution | 16 pixels per degree (`MAP_RESOLUTION 16.0`), `MAP_SCALE 3.705 km/pixel` at the equator; grid is 5760 samples x 2880 lines |
+| Sample format | `MSB_INTEGER`, 16 bit (big-endian signed int16), `UNIT = METER`, fixed-length records of 11,520 bytes; file size 33,177,600 bytes |
+| Stated extremes | minimum -8177 m, maximum 21171 m (asserted by `build_mars_profiles.py` on load) |
+| Observation period | `START_TIME 1997-09-15T19:10:00`, `STOP_TIME 2001-06-30T11:10:40`; orbits 3 to 20333 (MGS mapping, primary and extended missions) |
+| Quality limitations (from the label) | Each cell is the **median** of the shots inside it; where no shot fell in a cell **an interpolated value is supplied**. Because of the polar orbit, shot density is lowest near the equator, where about **55% of bins contain at least one shot**; gaps of **up to 12 km** exist between profiles. Shots more than 1.2 degrees off-nadir, channel 4 returns and non-ground returns (clouds, noise) were excluded; orbits were adjusted by a first-order crossover solution. |
+| Quality limitations (project) | Any slope or roughness derived from this grid is a **regional** statistic at a ~3.7 km baseline and says nothing about metre-scale landing hazards. Every derived measurement carries `quality_flag: regional_scale_only` and says so in `notes`. The profile's `uncertainty_notes` also give the radial (vertical) shot accuracy as "of order 1 m after crossover adjustment", attributed to **Smith et al. (2001)**, *Mars Orbiter Laser Altimeter: Experiment summary after the first year of global mapping of Mars*, J. Geophys. Res. 106(E10), https://doi.org/10.1029/2000JE001364 (validated against Crossref). The note says explicitly that this figure is **not stated in the product label**; it is a literature value, and the profile labels it as such. |
+| Extraction | `backend/scripts/fetch_mola.py` downloads both files over HTTPS, checks the `.img` is exactly 33,177,600 bytes, and writes `backend/data/raw/megt90n000eb.sha256` (`d18d9b9ab8c5516d02e157dd2cde0f1d0d160c21940e953ba22391269a545e7b`). `backend/scripts/build_mars_profiles.py` reads the grid with `numpy.fromfile(dtype=">i2")`, reshapes to 2880 x 5760, asserts the extremes, samples a 1.0 degree square around each site (`window()`: floor/ceil edges, so **17 x 17 = 289 cells**; longitude wraps modulo 5760, latitude clipped; `sites.json`'s `footprint_definition` and every measurement's footprint `description` say "17x17 MOLA 16 ppd cells (floor/ceil edges)") and computes the statistics in [SCIENTIFIC_METHOD.md](SCIENTIFIC_METHOD.md#3-derived-terrain-statistics). The `.img` is gitignored; the `.lbl` and the sha256 are committed. |
+| Why 16 ppd and not 128 ppd | The 128 ppd product is ~2 GB in tiles and needs hours of download; 16 ppd is sufficient for the regional footprint statistics this project claims, and the limitation is recorded on every derived value (`fetch_mola.py` docstring). |
+| Sanity checks (2026-11-14) | Single-cell values read at landmark coordinates: Olympus Mons 20046 m, Hellas -6072 m, Jezero -2628 m, Gale -4509 m, InSight -2595 m. `build_mars_profiles.py` asserts Olympus Mons > 15000 m and Hellas < -5000 m on every run. (A footprint **median** differs from the single cell at the centre; Jezero's footprint median is -2129 m.) |
+| Licence / attribution | NASA PDS data are public domain. Cite the MGS MOLA Science Team; the label names the producer and institution above. |
+| Retrieved | 2026-11-14 |
+
+Verified reachable without login on 2026-11-14.
+
+## 2. Earth topography: Copernicus DEM GLO-90
+
+`source_id`: `copernicus_glo90`
+
+| Field | Value |
+|---|---|
+| Institution | ESA / Airbus / Copernicus Programme; accessed through the **AWS Open Data** mirror |
+| Original URL | https://registry.opendata.aws/copernicus-dem/ (bucket `copernicus-dem-90m`) |
+| Tile URL pattern used | `https://copernicus-dem-90m.s3.amazonaws.com/Copernicus_DSM_COG_30_{lat}_00_{lon}_00_DEM/Copernicus_DSM_COG_30_{lat}_00_{lon}_00_DEM.tif`, e.g. `N36_00_W117_00` |
+| Instrument / model | TanDEM-X derived digital **surface** model (DSM), so it includes vegetation and buildings where present |
+| Dataset id | `copernicus-dem-90m` (GLO-90) |
+| Coverage | Global, 1 x 1 degree Cloud-Optimised GeoTIFF tiles; includes Antarctica (the McMurdo Dry Valleys candidate at 77.86 S was read successfully) |
+| CRS | WGS84 geographic (EPSG:4326), east-positive longitude |
+| Vertical datum | Metres above the **EGM2008** geoid. **Not comparable** with Mars areoid elevations; the analog engine discloses this and never differences absolute elevations between planets |
+| Resolution | 3 arc-second latitude spacing (**92.66 m**, recorded as "93 m (N-S)" in the profiles). **Longitude spacing is coarser at high latitude**: GLO-90 tiles are 1.5x coarser E-W at 50-60 degrees, 2x at 60-70 and 3x at 70-80 (`read_dem()` docstring). The profiles record both pixel sizes in every fine-scale `spatial_resolution` string, e.g. `93 m (N-S) x 85 m (E-W) pixels; 360000 pixels` at Atacama (600 x 600), `93 m (N-S) x 79 m (E-W) pixels; 180000 pixels` at Holuhraun (64.85 N, 600 x 300), `93 m (N-S) x 70 m (E-W) pixels; 120000 pixels` at Haughton (75.38 N, 600 x 200) and `93 m (N-S) x 58 m (E-W) pixels; 120000 pixels` at McMurdo (77.86 S, 600 x 200) |
+| Units | metres |
+| Observation period | 2011 to 2015 acquisitions (TanDEM-X mission data; stated in `candidates.json`) |
+| Quality limitations | The profile records "absolute vertical accuracy < 4 m (90% linear error)" as stated in `candidates.json`/`build_earth_profiles.py`; the DSM includes vegetation and buildings. Nodata pixels are replaced with the footprint's median before statistics; every V1 footprint reported a nodata fraction of 0.000 (the figure is written into each profile's `pipeline` string). |
+| **Per-axis harmonisation** | `read_dem()` returns both pixel sizes, `ds.res[0]` (longitude) and `ds.res[1]` (latitude), and `build()` converts each to metres on the ground (the longitude size times cos(latitude)). The fine slope gradient uses the two true spacings, and the block factors to the MOLA cell size are computed **separately per axis**: `fy = round(3705 m / N-S pixel)`, `fx = round(3705 m / E-W pixel)`, applied by `geo.block_average_xy()`. The harmonised cell is therefore ~3.7 km in **both** directions at every latitude, and every harmonised `spatial_resolution` string records it, e.g. `~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x53); 45 cells` at Haughton. The factors stored in each profile's `pipeline` string (rows x cols) are: Atacama 40x44, McMurdo 40x63, Haughton 40x53, Death Valley 40x50, Holuhraun 40x47, MDRS 40x51, Mauna Kea 40x42. An earlier build assumed square pixels in degrees and over-estimated the high-latitude slopes; the committed `candidate_profiles.v1.json` (generated 2026-11-14T16:19:15Z) is the rebuilt output. |
+| Extraction | `backend/scripts/build_earth_profiles.py`: `rasterio` windowed read over HTTPS of the 1 to 4 tiles the footprint touches (`read_dem()`), mosaicked north-first; fine statistics on the 90 m grid; `block_average_xy()` by the per-axis factors above to the MOLA cell size, then the same `terrain_stats()` as Mars. |
+| Licence / attribution | Free for any use under the Copernicus DEM licence; **attribution required** ("produced using Copernicus WorldDEM-90 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA" is the form the programme requests; the team should confirm the current wording on the AWS registry page before publishing). |
+| Retrieved | 2026-11-14 |
+
+Verified reachable without login on 2026-11-14.
+
+## 3. Earth climate: NASA POWER climatology
+
+`source_id`: `nasa_power`
+
+| Field | Value |
+|---|---|
+| Institution | NASA Langley Research Center, Prediction Of Worldwide Energy Resources (POWER) project |
+| Original URL | https://power.larc.nasa.gov/ |
+| Endpoint used | `https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=T2M,T2M_MIN,T2M_MAX,ALLSKY_SFC_SW_DWN,PRECTOTCORR&community=RE&longitude={lon}&latitude={lat}&format=JSON` |
+| Model / inputs | MERRA-2 reanalysis (meteorology) and CERES/FLASHFlux (solar) |
+| Dataset id | POWER climatology, **API v2.10.1**, community `RE`; response title recorded in every profile: "NASA/POWER Source Native Resolution Climatology Climatologies" |
+| Coverage | Global point service |
+| Resolution | 0.5 x 0.625 degree grid (meteorological parameters), 1 degree grid (solar). Both are far coarser than the 0.5 degree footprint, so they describe the regional climate, not the field site's microclimate |
+| Parameters and units | `T2M` 2 m air temperature, degC (annual mean `ANN` used); `T2M_MIN`, `T2M_MAX` degC (the pipeline takes the **minimum over months** of the monthly-mean minimum, and the maximum over months of the monthly-mean maximum); `ALLSKY_SFC_SW_DWN` kWh/m2/day (converted to W/m2 by x1000/24); `PRECTOTCORR` bias-corrected precipitation, mm/day |
+| Observation period | Multi-decade climatology; the exact span is in the API response header, which the pipeline does not store. Record it in the next profile version. |
+| Quality limitations | `measurement_type` is `estimated` (reanalysis/satellite product, not an in-situ reading). The coarse grid may not resolve valley or summit microclimates (Death Valley floor, Mauna Kea summit). `PRECTOTCORR` underestimates orographic extremes. `T2M` is **air** temperature at 2 m, not ground temperature; the profile notes say so. |
+| Extraction | `power_climate()` in `backend/scripts/build_earth_profiles.py`, one request per candidate |
+| Licence | Public domain (NASA) |
+| Retrieved | 2026-11-14 |
+
+Verified reachable without login on 2026-11-14.
+
+## 4. Mars globe texture: NASA Solar System Treks, Viking MDIM 2.1
+
+Not a `source_id` (it feeds the frontend, not a profile). Attribution file:
+`frontend/public/textures/mars_viking_4k.ATTRIBUTION.txt`.
+
+| Field | Value |
+|---|---|
+| Institution | NASA Solar System Treks (Mars Trek); imagery credit **NASA/JPL/USGS** |
+| Capabilities URL | https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/WMTSCapabilities.xml |
+| Tile URL pattern | `https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{zoom}/{row}/{col}.jpg` |
+| Layer | `Mars_Viking_MDIM21_ClrMosaic_global_232m`: Viking Orbiter Mars Digital Image Model 2.1, colour, 232 m/pixel at full resolution |
+| Zoom used | 3: a 16 x 8 grid of 256 px tiles stitched to **4096 x 2048** px, saved as JPEG quality 88, 2,329,229 bytes |
+| Projection / convention | Equirectangular; in the stitched file **column 0 is at 180 W (-180 E), row 0 at 90 N**, so u = (lon_east + 180)/360 and v = (90 - lat)/180. Note this differs from the MOLA grid, whose column 0 is at 0 E |
+| Use | Visual texture only. No number in the application is read from it |
+| Extraction | `backend/scripts/fetch_mars_texture.py` (also offers `--layer mola_shade` = `Mars_MGS_MOLA_ClrShade_merge_global_463m`, not fetched in V1) |
+| Licence / attribution | NASA imagery; credit "NASA/JPL/USGS via NASA Solar System Treks". Served with open CORS |
+| Retrieved | 2026-11-14 |
+
+## 5. Derived: top-of-atmosphere insolation model
+
+`source_id`: `derived_toa_insolation`
+
+| Field | Value |
+|---|---|
+| Institution | Planetary Explorer pipeline, `backend/scripts/geo.py` (`toa_annual_mean_insolation_wm2`) |
+| URL | [SCIENTIFIC_METHOD.md#insolation](SCIENTIFIC_METHOD.md#insolation) |
+| Model | Analytic daily-mean top-of-atmosphere insolation integrated over one orbit, weighted by orbital dwell time. Solar constant **S0 = 1361 W/m2** at 1 AU. Mars: a = 1.52368 AU, e = 0.0934, obliquity 25.19 deg, Ls of perihelion 251 deg. Earth: a = 1.00000 AU, e = 0.0167, obliquity 23.44 deg, Ls of perihelion 283 deg. 720 steps in Ls |
+| Coverage | Any latitude; latitude is the only input |
+| Units | W/m2 |
+| Check | Earth equator 415.6 W/m2 against the textbook ~417 W/m2 (`test_pipeline_geo.py`, 2% tolerance); S0/pi = 433.2 without obliquity. Mars equator 178.6 W/m2; Mars 47.67 N (Utopia) 127.8 W/m2; Mars 89.9 N 79.8 W/m2 |
+| Limitations | **Model output, not a measurement.** Ignores atmospheric dust opacity (which can cut Mars surface flux by tens of percent), clouds, local horizon and slope. Dominated by heliocentric distance when compared across planets, which is why the analog spec gives it weight 0. Seasonal variation is computed internally but not exposed as a metric |
+| Licence | n/a (project code, MIT) |
+
+## 6. Agency web pages
+
+These supply site **coordinates**, mission **heritage**, qualitative
+terrain/mineralogy **tags** and the Earth candidates' **documented analog
+use**. They carry no numeric measurement other than coordinates. All returned
+HTTP 200 on 2026-11-14; the Mars 2020 page redirects to the URL shown.
+
+Mars (`backend/data/mars/sites.json`):
+
+| `source_id` | Title | Institution | URL | Used by |
+|---|---|---|---|---|
+| `nasa_m2020_landing_site` | Mars 2020 Perseverance Rover - Science (Jezero Crater landing site) | NASA Science / JPL | https://science.nasa.gov/mission/mars-2020-perseverance/science/ | `jezero_crater` coordinates |
+| `nasa_msl_landing` | Mars Science Laboratory (Curiosity) - Gale Crater landing site | NASA Science / JPL | https://science.nasa.gov/mission/msl-curiosity/ | `gale_crater` coordinates |
+| `nasa_insight` | InSight Mars Lander mission page (Elysium Planitia) | NASA Science / JPL | https://science.nasa.gov/mission/insight/ | `elysium_planitia` coordinates and composition tags |
+| `esa_oxia_planum` | ExoMars Rosalind Franklin rover landing site: Oxia Planum | ESA | https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission | `oxia_planum` coordinates |
+| `nasa_viking` | Viking 1 and 2 missions | NASA Science | https://science.nasa.gov/mission/viking/ | `utopia_planitia` and `chryse_planitia` coordinates; `chryse_planitia` composition tags |
+| `nasa_mer` | Mars Exploration Rovers (Spirit and Opportunity) | NASA Science / JPL | https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/ | `meridiani_planum` and `gusev_crater` coordinates |
+| `usgs_planetary_nomenclature` | Gazetteer of Planetary Nomenclature - Mars | USGS Astrogeology / IAU | https://planetarynames.wr.usgs.gov/Page/MARS/target | Declared in `sites.json` but **not referenced by any site**, so it does not appear in any profile |
+
+Earth (`backend/data/earth/candidates.json`):
+
+| `source_id` | Title | Institution | URL | Used by |
+|---|---|---|---|---|
+| `nasa_analogs_overview` | NASA Analog Missions | NASA | https://www.nasa.gov/analog-missions/ | `mcmurdo_dry_valleys`, `death_valley`, `holuhraun_iceland`, `mauna_kea_summit` (tags, analog use) |
+| `nasa_hmp` | Haughton-Mars Project (Devon Island) | NASA Ames / Mars Institute | https://www.marsinstitute.no/hmp | `haughton_crater` |
+| `nasa_arads` | Atacama Rover Astrobiology Drilling Studies (ARADS) | NASA Ames | https://www.nasa.gov/ames/arads | `atacama_yungay` |
+| `mdrs` | Mars Desert Research Station | The Mars Society | https://mdrs.marssociety.org/ | `mdrs_utah` |
+
+Coordinates convention: Mars positions are rover/lander touchdown points or
+the published centre of a selected landing ellipse (`sites.json`,
+`coordinate_convention`). Earth positions are the field-site centres chosen by
+the team; the Mauna Kea footprint is deliberately summit-centred and its
+description says the statistics describe the whole upper mountain, not only
+the test sites.
+
+## 7. Peer-reviewed literature
+
+All **11 DOIs were validated against Crossref on 2026-11-14** (title, first
+author and year match the records in the data files). They supply the
+mineralogy and terrain tags and the water/ice evidence strings; no number in a
+profile is taken from them.
+
+Mars (`sites.json`):
+
+| `source_id` | Reference | DOI | Used by |
+|---|---|---|---|
+| `lit_jezero_mineralogy` | Goudge et al. (2015), Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, *J. Geophys. Res. Planets* 120 | https://doi.org/10.1002/2014JE004782 | `jezero_crater` composition |
+| `lit_gale_stratigraphy` | Grotzinger et al. (2014), A habitable fluvio-lacustrine environment at Yellowknife Bay, Gale Crater, Mars, *Science* 343 | https://doi.org/10.1126/science.1242777 | `gale_crater` composition |
+| `lit_oxia_clays` | Quantin-Nataf et al. (2021), Oxia Planum: The landing site for the ExoMars Rosalind Franklin rover mission, *Astrobiology* 21 | https://doi.org/10.1089/ast.2019.2191 | `oxia_planum` composition |
+| `lit_meridiani_hematite` | Christensen et al. (2000), Detection of crystalline hematite mineralization on Mars by the Thermal Emission Spectrometer, *J. Geophys. Res.* 105 | https://doi.org/10.1029/1999JE001093 | `meridiani_planum` composition |
+| `lit_utopia_ice` | Stuurman et al. (2016), SHARAD detection and characterization of subsurface water ice deposits in Utopia Planitia, Mars, *Geophys. Res. Lett.* 43 | https://doi.org/10.1002/2016GL070138 | `utopia_planitia` composition and ice evidence |
+| `lit_gusev_basalt` | McSween et al. (2004), Basaltic rocks analyzed by the Spirit rover in Gusev Crater, *Science* 305 | https://doi.org/10.1126/science.3050842 | `gusev_crater` composition |
+| `lit_golombek_mer_sites` | Golombek et al. (2003), Selection of the Mars Exploration Rover landing sites, *J. Geophys. Res.* 108(E12), 8072 | https://doi.org/10.1029/2003JE002074 | Declared in `sites.json`; cited in the scoring spec's `terrain_safety` and `elevation_suitability` rationales (the 2 deg slope knee and the -1.3 km MER elevation limit). Not attached to any site, so absent from the profiles |
+
+Earth (`candidates.json`):
+
+| `source_id` | Reference | DOI | Used by |
+|---|---|---|---|
+| `lit_yungay` | Navarro-Gonzalez et al. (2003), Mars-like soils in the Atacama Desert, Chile, and the dry limit of microbial life, *Science* 302 | https://doi.org/10.1126/science.1089143 | `atacama_yungay` |
+| `lit_dry_valleys` | Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, *Icarus* 192 | https://doi.org/10.1016/j.icarus.2007.06.018 | `mcmurdo_dry_valleys` |
+| `lit_haughton` | Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, *Meteoritics & Planetary Science* 40 | https://doi.org/10.1111/j.1945-5100.2005.tb00147.x | `haughton_crater` |
+| `lit_holuhraun` | Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, *J. Volcanol. Geotherm. Res.* 340 | https://doi.org/10.1016/j.jvolgeores.2017.02.027 | `holuhraun_iceland` |
+
+## 8. Not used in V1, and why
+
+| Source | Why not in V1 | What it would add |
+|---|---|---|
+| **JMARS** (ASU) | Has **no public API** (confirmed by the challenge prompt). A desktop GIS, not a data service; do not claim otherwise | Interactive layer browsing for humans; not a pipeline input |
+| **HiRISE / CTX DTMs** (UA / MSSS via PDS) | Per-site stereo DTMs are large, patchy in coverage and would have needed `rasterio` ingestion per ellipse; weekend scope | Metre-scale slope and roughness over the landing ellipse: the direct replacement for the `regional_scale_only` MOLA statistics (`future_investigation` in every explanation already says so) |
+| **CRISM MTRDR** via PDS Geosciences ODE (https://ode.rsl.wustl.edu/mars/) | No login, but time: mapping spectral parameters to the categorical `mineralogy_tags` needs a defined vocabulary | Measured surface mineralogy instead of literature tags; would make the Jaccard comparison data-driven |
+| **THEMIS / TES** (ASU, PDS) | Time; the gridded products need reprojection and masking | `surface_temperature_mean_c` (thermal inertia / surface temperature), `rock_abundance_pct` (IRTM/TES rock abundance; Christensen 1986; Nowicki & Christensen 2007), `dust_cover_index` (TES Dust Cover Index; Ruff & Christensen 2002). These are exactly the four missing Mars features |
+| **Mars Climate Database** (LMD) | Time; web form / API access not evaluated | `surface_temperature_mean_c`, `atmospheric_pressure_pa` per site and season |
+| **EMIT L2B Surface Mineral Identification** (EMITL2BMIN, NASA LP DAAC) | Requires Earthdata Login | Measured Earth surface mineralogy; the Earth half of a data-driven composition match, and the basis for *discovering* new analogs rather than curating them |
+| **SRTM GL1 30 m** | Requires Earthdata Login; GLO-90 already satisfies the harmonised 3.7 km baseline, and 30 m would be block-averaged away | Finer `slope_fine_median_deg` only |
+| **HLS L30** | Requires Earthdata Login | Vegetation and surface-reflectance screening to find bare, arid terrain at continental scale |
+| **PDS Geosciences ODE** generally | Time | Programmatic discovery of CRISM, HiRISE and other PDS products by footprint |
+| **Mars Trek `CTX_beta01_uncontrolled_5m_Caltech`**, **`Mars_MGS_MOLA_ClrShade_merge_global_463m`** | Time; the MOLA shade layer is already a `--layer` option in `fetch_mars_texture.py` | Higher-resolution imagery for the globe; shaded relief that makes the topography the scoring uses visible |
+| **LRO Diviner** temperature maps | Moon is out of V1 scope | Lunar thermal environment for the Version 2 Moon globe |
+
+The EMIT, SRTM, HLS, CRISM, Trek and Diviner entries come from an
+**unofficial** community list (see [CHALLENGE.md](CHALLENGE.md#7-unofficial-suggested-datasets)).
+The official Resources tab has not yet been reconciled.
+
+## 9. Data marked missing in V1
+
+Missing means `"value": null, "is_missing": true, "quality_flag": "missing"`.
+Nothing is imputed and nothing is scored as zero.
+
+**Mars: four features missing on every one of the 8 sites**
+(`completeness.features_requested 17, features_available 13, fraction 0.765`):
+
+| `feature_id` | Unit | Candidate source recorded in the profile note | Effect in V1 |
+|---|---|---|---|
+| `surface_temperature_mean_c` | degC | THEMIS/TES-derived surface temperature or thermal inertia (PDS); Mars Climate Database | The `thermal_conditions` scoring criterion is excluded for all sites under `common_feature_set` and listed in every result's `warnings`/`completeness.excluded_criteria` |
+| `atmospheric_pressure_pa` | Pa | Lander records (Viking, InSight, Curiosity, Perseverance); depends on elevation and season | Not scored; disclosed as non-comparable in every analog match |
+| `rock_abundance_pct` | % | IRTM/TES rock abundance maps (Christensen 1986; Nowicki & Christensen 2007) | Not scored |
+| `dust_cover_index` | (index) | TES Dust Cover Index (Ruff & Christensen 2002) | Not scored |
+
+**Earth: no missing features.** All 7 candidate profiles report
+`features_requested 17, features_available 17, fraction 1.0`.
+
+**Documents:** `backend/data/documents/` is populated (section 10 below):
+36 documents, 311 chunks, and `/api/v1/health` reports `retrieval: ok`
+(`docs/api_examples.json`). The explanation example for Jezero carries six
+`supporting_evidence` chunks. The corpus is evidence for the explanation
+engine only; no number in a profile comes from it.
+
+## 10. Scientific document corpus
+
+`backend/data/documents/`: the evidence behind `POST /api/v1/research/explain`.
+Built by `backend/scripts/ingest_documents.py` from a hand-curated list of real
+public URLs (`DOCUMENTS` in that script); described in
+`backend/data/documents/README.md`; inventoried in `manifest.json`. The
+retriever (`app/services/retrieval_engine.py`) never fetches at request time:
+everything it serves was ingested offline and committed.
+
+| Field | Value |
+|---|---|
+| Built | `manifest.json` `built_at` 2026-11-14T16:17:31+00:00 |
+| Counts | `documents_ingested` **36**, `documents_failed` **2**, `chunks` **311** (`chunks.jsonl` has 311 lines; `corpus/` has 36 files) |
+| Chunking | `target_chars` 900, `max_chars` 1000, `overlap_chars` 150, boundary "paragraph, then sentence" |
+| Document kinds | `html` (agency and programme pages), `text` (PDS3 label, AAREADME, catalog), `crossref` (bibliographic records) |
+| Chunk fields | `chunk_id` (`<document_id>#<nnn>`), `document_id`, `title`, `institution`, `url`, `publication_date`, `geographic_relevance`, `text`, `char_start`, `char_end`, `retrieved_at` |
+
+Document classes ingested (from `data/documents/README.md`, counts from the
+manifest):
+
+| Class | Documents | Institutions as recorded |
+|---|---|---|
+| The 8 Mars sites | NASA Science pages for Mars 2020 (overview and science), MSL (overview and science), InSight (overview and science), Viking (project, Viking 1, Viking 2), MER (overview, Spirit, Opportunity); ESA's Oxia Planum selection article | NASA Science / JPL; NASA Science; ESA |
+| Nomenclature | USGS/IAU Gazetteer descriptor-terms page and Mars system page | USGS Astrogeology / IAU WGPSN |
+| MOLA MEGDR | the PDS3 label of `MEGT90N000EB`, the archive AAREADME, the data set catalog, the PDS Geosciences product page | NASA PDS Geosciences Node / MOLA Science Team |
+| Landing-site selection | the 2015 First Landing Site / Exploration Zone Workshop page | NASA / Lunar and Planetary Institute (USRA) |
+| Earth analog programmes and datasets | NASA Analog Missions, ARADS, Haughton-Mars Project, the Copernicus DEM registry entry, NASA POWER methodology | NASA; NASA Ames; Mars Institute / SETI Institute / NASA; ESA Copernicus / AWS Registry of Open Data; NASA Langley Research Center (POWER) |
+| Peer-reviewed literature | Crossref metadata records for all 11 DOIs in section 7 (`crossref_lit_*`) | the journal and publisher, e.g. "Science / American Association for the Advancement of Science (AAAS)" |
+
+The literature entries are **bibliographic records, not papers**: the papers
+are paywalled, so each record holds title, authors, venue, date, DOI and
+(where Crossref has one) the abstract, and its text says so. A citation of one
+supports "this paper exists and studied this site", not a quotation of its
+findings unless the abstract carries them.
+
+The two failures, quoted from `manifest.json` `failed`:
+
+| `document_id` | URL | `reason` |
+|---|---|---|
+| `marssociety_mdrs` | https://mdrs.marssociety.org/ | "extracted text too short (45 chars): likely a JavaScript-rendered shell" |
+| `nasa_power_home` | https://power.larc.nasa.gov/ | "extracted text too short (584 chars): likely a JavaScript-rendered shell" |
+
+A page whose extracted text is under `MIN_TEXT_CHARS` (1200) is recorded as
+failed rather than replaced with anything invented. The MDRS failure means the
+`mdrs` provenance in section 6 has no corpus document behind it; the POWER
+methodology page (`nasa_power_methodology`, 11 chunks) stands in for the POWER
+home page.
+
+**Trust.** Retrieved documents are untrusted input: public pages and
+third-party metadata fetched verbatim. They are quoted as evidence and handed
+to the language model inside labelled delimiters; nothing in them is executed
+and no number in them can enter a score. Licences as recorded in the README:
+NASA and USGS content and PDS data are US public domain; ESA content is quoted
+under ESA's standard licence for editorial use with attribution; Crossref
+metadata is CC0; the Copernicus registry entry and the Mars Institute page are
+quoted for attribution and reference.
+
+## 11. Demonstration fixtures
+
+**None are present in the committed data.** Every measurement in
+`site_profiles.v1.json` and `candidate_profiles.v1.json` has a
+`measurement_type` of `measured`, `derived`, `literature` or `estimated`, and
+no `quality_flag` is `demo_fixture`.
+
+If one is ever added, the contract (`backend/app/models/common.py`) defines
+`measurement_type: "demo_fixture"` as "placeholder for development only and
+must never be presented as evidence", and `quality_flag: "demo_fixture"` as
+"not real data". Such a value must be labelled as a fixture wherever the UI
+shows it, must not enter a score or a similarity unless the user has been told
+it is fake, and must be removed before any demonstration or submission.
+
+## 12. Licence and attribution summary
+
+| Source | Terms |
+|---|---|
+| MOLA MEGDR (NASA PDS) | Public domain; cite the MGS MOLA Science Team |
+| NASA POWER | Public domain |
+| NASA Trek Viking MDIM 2.1 mosaic | NASA imagery; credit NASA/JPL/USGS via Solar System Treks |
+| Copernicus DEM GLO-90 | Free for any use; **attribution required** (confirm wording on the AWS registry page) |
+| Agency web pages | Public web content; cited by URL |
+| Literature | Cited by DOI; the corpus holds Crossref metadata records (CC0), not paper text |
+| Document corpus (`backend/data/documents/`) | Excerpts of public web pages and PDS text, quoted as evidence with attribution; see section 10 |
+| Project code and derived values | MIT (repository licence) |

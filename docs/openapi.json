@@ -214,7 +214,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultMissionResponse"
+                }
               }
             }
           },
@@ -816,6 +818,58 @@
         ],
         "title": "CriteriaCompleteness"
       },
+      "CriterionSpec": {
+        "properties": {
+          "criterion_id": {
+            "type": "string",
+            "title": "Criterion Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "default_weight": {
+            "type": "number",
+            "title": "Default Weight"
+          },
+          "rationale": {
+            "type": "string",
+            "title": "Rationale"
+          },
+          "function": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Function"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criterion_id",
+          "label",
+          "feature_id",
+          "unit",
+          "default_weight",
+          "rationale",
+          "function"
+        ],
+        "title": "CriterionSpec",
+        "description": "One criterion of the scoring spec, as served by GET /scoring/default-mission."
+      },
       "CriterionWeight": {
         "properties": {
           "criterion_id": {
@@ -835,6 +889,38 @@
           "weight"
         ],
         "title": "CriterionWeight"
+      },
+      "DefaultMissionResponse": {
+        "properties": {
+          "mission": {
+            "$ref": "#/components/schemas/MissionProfile"
+          },
+          "scoring_spec_version": {
+            "type": "string",
+            "title": "Scoring Spec Version"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionSpec"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mission",
+          "scoring_spec_version",
+          "criteria"
+        ],
+        "title": "DefaultMissionResponse"
       },
       "EarthCandidate": {
         "properties": {

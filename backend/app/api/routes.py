@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException, Query
 from app.config.settings import get_settings
 from app.models import (
     ApiError,
+    DefaultMissionResponse,
     EvaluateRequest,
     EvaluateResponse,
     ExplainRequest,
@@ -65,14 +66,14 @@ def get_site(site_id: str) -> SiteWithProfile:
     return SiteWithProfile(site=site, profile=prof)
 
 
-@router.get("/scoring/default-mission", responses=ERR)
-def default_mission():
+@router.get("/scoring/default-mission", response_model=DefaultMissionResponse, responses=ERR)
+def default_mission() -> DefaultMissionResponse:
     """The scoring spec's default criteria, weights and hard constraints, so the
     frontend can initialise its sliders from the backend rather than hard-coding."""
     spec = scoring_engine.load_spec()
-    return {"mission": scoring_engine.default_mission(), "scoring_spec_version": spec["version"],
-            "criteria": [{k: c[k] for k in ("criterion_id", "label", "feature_id", "unit", "default_weight", "rationale", "function")} for c in spec["criteria"]],
-            "notes": spec["notes"]}
+    return DefaultMissionResponse(mission=scoring_engine.default_mission(), scoring_spec_version=spec["version"],
+                                  criteria=[{k: c[k] for k in ("criterion_id", "label", "feature_id", "unit", "default_weight", "rationale", "function")} for c in spec["criteria"]],
+                                  notes=spec["notes"])
 
 
 @router.post("/scoring/evaluate", response_model=EvaluateResponse, responses=ERR)

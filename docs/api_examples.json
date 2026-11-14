@@ -887,7 +887,7 @@
         "label": "Terrain safety (regional slope)",
         "feature_id": "slope_regional_median_deg",
         "unit": "deg",
-        "default_weight": 35,
+        "default_weight": 35.0,
         "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards.",
         "function": {
           "type": "piecewise_linear",
@@ -901,7 +901,7 @@
         "label": "Elevation suitability (EDL atmosphere)",
         "feature_id": "elevation_median_m",
         "unit": "m",
-        "default_weight": 25,
+        "default_weight": 25.0,
         "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system.",
         "function": {
           "type": "piecewise_linear",
@@ -915,7 +915,7 @@
         "label": "Surface roughness (detrended relief)",
         "feature_id": "roughness_regional_m",
         "unit": "m",
-        "default_weight": 20,
+        "default_weight": 20.0,
         "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness.",
         "function": {
           "type": "piecewise_linear",
@@ -929,7 +929,7 @@
         "label": "Thermal conditions",
         "feature_id": "surface_temperature_mean_c",
         "unit": "degC",
-        "default_weight": 10,
+        "default_weight": 10.0,
         "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored.",
         "function": {
           "type": "piecewise_linear",
@@ -943,7 +943,7 @@
         "label": "Solar illumination (annual mean, top of atmosphere)",
         "feature_id": "insolation_toa_annual_mean_wm2",
         "unit": "W/m2",
-        "default_weight": 10,
+        "default_weight": 10.0,
         "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement.",
         "function": {
           "type": "piecewise_linear",
@@ -2675,7 +2675,7 @@
       "Citations point at retrieved passages only; read the source before relying on a claim."
     ],
     "cached": false,
-    "generated_at": "2026-11-14T16:22:18+00:00"
+    "generated_at": "2026-11-14T16:53:07+00:00"
   },
   "error_404": {
     "error": {

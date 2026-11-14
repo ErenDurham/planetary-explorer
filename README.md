@@ -24,6 +24,18 @@ deterministic template when no language model is available.
 | Read a citation-backed scientific explanation | Local retrieval over a curated corpus + optional LLM, with a deterministic fallback |
 | Compare a Mars site with curated Earth analog candidates | Copernicus GLO-90 DEM + NASA POWER climatology, harmonised to the MOLA cell size |
 
+## Screenshots
+
+Captured 2026-11-14 from the running app (headless Chrome, backend on committed v1 data).
+
+| Explore | Site selected |
+|---|---|
+| ![Explore](docs/screenshots/explore.jpg) | ![Site selected](docs/screenshots/site-selected.jpg) |
+
+| Analyze | Compare |
+|---|---|
+| ![Analyze](docs/screenshots/analyze.jpg) | ![Compare](docs/screenshots/compare.jpg) |
+
 ## Quick start
 
 ```bash
@@ -31,7 +43,7 @@ deterministic template when no language model is available.
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python -m pytest -q                      # 21 tests over the committed data
+python -m pytest -q                      # 244 tests over the committed data
 uvicorn app.main:app --reload            # http://localhost:8000/docs
 
 # Frontend (Node 20+)

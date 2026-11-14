@@ -255,12 +255,44 @@ export interface components {
             /** Excluded Criteria */
             excluded_criteria?: string[];
         };
+        /**
+         * CriterionSpec
+         * @description One criterion of the scoring spec, as served by GET /scoring/default-mission.
+         */
+        CriterionSpec: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Label */
+            label: string;
+            /** Feature Id */
+            feature_id: string;
+            /** Unit */
+            unit: string | null;
+            /** Default Weight */
+            default_weight: number;
+            /** Rationale */
+            rationale: string;
+            /** Function */
+            function: {
+                [key: string]: unknown;
+            };
+        };
         /** CriterionWeight */
         CriterionWeight: {
             /** Criterion Id */
             criterion_id: string;
             /** Weight */
             weight: number;
+        };
+        /** DefaultMissionResponse */
+        DefaultMissionResponse: {
+            mission: components["schemas"]["MissionProfile"];
+            /** Scoring Spec Version */
+            scoring_spec_version: string;
+            /** Criteria */
+            criteria: components["schemas"]["CriterionSpec"][];
+            /** Notes */
+            notes?: string[];
         };
         /** EarthCandidate */
         EarthCandidate: {
@@ -1046,7 +1078,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DefaultMissionResponse"];
                 };
             };
             /** @description Not Found */
