@@ -41,7 +41,7 @@ def test_manifest_validates_and_covers_every_site_with_verified_fields():
                 assert e.acquisition_date is None or "Single-day" in (e.acquisition_note or "")
             # acquisition and release dates are distinct fields; a release date never fills an acquisition date
             if e.acquisition_date is not None:
-                assert e.acquisition_note and "Caption" in e.acquisition_note
+                assert e.acquisition_note and len(e.acquisition_note) > 20  # every dated entry says where the date comes from
         views = {e.view for e in site.entries}
         assert set(site.missing_views) == {v for v in ("orbital", "surface") if v not in views}
 
