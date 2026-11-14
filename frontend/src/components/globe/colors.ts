@@ -2,6 +2,7 @@
 // ranked-sites chart, so one encoding is used everywhere. Colour is never the
 // only encoding: every consumer also shows the rank number and status text.
 import type { SuitabilityStatus } from "@/types";
+import { NOT_RANKED_COLOR, rankColor, type RankPalette } from "@/lib/rankColor";
 
 /** Continuous scale: low = muted grey-red, high = bright copper/amber. */
 const LOW: [number, number, number] = [0x6b, 0x3a, 0x33]; // muted grey-red
@@ -39,7 +40,7 @@ export function scoreToColor(score: number): string {
   return toHex(HIGH);
 }
 
-export type MarkerStyle = "scored" | "ineligible" | "insufficient_data" | "unscored";
+export type MarkerStyle = "scored" | "ineligible" | "insufficient_data" | "unscored" | "ranked" | "not_ranked";
 
 export interface MarkerAppearance {
   color: string;
@@ -61,3 +62,14 @@ export function markerAppearance(status: SuitabilityStatus | null | undefined, s
 }
 
 export const LEGEND_STOPS = [0, 25, 50, 75, 100].map((s) => ({ score: s, color: scoreToColor(s) }));
+
+/**
+ * Analog-match appearance from the backend's rank_color_position (0 strongest
+ * ... 1 weakest over the full ranked pool). null = unrankable -> hollow,
+ * neutral "Not ranked". Landing markers never use this and analog markers
+ * never use scoreToColor, so the two scales cannot be confused.
+ */
+export function analogMarkerAppearance(position: number | null | undefined, palette: RankPalette = "roygbiv"): MarkerAppearance {
+  const color = rankColor(position, palette);
+  return color ? { color, style: "ranked" } : { color: NOT_RANKED_COLOR, style: "not_ranked" };
+}

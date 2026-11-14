@@ -8,6 +8,11 @@
 // interpretation's real provenance. Only when that call fails does the
 // browser's keyword fallback seed the sliders, and then it is labelled
 // "offline rule-based" so it can never pass for a model reading.
+//
+// The same reading's `task_interpretation` (task, focus body, destination,
+// reference, analog preferences) is applied in the same store action, exactly
+// as the review UI's Apply does. An ambiguous initial objective leaves the
+// task state at its defaults rather than guessing a direction.
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api";

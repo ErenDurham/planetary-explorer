@@ -1,7 +1,7 @@
 export { PlanetViewer } from "./PlanetViewer";
 export type { PlanetViewerProps } from "./PlanetViewer";
-export { MARS_CONFIG } from "./PlanetConfig";
-export type { PlanetConfig, MarkerConvention } from "./PlanetConfig";
-export type { MarkerDatum } from "./MarkerData";
+export { MARS_CONFIG, EARTH_CONFIG, PLANET_CONFIGS } from "./PlanetConfig";
+export type { PlanetConfig, MarkerConvention, PlanetId } from "./PlanetConfig";
+export type { MarkerDatum, MarkerMode } from "./MarkerData";
 export { latLonToVector3, markerPosition, normalizeLonEast } from "./geo";
-export { scoreToColor, markerAppearance } from "./colors";
+export { scoreToColor, markerAppearance, analogMarkerAppearance } from "./colors";

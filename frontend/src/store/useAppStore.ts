@@ -9,9 +9,48 @@
 import type { ComparisonMode } from "@/lib/comparison";
 import { create } from "zustand";
 import { setShare, toShares } from "@/lib/allocation";
+import { ANALOG_FEATURE_IDS, otherBody, toAnalogShares, type Body } from "@/lib/analogFeatures";
 import type { HardConstraint } from "@/types";
 
 export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
+export type { Body };
+
+/** What the user is doing: screening Mars landing candidates, or picking an
+ * analog site on one body for a reference on the other. Never "ambiguous" in
+ * the store - an ambiguous reading must be resolved in the review UI first. */
+export type Task = "landing_screening" | "analog_site_selection";
+
+/** How the visible globe's candidates are coloured. `landing_suitability` is
+ * only meaningful on Mars; use `effectiveMapMode()` for what to render. */
+export type MapMode = "landing_suitability" | "analog_match";
+
+/** Palette for analog rank colours. ROYGBIV by default; single hue is the
+ * accessible alternative (both are monotonic in rank). */
+export type RankPalette = "roygbiv" | "single_hue";
+
+/** A location on either body, as the objective reader or the user named it. */
+export interface LocationReference {
+  body: Body;
+  id: string;
+  name: string;
+}
+
+/** Everything a reviewed objective settles besides the landing weights. Built
+ * by the review UI from `task_interpretation` (direction options resolved,
+ * unresolved mentions picked by the user) and applied in ONE store action. */
+export interface InterpretationApplication {
+  task: Task;
+  /** Where the user is looking for a location; null falls back to the task's default body. */
+  focusBody: Body | null;
+  /** Where the mission flies. A Mars mission can look for an Earth test site. */
+  missionDestination: Body | null;
+  /** The recognised reference site on the OTHER body, or null. */
+  reference: LocationReference | null;
+  /** Proposed analog-match preferences (shares over the five analog features); null keeps the current ones. */
+  analogWeights: Record<string, number> | null;
+  /** `objective_hash` of the reading this came from, for stale labels. */
+  objectiveHash: string | null;
+}
 
 /** Where the applied objective's weights came from. "offline_rule_based" is the
  * client fallback used when POST /mission/interpret could not be reached; it
@@ -43,6 +82,8 @@ export interface ObjectiveMeta {
   source?: ObjectiveSource;
   model?: string | null;
   interpretation?: AppliedInterpretation | null;
+  /** Task / body / reference reading applied together with the weights. */
+  taskApplication?: InterpretationApplication | null;
 }
 
 /** The last slider move, kept so the recommendation card can explain it and
@@ -113,6 +154,54 @@ export interface AppState {
   comparisonFeatureId: string;
   setComparisonFeatureId: (id: string) => void;
 
+  // ---- mission vs view (Earth-Mars release) -------------------------------
+  /** What the user is doing. Set by applying a reviewed objective; never by hovering, typing or clicking candidates. */
+  task: Task;
+  /** Where the mission flies (an Earth analog search for a Mars mission keeps "mars"). */
+  missionDestination: Body | null;
+  /** Preferred body where the user is looking for a location. */
+  selectionBody: Body;
+  /** The globe currently shown. Independently overridable from `selectionBody`. */
+  viewedBody: Body;
+  /** False after a manual body switch, until the user applies another objective or clicks "Follow objective". */
+  followObjective: boolean;
+  /** Selected location on each body. `selectedSiteId` is kept as the MARS alias for existing code. */
+  selectedEarthId: string | null;
+  selectedMarsId: string | null;
+  /** Select a location on `body`. Never touches the other body's selection or the objective. */
+  selectLocation: (body: Body, id: string | null) => void;
+  /** Show a body. `{ manual: true }` records a user override (followObjective = false). */
+  setViewedBody: (body: Body, opts?: { manual?: boolean }) => void;
+  /** Return the view to the applied objective's focus body (and set followObjective = true). */
+  followObjectiveNow: () => void;
+  /** How the visible globe's candidates are coloured; see `effectiveMapMode`. */
+  mapMode: MapMode;
+  setMapMode: (mode: MapMode) => void;
+  rankPalette: RankPalette;
+  setRankPalette: (p: RankPalette) => void;
+  /** The applied objective's task reading (null until something is applied). */
+  appliedTask: Task | null;
+  appliedFocusBody: Body | null;
+  appliedMissionDestination: Body | null;
+  appliedReference: LocationReference | null;
+  /** `objective_hash` of the applied reading, echoed by /mission/interpret (or a local- prefixed hash). */
+  appliedObjectiveRequestId: string | null;
+  /** Increments every time a reviewed objective is applied; consumers key one-time effects on it. */
+  objectiveRevision: number;
+  /** Apply a reviewed task reading on its own (applyObjective does this too when meta.taskApplication is set). */
+  applyInterpretation: (app: InterpretationApplication) => void;
+  /** The applied objective's proposed analog preferences (shares). Reset restores these. */
+  recommendedAnalogWeights: Record<string, number> | null;
+  /** The analog shares in force the moment the objective was applied. */
+  appliedAnalogWeights: Record<string, number> | null;
+  /** Replace every analog share at once (normalised to shares over the five features). */
+  setAnalogWeights: (weights: Record<string, number>) => void;
+  /** One-time best-match hint for the body that has no selection yet; labelled "Suggested reference", never auto-selected. */
+  suggestedSelection: { body: Body; id: string; name: string; forReferenceId: string } | null;
+  setSuggestedSelection: (s: { body: Body; id: string; name: string; forReferenceId: string } | null) => void;
+  /** Jump to Explore showing `body` with `id` selected and the camera flying to it (for the Compare view). */
+  showOnGlobe: (body: Body, id: string) => void;
+
   /** UI prefs */
   autoRotate: boolean;
   setAutoRotate: (v: boolean) => void;
@@ -131,7 +220,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   appliedObjectiveModel: null,
   appliedInterpretation: null,
   applyObjective: (text, weights, notes, meta) => {
-    const shares = toShares(weights, get().excludedCriteria);
+    const state = get();
+    const shares = toShares(weights, state.excludedCriteria);
     set({
       missionObjective: text,
       appliedObjective: text,
@@ -143,6 +233,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       appliedObjectiveSource: meta?.source ?? "offline_rule_based",
       appliedObjectiveModel: meta?.model ?? null,
       appliedInterpretation: meta?.interpretation ?? null,
+      ...(meta?.taskApplication ? taskPatch(state, meta.taskApplication) : {}),
     });
   },
   selectionRevision: 0,
@@ -152,7 +243,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   setActiveTab: (tab) => set({ activeTab: tab }),
 
   selectedSiteId: null,
-  selectSite: (id) => set((s) => ({ selectedSiteId: id, selectionRevision: s.selectionRevision + 1, autoRotate: id ? false : s.autoRotate })),
+  selectSite: (id) => get().selectLocation("mars", id),
 
   weights: {},
   beginPriorityChange: (criterionId) => set(s => ({ priorityChange: { criterionId, previous: { ...s.weights } } })),
@@ -185,9 +276,63 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   analogWeights: null,
+  // A slider move keeps the five analog shares summing to 100 (lib/allocation).
   setAnalogWeight: (featureId, weight) =>
-    set((s) => ({ analogWeights: { ...(s.analogWeights ?? {}), [featureId]: clamp(weight) } })),
-  resetAnalogWeights: () => set({ analogWeights: null }),
+    set((s) => {
+      if (!ANALOG_FEATURE_IDS.includes(featureId)) return {};
+      const current = toAnalogShares(s.analogWeights);
+      const next = setShare(current, featureId, clamp(weight));
+      return next === current ? {} : { analogWeights: next };
+    }),
+  setAnalogWeights: (weights) => set({ analogWeights: toAnalogShares(weights) }),
+  /** Restore the applied objective's recommended analog preferences; spec defaults if none was applied. */
+  resetAnalogWeights: () => set((s) => ({ analogWeights: s.recommendedAnalogWeights ? { ...s.recommendedAnalogWeights } : null })),
+  recommendedAnalogWeights: null,
+  appliedAnalogWeights: null,
+
+  task: "landing_screening",
+  missionDestination: "mars",
+  selectionBody: "mars",
+  viewedBody: "mars",
+  followObjective: true,
+  selectedEarthId: null,
+  selectedMarsId: null,
+  selectLocation: (body, id) =>
+    set((s) => {
+      const patch: Partial<AppState> = body === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id };
+      // the user picked on this body, so any seeded hint for it is moot
+      if (s.suggestedSelection?.body === body) patch.suggestedSelection = null;
+      return { ...patch, selectionRevision: s.selectionRevision + 1, autoRotate: id ? false : s.autoRotate };
+    }),
+  setViewedBody: (body, opts) =>
+    set((s) => {
+      if (s.viewedBody === body && !opts?.manual) return {};
+      return { viewedBody: body, ...(opts?.manual ? { followObjective: false } : {}) };
+    }),
+  followObjectiveNow: () => set((s) => ({ viewedBody: s.appliedFocusBody ?? s.selectionBody, followObjective: true })),
+  mapMode: "landing_suitability",
+  setMapMode: (mapMode) => set({ mapMode }),
+  rankPalette: "roygbiv",
+  setRankPalette: (rankPalette) => set({ rankPalette }),
+  appliedTask: null,
+  appliedFocusBody: null,
+  appliedMissionDestination: null,
+  appliedReference: null,
+  appliedObjectiveRequestId: null,
+  objectiveRevision: 0,
+  applyInterpretation: (app) => set((s) => taskPatch(s, app)),
+  suggestedSelection: null,
+  setSuggestedSelection: (suggestedSelection) => set({ suggestedSelection }),
+  showOnGlobe: (body, id) =>
+    set((s) => ({
+      activeTab: "explore",
+      viewedBody: body,
+      // a request to look at a body other than the objective's is an override
+      followObjective: s.appliedFocusBody == null || s.appliedFocusBody === body ? s.followObjective : false,
+      ...(body === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id }),
+      selectionRevision: s.selectionRevision + 1,
+      autoRotate: false,
+    })),
 
   comparisonFeatureId: "elevation_median_m",
   setComparisonFeatureId: (comparisonFeatureId) => set({ comparisonFeatureId }),
@@ -201,4 +346,53 @@ export const useAppStore = create<AppState>((set, get) => ({
 function clamp(n: number): number {
   if (Number.isNaN(n)) return 0;
   return Math.max(0, Math.min(100, n));
+}
+
+/** The patch a reviewed objective applies, once. It sets the task, where to
+ * look, where the mission flies, the reference (selecting it on its own body)
+ * and the analog preferences. Nothing else in the store ever writes these. */
+function taskPatch(s: AppState, app: InterpretationApplication): Partial<AppState> {
+  const focus: Body = app.focusBody ?? (app.task === "landing_screening" ? "mars" : app.reference ? otherBody(app.reference.body) : s.selectionBody);
+  const analog = app.analogWeights ? toAnalogShares(app.analogWeights) : null;
+  const patch: Partial<AppState> = {
+    task: app.task,
+    missionDestination: app.missionDestination ?? (app.task === "landing_screening" ? "mars" : s.missionDestination),
+    selectionBody: focus,
+    viewedBody: focus,
+    followObjective: true,
+    mapMode: app.task === "analog_site_selection" ? "analog_match" : "landing_suitability",
+    appliedTask: app.task,
+    appliedFocusBody: focus,
+    appliedMissionDestination: app.missionDestination ?? null,
+    appliedReference: app.reference,
+    appliedObjectiveRequestId: app.objectiveHash,
+    objectiveRevision: s.objectiveRevision + 1,
+    suggestedSelection: null,
+  };
+  if (analog) {
+    patch.recommendedAnalogWeights = analog;
+    patch.appliedAnalogWeights = { ...analog };
+    patch.analogWeights = { ...analog };
+  }
+  if (app.reference) {
+    if (app.reference.body === "earth") patch.selectedEarthId = app.reference.id;
+    else { patch.selectedMarsId = app.reference.id; patch.selectedSiteId = app.reference.id; }
+    patch.selectionRevision = s.selectionRevision + 1;
+  }
+  return patch;
+}
+
+/** Landing colours only exist on Mars; everywhere else the globe is in analog mode. */
+export function effectiveMapMode(s: Pick<AppState, "viewedBody" | "mapMode">): MapMode {
+  return s.viewedBody === "mars" ? s.mapMode : "analog_match";
+}
+
+/** The reference for ranking the VIEWED body's candidates: the selected location on the other body. */
+export function referenceIdFor(s: Pick<AppState, "viewedBody" | "selectedEarthId" | "selectedMarsId">): string | null {
+  return s.viewedBody === "earth" ? s.selectedMarsId : s.selectedEarthId;
+}
+
+/** The selected id on `body`. */
+export function selectedIdFor(s: Pick<AppState, "selectedEarthId" | "selectedMarsId">, body: Body): string | null {
+  return body === "earth" ? s.selectedEarthId : s.selectedMarsId;
 }

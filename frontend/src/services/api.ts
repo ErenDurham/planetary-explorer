@@ -1,4 +1,4 @@
-import type { ComparisonCatalog, SiteImagery, SensitivityRequest, SensitivityResponse } from "@/types";
+import type { AnalogRankRequest, AnalogRankResponse, ComparisonCatalog, SiteImagery, SensitivityRequest, SensitivityResponse } from "@/types";
 // Typed fetch wrapper for the Planetary Explorer backend.
 //
 // Every non-2xx response from the API is `{ error: { code, message, details } }`
@@ -111,6 +111,8 @@ export const api = {
   defaultMission: () => request<DefaultMissionResponse>("/scoring/default-mission"),
   evaluate: (body: EvaluateRequest) => post<EvaluateResponse>("/scoring/evaluate", body),
   matchAnalogs: (body: MatchRequest) => post<MatchResponse>("/analogs/match", body),
+  /** Rank every candidate on one body against a reference on the other; `client_request_id` is echoed for the stale guard. */
+  rankAnalogs: (body: AnalogRankRequest, signal?: AbortSignal) => request<AnalogRankResponse>("/analogs/rank", { method: "POST", body: JSON.stringify(body), signal }),
   explain: (body: ExplainRequest) => post<ResearchExplanation>("/research/explain", body),
   /** Reads a free-text objective into a reviewable weight proposal; never applies anything itself. */
   interpret: (body: InterpretRequest) => post<InterpretResponse>("/mission/interpret", body),
