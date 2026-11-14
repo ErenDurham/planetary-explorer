@@ -1,4 +1,4 @@
-// The "Edit mission" drawer: objective (left), share sliders (middle) and the
+// The "Mission Design" tab: objective (left), share sliders (middle) and the
 // recommendation card (right), stacked on narrow screens. It also tells the
 // store which factors the latest evaluation excluded, so the share maths and
 // the "Unavailable" row follow the backend rather than a hard-coded list.

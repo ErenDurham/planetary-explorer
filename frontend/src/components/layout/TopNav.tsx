@@ -2,6 +2,7 @@ import { Orbit } from "lucide-react";
 import type { Tab } from "@/store/useAppStore";
 
 const TABS: Array<{ id: Tab; label: string; hint: string }> = [
+  { id: "mission", label: "Mission Design", hint: "Mission objective, priorities and recommendation" },
   { id: "explore", label: "Explore", hint: "Globe, sites and environmental profiles" },
   { id: "analyze", label: "Analyze", hint: "Rankings and cross-site charts" },
   { id: "compare", label: "Compare", hint: "Compare Earth, Mars and Moon locations" },
