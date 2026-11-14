@@ -1,0 +1,289 @@
+{
+  "version": "v1",
+  "coordinate_convention": "WGS84 (EPSG:4326) latitude and east-positive longitude in -180..180.",
+  "footprint_definition": "Square footprint of half-width 0.25 degrees (about 28 km N-S) centred on the site. Smaller than the Mars footprint because Earth analog field sites are typically a few tens of km across; terrain statistics are computed on a grid block-averaged to the MOLA 16 ppd cell size (~3.7 km) so they are comparable to the Mars values.",
+  "sources": {
+    "nasa_analogs_overview": {
+      "source_id": "nasa_analogs_overview",
+      "title": "NASA Analog Missions",
+      "institution": "NASA",
+      "url": "https://www.nasa.gov/analog-missions/",
+      "access_method": "web page"
+    },
+    "nasa_hmp": {
+      "source_id": "nasa_hmp",
+      "title": "Haughton-Mars Project (Devon Island)",
+      "institution": "NASA Ames / Mars Institute",
+      "url": "https://www.marsinstitute.no/hmp",
+      "access_method": "web page"
+    },
+    "nasa_arads": {
+      "source_id": "nasa_arads",
+      "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
+      "institution": "NASA Ames",
+      "url": "https://www.nasa.gov/ames/arads",
+      "access_method": "web page"
+    },
+    "mdrs": {
+      "source_id": "mdrs",
+      "title": "Mars Desert Research Station",
+      "institution": "The Mars Society",
+      "url": "https://mdrs.marssociety.org/",
+      "access_method": "web page"
+    },
+    "copernicus_glo90": {
+      "source_id": "copernicus_glo90",
+      "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+      "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+      "url": "https://registry.opendata.aws/copernicus-dem/",
+      "instrument_or_model": "TanDEM-X derived DSM",
+      "dataset_id": "copernicus-dem-90m",
+      "spatial_resolution": "90 m (3 arc-second)",
+      "units": "metres above EGM2008 geoid",
+      "observation_period": "2011-2015 acquisitions",
+      "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+      "license": "Free for any use under the Copernicus DEM licence (attribution required)"
+    },
+    "nasa_power": {
+      "source_id": "nasa_power",
+      "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
+      "institution": "NASA Langley Research Center",
+      "url": "https://power.larc.nasa.gov/",
+      "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
+      "dataset_id": "POWER climatology v2.x, community RE",
+      "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
+      "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
+      "observation_period": "multi-decade climatology (see API header)",
+      "access_method": "REST API, no login",
+      "license": "Public domain (NASA)"
+    },
+    "lit_yungay": {
+      "source_id": "lit_yungay",
+      "title": "Navarro-Gonzalez et al. (2003), Mars-like soils in the Atacama Desert, Chile, and the dry limit of microbial life, Science 302",
+      "institution": "AAAS (peer-reviewed literature)",
+      "url": "https://doi.org/10.1126/science.1089143",
+      "access_method": "DOI"
+    },
+    "lit_dry_valleys": {
+      "source_id": "lit_dry_valleys",
+      "title": "Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, Icarus 192",
+      "institution": "Elsevier (peer-reviewed literature)",
+      "url": "https://doi.org/10.1016/j.icarus.2007.06.018",
+      "access_method": "DOI"
+    },
+    "lit_haughton": {
+      "source_id": "lit_haughton",
+      "title": "Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, Meteoritics & Planetary Science 40",
+      "institution": "Wiley (peer-reviewed literature)",
+      "url": "https://doi.org/10.1111/j.1945-5100.2005.tb00147.x",
+      "access_method": "DOI"
+    },
+    "lit_holuhraun": {
+      "source_id": "lit_holuhraun",
+      "title": "Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, J. Volcanol. Geotherm. Res. 340",
+      "institution": "Elsevier (peer-reviewed literature)",
+      "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
+      "access_method": "DOI"
+    }
+  },
+  "candidates": [
+    {
+      "id": "atacama_yungay",
+      "name": "Atacama Desert - Yungay region",
+      "region": "Antofagasta Region",
+      "country": "Chile",
+      "lat": -24.08,
+      "lon_east": -69.95,
+      "description": "Hyperarid core of the Atacama, with soils so low in organics and microbial life that they were proposed as the closest terrestrial match to Viking-era Mars soil results. Used by NASA ARADS for rover and drill testing.",
+      "tags_terrain": [
+        "desert_plain",
+        "smooth_plains",
+        "alluvial_fan",
+        "hyperarid"
+      ],
+      "tags_mineralogy": [
+        "nitrates",
+        "sulfates",
+        "perchlorates",
+        "halite",
+        "regolith"
+      ],
+      "known_analog_use": [
+        "NASA ARADS rover and drilling campaigns",
+        "Viking-era soil analog studies"
+      ],
+      "sources": [
+        "nasa_arads",
+        "lit_yungay"
+      ]
+    },
+    {
+      "id": "mcmurdo_dry_valleys",
+      "name": "McMurdo Dry Valleys - University Valley",
+      "region": "Victoria Land, Antarctica",
+      "country": "Antarctica (treaty)",
+      "lat": -77.86,
+      "lon_east": 160.72,
+      "description": "Cold, hyperarid polar desert with ice-cemented permafrost and sublimation-dominated landscapes; a long-standing analog for Martian periglacial terrain and the Phoenix landing region.",
+      "tags_terrain": [
+        "polar_desert",
+        "periglacial",
+        "polygonal_terrain",
+        "glacial_valley"
+      ],
+      "tags_mineralogy": [
+        "ice_cemented_permafrost",
+        "salts",
+        "dolerite",
+        "sandstone"
+      ],
+      "known_analog_use": [
+        "Phoenix mission permafrost analog studies",
+        "IceBite drill tests"
+      ],
+      "sources": [
+        "lit_dry_valleys",
+        "nasa_analogs_overview"
+      ]
+    },
+    {
+      "id": "haughton_crater",
+      "name": "Haughton impact structure",
+      "region": "Devon Island, Nunavut",
+      "country": "Canada",
+      "lat": 75.38,
+      "lon_east": -89.68,
+      "description": "A 23 km diameter, 39 Myr old impact crater in a polar desert, with impact breccia and hydrothermal mineral deposits. Host to the Haughton-Mars Project field station since 1997.",
+      "tags_terrain": [
+        "impact_crater",
+        "polar_desert",
+        "periglacial",
+        "crater_floor"
+      ],
+      "tags_mineralogy": [
+        "impact_breccia",
+        "carbonates",
+        "sulfates",
+        "gypsum"
+      ],
+      "known_analog_use": [
+        "Haughton-Mars Project (NASA Ames / Mars Institute / SETI)"
+      ],
+      "sources": [
+        "nasa_hmp",
+        "lit_haughton"
+      ]
+    },
+    {
+      "id": "death_valley",
+      "name": "Death Valley - central basin",
+      "region": "California",
+      "country": "United States",
+      "lat": 36.46,
+      "lon_east": -116.87,
+      "description": "Arid basin-and-range valley with playas, evaporite deposits, alluvial fans and volcanic features, named in the challenge statement as an established Mars analog.",
+      "tags_terrain": [
+        "desert_plain",
+        "playa",
+        "alluvial_fan",
+        "basin_and_range"
+      ],
+      "tags_mineralogy": [
+        "evaporites",
+        "halite",
+        "borates",
+        "basalt",
+        "iron_oxides"
+      ],
+      "known_analog_use": [
+        "Named in the Space Apps challenge statement",
+        "NASA field instrument tests"
+      ],
+      "sources": [
+        "nasa_analogs_overview"
+      ]
+    },
+    {
+      "id": "holuhraun_iceland",
+      "name": "Holuhraun lava field",
+      "region": "Central Highlands",
+      "country": "Iceland",
+      "lat": 64.85,
+      "lon_east": -16.8,
+      "description": "Fresh basaltic lava field from the 2014-2015 fissure eruption, surrounded by glacial outwash plains; a close morphological and compositional analog for young Martian volcanic plains.",
+      "tags_terrain": [
+        "lava_plain",
+        "fissure_vent",
+        "outwash_plain"
+      ],
+      "tags_mineralogy": [
+        "basalt",
+        "olivine",
+        "glass",
+        "regolith"
+      ],
+      "known_analog_use": [
+        "NASA SAND-E rover field tests",
+        "ESA / university Mars volcanism analog studies"
+      ],
+      "sources": [
+        "lit_holuhraun",
+        "nasa_analogs_overview"
+      ]
+    },
+    {
+      "id": "mdrs_utah",
+      "name": "San Rafael Swell - MDRS area",
+      "region": "Utah",
+      "country": "United States",
+      "lat": 38.41,
+      "lon_east": -110.79,
+      "description": "Semi-arid badlands of Jurassic and Cretaceous sandstone, shale and clays near Hanksville, where the Mars Desert Research Station hosts crewed simulations.",
+      "tags_terrain": [
+        "badlands",
+        "sedimentary_plain",
+        "mesa",
+        "desert_plain"
+      ],
+      "tags_mineralogy": [
+        "sandstone",
+        "clays",
+        "gypsum",
+        "iron_oxides"
+      ],
+      "known_analog_use": [
+        "Mars Desert Research Station crewed simulations"
+      ],
+      "sources": [
+        "mdrs"
+      ]
+    },
+    {
+      "id": "mauna_kea_summit",
+      "name": "Mauna Kea volcano (summit-centred footprint)",
+      "region": "Hawai'i Island",
+      "country": "United States",
+      "lat": 19.82,
+      "lon_east": -155.47,
+      "description": "Shield volcano whose upper slopes (tephra cones and basalt above ~3,500 m) are used for ISRU, regolith-excavation and rover trials because of their low vegetation and basaltic soils. NOTE: the 0.5 deg footprint centred on the summit spans the whole upper mountain, so footprint statistics describe the summit region as a whole, not only the test sites.",
+      "tags_terrain": [
+        "volcanic_slope",
+        "tephra_field",
+        "lava_plain"
+      ],
+      "tags_mineralogy": [
+        "basalt",
+        "tephra",
+        "volcanic_glass",
+        "regolith"
+      ],
+      "known_analog_use": [
+        "PISCES / NASA ISRU field tests",
+        "RESOLVE rover trials"
+      ],
+      "sources": [
+        "nasa_analogs_overview"
+      ]
+    }
+  ]
+}

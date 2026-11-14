@@ -1,0 +1,71 @@
+{
+  "version": "analog-v1.0",
+  "notes": [
+    "Similarity = 100 / (1 + D), D = sum(w_i d_i) / sum(w_i) over COMPARABLE features only. It is a heuristic index, not a validated probability.",
+    "Numeric features are compared at a HARMONISED ~3.7 km baseline: Earth 90 m DEMs are block-averaged to the MOLA MEGDR 16 ppd cell size before slope and roughness are computed, so both planets' terrain statistics describe the same physical scale.",
+    "Landing suitability and environmental similarity are separate calculations and never feed each other."
+  ],
+  "features": [
+    {
+      "feature_id": "slope_regional_median_deg",
+      "label": "Regional slope (median, ~3.7 km baseline)",
+      "method": "scaled_absolute_difference",
+      "scale": 1.5,
+      "unit": "deg",
+      "default_weight": 25,
+      "rationale": "Terrain gradient at the same baseline on both planets. Scale of 1.5 deg means a 1.5 deg difference contributes d = 1."
+    },
+    {
+      "feature_id": "roughness_regional_m",
+      "label": "Detrended relief (~3.7 km cells)",
+      "method": "scaled_absolute_difference",
+      "scale": 100.0,
+      "unit": "m",
+      "default_weight": 25,
+      "rationale": "Plane-removed elevation standard deviation across the footprint at a harmonised cell size. Scale 100 m."
+    },
+    {
+      "feature_id": "terrain_morphology",
+      "label": "Terrain morphology",
+      "method": "jaccard_distance",
+      "scale": null,
+      "unit": null,
+      "default_weight": 20,
+      "rationale": "Categorical tags (e.g. impact_crater, lava_plain, playa, alluvial_fan, permafrost). Distance = 1 - |A and B| / |A or B|. Tags are literature-sourced and listed per site."
+    },
+    {
+      "feature_id": "mineralogy_tags",
+      "label": "Mineralogy / composition",
+      "method": "jaccard_distance",
+      "scale": null,
+      "unit": null,
+      "default_weight": 20,
+      "rationale": "Categorical composition tags from cited literature (e.g. basalt, clays, sulfates, carbonates, evaporites). Same Jaccard distance."
+    },
+    {
+      "feature_id": "precipitation_mm_day",
+      "label": "Aridity (mean precipitation)",
+      "method": "scaled_absolute_difference",
+      "scale": 1.0,
+      "unit": "mm/day",
+      "default_weight": 10,
+      "rationale": "Mars has no liquid precipitation (value 0, physical fact, source: literature). Earth values are NASA POWER climatology. Lower Earth precipitation = better aridity analog. Scale 1 mm/day."
+    },
+    {
+      "feature_id": "insolation_toa_annual_mean_wm2",
+      "label": "Top-of-atmosphere insolation (annual mean)",
+      "method": "scaled_absolute_difference",
+      "scale": 100.0,
+      "unit": "W/m2",
+      "default_weight": 0,
+      "rationale": "Computed identically for both planets, but dominated by heliocentric distance rather than site character, so it is informational (default weight 0) and disclosed rather than matched on."
+    }
+  ],
+  "noncomparable_disclosures": [
+    "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
+    "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
+    "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
+    "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
+    "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
+  ]
+}

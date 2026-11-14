@@ -1,0 +1,2427 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Planetary Explorer API",
+    "description": "Mars landing-site environmental profiles, explainable suitability scoring, Earth analog matching and citation-backed scientific explanations. Scores are relative decision-support indices under documented assumptions, not safety certifications.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sites": {
+      "get": {
+        "summary": "List Sites",
+        "operationId": "list_sites_api_v1_sites_get",
+        "parameters": [
+          {
+            "name": "planet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(mars|earth)$",
+              "default": "mars",
+              "title": "Planet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteListResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/sites/{site_id}": {
+      "get": {
+        "summary": "Get Site",
+        "operationId": "get_site_api_v1_sites__site_id__get",
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Site Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteWithProfile"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/scoring/default-mission": {
+      "get": {
+        "summary": "Default Mission",
+        "description": "The scoring spec's default criteria, weights and hard constraints, so the\nfrontend can initialise its sliders from the backend rather than hard-coding.",
+        "operationId": "default_mission_api_v1_scoring_default_mission_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/scoring/evaluate": {
+      "post": {
+        "summary": "Evaluate",
+        "operationId": "evaluate_api_v1_scoring_evaluate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analogs/match": {
+      "post": {
+        "summary": "Match Analogs",
+        "operationId": "match_analogs_api_v1_analogs_match_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/research/explain": {
+      "post": {
+        "summary": "Explain",
+        "operationId": "explain_api_v1_research_explain_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExplainRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchExplanation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalogMatch": {
+        "properties": {
+          "mars_site_id": {
+            "type": "string",
+            "title": "Mars Site Id"
+          },
+          "earth_candidate": {
+            "$ref": "#/components/schemas/EarthCandidate"
+          },
+          "similarity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity",
+            "description": "100 / (1 + D); heuristic index, not a probability"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance",
+            "description": "D = sum(w_i d_i)/sum(w_i) over comparable features"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank"
+          },
+          "feature_distances": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureDistance"
+            },
+            "type": "array",
+            "title": "Feature Distances"
+          },
+          "shared_characteristics": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Shared Characteristics"
+          },
+          "important_differences": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Important Differences"
+          },
+          "noncomparable_variables": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Noncomparable Variables"
+          },
+          "research_applications": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Research Applications"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          },
+          "citations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Citations",
+            "description": "source_ids"
+          },
+          "completeness_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Completeness Fraction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mars_site_id",
+          "earth_candidate",
+          "feature_distances",
+          "completeness_fraction"
+        ],
+        "title": "AnalogMatch"
+      },
+      "AnalogWeight": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "weight": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_id",
+          "weight"
+        ],
+        "title": "AnalogWeight"
+      },
+      "ApiError": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ApiErrorBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ApiError",
+        "description": "Structured error envelope returned on every non-2xx response."
+      },
+      "ApiErrorBody": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ApiErrorBody"
+      },
+      "Citation": {
+        "properties": {
+          "citation_id": {
+            "type": "string",
+            "title": "Citation Id",
+            "description": "Short handle used inline, e.g. \"[C1]\""
+          },
+          "chunk_id": {
+            "type": "string",
+            "title": "Chunk Id"
+          },
+          "document_id": {
+            "type": "string",
+            "title": "Document Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "citation_id",
+          "chunk_id",
+          "document_id",
+          "title",
+          "institution",
+          "url"
+        ],
+        "title": "Citation"
+      },
+      "Completeness": {
+        "properties": {
+          "features_requested": {
+            "type": "integer",
+            "title": "Features Requested"
+          },
+          "features_available": {
+            "type": "integer",
+            "title": "Features Available"
+          },
+          "fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Fraction"
+          },
+          "missing_feature_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Feature Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "features_requested",
+          "features_available",
+          "fraction"
+        ],
+        "title": "Completeness"
+      },
+      "ConstraintResult": {
+        "properties": {
+          "constraint_id": {
+            "type": "string",
+            "title": "Constraint Id"
+          },
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "passed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Passed",
+            "description": "null when the feature is missing"
+          },
+          "feature_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feature Value"
+          },
+          "operator": {
+            "type": "string",
+            "title": "Operator"
+          },
+          "threshold": {
+            "type": "number",
+            "title": "Threshold"
+          },
+          "rationale": {
+            "type": "string",
+            "title": "Rationale"
+          },
+          "is_assumption": {
+            "type": "boolean",
+            "title": "Is Assumption"
+          }
+        },
+        "type": "object",
+        "required": [
+          "constraint_id",
+          "feature_id",
+          "feature_value",
+          "operator",
+          "threshold",
+          "rationale",
+          "is_assumption"
+        ],
+        "title": "ConstraintResult"
+      },
+      "CriteriaCompleteness": {
+        "properties": {
+          "criteria_requested": {
+            "type": "integer",
+            "title": "Criteria Requested"
+          },
+          "criteria_supported": {
+            "type": "integer",
+            "title": "Criteria Supported"
+          },
+          "fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Fraction"
+          },
+          "excluded_criteria": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Excluded Criteria"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criteria_requested",
+          "criteria_supported",
+          "fraction"
+        ],
+        "title": "CriteriaCompleteness"
+      },
+      "CriterionWeight": {
+        "properties": {
+          "criterion_id": {
+            "type": "string",
+            "title": "Criterion Id"
+          },
+          "weight": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criterion_id",
+          "weight"
+        ],
+        "title": "CriterionWeight"
+      },
+      "EarthCandidate": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "footprint": {
+            "$ref": "#/components/schemas/GeographicFootprint"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "known_analog_use": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Known Analog Use",
+            "description": "Documented analog programmes / field campaigns"
+          },
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sources"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "region",
+          "country",
+          "lat",
+          "lon_east",
+          "footprint",
+          "description"
+        ],
+        "title": "EarthCandidate"
+      },
+      "Eligibility": {
+        "properties": {
+          "eligible": {
+            "type": "boolean",
+            "title": "Eligible"
+          },
+          "failed_constraints": {
+            "items": {
+              "$ref": "#/components/schemas/ConstraintResult"
+            },
+            "type": "array",
+            "title": "Failed Constraints"
+          },
+          "unevaluated_constraints": {
+            "items": {
+              "$ref": "#/components/schemas/ConstraintResult"
+            },
+            "type": "array",
+            "title": "Unevaluated Constraints"
+          }
+        },
+        "type": "object",
+        "required": [
+          "eligible"
+        ],
+        "title": "Eligibility"
+      },
+      "EnvironmentalMeasurement": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "ground",
+              "atmosphere_thermal",
+              "light",
+              "water_ice",
+              "hazards",
+              "composition"
+            ],
+            "title": "Category"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "source_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Id"
+          },
+          "measurement_type": {
+            "type": "string",
+            "enum": [
+              "measured",
+              "derived",
+              "literature",
+              "estimated",
+              "demo_fixture"
+            ],
+            "title": "Measurement Type"
+          },
+          "spatial_resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spatial Resolution"
+          },
+          "geographic_footprint": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GeographicFootprint"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "uncertainty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uncertainty"
+          },
+          "quality_flag": {
+            "type": "string",
+            "enum": [
+              "good",
+              "regional_scale_only",
+              "qualitative",
+              "low_confidence",
+              "demo_fixture",
+              "missing"
+            ],
+            "title": "Quality Flag"
+          },
+          "is_missing": {
+            "type": "boolean",
+            "title": "Is Missing",
+            "default": false
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_id",
+          "label",
+          "category",
+          "measurement_type",
+          "quality_flag"
+        ],
+        "title": "EnvironmentalMeasurement",
+        "description": "One metric for one site. `value` is null when `is_missing` is true;\nnever zero. Numeric values are floats; categorical ones are strings or\nlists of strings."
+      },
+      "EnvironmentalProfile": {
+        "properties": {
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "planet": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "earth"
+            ],
+            "title": "Planet"
+          },
+          "profile_version": {
+            "type": "string",
+            "title": "Profile Version"
+          },
+          "generated_at": {
+            "type": "string",
+            "title": "Generated At"
+          },
+          "pipeline": {
+            "type": "string",
+            "title": "Pipeline",
+            "description": "Script and method that produced this profile"
+          },
+          "measurements": {
+            "items": {
+              "$ref": "#/components/schemas/EnvironmentalMeasurement"
+            },
+            "type": "array",
+            "title": "Measurements"
+          },
+          "sources": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Provenance"
+            },
+            "type": "object",
+            "title": "Sources"
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/Completeness"
+          }
+        },
+        "type": "object",
+        "required": [
+          "site_id",
+          "planet",
+          "profile_version",
+          "generated_at",
+          "pipeline",
+          "measurements",
+          "sources",
+          "completeness"
+        ],
+        "title": "EnvironmentalProfile"
+      },
+      "EvaluateRequest": {
+        "properties": {
+          "planet": {
+            "type": "string",
+            "const": "mars",
+            "title": "Planet",
+            "default": "mars"
+          },
+          "site_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Site Ids",
+            "description": "Subset to evaluate; null = all sites"
+          },
+          "mission": {
+            "$ref": "#/components/schemas/MissionProfile"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id",
+            "description": "Echoed back so the client can drop stale responses"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mission"
+        ],
+        "title": "EvaluateRequest"
+      },
+      "EvaluateResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/SuitabilityResult"
+            },
+            "type": "array",
+            "title": "Results",
+            "description": "Sorted: ok by score desc, then insufficient_data, then ineligible"
+          },
+          "scoring_spec_version": {
+            "type": "string",
+            "title": "Scoring Spec Version"
+          },
+          "profile_version": {
+            "type": "string",
+            "title": "Profile Version"
+          },
+          "mission": {
+            "$ref": "#/components/schemas/MissionProfile"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "results",
+          "scoring_spec_version",
+          "profile_version",
+          "mission"
+        ],
+        "title": "EvaluateResponse"
+      },
+      "EvidenceChunk": {
+        "properties": {
+          "chunk_id": {
+            "type": "string",
+            "title": "Chunk Id"
+          },
+          "document_id": {
+            "type": "string",
+            "title": "Document Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "publication_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publication Date"
+          },
+          "geographic_relevance": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Geographic Relevance",
+            "description": "site ids / regions this chunk is about"
+          },
+          "excerpt": {
+            "type": "string",
+            "title": "Excerpt"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score",
+            "description": "retrieval score; higher is more relevant"
+          }
+        },
+        "type": "object",
+        "required": [
+          "chunk_id",
+          "document_id",
+          "title",
+          "institution",
+          "url",
+          "excerpt"
+        ],
+        "title": "EvidenceChunk"
+      },
+      "ExplainRequest": {
+        "properties": {
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "mission": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MissionProfile"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null = scoring spec defaults"
+          },
+          "include_analogs": {
+            "type": "boolean",
+            "title": "Include Analogs",
+            "default": false
+          },
+          "question": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Question",
+            "description": "Optional focus question; treated as a hint, never as instructions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "site_id"
+        ],
+        "title": "ExplainRequest"
+      },
+      "ExplanationSections": {
+        "properties": {
+          "favorable": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Favorable"
+          },
+          "unfavorable": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unfavorable"
+          },
+          "risks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Risks"
+          },
+          "influential_factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Influential Factors"
+          },
+          "research_applications": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Research Applications"
+          },
+          "missing_evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Evidence"
+          },
+          "future_investigation": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Future Investigation"
+          }
+        },
+        "type": "object",
+        "title": "ExplanationSections"
+      },
+      "FactorScore": {
+        "properties": {
+          "criterion_id": {
+            "type": "string",
+            "title": "Criterion Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "feature_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feature Value"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "suitability": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suitability",
+            "description": "q(s,i) in [0,1]; null if missing"
+          },
+          "raw_weight": {
+            "type": "number",
+            "title": "Raw Weight"
+          },
+          "normalized_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Normalized Weight",
+            "description": "w_i / sum(w_j) over VALID criteria"
+          },
+          "weighted_contribution": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weighted Contribution",
+            "description": "100 * normalized_weight * suitability"
+          },
+          "is_missing": {
+            "type": "boolean",
+            "title": "Is Missing"
+          },
+          "excluded_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excluded Reason"
+          },
+          "rationale": {
+            "type": "string",
+            "title": "Rationale"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criterion_id",
+          "label",
+          "feature_id",
+          "feature_value",
+          "unit",
+          "raw_weight",
+          "is_missing",
+          "rationale"
+        ],
+        "title": "FactorScore"
+      },
+      "FeatureDistance": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "comparable": {
+            "type": "boolean",
+            "title": "Comparable"
+          },
+          "mars_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mars Value"
+          },
+          "earth_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Earth Value"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "scale": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scale",
+            "description": "Reference scale for numeric features (d = |a-b|/scale)"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "raw_weight": {
+            "type": "number",
+            "title": "Raw Weight"
+          },
+          "normalized_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Normalized Weight"
+          },
+          "contribution": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contribution",
+            "description": "normalized_weight * distance"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_id",
+          "label",
+          "comparable",
+          "mars_value",
+          "earth_value",
+          "unit",
+          "raw_weight",
+          "normalized_weight",
+          "method"
+        ],
+        "title": "FeatureDistance"
+      },
+      "GeographicFootprint": {
+        "properties": {
+          "shape": {
+            "type": "string",
+            "enum": [
+              "square",
+              "circle",
+              "point"
+            ],
+            "title": "Shape",
+            "default": "square"
+          },
+          "center_lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Center Lat"
+          },
+          "center_lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Center Lon East",
+            "description": "East-positive longitude, -180..180"
+          },
+          "half_width_deg": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Half Width Deg",
+            "description": "Half-width of a square footprint, degrees"
+          },
+          "radius_km": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Radius Km"
+          },
+          "crs": {
+            "type": "string",
+            "title": "Crs",
+            "description": "e.g. \"IAU2000:49900\" (Mars planetocentric) or \"EPSG:4326\""
+          },
+          "longitude_convention": {
+            "type": "string",
+            "enum": [
+              "east_0_360",
+              "east_-180_180"
+            ],
+            "title": "Longitude Convention",
+            "default": "east_-180_180"
+          },
+          "approx_width_km": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approx Width Km",
+            "description": "Footprint width in km at this latitude"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "center_lat",
+          "center_lon_east",
+          "crs"
+        ],
+        "title": "GeographicFootprint",
+        "description": "The area a measurement summarises. A site is a footprint, not a point.\n\nMars coordinates are planetocentric latitude and east-positive longitude on\nthe IAU2000 Mars reference (MOLA MEGDR convention). Earth coordinates are\nWGS84 (EPSG:4326). Both store longitude in the -180..180 convention so the\nfrontend can use one formula for marker placement."
+      },
+      "HardConstraint": {
+        "properties": {
+          "constraint_id": {
+            "type": "string",
+            "title": "Constraint Id"
+          },
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "<=",
+              ">=",
+              "<",
+              ">",
+              "abs<="
+            ],
+            "title": "Operator"
+          },
+          "threshold": {
+            "type": "number",
+            "title": "Threshold"
+          },
+          "rationale": {
+            "type": "string",
+            "title": "Rationale"
+          },
+          "is_assumption": {
+            "type": "boolean",
+            "title": "Is Assumption",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "constraint_id",
+          "feature_id",
+          "operator",
+          "threshold",
+          "rationale"
+        ],
+        "title": "HardConstraint",
+        "description": "A mandatory requirement. A site failing one is ineligible whatever its score.\nDefault thresholds are documented assumptions, not universal requirements."
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "profile_version": {
+            "type": "string",
+            "title": "Profile Version"
+          },
+          "scoring_spec_version": {
+            "type": "string",
+            "title": "Scoring Spec Version"
+          },
+          "services": {
+            "$ref": "#/components/schemas/ServiceStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "profile_version",
+          "scoring_spec_version",
+          "services"
+        ],
+        "title": "HealthResponse"
+      },
+      "MatchRequest": {
+        "properties": {
+          "mars_site_id": {
+            "type": "string",
+            "title": "Mars Site Id"
+          },
+          "weights": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AnalogWeight"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weights",
+            "description": "Override analog weights; null = spec defaults"
+          },
+          "top_k": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Top K",
+            "default": 5
+          }
+        },
+        "type": "object",
+        "required": [
+          "mars_site_id"
+        ],
+        "title": "MatchRequest"
+      },
+      "MatchResponse": {
+        "properties": {
+          "mars_site_id": {
+            "type": "string",
+            "title": "Mars Site Id"
+          },
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/AnalogMatch"
+            },
+            "type": "array",
+            "title": "Matches"
+          },
+          "analog_spec_version": {
+            "type": "string",
+            "title": "Analog Spec Version"
+          },
+          "planetary_differences": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Planetary Differences",
+            "description": "Fundamental differences disclosed on every comparison"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mars_site_id",
+          "matches",
+          "analog_spec_version",
+          "planetary_differences"
+        ],
+        "title": "MatchResponse"
+      },
+      "MissionProfile": {
+        "properties": {
+          "mission_phase": {
+            "type": "string",
+            "const": "landing",
+            "title": "Mission Phase",
+            "default": "landing"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionWeight"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "hard_constraints": {
+            "items": {
+              "$ref": "#/components/schemas/HardConstraint"
+            },
+            "type": "array",
+            "title": "Hard Constraints"
+          },
+          "missing_data_policy": {
+            "type": "string",
+            "enum": [
+              "common_feature_set",
+              "per_site_exclusion"
+            ],
+            "title": "Missing Data Policy",
+            "default": "common_feature_set"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criteria"
+        ],
+        "title": "MissionProfile"
+      },
+      "Provenance": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "instrument_or_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument Or Model"
+          },
+          "dataset_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Id"
+          },
+          "coverage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage"
+          },
+          "spatial_resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spatial Resolution"
+          },
+          "units": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Units"
+          },
+          "observation_period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observation Period"
+          },
+          "uncertainty_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uncertainty Notes"
+          },
+          "access_method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Access Method"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At",
+            "description": "ISO date the data was fetched"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id",
+          "title",
+          "institution",
+          "url"
+        ],
+        "title": "Provenance",
+        "description": "Where a number came from. Every measurement carries a source_id that\nresolves to one of these in the profile's `sources` map."
+      },
+      "ResearchExplanation": {
+        "properties": {
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "generated_by": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "deterministic_fallback"
+            ],
+            "title": "Generated By"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "sections": {
+            "$ref": "#/components/schemas/ExplanationSections"
+          },
+          "supporting_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceChunk"
+            },
+            "type": "array",
+            "title": "Supporting Evidence"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "type": "array",
+            "title": "Citations"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          },
+          "cached": {
+            "type": "boolean",
+            "title": "Cached",
+            "default": false
+          },
+          "generated_at": {
+            "type": "string",
+            "title": "Generated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "site_id",
+          "generated_by",
+          "sections",
+          "supporting_evidence",
+          "citations",
+          "generated_at"
+        ],
+        "title": "ResearchExplanation"
+      },
+      "ServiceStatus": {
+        "properties": {
+          "data": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "error"
+            ],
+            "title": "Data"
+          },
+          "retrieval": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "unavailable"
+            ],
+            "title": "Retrieval"
+          },
+          "llm": {
+            "type": "string",
+            "enum": [
+              "configured",
+              "unconfigured",
+              "error"
+            ],
+            "title": "Llm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "retrieval",
+          "llm"
+        ],
+        "title": "ServiceStatus"
+      },
+      "Site": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "title": "Id"
+          },
+          "planet": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "earth"
+            ],
+            "title": "Planet"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat",
+            "description": "Planetocentric latitude, degrees"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East",
+            "description": "East-positive longitude, -180..180"
+          },
+          "footprint": {
+            "$ref": "#/components/schemas/GeographicFootprint"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "heritage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heritage",
+            "description": "Mission that landed or selected this site, if any"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags",
+            "description": "Terrain / geology keywords used by the analog engine"
+          },
+          "coordinate_sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Coordinate Sources",
+            "description": "source_ids for the coordinates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "planet",
+          "name",
+          "region",
+          "lat",
+          "lon_east",
+          "footprint",
+          "description"
+        ],
+        "title": "Site"
+      },
+      "SiteListResponse": {
+        "properties": {
+          "planet": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "earth"
+            ],
+            "title": "Planet"
+          },
+          "sites": {
+            "items": {
+              "$ref": "#/components/schemas/Site"
+            },
+            "type": "array",
+            "title": "Sites"
+          },
+          "profile_version": {
+            "type": "string",
+            "title": "Profile Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "planet",
+          "sites",
+          "profile_version"
+        ],
+        "title": "SiteListResponse"
+      },
+      "SiteWithProfile": {
+        "properties": {
+          "site": {
+            "$ref": "#/components/schemas/Site"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/EnvironmentalProfile"
+          }
+        },
+        "type": "object",
+        "required": [
+          "site",
+          "profile"
+        ],
+        "title": "SiteWithProfile"
+      },
+      "SuitabilityResult": {
+        "properties": {
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "site_name": {
+            "type": "string",
+            "title": "Site Name"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "insufficient_data",
+              "ineligible"
+            ],
+            "title": "Status"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score",
+            "description": "Relative decision-support index, not a probability"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank",
+            "description": "1 = best among eligible sites with status ok"
+          },
+          "factor_scores": {
+            "items": {
+              "$ref": "#/components/schemas/FactorScore"
+            },
+            "type": "array",
+            "title": "Factor Scores"
+          },
+          "eligibility": {
+            "$ref": "#/components/schemas/Eligibility"
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/CriteriaCompleteness"
+          },
+          "favorable": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Favorable"
+          },
+          "risks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Risks"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "site_id",
+          "site_name",
+          "status",
+          "factor_scores",
+          "eligibility",
+          "completeness"
+        ],
+        "title": "SuitabilityResult"
+      }
+    }
+  }
+}
