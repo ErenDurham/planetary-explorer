@@ -1,0 +1,1 @@
+NASA Earth Observatory Blue Marble Next Generation (Reto Stöckli, NASA GSFC), via NASA GIBS layer BlueMarble_NextGeneration, 500 m set level 3, resized to 4096x2048. Public domain (NASA). Equirectangular, column 0 = 180W, row 0 = 90N, same convention as the Mars texture.

@@ -29,6 +29,53 @@ class WeightSuggestion(BaseModel):
     data_available: bool
 
 
+TaskKind = Literal["landing_screening", "analog_site_selection", "ambiguous"]
+BodyKind = Literal["earth", "mars"]
+
+
+class SiteReference(BaseModel):
+    body: BodyKind
+    id: str
+    name: str
+    matched_text: str = Field(..., description="The words in the objective that named this site")
+
+
+class SiteCandidate(BaseModel):
+    """An ambiguous or partial site mention the user must resolve with a selector; never a guessed coordinate."""
+
+    matched_text: str
+    options: list[SiteReference]
+
+
+class DirectionOption(BaseModel):
+    task: TaskKind
+    focus_body: BodyKind
+    label: str
+    description: str
+
+
+class AnalogWeightSuggestion(BaseModel):
+    feature_id: str
+    label: str
+    weight: int = Field(..., ge=0, le=100)
+    reason: str
+
+
+class TaskInterpretation(BaseModel):
+    """What the objective asks for, separately from the landing-priority weights.
+    `focus_body` is where the user is looking for a location; `mission_destination`
+    is where the mission flies (a Mars mission can use Earth test sites)."""
+
+    task: TaskKind
+    focus_body: BodyKind | None = None
+    mission_destination: BodyKind | None = None
+    reference_site: SiteReference | None = None
+    unresolved_sites: list[SiteCandidate] = Field(default_factory=list)
+    direction_options: list[DirectionOption] = Field(default_factory=list, description="Offered when the text does not settle the search direction")
+    analog_suggestions: list[AnalogWeightSuggestion] = Field(default_factory=list, description="Proposed analog-match preferences (separate from landing priorities)")
+    rationale: list[str] = Field(default_factory=list)
+
+
 class InterpretResponse(BaseModel):
     objective: str
     objective_hash: str = Field(..., description="Stable hash of the interpreted text; the client uses it to avoid stale 'interpreted' labels")
@@ -43,6 +90,7 @@ class InterpretResponse(BaseModel):
     confidence_note: str = Field(..., description="What the confidence refers to: the reading of the text, never the suitability science")
     validation_notes: list[str] = Field(default_factory=list, description="Deterministic corrections applied to the proposal")
     scoring_spec_version: str
+    task_interpretation: TaskInterpretation | None = Field(None, description="Task / body / reference reading; additive to the landing-weight proposal")
     cached: bool = False
     generated_at: str
 

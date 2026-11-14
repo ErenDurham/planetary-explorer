@@ -5,6 +5,7 @@ FastAPI builds from these models (`npm run gen:types` in frontend/). Change a
 model here, regenerate, and both sides move together.
 """
 from .analog import AnalogMatch, AnalogWeight, EarthCandidate, FeatureDistance, MatchRequest, MatchResponse
+from .analog_rank import AnalogRankRequest, AnalogRankResponse, ExcludedFeature, LocationRef, RankedCandidate
 from .common import (
     ApiError,
     ApiErrorBody,
@@ -31,7 +32,7 @@ from .mission import (
     MissionProfile,
     SuitabilityResult,
 )
-from .objective import GuidanceRequest, GuidanceResponse, InfluenceDelta, InterpretRequest, InterpretResponse, RankDelta, WeightSuggestion
+from .objective import AnalogWeightSuggestion, DirectionOption, GuidanceRequest, GuidanceResponse, InfluenceDelta, InterpretRequest, InterpretResponse, RankDelta, SiteCandidate, SiteReference, TaskInterpretation, WeightSuggestion
 from .research import Citation, EvidenceChunk, ExplainRequest, ExplanationSections, ResearchExplanation, SourceDigest, StudyCard
 from .sensitivity import (
     ExcludedCriterion,

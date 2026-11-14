@@ -605,6 +605,75 @@
         }
       }
     },
+    "/api/v1/analogs/rank": {
+      "post": {
+        "summary": "Rank Analogs",
+        "description": "Body-aware analog ranking: every candidate on one body ranked against a\nreference on the other, on a common positive-weight feature basis. The\npairwise maths is the same as /analogs/match (unchanged).",
+        "operationId": "rank_analogs_api_v1_analogs_rank_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalogRankRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalogRankResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/sites/{site_id}/imagery": {
       "get": {
         "summary": "Site Imagery",
@@ -963,6 +1032,178 @@
         ],
         "title": "AnalogMatch"
       },
+      "AnalogRankRequest": {
+        "properties": {
+          "reference_body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Reference Body"
+          },
+          "reference_id": {
+            "type": "string",
+            "title": "Reference Id"
+          },
+          "candidate_body": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "earth",
+                  "mars"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Candidate Body",
+            "description": "Defaults to the other body; must differ from reference_body"
+          },
+          "weights": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AnalogWeight"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weights",
+            "description": "Analog feature weights; null = analog spec defaults"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id",
+            "description": "Echoed so the client can discard stale responses"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reference_body",
+          "reference_id"
+        ],
+        "title": "AnalogRankRequest"
+      },
+      "AnalogRankResponse": {
+        "properties": {
+          "reference": {
+            "$ref": "#/components/schemas/LocationRef"
+          },
+          "candidate_body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Candidate Body"
+          },
+          "basis_features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Basis Features",
+            "description": "Positive-weight features comparable for every candidate in the pool"
+          },
+          "excluded_features": {
+            "items": {
+              "$ref": "#/components/schemas/ExcludedFeature"
+            },
+            "type": "array",
+            "title": "Excluded Features"
+          },
+          "effective_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Effective Weights",
+            "description": "Normalised weights over the basis features (sum to 1)"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/RankedCandidate"
+            },
+            "type": "array",
+            "title": "Candidates",
+            "description": "Sorted by rank; unrankable candidates last"
+          },
+          "pool_size": {
+            "type": "integer",
+            "title": "Pool Size"
+          },
+          "ranked_count": {
+            "type": "integer",
+            "title": "Ranked Count"
+          },
+          "tie_rule": {
+            "type": "string",
+            "title": "Tie Rule"
+          },
+          "analog_spec_version": {
+            "type": "string",
+            "title": "Analog Spec Version"
+          },
+          "profile_version": {
+            "type": "string",
+            "title": "Profile Version"
+          },
+          "planetary_differences": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Planetary Differences"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reference",
+          "candidate_body",
+          "basis_features",
+          "excluded_features",
+          "effective_weights",
+          "candidates",
+          "pool_size",
+          "ranked_count",
+          "tie_rule",
+          "analog_spec_version",
+          "profile_version",
+          "planetary_differences"
+        ],
+        "title": "AnalogRankResponse"
+      },
       "AnalogWeight": {
         "properties": {
           "feature_id": {
@@ -982,6 +1223,36 @@
           "weight"
         ],
         "title": "AnalogWeight"
+      },
+      "AnalogWeightSuggestion": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "weight": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_id",
+          "label",
+          "weight",
+          "reason"
+        ],
+        "title": "AnalogWeightSuggestion"
       },
       "ApiError": {
         "properties": {
@@ -1457,6 +1728,43 @@
           "criteria"
         ],
         "title": "DefaultMissionResponse"
+      },
+      "DirectionOption": {
+        "properties": {
+          "task": {
+            "type": "string",
+            "enum": [
+              "landing_screening",
+              "analog_site_selection",
+              "ambiguous"
+            ],
+            "title": "Task"
+          },
+          "focus_body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Focus Body"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task",
+          "focus_body",
+          "label",
+          "description"
+        ],
+        "title": "DirectionOption"
       },
       "EarthCandidate": {
         "properties": {
@@ -1949,6 +2257,29 @@
           "reason"
         ],
         "title": "ExcludedCriterion"
+      },
+      "ExcludedFeature": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_id",
+          "label",
+          "reason"
+        ],
+        "title": "ExcludedFeature"
       },
       "ExplainRequest": {
         "properties": {
@@ -3157,6 +3488,17 @@
             "type": "string",
             "title": "Scoring Spec Version"
           },
+          "task_interpretation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskInterpretation"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Task / body / reference reading; additive to the landing-weight proposal"
+          },
           "cached": {
             "type": "boolean",
             "title": "Cached",
@@ -3179,6 +3521,43 @@
           "generated_at"
         ],
         "title": "InterpretResponse"
+      },
+      "LocationRef": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Body"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "lat": {
+            "type": "number",
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "title": "Lon East"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body",
+          "id",
+          "name",
+          "lat",
+          "lon_east"
+        ],
+        "title": "LocationRef"
       },
       "MatchRequest": {
         "properties": {
@@ -3500,6 +3879,119 @@
           "new_score"
         ],
         "title": "RankDelta"
+      },
+      "RankedCandidate": {
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationRef"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank",
+            "description": "1 = strongest match over the full ranked pool; null when unrankable"
+          },
+          "rank_color_position": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank Color Position",
+            "description": "0 = strongest ... 1 = weakest over the ranked pool; the client maps it onto its colour scale"
+          },
+          "similarity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "feature_distances": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureDistance"
+            },
+            "type": "array",
+            "title": "Feature Distances",
+            "description": "Canonical mars_value/earth_value regardless of direction"
+          },
+          "coverage_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Coverage Fraction",
+            "description": "basis features comparable for this pair / basis features"
+          },
+          "unrankable_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unrankable Reason"
+          },
+          "shared_characteristics": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Shared Characteristics"
+          },
+          "important_differences": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Important Differences"
+          },
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sources",
+            "description": "source_ids of both locations' profiles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "location",
+          "feature_distances",
+          "coverage_fraction"
+        ],
+        "title": "RankedCandidate"
       },
       "ResearchExplanation": {
         "properties": {
@@ -4241,11 +4733,42 @@
         ],
         "title": "Site"
       },
+      "SiteCandidate": {
+        "properties": {
+          "matched_text": {
+            "type": "string",
+            "title": "Matched Text"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/SiteReference"
+            },
+            "type": "array",
+            "title": "Options"
+          }
+        },
+        "type": "object",
+        "required": [
+          "matched_text",
+          "options"
+        ],
+        "title": "SiteCandidate",
+        "description": "An ambiguous or partial site mention the user must resolve with a selector; never a guessed coordinate."
+      },
       "SiteImagery": {
         "properties": {
           "site_id": {
             "type": "string",
             "title": "Site Id"
+          },
+          "body": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "earth"
+            ],
+            "title": "Body",
+            "default": "mars"
           },
           "entries": {
             "items": {
@@ -4310,6 +4833,39 @@
           "profile_version"
         ],
         "title": "SiteListResponse"
+      },
+      "SiteReference": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Body"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "matched_text": {
+            "type": "string",
+            "title": "Matched Text",
+            "description": "The words in the objective that named this site"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body",
+          "id",
+          "name",
+          "matched_text"
+        ],
+        "title": "SiteReference"
       },
       "SiteWithProfile": {
         "properties": {
@@ -4584,6 +5140,95 @@
           "completeness"
         ],
         "title": "SuitabilityResult"
+      },
+      "TaskInterpretation": {
+        "properties": {
+          "task": {
+            "type": "string",
+            "enum": [
+              "landing_screening",
+              "analog_site_selection",
+              "ambiguous"
+            ],
+            "title": "Task"
+          },
+          "focus_body": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "earth",
+                  "mars"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus Body"
+          },
+          "mission_destination": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "earth",
+                  "mars"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mission Destination"
+          },
+          "reference_site": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SiteReference"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unresolved_sites": {
+            "items": {
+              "$ref": "#/components/schemas/SiteCandidate"
+            },
+            "type": "array",
+            "title": "Unresolved Sites"
+          },
+          "direction_options": {
+            "items": {
+              "$ref": "#/components/schemas/DirectionOption"
+            },
+            "type": "array",
+            "title": "Direction Options",
+            "description": "Offered when the text does not settle the search direction"
+          },
+          "analog_suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/AnalogWeightSuggestion"
+            },
+            "type": "array",
+            "title": "Analog Suggestions",
+            "description": "Proposed analog-match preferences (separate from landing priorities)"
+          },
+          "rationale": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Rationale"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task"
+        ],
+        "title": "TaskInterpretation",
+        "description": "What the objective asks for, separately from the landing-priority weights.\n`focus_body` is where the user is looking for a location; `mission_destination`\nis where the mission flies (a Mars mission can use Earth test sites)."
       },
       "ValidationError": {
         "properties": {

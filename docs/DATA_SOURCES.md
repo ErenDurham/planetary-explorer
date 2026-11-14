@@ -392,3 +392,15 @@ spacecraft and camera but not the acquisition sol, so `acquisition_date` is null
 ## Earth–Mars–Moon comparison reference catalogue
 
 `backend/data/comparison/catalog.v1.json` holds dated NASA body references and curated Apollo 11 / Apollo 15 landing-region descriptions. Each record carries source links. Lunar mission coordinates are rounded to the precision of the NASA NSSDCA mission summaries. The lunar records are not numeric environmental profiles; no slopes, relief, local illumination, temperature or resource quantities are inferred from their descriptions. Original Earth and Mars profile measurements are exposed unchanged through `/comparison/catalog`.
+
+## 14. Earth globe texture and Earth imagery (Earth–Mars release)
+
+| Source | Use | Access | Licence / credit |
+|---|---|---|---|
+| NASA GIBS `BlueMarble_NextGeneration` (Blue Marble Next Generation, NASA Earth Observatory, Reto Stöckli, NASA GSFC) | Earth globe texture, stitched at 500 m set level 3 (10x5 tiles) and resized to 4096x2048 (`frontend/public/textures/earth_bluemarble_4k.jpg`); equirectangular, column 0 = 180 W, same convention as the Mars texture; verified by pixel colour at the Gulf of Guinea, Sahara, Amazon, Pacific and Himalaya | WMTS, no login | Public domain (NASA) |
+| NASA GIBS `Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual`, time 2000-12-01 (Landsat 7 ETM+ Web-Enabled Landsat Data annual composite) | Earth orbital context per site: level 10 (2x2 tiles, ~62.5 km, 61 m/px) and level 11 (2x2, ~31 km, 30.5 m/px); exact bounds from the tile grid | WMTS, no login (`scripts/site_imagery_earth.py`) | Public domain (USGS/NASA); GIBS requests credit |
+| NASA GIBS `MODIS_Terra_CorrectedReflectance_TrueColor`, 2016-01-15 | Fallback where WELD tiles are blank (high-latitude Dry Valleys) | WMTS, no login | Public domain (NASA LANCE) |
+| NASA Image and Video Library | Haughton-Mars Project field photos (ARC-2007-ACD07-0170-005, ARC-2007-ACD09-0255-001), Holuhraun from Bárðarbunga (jsc2024e055198) | REST, no key | NASA, credit as recorded |
+| Wikimedia Commons (metadata read from `extmetadata`) | NSF/USAP Beacon Valley (public domain), Alfonso Davila/NASA Beacon Valley (public domain), NPS Badwater and Mesquite Flat (public domain), USGS Mauna Kea summit (public domain), CC BY 4.0 Mauna Kea pu'u, CC BY 4.0 MDRS landscape (Sokoloff et al. 2020), CC BY-SA 4.0 MDRS station 2020, HMP aerial Devon Island (public domain), NASA Earth Observatory Landsat 8 Holuhraun (public domain) | MediaWiki API, no key, paced | Per file, recorded verbatim in the manifest |
+
+No field photograph with a documented licence and location could be verified for the Atacama Yungay site; it carries orbital context only and says so. Field photographs are evidence of appearance, not measurements, and several are explicitly `nearby_scene` (Beacon Valley for University Valley; Badwater and Mesquite Flat for the Death Valley footprint centre).

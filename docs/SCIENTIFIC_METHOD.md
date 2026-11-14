@@ -471,6 +471,23 @@ It compares regional terrain statistics, categorical literature tags and one
 climate variable; it does not assess metre-scale morphology, measured
 mineralogy, pressure, gravity or radiation.
 
+### 6.5 Ranking a whole pool in either direction
+
+`POST /analogs/rank` ranks all candidates on one body against a reference on
+the other. The pair distance is `feature_distance()` from section 6.1 with the
+Mars profile always in the Mars slot, so Earth→Mars and Mars→Earth give the
+same D and similarity for the same pair and weights. Two rules differ from the
+top-k match: (1) a **common feature basis** - a positive-weight feature enters
+only if it is comparable for every candidate in the pool, otherwise it is
+dropped pool-wide and reported, so a candidate missing a difficult feature is
+never flattered; with an empty basis the pool is unrankable. (2) **ties** are
+resolved on full-precision D and then candidate id; rounded display values are
+not ties. `rank_color_position = (rank-1)/(ranked-1)` maps the FULL ranked
+pool monotonically onto the client's seven-stop rank palette, so the endpoints
+are always the strongest and weakest match whatever the pool size; unranked
+candidates are excluded from the scale.
+
+
 ## 7. Retrieval and AI integrity
 
 ### 7.1 Corpus and retrieval
@@ -654,6 +671,20 @@ de-emphasised factors, rank deltas, the leader and missing data; the only
 thing a model may do is phrase the summary, and the numeric guard rejects any
 number not present in those facts. The Earth-comparison weights are not
 involved.
+
+### 7.8 Reading the task from the objective
+
+`task_interpreter.py` decides, deterministically, whether an objective asks
+for Mars landing screening or analog-site selection, which body the user is
+looking on (`focus_body`) versus where the mission flies
+(`mission_destination`), which named site is the reference (longest alias
+match over the data files' names and documented nicknames), and which analog
+preferences to propose (mobility wording raises slopes, relief and landforms;
+mineral wording raises materials; dryness raises aridity; elevation and
+thermal never enter). "Compare Earth and Mars geology" is reported as
+`ambiguous` with both directions offered; "the crater" is an unresolved
+mention that needs a selector. None of this touches landing weights, hard
+constraints or scoring thresholds.
 
 ## 8. Validation performed
 
