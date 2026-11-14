@@ -1,0 +1,8 @@
+# Optional heavy dependencies for the AI paths. NOT installed by CI, which
+# installs only requirements.txt; the app runs fully without these.
+#   pip install -r requirements-ai.txt
+# chromadb: vector index for EMBEDDING_BACKEND=chroma-default (its default
+#           embedding model, ~80 MB, is downloaded on first use)
+# anthropic: LLM explanations when ANTHROPIC_API_KEY is set
+chromadb>=0.5
+anthropic>=0.40

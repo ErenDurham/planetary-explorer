@@ -54,6 +54,15 @@ def terrain_stats(z: np.ndarray, dx_m: float, dy_m: float) -> dict:
     }
 
 
+def block_average_xy(z: np.ndarray, fy: int, fx: int) -> np.ndarray:
+    """Aggregate with different factors per axis, for grids whose pixels are
+    not square on the ground (Copernicus GLO-90 above 50 deg latitude)."""
+    ny, nx = z.shape
+    ny2, nx2 = (ny // fy) * fy, (nx // fx) * fx
+    zz = z[:ny2, :nx2].astype(float)
+    return zz.reshape(ny2 // fy, fy, nx2 // fx, fx).mean(axis=(1, 3))
+
+
 def block_average(z: np.ndarray, factor: int) -> np.ndarray:
     """Aggregate a fine grid to coarse cells by averaging factor x factor blocks,
     trimming any remainder. Used to bring 90 m Earth DEMs to the ~3.7 km MOLA

@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "coordinate_convention": "Planetocentric latitude, east-positive longitude in -180..180, IAU2000 Mars reference (same convention as MOLA MEGDR). Positions are rover/lander touchdown points or the published centre of a selected landing ellipse.",
-  "footprint_definition": "Square footprint of half-width 0.5 degrees (about 59 km N-S, 59*cos(lat) km E-W) centred on the site coordinates. Chosen to hold ~16x16 MOLA MEGDR 16 ppd cells so slope and roughness statistics are populated; it is a REGIONAL footprint, far larger than any landing ellipse.",
+  "footprint_definition": "Square footprint of half-width 0.5 degrees (about 59 km N-S, 59*cos(lat) km E-W) centred on the site coordinates. Chosen to hold 17x17 MOLA MEGDR 16 ppd cells (floor/ceil edges) so slope and roughness statistics are populated; it is a REGIONAL footprint, far larger than any landing ellipse.",
   "sources": {
     "nasa_m2020_landing_site": {
       "source_id": "nasa_m2020_landing_site",

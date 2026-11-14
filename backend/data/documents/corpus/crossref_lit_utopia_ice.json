@@ -1,0 +1,18 @@
+{
+ "document_id": "crossref_lit_utopia_ice",
+ "title": "SHARAD detection and characterization of subsurface water ice deposits in Utopia Planitia, Mars",
+ "institution": "Geophysical Research Letters / American Geophysical Union (AGU)",
+ "url": "https://api.crossref.org/works/10.1002/2016GL070138",
+ "final_url": "https://api.crossref.org/works/10.1002/2016GL070138",
+ "publication_date": "2016-09-28",
+ "retrieved_at": "2026-11-14",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "Bibliographic record for DOI 10.1002/2016GL070138",
+ "default_geographic_relevance": [
+  "utopia_planitia"
+ ],
+ "sha256": "547ac9bb123656088f9fed655f720b4bde9e9bf14bea6c018146a331325f58e3",
+ "char_count": 1613,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): SHARAD detection and characterization of subsurface water ice deposits in Utopia Planitia, Mars.\n\nAuthors: C. M. Stuurman, G. R. Osinski, J. W. Holt, J. S. Levy, T. C. Brothers, M. Kerrigan, B. A. Campbell.\n\nPublished in Geophysical Research Letters, volume 43, issue 18, pages 9484-9491 (2016), publisher American Geophysical Union (AGU). DOI: https://doi.org/10.1002/2016gl070138.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.\n\nAbstract (from Crossref): Abstract Morphological analyses of Utopia Planitia, Mars, have led to the hypothesis that the region contains a substantial amount of near‐surface ice. This paper tests this hypothesis using ground‐penetrating radar techniques. We have identified an expansive radar reflective region spanning approximately 375,000 km 2 in SHAllow RADar (SHARAD) data over western Utopia Planitia. The SHARAD reflective regions coincides with high densities of scalloped depressions and polygonal terrain. The reflectors are associated with layered mesas ∼80–170 m thick. We find a value of 2.8 ± 0.8 for the dielectric constant of the material overlying the reflectors. This work finds that the dielectric constant is consistent with a mixture of ice, air, and dust, containing a water ice volume up to 14,300 km 3 in this unit."
+}

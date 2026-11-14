@@ -25,7 +25,7 @@ import rasterio
 from rasterio.windows import from_bounds
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from geo import EARTH_RADIUS_KM, MARS_CELL_KM, block_average, footprint_width_km, terrain_stats, toa_annual_mean_insolation_wm2  # noqa: E402
+from geo import EARTH_RADIUS_KM, MARS_CELL_KM, block_average_xy, footprint_width_km, terrain_stats, toa_annual_mean_insolation_wm2  # noqa: E402
 
 BACKEND = Path(__file__).resolve().parents[1]
 DATA = BACKEND / "data"
@@ -50,16 +50,20 @@ def tile_name(lat: float, lon: float) -> tuple[str, str]:
     return (f"{'N' if la >= 0 else 'S'}{abs(la):02d}", f"{'E' if lo >= 0 else 'W'}{abs(lo):03d}")
 
 
-def read_dem(lat: float, lon: float, half: float) -> tuple[np.ndarray, float]:
-    """Mosaic the 1-4 tiles the footprint touches and return (grid, pixel size deg)."""
+def read_dem(lat: float, lon: float, half: float) -> tuple[np.ndarray, float, float]:
+    """Mosaic the 1-4 tiles the footprint touches and return (grid, lon pixel deg, lat pixel deg).
+
+    Copernicus GLO-90 pixels are NOT square in degrees above 50 N/S: the
+    longitude spacing is 1.5x (50-60), 2x (60-70), 3x (70-80) ... coarser than
+    the 3 arc-second latitude spacing, so both sizes are returned and used."""
     west, east, south, north = lon - half, lon + half, lat - half, lat + half
     tiles = sorted({tile_name(la, lo) for la in (south, north - 1e-9) for lo in (west, east - 1e-9)})
     pieces = {}
-    px = None
+    px_x = px_y = None
     for la, lo in tiles:
         url = COP.format(lat=la, lon=lo)
         with rasterio.open(url) as ds:
-            px = ds.res[1]
+            px_x, px_y = ds.res[0], ds.res[1]
             b = ds.bounds
             w = from_bounds(max(west, b.left), max(south, b.bottom), min(east, b.right), min(north, b.top), ds.transform)
             arr = ds.read(1, window=w).astype(float)
@@ -77,7 +81,7 @@ def read_dem(lat: float, lon: float, half: float) -> tuple[np.ndarray, float]:
         rows.append(np.hstack([a[:h] for a in row]))
     wmin = min(r.shape[1] for r in rows)
     grid = np.vstack([r[:, :wmin] for r in rows])
-    return grid, float(px)
+    return grid, float(px_x), float(px_y)
 
 
 def power_climate(lat: float, lon: float) -> dict:
@@ -103,19 +107,24 @@ def build(c: dict, sources: dict, now: str) -> dict:
           "crs": "EPSG:4326", "longitude_convention": "east_-180_180",
           "approx_width_km": round(footprint_width_km(HALF_WIDTH_DEG, lat, EARTH_RADIUS_KM), 1),
           "description": f"{2*HALF_WIDTH_DEG:.1f} deg square centred on the site"}
-    grid, px_deg = read_dem(lat, lon, HALF_WIDTH_DEG)
+    grid, px_x_deg, px_y_deg = read_dem(lat, lon, HALF_WIDTH_DEG)
     nan_frac = float(np.isnan(grid).mean())
     if nan_frac > 0:
         grid = np.where(np.isnan(grid), np.nanmedian(grid), grid)
-    pix_m_lat = px_deg * 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
-    pix_m_lon = pix_m_lat * math.cos(math.radians(lat))
+    deg_m = 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
+    pix_m_lat = px_y_deg * deg_m
+    pix_m_lon = px_x_deg * deg_m * math.cos(math.radians(lat))
     fine = terrain_stats(grid, pix_m_lon, pix_m_lat)
-    factor = max(1, round(MARS_CELL_KM * 1000 / pix_m_lat))      # ~41 cells of 90 m -> 3.7 km
-    coarse_grid = block_average(grid, factor)
-    coarse = terrain_stats(coarse_grid, pix_m_lon * factor, pix_m_lat * factor)
+    # Separate block factors per axis so the harmonised cell is ~3.7 km in BOTH directions
+    # (~40 x 90 m cells N-S at any latitude; fewer E-W where the tile's longitude spacing is coarser).
+    fy = max(1, round(MARS_CELL_KM * 1000 / pix_m_lat))
+    fx = max(1, round(MARS_CELL_KM * 1000 / pix_m_lon))
+    coarse_grid = block_average_xy(grid, fy, fx)
+    coarse = terrain_stats(coarse_grid, pix_m_lon * fx, pix_m_lat * fy)
+    factor = f"{fy}x{fx}"
     clim = power_climate(lat, lon)
-    res_c = f"~{pix_m_lat*factor/1000:.1f} km cells (90 m DEM block-averaged x{factor}); {coarse['cells']} cells"
-    res_f = f"{pix_m_lat:.0f} m pixels; {fine['cells']} pixels"
+    res_c = f"~{pix_m_lat*fy/1000:.1f} km (N-S) x {pix_m_lon*fx/1000:.1f} km (E-W) cells (DEM block-averaged {factor}); {coarse['cells']} cells"
+    res_f = f"{pix_m_lat:.0f} m (N-S) x {pix_m_lon:.0f} m (E-W) pixels; {fine['cells']} pixels"
     harmon = "Harmonised to the MOLA 16 ppd cell size so it is comparable with Mars regional statistics."
     ms = [
         measurement("elevation_median_m", "Elevation (footprint median)", "ground", round(fine["elevation_median_m"], 1), "m", "copernicus_glo90", "measured", res_f, fp, "Copernicus DEM GLO-90 absolute vertical accuracy < 4 m (90% linear error); surface model, so includes vegetation/buildings where present. Datum EGM2008 - NOT comparable to Mars areoid elevations.", "good"),
@@ -140,7 +149,7 @@ def build(c: dict, sources: dict, now: str) -> dict:
     missing = [m["feature_id"] for m in ms if m["is_missing"]]
     return {
         "site_id": c["id"], "planet": "earth", "profile_version": PROFILE_VERSION, "generated_at": now,
-        "pipeline": f"scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction {nan_frac:.3f}) + block-average x{factor} + scripts/geo.py terrain statistics + NASA POWER climatology ({clim['title']}, API {clim['api']})",
+        "pipeline": f"scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction {nan_frac:.3f}) + block-average {factor} (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology ({clim['title']}, API {clim['api']})",
         "measurements": ms, "sources": {k: sources[k] for k in used},
         "completeness": {"features_requested": len(ms), "features_available": len(ms) - len(missing), "fraction": round((len(ms) - len(missing)) / len(ms), 3), "missing_feature_ids": missing},
     }

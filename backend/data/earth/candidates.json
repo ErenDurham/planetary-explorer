@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "coordinate_convention": "WGS84 (EPSG:4326) latitude and east-positive longitude in -180..180.",
-  "footprint_definition": "Square footprint of half-width 0.25 degrees (about 28 km N-S) centred on the site. Smaller than the Mars footprint because Earth analog field sites are typically a few tens of km across; terrain statistics are computed on a grid block-averaged to the MOLA 16 ppd cell size (~3.7 km) so they are comparable to the Mars values.",
+  "footprint_definition": "Square footprint of half-width 0.25 degrees (about 56 km N-S full width, 56*cos(lat) km E-W) centred on the site. Smaller than the Mars footprint because Earth analog field sites are typically a few tens of km across; terrain statistics are computed on a grid block-averaged to the MOLA 16 ppd cell size (~3.7 km, separately per axis) so they are comparable to the Mars values.",
   "sources": {
     "nasa_analogs_overview": {
       "source_id": "nasa_analogs_overview",

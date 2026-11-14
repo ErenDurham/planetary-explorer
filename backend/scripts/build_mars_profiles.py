@@ -40,7 +40,7 @@ MOLA_SOURCE = {
     "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
     "units": "metres (planetary radius minus areoid radius)",
     "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
-    "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. Individual shot vertical accuracy is ~1 m; interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+    "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
     "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
     "license": "NASA PDS data are public domain; cite the MOLA Science Team",
     "retrieved_at": None,
@@ -99,7 +99,7 @@ def build(site: dict, grid: np.ndarray, sources: dict, now: str) -> dict:
         "shape": "square", "center_lat": lat, "center_lon_east": lon, "half_width_deg": HALF_WIDTH_DEG,
         "radius_km": None, "crs": "IAU2000:49900", "longitude_convention": "east_-180_180",
         "approx_width_km": round(footprint_width_km(HALF_WIDTH_DEG, lat, MARS_RADIUS_KM), 1),
-        "description": f"{2*HALF_WIDTH_DEG:.1f} deg square centred on the site; ~{round(2*HALF_WIDTH_DEG*MOLA_PPD)}x{round(2*HALF_WIDTH_DEG*MOLA_PPD)} MOLA 16 ppd cells",
+        "description": f"{2*HALF_WIDTH_DEG:.1f} deg square centred on the site; {round(2*HALF_WIDTH_DEG*MOLA_PPD)+1}x{round(2*HALF_WIDTH_DEG*MOLA_PPD)+1} MOLA 16 ppd cells (floor/ceil edges)",
     }
     z = window(grid, lat, lon, HALF_WIDTH_DEG)
     dy_m = MARS_CELL_KM * 1000
