@@ -1,0 +1,51 @@
+{
+  "interpret": {
+    "objective": "Prioritise landing safety over sunlight; ignore solar",
+    "objective_hash": "ac7ffbd73f2cf0d5",
+    "generated_by": "rule_based",
+    "model": null,
+    "suggestions": [
+      { "criterion_id": "terrain_safety", "label": "Terrain safety (regional slope)", "weight": 75, "previous_weight": 65, "reason": "\"safety\" is ranked above \"sunlight\" in the objective, so it is raised.", "data_available": true },
+      { "criterion_id": "elevation_suitability", "label": "Elevation suitability (EDL atmosphere)", "weight": 45, "previous_weight": 45, "reason": "Unchanged: the objective did not mention this factor.", "data_available": true },
+      { "criterion_id": "surface_roughness", "label": "Surface roughness (detrended relief)", "weight": 55, "previous_weight": 55, "reason": "Unchanged: the objective did not mention this factor.", "data_available": true },
+      { "criterion_id": "thermal_conditions", "label": "Thermal conditions", "weight": 0, "previous_weight": 0, "reason": "Unchanged: the objective did not mention this factor.", "data_available": false },
+      { "criterion_id": "solar_illumination", "label": "Solar illumination (annual mean, top of atmosphere)", "weight": 0, "previous_weight": 75, "reason": "\"ignore ... solar\" reads as an exclusion, so this factor is set to 0.", "data_available": true }
+    ],
+    "rationale": [
+      "Read \"Prioritise landing safety over sunlight\" as a trade-off: Terrain safety (regional slope) up, Solar illumination (annual mean, top of atmosphere) down.",
+      "Clause \"ignore solar\": Solar illumination (annual mean, top of atmosphere) -> 0."
+    ],
+    "tradeoffs": [
+      "Terrain safety (regional slope) over Solar illumination (annual mean, top of atmosphere) (from: \"Prioritise landing safety over sunlight\").",
+      "Solar illumination (annual mean, top of atmosphere) excluded (\"ignore solar\")."
+    ],
+    "unsupported_needs": ["Subsurface ice is not a landing-phase criterion in this model."],
+    "clarifying_questions": ["Should elevation be de-emphasised as well?"],
+    "confidence": "high",
+    "confidence_note": "Confidence describes how clearly the text matched the rule lexicon; it says nothing about how suitable any site is. Rule-based reading: lexicon matches plus emphasis, exclusion and 'X over Y' cues. It does not understand general language.",
+    "validation_notes": ["thermal_conditions forced to 0: no measurements."],
+    "scoring_spec_version": "landing-v1.1",
+    "cached": false,
+    "generated_at": "2026-11-14T17:56:35+00:00"
+  },
+  "guidance": {
+    "generated_by": "rule_based",
+    "model": null,
+    "summary": "Terrain safety (regional slope) now carries 10.3% of the effective influence (was 27.1%). This de-emphasises Terrain safety (regional slope). Scores shifted but no site changed rank. Check that this still matches your objective: \"Find a safe landing site with reliable solar energy.\". Thermal conditions remain unscored: no site has a measured temperature.",
+    "de_emphasised": ["Terrain safety (regional slope)"],
+    "leader_changed": false,
+    "leader": "Elysium Planitia (InSight)",
+    "rank_changes": [],
+    "influence": [
+      { "criterion_id": "terrain_safety", "label": "Terrain safety (regional slope)", "previous_pct": 27.1, "new_pct": 10.3, "excluded_reason": null },
+      { "criterion_id": "elevation_suitability", "label": "Elevation suitability (EDL atmosphere)", "previous_pct": 18.8, "new_pct": 23.1, "excluded_reason": null },
+      { "criterion_id": "surface_roughness", "label": "Surface roughness (detrended relief)", "previous_pct": 22.9, "new_pct": 28.2, "excluded_reason": null },
+      { "criterion_id": "thermal_conditions", "label": "Thermal conditions", "previous_pct": null, "new_pct": null, "excluded_reason": "weight is 0" },
+      { "criterion_id": "solar_illumination", "label": "Solar illumination (annual mean, top of atmosphere)", "previous_pct": 31.2, "new_pct": 38.5, "excluded_reason": null }
+    ],
+    "missing_data_notes": ["criterion 'thermal_conditions' excluded: weight is 0"],
+    "client_request_id": "g-1",
+    "cached": false,
+    "generated_at": "2026-11-14T17:56:35+00:00"
+  }
+}

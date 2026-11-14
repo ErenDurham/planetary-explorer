@@ -19,7 +19,7 @@ describe("RankedList", () => {
   });
   it("shows the backend warnings", () => {
     render(<RankedList results={evaluation.results} selectedId={null} onSelect={() => {}} warnings={evaluation.warnings} />);
-    expect(screen.getByText(/thermal_conditions.*excluded/)).toBeInTheDocument();
+    expect(screen.getByText(/Temperature data is unavailable/)).toBeInTheDocument();
   });
   it("selects a site on click and marks the selected row", () => {
     const onSelect = vi.fn();
@@ -27,6 +27,19 @@ describe("RankedList", () => {
     fireEvent.click(screen.getByRole("button", { name: /Jezero Crater/ }));
     expect(onSelect).toHaveBeenCalledWith("jezero_crater");
     expect(screen.getByRole("button", { name: /Oxia Planum/ })).toHaveAttribute("aria-pressed", "true");
+  });
+  it("moves keyboard focus without selecting or loading a site", () => {
+    const onSelect = vi.fn();
+    render(<RankedList results={evaluation.results} selectedId={null} onSelect={onSelect} />);
+    const buttons = within(screen.getByRole("list", { name: "Ranked sites" })).getAllByRole("button");
+    buttons[0].focus();
+    fireEvent.keyDown(buttons[0], { key: "ArrowDown" });
+    expect(buttons[1]).toHaveFocus();
+    expect(onSelect).not.toHaveBeenCalled();
+    fireEvent.keyDown(buttons[1], { key: "End" });
+    expect(buttons.at(-1)).toHaveFocus();
+    fireEvent.keyDown(buttons.at(-1)!, { key: "Home" });
+    expect(buttons[0]).toHaveFocus();
   });
   it("renders ineligible and insufficient-data rows without a rank or score", () => {
     const results: SuitabilityResult[] = [

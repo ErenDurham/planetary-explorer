@@ -1,37 +1,77 @@
-import { Section, EmptyNote } from "@/components/ui/Section";
-import { Spinner } from "@/components/ui/Spinner";
-import { RankedSitesChart } from "@/components/charts/RankedSitesChart";
-import { EnvironmentalComparisonChart } from "@/components/charts/EnvironmentalComparisonChart";
-import { CompletenessChart } from "@/components/charts/CompletenessChart";
-import { useAllProfiles } from "@/hooks/useAllProfiles";
+import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
-import type { EvaluateResponse, Site } from "@/types";
+import { useSiteProfile } from "@/hooks/useSites";
+import { api } from "@/services/api";
+import { missionKey } from "@/lib/mission";
+import { factorName } from "@/lib/objective";
+import { preciseScore, alternativeFor, factorDeltas } from "@/lib/siteAnalysis";
+import { formatValueWithUnit } from "@/lib/format";
+import { EmptyNote, BulletList } from "@/components/ui/Section";
+import { ErrorNote } from "@/components/ui/ErrorNote";
+import type { EvaluateResponse, Site, } from "@/types";
 
-export function AnalyzeView({ sites, evaluation, selectedId, onSelect }: { sites: Site[] | undefined; evaluation: EvaluateResponse | undefined; selectedId: string | null; onSelect: (id: string) => void }) {
-  const profiles = useAllProfiles(sites?.map((s) => s.id));
-  const featureId = useAppStore((s) => s.comparisonFeatureId);
-  const setFeatureId = useAppStore((s) => s.setComparisonFeatureId);
-  return (
-    <div className="scroll-thin h-full overflow-y-auto">
-      <div className="grid gap-0 xl:grid-cols-2">
-        <Section title="Ranked sites" subtitle="Relative suitability index under the current priorities · colours match the globe markers">
-          {evaluation ? <RankedSitesChart results={evaluation.results} selectedId={selectedId} onSelect={onSelect} /> : <EmptyNote>No evaluation yet.</EmptyNote>}
-        </Section>
-        <Section title="Environmental comparison" subtitle="One metric at a time across all sites; missing values are listed, never plotted as zero">
-          {profiles.data.length === 0 ? profiles.isPending ? <Spinner label="Loading profiles" /> : <EmptyNote>No profiles loaded.</EmptyNote> : <EnvironmentalComparisonChart profiles={profiles.data} featureId={featureId} onFeatureChange={setFeatureId} selectedId={selectedId} />}
-        </Section>
-        <Section title="Data completeness" subtitle="Features available per site in profile v1">
-          {profiles.data.length === 0 ? profiles.isPending ? <Spinner label="Loading profiles" /> : <EmptyNote>No profiles loaded.</EmptyNote> : <CompletenessChart profiles={profiles.data} />}
-        </Section>
-        <Section title="Reading these charts">
-          <ul className="space-y-1.5 text-xs leading-relaxed text-fg-muted">
-            <li>Suitability is a relative decision-support index on 0–100 under documented assumptions. It is not a probability and not a landing-safety certification.</li>
-            <li>Terrain statistics are regional (~3.7 km MOLA baseline) and cannot resolve lander-scale hazards.</li>
-            <li>A criterion whose feature is missing on any site is excluded for all sites, so every ranked score is built from the same feature set.</li>
-            <li>Earth analog similarity (Compare tab) is a separate calculation and is never combined with suitability.</li>
-          </ul>
-        </Section>
-      </div>
-    </div>
-  );
+const EMPTY_NEEDS: string[] = [];
+const signed=(n:number)=>`${n>0?"+":""}${n.toFixed(2)}`;
+const card="rounded-lg border border-line-strong bg-bg-elev p-4";
+export function AnalyzeView({sites,evaluation,selectedId,onSelect}: {sites: Site[]|undefined;evaluation:EvaluateResponse|undefined;selectedId:string|null;onSelect:(id:string)=>void}) {
+  const scroll=useRef<HTMLDivElement>(null);
+  useEffect(()=>{if(scroll.current)scroll.current.scrollTop=0;},[selectedId]);
+  const objective=useAppStore(s=>s.appliedObjective);
+  const draft=useAppStore(s=>s.missionObjective);
+  const weights=useAppStore(s=>s.weights);
+  const recommended=useAppStore(s=>s.recommendedWeights);
+  const needs=useAppStore(s=>s.appliedInterpretation?.unsupportedNeeds ?? EMPTY_NEEDS);
+  const setTab=useAppStore(s=>s.setActiveTab);
+  const profile=useSiteProfile(selectedId);
+  const [compareId,setCompareId]=useState("");
+  const focus=evaluation?.results.find(r=>r.site_id===selectedId);
+  const comparator=evaluation?.results.find(r=>r.site_id===compareId && r.site_id!==selectedId) ?? (evaluation && selectedId ? alternativeFor(evaluation.results,selectedId) : undefined);
+  const active=focus?.factor_scores.filter(f=>f.weighted_contribution!=null && f.normalized_weight!=null && f.suitability!=null) ?? [];
+  const comparable=focus?.status==="ok" && comparator?.status==="ok";
+  const gap=focus && comparator && comparable ? preciseScore(focus)-preciseScore(comparator) : null;
+  const deltas=focus && comparator && comparable ? factorDeltas(focus,comparator).sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta)) : [];
+  const driver=deltas.find(d=>Math.abs(d.delta)>1e-8);
+  const custom=Object.entries(recommended).some(([id,w])=>weights[id]!==w);
+  const unsupported=needs.length ? needs : /\b(ice|water|habitation|base|biology|life|lunar|moon)\b/i.test(objective) ? ["This objective includes needs outside the current landing model. The index does not assess those needs."] : [];
+  return <div ref={scroll} className="scroll-thin h-full overflow-y-auto p-4">
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h1 className="text-xl font-semibold">Site analysis</h1><p className="mt-1 text-sm text-fg-muted">Mission fit, alternatives and priority sensitivity.</p></div><div className="flex items-center gap-2"><label htmlFor="analysis-site" className="text-sm text-fg-muted">Mars site</label><select id="analysis-site" value={selectedId ?? ""} onChange={e=>onSelect(e.target.value)} className="max-w-full rounded-lg border border-line bg-bg-elev p-2 text-sm"><option disabled value="">Select a site</option>{sites?.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select></div></div>
+    {!selectedId ? <EmptyNote>Select a candidate to analyse its fit for the applied mission.</EmptyNote> : !focus || !evaluation ? <p role="status" className="p-4 text-sm text-fg-muted">Waiting for the current mission evaluation…</p> : <div className="space-y-4">
+      <section className={card} aria-label="Decision summary"><p className="text-xs text-copper-bright">APPLIED MISSION · {custom?"CUSTOMISED PRIORITIES":"SUGGESTED PRIORITIES"}</p><p className="mt-2 text-sm">{objective || "Regional Mars landing screening"}</p>{draft!==objective && <p className="mt-2 text-xs text-warn">The draft objective has not been applied. This analysis uses the objective above.</p>}
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-4"><div><h2 className="text-lg font-semibold">{focus.site_name}</h2><p className="mt-1 text-sm text-fg-muted">{focus.status==="ok" ? `Rank ${focus.rank} of ${evaluation.results.filter(r=>r.status==="ok").length} ranked sites` : focus.status.replace(/_/g," ")}</p></div><p className="num text-3xl text-copper-bright">{focus.score?.toFixed(2) ?? "—"}<span className="ml-2 text-sm text-fg-muted">/ 100</span></p></div>
+        {gap!==null && comparator && <p className="mt-3 text-sm">{Math.abs(gap)<1e-8?"Same weighted score as":`${Math.abs(gap)<.005?"Less than 0.01":Math.abs(gap).toFixed(2)} points ${gap>0?"ahead of":"behind"}`} {comparator.site_name}.{driver && ` The largest difference is ${factorName(driver.criterionId,driver.label)} (${signed(driver.delta)} points).`}</p>}
+        {focus.score!=null && focus.score===comparator?.score && <p className="mt-2 text-xs text-fg-muted">Scores tie at displayed precision. The engine uses its tie-break order for ranks; inspect factor deltas before treating the order as an advantage.</p>}
+        {unsupported.length>0 && <div className="mt-3 rounded border border-warn/40 p-3 text-sm text-warn"><BulletList items={unsupported} /></div>}
+        <p className="mt-3 text-xs text-fg-muted">Regional landing-screening index, not a probability. {active.length} factors scored; unknown hazards remain unassessed.</p>
+      </section>
+      <section className={card}><h2 className="text-base font-semibold">What helps and what costs points?</h2><p className="mt-1 text-xs text-fg-muted">Influence is your preference. Factor score is the model's rating of the measurement. Contribution is their weighted result.</p>
+        <div className="mt-3 overflow-x-auto"><table className="w-full text-left text-sm"><thead className="text-xs text-fg-muted"><tr>{["Factor / measurement","Influence","Factor score","Contribution","Below ideal"].map(t=><th key={t} className="p-2 font-medium">{t}</th>)}</tr></thead><tbody className="divide-y divide-line">{active.map(f=>{const m=profile.data?.profile.measurements.find(m=>m.feature_id===f.feature_id);return <tr key={f.criterion_id}><td className="p-2"><span>{factorName(f.criterion_id,f.label)}</span><p className="num mt-1 text-xs text-fg-muted">{f.feature_value==null?"No data":formatValueWithUnit(f.feature_value,f.unit)}</p><span className="text-xs text-fg-muted">{m?.measurement_type?.replace(/_/g," ")}</span></td><td className="num p-2">{((f.normalized_weight ?? 0)*100).toFixed(1)}%</td><td className="num p-2">{f.suitability?.toFixed(2)} / 1</td><td className="num p-2">{f.weighted_contribution?.toFixed(2)} pts</td><td className="num p-2">{(100*(f.normalized_weight ?? 0)*(1-(f.suitability ?? 0))).toFixed(2)} pts</td></tr>})}</tbody></table></div>
+        <p className="mt-3 text-xs text-fg-muted">“Below ideal” means points below the model's weighted ideal. It is not physical risk. A high contribution can come from a high weight rather than an advantage over other sites.</p>
+        <details className="mt-3 text-xs"><summary className="cursor-pointer text-info">Scoring rules and source measurements</summary>{focus.factor_scores.map(f=><div key={f.criterion_id} className="mt-3"><p className="font-semibold">{factorName(f.criterion_id,f.label)}</p><p className="mt-1 text-fg-muted">{f.rationale}</p></div>)}<button className="mt-3 text-info underline" onClick={()=>setTab("explore")}>Open environmental measurements in Explore</button></details>
+      </section>
+      <section className={card}><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-base font-semibold">Why this site rather than another?</h2><select aria-label="Comparison Mars site" value={comparator?.site_id ?? ""} onChange={e=>setCompareId(e.target.value)} className="max-w-full rounded border border-line bg-bg p-2 text-sm">{evaluation.results.filter(r=>r.site_id!==selectedId).map(r=><option key={r.site_id} value={r.site_id}>{r.site_name}</option>)}</select></div>
+        {!comparable ? <p className="mt-3 text-sm text-fg-muted">A numerical score gap is available only when both sites are eligible and scorable.</p> : <><p className="mt-2 text-sm text-fg-muted">Positive values favour {focus.site_name}; negative values favour {comparator?.site_name}.</p><div className="mt-3 grid gap-3 md:grid-cols-2">{deltas.map(d=>{const f=active.find(f=>f.criterion_id===d.criterionId)!;const other=comparator!.factor_scores.find(f=>f.criterion_id===d.criterionId);return <div key={d.criterionId} className="rounded-lg border border-line p-3"><div className="flex justify-between gap-3 text-sm"><span>{factorName(d.criterionId,d.label)}</span><span className={`num shrink-0 ${d.delta>0?"text-ok":d.delta<0?"text-warn":"text-fg-muted"}`}>{signed(d.delta)} pts</span></div><p className="num mt-1 text-xs text-fg-muted">{formatValueWithUnit(f.feature_value!,f.unit)} vs {other?.feature_value==null?"No data":formatValueWithUnit(other.feature_value,other.unit)} · factor scores {f.suitability?.toFixed(2)} vs {other?.suitability?.toFixed(2)}</p>{f.suitability===1 && other?.suitability===1 && <p className="mt-1 text-xs text-fg-muted">Both reach the model's ceiling. This factor does not distinguish them.</p>}</div>})}</div><p className="mt-3 text-xs text-fg-muted">Factor differences sum to {signed(deltas.reduce((s,d)=>s+d.delta,0))} points before display rounding.</p></>}
+      </section>
+      <Sensitivity key={`${selectedId}:${missionKey(evaluation.mission)}`} evaluation={evaluation} selectedId={selectedId} />
+      <section className={card}><h2 className="text-base font-semibold">What evidence would improve this decision?</h2><p className="mt-2 text-sm text-fg-muted">{focus.completeness.criteria_supported}/{focus.completeness.criteria_requested} requested scoring factors available; {profile.data?.profile.completeness.features_available ?? "—"}/{profile.data?.profile.completeness.features_requested ?? "—"} environmental fields available. Active coverage does not establish that all important hazards are measured.</p>
+        <ul className="mt-3 space-y-2 text-sm text-fg-muted">{active.some(f=>["terrain_safety","surface_roughness"].includes(f.criterion_id)) && <li><strong className="text-fg">Landing terrain:</strong> local terrain models and rock counts are needed to assess metre-scale hazards.</li>}{active.some(f=>f.criterion_id==="solar_illumination") && <li><strong className="text-fg">Solar operation:</strong> dust, seasonal surface sunlight and local shadows are needed to estimate usable power.</li>}{profile.data?.profile.completeness.missing_feature_ids?.includes("surface_temperature_mean_c") && <li><strong className="text-fg">Thermal operation:</strong> measured temperature cycles are missing. Exclusion does not make thermal performance unimportant.</li>}</ul><button type="button" className="mt-3 rounded border border-info px-3 py-2 text-sm text-info" onClick={()=>setTab("research")}>Investigate this site in Research →</button>
+      </section>
+      <section className={card}><h2 className="text-base font-semibold">Constraints, risks and limitations</h2><details className="mt-3"><summary className="cursor-pointer text-sm text-fg-muted">Hard constraints and margins</summary>{evaluation.mission.hard_constraints?.map(c=>{const m=profile.data?.profile.measurements.find(m=>m.feature_id===c.feature_id);const value=typeof m?.value==="number"?m.value:null;const checked=c.operator==="abs<=" && value!=null?Math.abs(value):value;const margin=checked==null?null:["<=","<","abs<="].includes(c.operator)?c.threshold-checked:checked-c.threshold;return <p key={c.constraint_id} className="mt-2 text-sm">{c.feature_id.replace(/_/g," ")}: {checked ?? "Not measured"} {c.operator} {c.threshold} {m?.unit ?? ""}{margin!=null?` · margin ${margin.toFixed(2)} ${m?.unit ?? ""}`:""}. {c.is_assumption?"Screening assumption.":""}</p>})}</details><div className="mt-3"><BulletList items={[...(focus.risks ?? []),...(focus.limitations ?? []),"Weight sensitivity is not measurement uncertainty or confidence in landing success."]} tone="warn" /></div><p className="mt-3 text-xs text-fg-muted">Scoring {evaluation.scoring_spec_version} · profile {evaluation.profile_version}. Terrain: regional (~3.7 km cells), footprints tens of kilometres across.</p></section>
+    </div>}
+  </div>;
+}
+
+function Sensitivity({evaluation,selectedId}:{evaluation:EvaluateResponse;selectedId:string}) {
+  const [range,setRange]=useState(5);
+  const [criterion,setCriterion]=useState("");
+  const [offset,setOffset]=useState(0);
+  const q=useQuery({queryKey:["sensitivity",selectedId,missionKey(evaluation.mission),evaluation.scoring_spec_version,evaluation.profile_version,evaluation.results.map(r=>r.site_id).sort(),range],queryFn:({signal})=>api.sensitivity({planet:"mars",mission:evaluation.mission,focus_site_id:selectedId,site_ids:evaluation.results.map(r=>r.site_id),range_pp:range,step_pp:1},signal),enabled:false,staleTime:Infinity,retry:false});
+  const sweep=q.data?.sweeps.find(s=>s.criterion_id===criterion) ?? q.data?.sweeps[0];
+  const point=sweep?.points.find(p=>Math.abs(p.delta_pp-offset)<1e-6) ?? sweep?.points.find(p=>p.delta_pp===0) ?? sweep?.points[0];
+  return <section className={card} aria-label="Priority sensitivity"><h2 className="text-base font-semibold">Would a priority change alter the choice?</h2><p className="mt-2 text-sm text-fg-muted">One factor changes at a time; the others retain their relative proportions. This is a read-only sandbox. Your applied priorities stay unchanged.</p><div className="mt-3 flex flex-wrap items-center gap-3"><label className="text-sm">Test range <select aria-label="Sensitivity range" value={range} onChange={e=>{setRange(Number(e.target.value));setOffset(0);}} className="ml-2 rounded border border-line bg-bg p-2"><option value={5}>±5 percentage points</option><option value={20}>±20 percentage points</option></select></label><button disabled={q.isFetching} onClick={()=>void q.refetch()} className="rounded-lg border border-copper px-3 py-2 text-sm text-copper-bright disabled:opacity-40">{q.isFetching?"Testing scenarios…":"Run sensitivity test"}</button></div>
+    {q.error && <div className="mt-3"><ErrorNote error={q.error} /></div>}
+    {q.data && <div className="mt-4">{q.data.too_few_active ? <EmptyNote>At least two scored factors are required for a sensitivity sweep.</EmptyNote> : <><ul className="grid gap-3 md:grid-cols-2">{q.data.sweeps.map(s=><li key={s.criterion_id} className="rounded border border-line p-3 text-sm"><strong>{factorName(s.criterion_id,s.label)}</strong><p className="mt-1 text-fg-muted">{s.focus_rank_min==null ? "Unranked in the tested samples." : s.focus_rank_stable ? `Rank ${s.focus_rank_min} throughout ±${q.data!.range_pp} pp.` : `Rank ${s.focus_rank_min}–${s.focus_rank_max} within ±${q.data!.range_pp} pp.`} {s.leader_stable ? "Leader unchanged." : "Leader changes in the tested samples."}</p></li>)}</ul>
+      {sweep && point && <div className="mt-4 rounded-lg border border-info/40 p-3"><label htmlFor="swept-factor" className="text-xs text-fg-muted">Explore one factor</label><select id="swept-factor" value={sweep.criterion_id} onChange={e=>{setCriterion(e.target.value);setOffset(0);}} className="ml-2 rounded border border-line bg-bg p-2 text-sm">{q.data.sweeps.map(s=><option key={s.criterion_id} value={s.criterion_id}>{factorName(s.criterion_id,s.label)}</option>)}</select><label htmlFor="scenario-offset" className="mt-3 block text-sm">{signed(point.delta_pp)} percentage points · {point.share==null?"not scored":`${(point.share*100).toFixed(1)}% share`}</label><input id="scenario-offset" type="range" min={0} max={sweep.points.length-1} step={1} value={sweep.points.indexOf(point)} aria-valuetext={`${point.delta_pp} percentage points from the applied share`} onChange={e=>setOffset(sweep.points[Number(e.target.value)].delta_pp)} /><p className="mt-3 text-sm">Selected site: {point.focus_status==="ok"?`rank ${point.focus_rank}, index ${point.focus_score?.toFixed(2)}`:point.focus_status?.replace(/_/g," ")}. Leader: {point.leader_site_name ?? "none"}.</p><button className="mt-2 text-xs text-info underline" onClick={()=>setOffset(0)}>Return to applied allocation</button><details className="mt-3 text-xs"><summary className="cursor-pointer">Scenario values and sampled changes</summary><div className="overflow-x-auto"><table className="mt-2 w-full text-left"><thead><tr>{["Change (pp)","Share","Rank","Index","Leader"].map(t=><th key={t} className="p-2">{t}</th>)}</tr></thead><tbody>{sweep.points.map((p,i)=><tr key={i}><td className="num p-2">{signed(p.delta_pp)}</td><td className="num p-2">{p.share==null?"—":`${(p.share*100).toFixed(1)}%`}</td><td className="p-2">{p.focus_rank ?? "Unranked"}</td><td className="p-2">{p.focus_score?.toFixed(2) ?? "—"}</td><td className="p-2">{p.leader_site_name ?? "None"}</td></tr>)}</tbody></table></div>{sweep.breakpoints?.map((b,i)=><p key={i} className="mt-2">{b.before} → {b.after} between {b.from_delta_pp} and {b.to_delta_pp} pp.</p>)}</details></div>}</>}
+      <p className="mt-3 text-xs text-fg-muted">Only the tested range and 1 percentage-point samples are described. This is weight sensitivity, not a confidence interval or probability of success.</p></div>}
+  </section>;
 }

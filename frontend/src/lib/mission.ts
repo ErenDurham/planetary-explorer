@@ -22,7 +22,8 @@ export function buildMission(
 export function missionKey(mission: MissionProfile | null): string {
   if (!mission) return "default";
   const c = [...mission.criteria].sort((a, b) => a.criterion_id.localeCompare(b.criterion_id));
-  return c.map((x) => `${x.criterion_id}=${Math.round(x.weight)}`).join("&");
+  const constraints = [...(mission.hard_constraints ?? [])].sort((a,b) => a.constraint_id.localeCompare(b.constraint_id));
+  return JSON.stringify({ phase: mission.mission_phase, criteria: c, constraints, policy: mission.missing_data_policy });
 }
 
 export function hasPositiveWeight(weights: Record<string, number>): boolean {

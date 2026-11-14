@@ -1,45 +1,24 @@
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { AXIS, COPPER, GRID, MUTED, TOOLTIP_STYLE } from "./theme";
+import { PRIORITY_GUIDE } from "@/lib/objective";
 import type { FactorScore } from "@/types";
 
+/** Direct labels remain legible in a narrow detail pane and on the keyboard.
+ * Bar lengths use the same 0–100 index scale, never a per-row scale. */
 export function FactorBreakdownChart({ factors }: { factors: FactorScore[] }) {
-  const data = factors.map((f) => ({
-    name: shortLabel(f.label),
-    contribution: f.weighted_contribution ?? 0,
-    excluded: !!f.excluded_reason || f.is_missing,
-    suitability: f.suitability,
-    weight: f.normalized_weight,
-  }));
-  const total = data.reduce((a, d) => a + d.contribution, 0);
-  return (
-    <figure aria-label="Factor breakdown: weighted contribution per criterion">
-      <div className="h-36 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 4 }}>
-            <CartesianGrid horizontal={false} stroke={GRID} />
-            <XAxis type="number" domain={[0, 100]} tick={AXIS} axisLine={{ stroke: AXIS.stroke }} tickLine={false} label={{ value: "weighted contribution (index points)", position: "insideBottom", offset: -2, fill: AXIS.fill, fontSize: 9 }} />
-            <YAxis type="category" dataKey="name" width={118} tick={AXIS} axisLine={false} tickLine={false} />
-            <Tooltip
-              contentStyle={TOOLTIP_STYLE}
-              cursor={{ fill: "#ffffff08" }}
-              formatter={(v, _n, item) => {
-                const p = item.payload as (typeof data)[number];
-                return [`${Number(v).toFixed(1)} pts (suitability ${p.suitability?.toFixed(2) ?? "—"}, weight ${p.weight?.toFixed(2) ?? "—"})`, "contribution"];
-              }}
-            />
-            <Bar dataKey="contribution" radius={[0, 2, 2, 0]} isAnimationActive={false}>
-              {data.map((d, i) => (
-                <Cell key={i} fill={d.excluded ? MUTED : COPPER} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <figcaption className="num text-[10.5px] text-fg-faint">Sum of contributions: {total.toFixed(1)} index points</figcaption>
-    </figure>
-  );
-}
-
-function shortLabel(label: string): string {
-  return label.replace(/\s*\(.*\)\s*$/, "");
+  const active = factors.filter(f => !f.excluded_reason && !f.is_missing && f.weighted_contribution != null);
+  const excluded = factors.filter(f => f.excluded_reason || f.is_missing || f.weighted_contribution == null);
+  const total = active.reduce((sum, f) => sum + (f.weighted_contribution ?? 0), 0);
+  return <figure aria-label="Factor breakdown: weighted contribution per criterion" className="mt-3">
+    <div className="mb-3 flex items-center justify-between text-xs text-fg-muted"><span>Contribution to the total score</span><span className="num text-fg">{total.toFixed(1)} / 100</span></div>
+    <ul className="space-y-4">{[...active].sort((a,b) => (b.weighted_contribution ?? 0) - (a.weighted_contribution ?? 0)).map(f => {
+      const guide = PRIORITY_GUIDE[f.criterion_id];
+      const points = f.weighted_contribution ?? 0;
+      return <li key={f.criterion_id}>
+        <div className="mb-2 flex items-center justify-between gap-3 text-sm"><span className="text-fg">{guide?.name ?? f.label}</span><span className="num shrink-0 font-semibold text-fg">{points.toFixed(1)} <span className="font-normal text-fg-muted">pts</span></span></div>
+        <div className="h-2 overflow-hidden rounded-full bg-line" aria-hidden><div className="h-full rounded-full" style={{width: `${Math.max(0, Math.min(100, points))}%`, background: guide?.color ?? "#f0a03c"}} /></div>
+        <p className="mt-1 text-xs text-fg-muted">{Math.round((f.normalized_weight ?? 0) * 100)}% influence · factor score {f.suitability?.toFixed(2) ?? "—"} / 1</p>
+      </li>;
+    })}</ul>
+    {excluded.length > 0 && <p className="mt-4 text-xs text-fg-muted">Not scored: {excluded.map(f => PRIORITY_GUIDE[f.criterion_id]?.name ?? f.label).join(", ")}</p>}
+    <figcaption className="mt-3 text-xs text-fg-muted">All bars use a 0–100 point scale. Contributions add up to the suitability index.</figcaption>
+  </figure>;
 }

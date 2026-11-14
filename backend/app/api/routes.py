@@ -14,6 +14,10 @@ from app.models import (
     EvaluateRequest,
     EvaluateResponse,
     ExplainRequest,
+    GuidanceRequest,
+    GuidanceResponse,
+    InterpretRequest,
+    InterpretResponse,
     HealthResponse,
     MatchRequest,
     MatchResponse,
@@ -22,7 +26,7 @@ from app.models import (
     SiteListResponse,
     SiteWithProfile,
 )
-from app.services import analog_engine, explanation_engine, ranking_engine, scoring_engine
+from app.services import analog_engine, explanation_engine, guidance_engine, objective_engine, ranking_engine, scoring_engine
 from app.services.data_loader import DataError, get_store
 from app.services.retrieval_engine import get_retriever
 
@@ -121,6 +125,25 @@ def explain(req: ExplainRequest) -> ResearchExplanation:
     analogs = None
     if req.include_analogs:
         analogs, _ = analog_engine.match_all(site, prof, [(c, store.earth_profile(c.id)) for c in store.earth_candidates()], None, 3)
-    query = explanation_engine.build_query(site, prof, mine, req.question)
-    evidence = get_retriever().retrieve(query, k=6, geographic_relevance=[site.id, site.region])
-    return explanation_engine.explain(site, prof, mine, evidence, analogs, req.question)
+    query = explanation_engine.build_query(site, prof, mine, req.question or req.objective)
+    # k=8 with at most two passages per source: several useful passages, but
+    # repeated links can never masquerade as independent corroboration.
+    evidence = get_retriever().retrieve(query, k=8, geographic_relevance=[site.id, site.region])
+    return explanation_engine.explain(site, prof, mine, evidence, analogs, req.question, objective=req.objective)
+
+
+@router.post("/mission/interpret", response_model=InterpretResponse, responses=ERR)
+def interpret_objective(req: InterpretRequest) -> InterpretResponse:
+    """Free-text objective -> PROPOSED weights for the existing criteria, with
+    rationale, trade-offs, unsupported needs and clarifying questions. The
+    proposal is validated deterministically; hard constraints and thresholds
+    are never exposed to free text."""
+    return objective_engine.interpret(req)
+
+
+@router.post("/mission/guidance", response_model=GuidanceResponse, responses=ERR)
+def priority_guidance(req: GuidanceRequest) -> GuidanceResponse:
+    """Objective-aware guidance after a priority change: effective influence
+    before/after, de-emphasised factors, rank deltas and missing data, all
+    computed by the scoring engine; a model may only phrase them."""
+    return guidance_engine.guide(req, get_store())

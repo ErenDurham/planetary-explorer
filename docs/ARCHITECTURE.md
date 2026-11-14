@@ -71,9 +71,20 @@ slider change ─► debounce 150 ms ─► POST /scoring/evaluate {mission, cli
 ```
 POST /research/explain {site_id, mission?, include_analogs?}
   backend: evaluate(default or given mission) ─► retrieve(query built from site + factors, site-aware boost)
-           ─► explanation_engine.explain(result, profile, evidence, analogs)
+           ─► explanation_engine.explain(result, profile, evidence, analogs, objective)
+           ─► digest_engine: one SourceDigest per source URL (extractive or validated model digest), up to three StudyCards
            ─► LLM path (if configured): structured output validated by Pydantic,
               citation ids checked against retrieved chunk ids, else fallback
+```
+
+**Objective and guidance**
+
+```
+type objective ─► "Suggest priorities" ─► POST /mission/interpret {objective, current_weights, excluded_criteria}
+  backend: rule-based reader (always) or model proposal ─► validate_proposal (ids, 0-100, data availability, positive total)
+  ─► reviewable suggestions (edit, then apply); objective_hash guards stale "interpreted" labels
+slider settles (~600 ms) ─► POST /mission/guidance {objective, previous_weights, new_weights, changed_criterion_id, client_request_id}
+  backend: evaluate old and new ─► influence deltas, rank deltas, leader, missing data ─► rule summary or model phrasing (numeric guard)
 ```
 
 **Compare**

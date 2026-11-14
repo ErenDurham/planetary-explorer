@@ -328,3 +328,67 @@ it is fake, and must be removed before any demonstration or submission.
 | Literature | Cited by DOI; the corpus holds Crossref metadata records (CC0), not paper text |
 | Document corpus (`backend/data/documents/`) | Excerpts of public web pages and PDS text, quoted as evidence with attribution; see section 10 |
 | Project code and derived values | MIT (repository licence) |
+
+## 13. Verified site imagery (Task B, 2026-11-14)
+
+Manifest: `backend/data/imagery/manifest.json` (built by `scripts/site_imagery_ctx.py` and
+`scripts/site_imagery_nasa.py`; cached assets under `backend/data/imagery/assets/`; served by
+`GET /api/v1/sites/{id}/imagery` and `GET /api/v1/imagery/{entry_id}/asset`). Every entry records
+the source page, asset URL, credit and licence, instrument, acquisition date (null unless the
+caption states it; the publication date is a separate field), resolution if known, bounds only
+where georeferenced, the geographic relationship to the candidate point, and an appearance
+caveat. Nothing generated or artistic is included.
+
+| Source | Institution / credit | Access | Licence |
+|---|---|---|---|
+| CTX global mosaic beta01 (Context Camera, MRO), tiles via NASA Solar System Treks / Esri `astro.arcgis.com/.../OnMars/CTX` | NASA/JPL/MSSS/The Murray Lab (Caltech) | WMTS/ArcGIS tile cache, no login; stitched at zoom 9 (62 km, 81 m/px) and zoom 12 (7.8 km, 10 m/px) around each site; bounds exact from the tile grid | Free use of beta01 for all purposes with credit (service description) |
+| NASA Image and Video Library (`images-api.nasa.gov`) products from JPL Photojournal | NASA/JPL-Caltech and partner credits as recorded per entry | REST API, no key; web-sized JPEG assets cached locally with MIME and size checks | NASA imagery is free to use with credit (NASA Media Usage Guidelines) |
+
+Uncontrolled-mosaic caveat: the CTX beta01 mosaic is greyscale, lossy and uncontrolled, so
+brightness changes and seams occur between orbit strips; three zoom-9 tiles around Elysium
+Planitia are corrupt at the source and were rebuilt from their zoom-10 children.
+
+| Site | View | Product | Instrument | Relationship to the candidate point | Acquired | Source |
+|---|---|---|---|---|---|---|
+| jezero_crater | orbital | CTX mosaic, regional context (62.5 km across) centred on Jez | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| jezero_crater | orbital | CTX mosaic, local context (7.8 km across) centred on Jezero  | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| jezero_crater | orbital | Perseverance and Mars 2020 Spacecraft Components on the Surf | HiRISE (MRO) | exact location | 2021-02-19 | [source](https://photojournal.jpl.nasa.gov/catalog/PIA24333) |
+| jezero_crater | orbital | A Possible Landing Site for the 2020 Mission: Jezero Crater | HiRISE (MRO) | candidate region | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA19303) |
+| jezero_crater | surface | Mastcam-Z's First 360-Degree Panorama | Mastcam-Z (Perseverance) | exact location | 2021-02-21 | [source](https://photojournal.jpl.nasa.gov/catalog/PIA24264) |
+| gale_crater | orbital | CTX mosaic, regional context (62.5 km across) centred on Gal | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| gale_crater | orbital | CTX mosaic, local context (7.8 km across) centred on Gale Cr | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| gale_crater | orbital | Scene of a Martian Landing | HiRISE (MRO) | exact location | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA16001) |
+| gale_crater | surface | Gale Crater Vista, in Glorious Color | Mastcam (Curiosity) | exact location | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA16029) |
+| elysium_planitia | orbital | CTX mosaic, regional context (62.5 km across) centred on Ely | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| elysium_planitia | orbital | CTX mosaic, local context (7.8 km across) centred on Elysium | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| elysium_planitia | orbital | InSight on Mars, As Seen by HiRISE | HiRISE (MRO) | exact location | 2018-12-06 | [source](https://photojournal.jpl.nasa.gov/catalog/PIA22875) |
+| elysium_planitia | surface | InSight's First Image from Mars | Instrument Context Camera (InSight) | exact location | 2018-11-26 | [source](https://photojournal.jpl.nasa.gov/catalog/PIA22829) |
+| oxia_planum | orbital | CTX mosaic, regional context (62.5 km across) centred on Oxi | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| oxia_planum | orbital | CTX mosaic, local context (7.8 km across) centred on Oxia Pl | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| oxia_planum | orbital | Clay-Rich Terrain in Oxia Planum: A Proposed ExoMars Landing | HiRISE (MRO) | candidate region | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA19851) |
+| oxia_planum | orbital | Possible Future Mars Landing Site in Oxia Planum | HiRISE (MRO) | candidate region | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA18817) |
+| utopia_planitia | orbital | CTX mosaic, regional context (62.5 km across) centred on Uto | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| utopia_planitia | orbital | CTX mosaic, local context (7.8 km across) centred on Utopia  | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| utopia_planitia | orbital | Viking Lander 2 Anniversary | THEMIS infrared band 9 (Mars Odyssey) | candidate region | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA04023) |
+| utopia_planitia | surface | First Color Image of the Viking Lander 2 Site | Viking Lander 2 Camera 2 | exact location | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA00568) |
+| chryse_planitia | orbital | CTX mosaic, regional context (62.5 km across) centred on Chr | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| chryse_planitia | orbital | CTX mosaic, local context (7.8 km across) centred on Chryse  | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| chryse_planitia | orbital | Acidalia and Chryse Plains, Mars | MOC wide-angle (Mars Global Surveyor) | candidate region | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA02000) |
+| chryse_planitia | surface | First Color Image From Viking Lander 1 | Viking Lander 1 Camera 2 | exact location | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA00563) |
+| chryse_planitia | surface | Afternoon on Chryse Planitia - Viking Lander 1 Camera 1 Mosa | Viking Lander 1 Camera 1 | exact location | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA03165) |
+| meridiani_planum | orbital | CTX mosaic, regional context (62.5 km across) centred on Mer | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| meridiani_planum | orbital | CTX mosaic, local context (7.8 km across) centred on Meridia | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| meridiani_planum | orbital | Rover Landing Hardware at Eagle Crater, Mars | HiRISE (MRO) | exact location | 2017-04-08 | [source](https://photojournal.jpl.nasa.gov/catalog/PIA21494) |
+| meridiani_planum | surface | A Geologist Treasure Trove | Panoramic Camera (Opportunity) | exact location | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA05163) |
+| gusev_crater | orbital | CTX mosaic, regional context (62.5 km across) centred on Gus | Context Camera (CTX), Mars Reconnaissance Orbiter | candidate region | not verified | [source](https://trek.nasa.gov/mars/) |
+| gusev_crater | orbital | CTX mosaic, local context (7.8 km across) centred on Gusev C | Context Camera (CTX), Mars Reconnaissance Orbiter | exact location | not verified | [source](https://trek.nasa.gov/mars/) |
+| gusev_crater | surface | Mars in Full View | Panoramic Camera (Spirit) | exact location | not verified | [source](https://photojournal.jpl.nasa.gov/catalog/PIA05049) |
+
+Missing imagery is a recorded state: Oxia Planum has no landed mission and therefore no surface
+view. For the Viking first colour images and the early MER panoramas the product pages state the
+spacecraft and camera but not the acquisition sol, so `acquisition_date` is null with a note.
+
+
+## Earth–Mars–Moon comparison reference catalogue
+
+`backend/data/comparison/catalog.v1.json` holds dated NASA body references and curated Apollo 11 / Apollo 15 landing-region descriptions. Each record carries source links. Lunar mission coordinates are rounded to the precision of the NASA NSSDCA mission summaries. The lunar records are not numeric environmental profiles; no slopes, relief, local illumination, temperature or resource quantities are inferred from their descriptions. Original Earth and Mars profile measurements are exposed unchanged through `/comparison/catalog`.

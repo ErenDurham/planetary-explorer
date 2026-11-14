@@ -57,6 +57,7 @@ from pathlib import Path
 
 from app.config.settings import get_settings
 from app.models import EvidenceChunk
+from app.services.text_cleaning import clean_passage
 
 log = logging.getLogger(__name__)
 
@@ -65,6 +66,8 @@ RRF_K = 60            # standard reciprocal-rank-fusion constant
 GEO_BOOST = 1.25      # metadata match on geographic_relevance
 TERM_BOOST = 1.10     # chunk text mentions a distinctive geographic term
 EXCERPT_CHARS = 700
+MAX_PER_DOCUMENT = 2   # keep several useful passages from one source, but never let one page fill the list
+MIN_CLEAN_CHARS = 120  # a chunk whose cleaned text is shorter than this is debris (navigation, captions) and is demoted
 BM25_K1 = 1.5
 BM25_B = 0.75
 CHROMA_COLLECTION = "planetary_explorer_chunks"
@@ -192,7 +195,11 @@ class Retriever:
         return {"chunks": len(self.chunks), "backend": self.backend, "requested": self.backend_requested, "error": self.backend_error,
                 "path": str(self.chunks_path)}
 
-    def retrieve(self, query: str, k: int = 6, geographic_relevance: list[str] | None = None) -> list[EvidenceChunk]:
+    def retrieve(self, query: str, k: int = 6, geographic_relevance: list[str] | None = None, max_per_document: int | None = MAX_PER_DOCUMENT) -> list[EvidenceChunk]:
+        """Ranked chunks. `max_per_document` diversifies across sources so that
+        repeated links mean repeated passages, not pretend corroboration; chunks
+        that are mostly navigation debris after cleaning are demoted below any
+        clean chunk."""
         if not self.chunks:
             return []
         pool = max(k * 5, 30)
@@ -217,10 +224,19 @@ class Retriever:
             if terms and any(t in self._text_lower[idx] for t in terms):
                 s *= TERM_BOOST
             scored.append((s, idx))
+        # Demote debris: a chunk with little prose left after cleaning ranks below every clean one.
+        cleaned = {idx: clean_passage(self.chunks[idx]["text"]) for _, idx in scored}
+        scored = [((s if len(cleaned[idx]) >= MIN_CLEAN_CHARS else s * 0.01), idx) for s, idx in scored]
         scored.sort(key=lambda x: (-x[0], x[1]))
         out = []
-        for s, idx in scored[:k]:
+        per_doc: Counter = Counter()
+        for s, idx in scored:
+            if len(out) >= k:
+                break
             c = self.chunks[idx]
+            if max_per_document and per_doc[c["document_id"]] >= max_per_document:
+                continue
+            per_doc[c["document_id"]] += 1
             out.append(EvidenceChunk(chunk_id=c["chunk_id"], document_id=c["document_id"], title=c["title"], institution=c["institution"], url=c["url"],
                                      publication_date=c.get("publication_date"), geographic_relevance=c.get("geographic_relevance", []),
                                      excerpt=c["text"][:EXCERPT_CHARS], score=round(s, 6)))

@@ -76,8 +76,11 @@ export function SuitabilityPanel({ result, scoringSpecVersion, isPending, totalR
         </div>
       </Section>
 
-      <Section title="Factor breakdown" subtitle="Weighted contributions sum to the index">
+      <Section title="Why this score?" subtitle="How each scored priority contributes to the total">
         <FactorBreakdownChart factors={result.factor_scores} />
+      </Section>
+      <details className="m-4 rounded-lg border border-line-strong"><summary className="cursor-pointer p-3 text-sm text-fg">Full scoring calculation</summary>
+      <Section title="Factor breakdown" subtitle="Weighted contributions sum to the index">
         <div className="mt-2 overflow-x-auto">
           <table className="w-full text-left text-[11px]">
             <thead className="text-[10px] uppercase tracking-wide text-fg-faint">
@@ -107,14 +110,9 @@ export function SuitabilityPanel({ result, scoringSpecVersion, isPending, totalR
         </div>
       </Section>
 
+      </details>
       <Section title="Favorable">
         <BulletList items={result.favorable} tone="ok" empty="Nothing scored favourably under these priorities." />
-      </Section>
-      <Section title="Risks">
-        <BulletList items={result.risks} tone="danger" empty="No risk flags under these priorities." />
-      </Section>
-      <Section title="Limitations">
-        <BulletList items={result.limitations} tone="warn" />
       </Section>
     </>
   );

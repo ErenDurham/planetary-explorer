@@ -51,7 +51,9 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover }: { datum
     return new Quaternion().setFromUnitVectors(new Vector3(0, 0, 1), n);
   }, [pos]);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock, camera }) => {
+    // Keep markers small enough to inspect the surface when the camera zooms in.
+    if (groupRef.current) groupRef.current.scale.setScalar(Math.max(0.18, Math.min(1, camera.position.distanceTo(pos) / 2.1)));
     if (!ringRef.current) return;
     if (selected) {
       const t = (clock.elapsedTime % 1.6) / 1.6;

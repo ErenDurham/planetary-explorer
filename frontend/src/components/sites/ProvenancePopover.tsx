@@ -15,7 +15,7 @@ function Row({ k, v }: { k: string; v: string | null | undefined }) {
 export function ProvenancePopover({ measurement, source }: { measurement: EnvironmentalMeasurement; source: Provenance | undefined }) {
   return (
     <InfoTip label={`Provenance for ${measurement.label}`}>
-      <div className="mb-1.5 text-[10.5px] font-semibold uppercase tracking-wide text-fg-faint">Provenance</div>
+      <div className="mb-1.5 text-[10.5px] font-semibold uppercase tracking-wide text-fg-faint">Source and method</div>
       {source ? (
         <dl>
           <Row k="Source" v={source.title} />
@@ -37,7 +37,7 @@ export function ProvenancePopover({ measurement, source }: { measurement: Enviro
         </dl>
       ) : (
         <p className="text-fg-muted">
-          {measurement.source_id ? `Source id "${measurement.source_id}" is not in this profile's source table.` : "No source recorded for this metric."}
+          {measurement.source_id ? "The referenced source is not available in this profile." : "No source is recorded for this measurement."}
         </p>
       )}
       {measurement.notes && <p className="mt-2 border-t border-line pt-1.5 text-fg-muted">{measurement.notes}</p>}

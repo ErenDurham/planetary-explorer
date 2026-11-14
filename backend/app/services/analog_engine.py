@@ -142,12 +142,32 @@ def feature_distance(fs: dict, mars_p: EnvironmentalProfile, earth_p: Environmen
 
 
 def _applications(cand: EarthCandidate, shared_terrain: list[str], shared_minerals: list[str]) -> list[str]:
-    apps = list(cand.known_analog_use)
+    """Documented analog use only (from the data files). Proposals live in
+    `_proposed_studies` and are labelled as hypotheses."""
+    return list(cand.known_analog_use)
+
+
+def _proposed_studies(mars_site: Site, cand: EarthCandidate, shared_terrain: list[str], shared_minerals: list[str], similarity: float | None) -> list[dict]:
+    """At most two StudyCard dicts, each motivated by a SHARED characteristic
+    that the study would actually use. A mineralogy-only match does not
+    motivate a terrain traverse and vice versa. Empty when nothing is shared."""
+    cards: list[dict] = []
+    sim = f"{similarity:g}" if similarity is not None else "n/a"
     if shared_terrain:
-        apps.append("Terrain-mobility and landing-approach rehearsals on " + _words(shared_terrain))
+        cards.append({"kind": "proposed_study", "title": f"Terrain-mobility rehearsal on shared landforms ({_words(shared_terrain)})",
+                      "research_question": f"Do traverse-planning and hazard-mapping methods exercised on {_words(shared_terrain)} at {cand.name} transfer to the same landforms at {mars_site.name}?",
+                      "method": "Instrumented traverses and terrain mapping on the matched landforms at the Earth site; compare predicted and observed trafficability; re-run the mapping method on orbital data for the Mars footprint.",
+                      "why_here": f"{cand.name} shares these literature-tagged landforms with {mars_site.name}; the harmonised ~3.7 km terrain statistics show where regional slope or relief also agree.",
+                      "motivating_citation_ids": [], "cannot_infer": f"Similarity {sim} is a heuristic index over tags and regional statistics; Earth gravity, atmosphere and radiation differ, and transfer has not been demonstrated.",
+                      "analog_candidate_id": cand.id})
     if shared_minerals:
-        apps.append("Instrument calibration and sample-handling tests against " + _words(shared_minerals))
-    return apps
+        cards.append({"kind": "proposed_study", "title": f"Instrument and sample-handling tests on shared materials ({_words(shared_minerals)})",
+                      "research_question": f"Can instrument calibration and sample-handling procedures developed on {_words(shared_minerals)} at {cand.name} be validated before use on the materials reported at {mars_site.name}?",
+                      "method": "Field spectroscopy and sample preparation on the Earth materials; compare instrument response against laboratory reference measurements; document which procedures depend on Earth-only conditions.",
+                      "why_here": f"Both sites carry cited {_words(shared_minerals)}; the comparison targets materials, not landing suitability.",
+                      "motivating_citation_ids": [], "cannot_infer": "Composition tags are literature labels, not spectral matches; weathering, humidity and biology on Earth have no Mars counterpart.",
+                      "analog_candidate_id": cand.id})
+    return cards[:2]
 
 
 def match(mars_site: Site, mars_p: EnvironmentalProfile, cand: EarthCandidate, earth_p: EnvironmentalProfile | None, weights: dict[str, float]) -> AnalogMatch:
@@ -206,7 +226,9 @@ def match(mars_site: Site, mars_p: EnvironmentalProfile, cand: EarthCandidate, e
     citations = sorted(set(cand.sources) | set(mars_p.sources.keys()) | (set(earth_p.sources.keys()) if earth_p else set()))
     return AnalogMatch(mars_site_id=mars_site.id, earth_candidate=cand, similarity=None if sim is None else round(sim, 2), distance=None if D is None else round(D, 4), rank=None,
                        feature_distances=fds, shared_characteristics=shared, important_differences=diffs, noncomparable_variables=noncomp,
-                       research_applications=_applications(cand, shared_t, shared_m), limitations=limitations, citations=citations, completeness_fraction=round(completeness, 3))
+                       research_applications=_applications(cand, shared_t, shared_m), documented_analog_use=list(cand.known_analog_use),
+                       proposed_studies=_proposed_studies(mars_site, cand, shared_t, shared_m, None if sim is None else round(sim, 2)),
+                       limitations=limitations, citations=citations, completeness_fraction=round(completeness, 3))
 
 
 def match_all(mars_site: Site, mars_p: EnvironmentalProfile, candidates: list[tuple[EarthCandidate, EnvironmentalProfile | None]], weights: list[AnalogWeight] | None, top_k: int) -> tuple[list[AnalogMatch], list[str]]:
