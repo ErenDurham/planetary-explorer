@@ -117,3 +117,22 @@ class EvaluateResponse(BaseModel):
     mission: MissionProfile
     warnings: list[str] = Field(default_factory=list)
     client_request_id: str | None = None
+
+
+class CriterionSpec(BaseModel):
+    """One criterion of the scoring spec, as served by GET /scoring/default-mission."""
+
+    criterion_id: str
+    label: str
+    feature_id: str
+    unit: str | None
+    default_weight: float
+    rationale: str
+    function: dict
+
+
+class DefaultMissionResponse(BaseModel):
+    mission: MissionProfile
+    scoring_spec_version: str
+    criteria: list[CriterionSpec]
+    notes: list[str] = Field(default_factory=list)

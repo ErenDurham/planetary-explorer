@@ -26,7 +26,7 @@ still renders from the bundled texture and a banner says the API is unreachable.
 | `npm run dev` | Vite dev server on :5173 |
 | `npm run build` | `tsc --noEmit` then `vite build` → `dist/` |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test -- --run` | vitest (jsdom), 6 files / 27 tests |
+| `npm test -- --run` | vitest (jsdom), 7 files / 29 tests |
 | `npm run gen:types` | `openapi-typescript http://localhost:8000/openapi.json -o src/types/api.ts` — regenerate whenever a backend model changes, and commit the result (CI has no backend) |
 
 ## Environment

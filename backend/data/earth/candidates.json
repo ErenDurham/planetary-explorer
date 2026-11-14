@@ -53,7 +53,7 @@
       "dataset_id": "POWER climatology v2.x, community RE",
       "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
       "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
-      "observation_period": "multi-decade climatology (see API header)",
+      "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
       "access_method": "REST API, no login",
       "license": "Public domain (NASA)"
     },

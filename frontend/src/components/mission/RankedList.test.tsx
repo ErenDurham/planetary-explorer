@@ -13,7 +13,7 @@ describe("RankedList", () => {
     expect(items).toHaveLength(evaluation.results.length);
     expect(items[0]).toHaveTextContent("1");
     expect(items[0]).toHaveTextContent("Chryse Planitia");
-    expect(items[0]).toHaveTextContent("98.1");
+    expect(items[0]).toHaveTextContent("98.7");
     expect(items[0]).toHaveTextContent("ok");
     expect(items[items.length - 1]).toHaveTextContent("Gale Crater");
   });

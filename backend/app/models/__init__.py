@@ -19,7 +19,9 @@ from .health import HealthResponse, ServiceStatus
 from .mission import (
     ConstraintResult,
     CriteriaCompleteness,
+    CriterionSpec,
     CriterionWeight,
+    DefaultMissionResponse,
     Eligibility,
     EvaluateRequest,
     EvaluateResponse,
