@@ -3,12 +3,15 @@ Run from backend/:  python scripts/export_contracts.py"""
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
-from fastapi.testclient import TestClient
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # run from anywhere
 
-from app.main import app
-from app.services import scoring_engine
+from fastapi.testclient import TestClient  # noqa: E402
+
+from app.main import app  # noqa: E402
+from app.services import scoring_engine  # noqa: E402
 
 DOCS = Path(__file__).resolve().parents[2] / "docs"
 

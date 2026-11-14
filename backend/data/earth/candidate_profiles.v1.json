@@ -1,14 +1,14 @@
 {
   "profile_version": "v1",
-  "generated_at": "2026-11-14T15:49:49+00:00",
-  "footprint_definition": "Square footprint of half-width 0.25 degrees (about 28 km N-S) centred on the site. Smaller than the Mars footprint because Earth analog field sites are typically a few tens of km across; terrain statistics are computed on a grid block-averaged to the MOLA 16 ppd cell size (~3.7 km) so they are comparable to the Mars values.",
+  "generated_at": "2026-11-14T16:19:15+00:00",
+  "footprint_definition": "Square footprint of half-width 0.25 degrees (about 56 km N-S full width, 56*cos(lat) km E-W) centred on the site. Smaller than the Mars footprint because Earth analog field sites are typically a few tens of km across; terrain statistics are computed on a grid block-averaged to the MOLA 16 ppd cell size (~3.7 km, separately per axis) so they are comparable to the Mars values.",
   "profiles": [
     {
       "site_id": "atacama_yungay",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-14T15:49:49+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average x40 + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-14T16:19:15+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x44 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
@@ -18,7 +18,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 85 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -43,7 +43,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 85 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -68,7 +68,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 85 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -93,7 +93,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 85 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -114,11 +114,11 @@
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": 1.106,
+          "value": 1.166,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x44); 195 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -139,11 +139,11 @@
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": 3.145,
+          "value": 3.047,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x44); 195 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -164,11 +164,11 @@
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": 126.8,
+          "value": 126.5,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x44); 195 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -193,7 +193,7 @@
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 85 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -24.08,
@@ -458,6 +458,13 @@
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
         },
+        "nasa_arads": {
+          "source_id": "nasa_arads",
+          "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
+          "institution": "NASA Ames",
+          "url": "https://www.nasa.gov/ames/arads",
+          "access_method": "web page"
+        },
         "copernicus_glo90": {
           "source_id": "copernicus_glo90",
           "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
@@ -492,13 +499,6 @@
           "access_method": "REST API, no login",
           "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-14"
-        },
-        "nasa_arads": {
-          "source_id": "nasa_arads",
-          "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
-          "institution": "NASA Ames",
-          "url": "https://www.nasa.gov/ames/arads",
-          "access_method": "web page"
         }
       },
       "completeness": {
@@ -512,8 +512,8 @@
       "site_id": "mcmurdo_dry_valleys",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-14T15:49:49+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average x40 + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-14T16:19:15+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x63 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
@@ -523,7 +523,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 58 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -548,7 +548,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 58 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -573,7 +573,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 58 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -598,7 +598,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 58 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -619,11 +619,11 @@
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": 3.684,
+          "value": 1.955,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 75 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x63); 45 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -644,11 +644,11 @@
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": 14.657,
+          "value": 4.972,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 75 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x63); 45 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -669,11 +669,11 @@
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": 186.3,
+          "value": 176.2,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 75 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x63); 45 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -694,11 +694,11 @@
           "feature_id": "slope_fine_median_deg",
           "label": "Fine-scale slope (median, 90 m)",
           "category": "ground",
-          "value": 4.862,
+          "value": 2.18,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 58 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -77.86,
@@ -952,20 +952,6 @@
         }
       ],
       "sources": {
-        "lit_dry_valleys": {
-          "source_id": "lit_dry_valleys",
-          "title": "Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, Icarus 192",
-          "institution": "Elsevier (peer-reviewed literature)",
-          "url": "https://doi.org/10.1016/j.icarus.2007.06.018",
-          "access_method": "DOI"
-        },
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
-        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -975,6 +961,13 @@
           "units": "W/m2",
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
+        },
+        "lit_dry_valleys": {
+          "source_id": "lit_dry_valleys",
+          "title": "Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, Icarus 192",
+          "institution": "Elsevier (peer-reviewed literature)",
+          "url": "https://doi.org/10.1016/j.icarus.2007.06.018",
+          "access_method": "DOI"
         },
         "copernicus_glo90": {
           "source_id": "copernicus_glo90",
@@ -989,6 +982,13 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
+        },
+        "nasa_analogs_overview": {
+          "source_id": "nasa_analogs_overview",
+          "title": "NASA Analog Missions",
+          "institution": "NASA",
+          "url": "https://www.nasa.gov/analog-missions/",
+          "access_method": "web page"
         },
         "nasa_power": {
           "source_id": "nasa_power",
@@ -1016,8 +1016,8 @@
       "site_id": "haughton_crater",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-14T15:49:49+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average x40 + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-14T16:19:15+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x53 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
@@ -1027,7 +1027,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 70 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1052,7 +1052,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 70 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1077,7 +1077,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 70 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1102,7 +1102,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 70 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1123,11 +1123,11 @@
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": 1.14,
+          "value": 0.567,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 75 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x53); 45 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1148,11 +1148,11 @@
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": 2.6,
+          "value": 1.184,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 75 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x53); 45 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1173,11 +1173,11 @@
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": 48.7,
+          "value": 44.6,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 75 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x53); 45 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1198,11 +1198,11 @@
           "feature_id": "slope_fine_median_deg",
           "label": "Fine-scale slope (median, 90 m)",
           "category": "ground",
-          "value": 7.142,
+          "value": 3.438,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 120000 pixels",
+          "spatial_resolution": "93 m (N-S) x 70 m (E-W) pixels; 120000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 75.38,
@@ -1466,20 +1466,6 @@
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
         },
-        "lit_haughton": {
-          "source_id": "lit_haughton",
-          "title": "Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, Meteoritics & Planetary Science 40",
-          "institution": "Wiley (peer-reviewed literature)",
-          "url": "https://doi.org/10.1111/j.1945-5100.2005.tb00147.x",
-          "access_method": "DOI"
-        },
-        "nasa_hmp": {
-          "source_id": "nasa_hmp",
-          "title": "Haughton-Mars Project (Devon Island)",
-          "institution": "NASA Ames / Mars Institute",
-          "url": "https://www.marsinstitute.no/hmp",
-          "access_method": "web page"
-        },
         "copernicus_glo90": {
           "source_id": "copernicus_glo90",
           "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
@@ -1494,6 +1480,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
         },
+        "lit_haughton": {
+          "source_id": "lit_haughton",
+          "title": "Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, Meteoritics & Planetary Science 40",
+          "institution": "Wiley (peer-reviewed literature)",
+          "url": "https://doi.org/10.1111/j.1945-5100.2005.tb00147.x",
+          "access_method": "DOI"
+        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -1507,6 +1500,13 @@
           "access_method": "REST API, no login",
           "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-14"
+        },
+        "nasa_hmp": {
+          "source_id": "nasa_hmp",
+          "title": "Haughton-Mars Project (Devon Island)",
+          "institution": "NASA Ames / Mars Institute",
+          "url": "https://www.marsinstitute.no/hmp",
+          "access_method": "web page"
         }
       },
       "completeness": {
@@ -1520,8 +1520,8 @@
       "site_id": "death_valley",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-14T15:49:49+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average x40 + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-14T16:19:15+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x50 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
@@ -1531,7 +1531,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 75 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1556,7 +1556,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 75 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1581,7 +1581,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 75 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1606,7 +1606,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 75 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1627,11 +1627,11 @@
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": 3.719,
+          "value": 3.542,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x50); 180 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1652,11 +1652,11 @@
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": 9.925,
+          "value": 9.279,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x50); 180 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1677,11 +1677,11 @@
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": 592.3,
+          "value": 589.2,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x50); 180 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1706,7 +1706,7 @@
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 75 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 36.46,
@@ -1961,19 +1961,12 @@
         }
       ],
       "sources": {
-        "copernicus_glo90": {
-          "source_id": "copernicus_glo90",
-          "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
-          "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
-          "url": "https://registry.opendata.aws/copernicus-dem/",
-          "instrument_or_model": "TanDEM-X derived DSM",
-          "dataset_id": "copernicus-dem-90m",
-          "spatial_resolution": "90 m (3 arc-second)",
-          "units": "metres above EGM2008 geoid",
-          "observation_period": "2011-2015 acquisitions",
-          "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
-          "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-14"
+        "nasa_analogs_overview": {
+          "source_id": "nasa_analogs_overview",
+          "title": "NASA Analog Missions",
+          "institution": "NASA",
+          "url": "https://www.nasa.gov/analog-missions/",
+          "access_method": "web page"
         },
         "nasa_power": {
           "source_id": "nasa_power",
@@ -1999,12 +1992,19 @@
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
         },
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
+        "copernicus_glo90": {
+          "source_id": "copernicus_glo90",
+          "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+          "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+          "url": "https://registry.opendata.aws/copernicus-dem/",
+          "instrument_or_model": "TanDEM-X derived DSM",
+          "dataset_id": "copernicus-dem-90m",
+          "spatial_resolution": "90 m (3 arc-second)",
+          "units": "metres above EGM2008 geoid",
+          "observation_period": "2011-2015 acquisitions",
+          "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+          "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+          "retrieved_at": "2026-11-14"
         }
       },
       "completeness": {
@@ -2018,8 +2018,8 @@
       "site_id": "holuhraun_iceland",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-14T15:49:49+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average x40 + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-14T16:19:15+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x47 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
@@ -2029,7 +2029,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 180000 pixels",
+          "spatial_resolution": "93 m (N-S) x 79 m (E-W) pixels; 180000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2054,7 +2054,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 180000 pixels",
+          "spatial_resolution": "93 m (N-S) x 79 m (E-W) pixels; 180000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2079,7 +2079,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 180000 pixels",
+          "spatial_resolution": "93 m (N-S) x 79 m (E-W) pixels; 180000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2104,7 +2104,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 180000 pixels",
+          "spatial_resolution": "93 m (N-S) x 79 m (E-W) pixels; 180000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2125,11 +2125,11 @@
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": 2.188,
+          "value": 1.628,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 105 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x47); 90 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2150,11 +2150,11 @@
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": 5.81,
+          "value": 3.413,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 105 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x47); 90 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2175,11 +2175,11 @@
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": 228.4,
+          "value": 227.3,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 105 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x47); 90 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2200,11 +2200,11 @@
           "feature_id": "slope_fine_median_deg",
           "label": "Fine-scale slope (median, 90 m)",
           "category": "ground",
-          "value": 2.744,
+          "value": 1.878,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 180000 pixels",
+          "spatial_resolution": "93 m (N-S) x 79 m (E-W) pixels; 180000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 64.85,
@@ -2457,13 +2457,6 @@
         }
       ],
       "sources": {
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
-        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -2488,6 +2481,20 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
         },
+        "nasa_analogs_overview": {
+          "source_id": "nasa_analogs_overview",
+          "title": "NASA Analog Missions",
+          "institution": "NASA",
+          "url": "https://www.nasa.gov/analog-missions/",
+          "access_method": "web page"
+        },
+        "lit_holuhraun": {
+          "source_id": "lit_holuhraun",
+          "title": "Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, J. Volcanol. Geotherm. Res. 340",
+          "institution": "Elsevier (peer-reviewed literature)",
+          "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
+          "access_method": "DOI"
+        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -2501,13 +2508,6 @@
           "access_method": "REST API, no login",
           "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-14"
-        },
-        "lit_holuhraun": {
-          "source_id": "lit_holuhraun",
-          "title": "Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, J. Volcanol. Geotherm. Res. 340",
-          "institution": "Elsevier (peer-reviewed literature)",
-          "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
-          "access_method": "DOI"
         }
       },
       "completeness": {
@@ -2521,8 +2521,8 @@
       "site_id": "mdrs_utah",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-14T15:49:49+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average x40 + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-14T16:19:15+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x51 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
@@ -2532,7 +2532,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 73 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2557,7 +2557,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 73 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2582,7 +2582,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 73 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2607,7 +2607,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 73 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2628,11 +2628,11 @@
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": 0.978,
+          "value": 0.923,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x51); 165 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2653,11 +2653,11 @@
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": 2.735,
+          "value": 2.533,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x51); 165 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2678,11 +2678,11 @@
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": 129.0,
+          "value": 129.6,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x51); 165 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2707,7 +2707,7 @@
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 73 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 38.41,
@@ -2961,27 +2961,6 @@
         }
       ],
       "sources": {
-        "copernicus_glo90": {
-          "source_id": "copernicus_glo90",
-          "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
-          "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
-          "url": "https://registry.opendata.aws/copernicus-dem/",
-          "instrument_or_model": "TanDEM-X derived DSM",
-          "dataset_id": "copernicus-dem-90m",
-          "spatial_resolution": "90 m (3 arc-second)",
-          "units": "metres above EGM2008 geoid",
-          "observation_period": "2011-2015 acquisitions",
-          "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
-          "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-14"
-        },
-        "mdrs": {
-          "source_id": "mdrs",
-          "title": "Mars Desert Research Station",
-          "institution": "The Mars Society",
-          "url": "https://mdrs.marssociety.org/",
-          "access_method": "web page"
-        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -3005,6 +2984,27 @@
           "units": "W/m2",
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
+        },
+        "mdrs": {
+          "source_id": "mdrs",
+          "title": "Mars Desert Research Station",
+          "institution": "The Mars Society",
+          "url": "https://mdrs.marssociety.org/",
+          "access_method": "web page"
+        },
+        "copernicus_glo90": {
+          "source_id": "copernicus_glo90",
+          "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+          "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+          "url": "https://registry.opendata.aws/copernicus-dem/",
+          "instrument_or_model": "TanDEM-X derived DSM",
+          "dataset_id": "copernicus-dem-90m",
+          "spatial_resolution": "90 m (3 arc-second)",
+          "units": "metres above EGM2008 geoid",
+          "observation_period": "2011-2015 acquisitions",
+          "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+          "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+          "retrieved_at": "2026-11-14"
         }
       },
       "completeness": {
@@ -3018,8 +3018,8 @@
       "site_id": "mauna_kea_summit",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-14T15:49:49+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average x40 + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-14T16:19:15+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x42 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
@@ -3029,7 +3029,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 87 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3054,7 +3054,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 87 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3079,7 +3079,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 87 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3104,7 +3104,7 @@
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 87 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3125,11 +3125,11 @@
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": 4.58,
+          "value": 4.501,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x42); 210 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3150,11 +3150,11 @@
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": 8.978,
+          "value": 8.935,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x42); 210 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3175,11 +3175,11 @@
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": 640.0,
+          "value": 637.1,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~3.7 km cells (90 m DEM block-averaged x40); 225 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 40x42); 210 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3204,7 +3204,7 @@
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "93 m pixels; 360000 pixels",
+          "spatial_resolution": "93 m (N-S) x 87 m (E-W) pixels; 360000 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": 19.82,
@@ -3457,19 +3457,12 @@
         }
       ],
       "sources": {
-        "copernicus_glo90": {
-          "source_id": "copernicus_glo90",
-          "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
-          "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
-          "url": "https://registry.opendata.aws/copernicus-dem/",
-          "instrument_or_model": "TanDEM-X derived DSM",
-          "dataset_id": "copernicus-dem-90m",
-          "spatial_resolution": "90 m (3 arc-second)",
-          "units": "metres above EGM2008 geoid",
-          "observation_period": "2011-2015 acquisitions",
-          "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
-          "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-14"
+        "nasa_analogs_overview": {
+          "source_id": "nasa_analogs_overview",
+          "title": "NASA Analog Missions",
+          "institution": "NASA",
+          "url": "https://www.nasa.gov/analog-missions/",
+          "access_method": "web page"
         },
         "nasa_power": {
           "source_id": "nasa_power",
@@ -3495,12 +3488,19 @@
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
         },
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
+        "copernicus_glo90": {
+          "source_id": "copernicus_glo90",
+          "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+          "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+          "url": "https://registry.opendata.aws/copernicus-dem/",
+          "instrument_or_model": "TanDEM-X derived DSM",
+          "dataset_id": "copernicus-dem-90m",
+          "spatial_resolution": "90 m (3 arc-second)",
+          "units": "metres above EGM2008 geoid",
+          "observation_period": "2011-2015 acquisitions",
+          "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+          "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+          "retrieved_at": "2026-11-14"
         }
       },
       "completeness": {

@@ -1,0 +1,18 @@
+{
+ "document_id": "crossref_lit_yungay",
+ "title": "Mars-Like Soils in the Atacama Desert, Chile, and the Dry Limit of Microbial Life",
+ "institution": "Science / American Association for the Advancement of Science (AAAS)",
+ "url": "https://api.crossref.org/works/10.1126/science.1089143",
+ "final_url": "https://api.crossref.org/works/10.1126/science.1089143",
+ "publication_date": "2003-11-07",
+ "retrieved_at": "2026-11-14",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "Bibliographic record for DOI 10.1126/science.1089143",
+ "default_geographic_relevance": [
+  "atacama_yungay"
+ ],
+ "sha256": "9b0f9a91e996b32cd668a6c04543c72f864e44bfdec8072a399da7009d2b813d",
+ "char_count": 1594,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): Mars-Like Soils in the Atacama Desert, Chile, and the Dry Limit of Microbial Life.\n\nAuthors: Rafael Navarro-González, Fred A. Rainey, Paola Molina, Danielle R. Bagaley, Becky J. Hollen, José de la Rosa, Alanna M. Small, Richard C. Quinn, Frank J. Grunthaner, Luis Cáceres, Benito Gomez-Silva, Christopher P. McKay.\n\nPublished in Science, volume 302, issue 5647, pages 1018-1021 (2003), publisher American Association for the Advancement of Science (AAAS). DOI: https://doi.org/10.1126/science.1089143.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.\n\nAbstract (from Crossref): The Viking missions showed the martian soil to be lifeless and depleted in organic material and indicated the presence of one or more reactive oxidants. Here we report the presence of Mars-like soils in the extreme arid region of the Atacama Desert. Samples from this region had organic species only at trace levels and extremely low levels of culturable bacteria. Two samples from the extreme arid region were tested for DNA and none was recovered. Incubation experiments, patterned after the Viking labeled-release experiment but with separate biological and nonbiological isomers, show active decomposition of organic species in these soils by nonbiological processes."
+}

@@ -1,0 +1,424 @@
+{
+ "built_at": "2026-11-14T16:17:31+00:00",
+ "pipeline": "scripts/ingest_documents.py",
+ "chunking": {
+  "target_chars": 900,
+  "max_chars": 1000,
+  "overlap_chars": 150,
+  "boundary": "paragraph, then sentence"
+ },
+ "documents_ingested": 36,
+ "documents_failed": 2,
+ "chunks": 311,
+ "ingested": [
+  {
+   "document_id": "nasa_m2020_overview",
+   "title": "Mars 2020: Perseverance Rover - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+   "publication_date": "2017-12-05",
+   "retrieved_at": "2026-11-14",
+   "chars": 9713,
+   "chunks": 13,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_m2020_science",
+   "title": "Perseverance Science - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/mars-2020-perseverance/science/",
+   "publication_date": "2024-04-16",
+   "retrieved_at": "2026-11-14",
+   "chars": 3775,
+   "chunks": 5,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_msl_overview",
+   "title": "Mars Science Laboratory: Curiosity Rover - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/msl-curiosity/",
+   "publication_date": "2017-11-30",
+   "retrieved_at": "2026-11-14",
+   "chars": 6247,
+   "chunks": 9,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_msl_science",
+   "title": "Curiosity Rover Science - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/msl-curiosity/science/",
+   "publication_date": "2024-04-16",
+   "retrieved_at": "2026-11-14",
+   "chars": 4892,
+   "chunks": 7,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_insight_overview",
+   "title": "InSight Lander - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/insight/",
+   "publication_date": "2017-12-04",
+   "retrieved_at": "2026-11-14",
+   "chars": 5364,
+   "chunks": 8,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_insight_science",
+   "title": "InSight Science - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/insight/science/",
+   "publication_date": "2024-03-25",
+   "retrieved_at": "2026-11-14",
+   "chars": 3356,
+   "chunks": 5,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_viking_project",
+   "title": "Viking Project - NASA Science",
+   "institution": "NASA Science",
+   "url": "https://science.nasa.gov/mission/viking/",
+   "publication_date": "2023-09-19",
+   "retrieved_at": "2026-11-14",
+   "chars": 8472,
+   "chunks": 12,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_viking_1",
+   "title": "Viking 1 - NASA Science",
+   "institution": "NASA Science",
+   "url": "https://science.nasa.gov/mission/viking-1/",
+   "publication_date": "2017-12-06",
+   "retrieved_at": "2026-11-14",
+   "chars": 7469,
+   "chunks": 11,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_viking_2",
+   "title": "Viking 2 - NASA Science",
+   "institution": "NASA Science",
+   "url": "https://science.nasa.gov/mission/viking-2/",
+   "publication_date": "2017-12-06",
+   "retrieved_at": "2026-11-14",
+   "chars": 5711,
+   "chunks": 8,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_mer_overview",
+   "title": "Mars Exploration Rovers: Spirit and Opportunity - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/",
+   "publication_date": "2024-03-22",
+   "retrieved_at": "2026-11-14",
+   "chars": 5825,
+   "chunks": 9,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_mer_spirit",
+   "title": "Spirit - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/mer-spirit/",
+   "publication_date": "2017-12-05",
+   "retrieved_at": "2026-11-14",
+   "chars": 12575,
+   "chunks": 17,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_mer_opportunity",
+   "title": "Opportunity - NASA Science",
+   "institution": "NASA Science / JPL",
+   "url": "https://science.nasa.gov/mission/mer-opportunity/",
+   "publication_date": "2017-12-05",
+   "retrieved_at": "2026-11-14",
+   "chars": 17619,
+   "chunks": 25,
+   "kind": "html"
+  },
+  {
+   "document_id": "esa_oxia_planum",
+   "title": "Oxia Planum favoured for ExoMars surface mission",
+   "institution": "ESA",
+   "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 11560,
+   "chunks": 17,
+   "kind": "html"
+  },
+  {
+   "document_id": "usgs_nomenclature_descriptor_terms",
+   "title": "Gazetteer of Planetary Nomenclature: Descriptor Terms (Feature Types)",
+   "institution": "USGS Astrogeology / IAU WGPSN",
+   "url": "https://planetarynames.wr.usgs.gov/DescriptorTerms",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 4591,
+   "chunks": 6,
+   "kind": "html"
+  },
+  {
+   "document_id": "usgs_nomenclature_mars_system",
+   "title": "Gazetteer of Planetary Nomenclature: Mars System",
+   "institution": "USGS Astrogeology / IAU WGPSN",
+   "url": "https://planetarynames.wr.usgs.gov/Page/MARS/system",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 2663,
+   "chunks": 5,
+   "kind": "html"
+  },
+  {
+   "document_id": "pds_mola_megdr_label",
+   "title": "PDS3 label for MOLA MEGDR MEGT90N000EB (16 pixel/degree global topography)",
+   "institution": "NASA PDS Geosciences Node / MOLA Science Team",
+   "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+   "publication_date": "2003-04-03",
+   "retrieved_at": "2026-11-14",
+   "chars": 4720,
+   "chunks": 6,
+   "kind": "text"
+  },
+  {
+   "document_id": "pds_mola_megdr_aareadme",
+   "title": "MGS MOLA MEGDR archive volume AAREADME",
+   "institution": "NASA PDS Geosciences Node / MOLA Science Team",
+   "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/aareadme.txt",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 10254,
+   "chunks": 16,
+   "kind": "text"
+  },
+  {
+   "document_id": "pds_mola_megdr_catalog",
+   "title": "MGS MOLA MEGDR data set catalog",
+   "institution": "NASA PDS Geosciences Node / MOLA Science Team",
+   "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/catalog/megdrds.cat",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 12175,
+   "chunks": 19,
+   "kind": "text"
+  },
+  {
+   "document_id": "pds_mola_megdr_page",
+   "title": "PDS Geosciences Node Data and Services: MGS MOLA MEGDRs",
+   "institution": "NASA PDS Geosciences Node",
+   "url": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 12371,
+   "chunks": 17,
+   "kind": "html"
+  },
+  {
+   "document_id": "lpi_exploration_zone_workshop_2015",
+   "title": "First Landing Site/Exploration Zone Workshop for Human Missions to the Surface of Mars (2015)",
+   "institution": "NASA / Lunar and Planetary Institute (USRA)",
+   "url": "https://www.hou.usra.edu/meetings/explorationzone2015/",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 3368,
+   "chunks": 5,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_analog_missions",
+   "title": "Analog Missions - NASA",
+   "institution": "NASA",
+   "url": "https://www.nasa.gov/analog-missions/",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 9508,
+   "chunks": 13,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_arads",
+   "title": "Atacama Rover Astrobiology Drilling Studies (ARADS) - NASA",
+   "institution": "NASA Ames",
+   "url": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/",
+   "publication_date": "2019-09-19",
+   "retrieved_at": "2026-11-14",
+   "chars": 8929,
+   "chunks": 15,
+   "kind": "html"
+  },
+  {
+   "document_id": "marsinstitute_hmp",
+   "title": "Mars Institute | HMP",
+   "institution": "Mars Institute / SETI Institute / NASA",
+   "url": "https://www.marsinstitute.no/hmp",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 7346,
+   "chunks": 11,
+   "kind": "html"
+  },
+  {
+   "document_id": "aws_copernicus_dem_registry",
+   "title": "Copernicus Digital Elevation Model (DEM) - Registry of Open Data on AWS",
+   "institution": "ESA Copernicus / AWS Registry of Open Data",
+   "url": "https://registry.opendata.aws/copernicus-dem/",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 2406,
+   "chunks": 3,
+   "kind": "html"
+  },
+  {
+   "document_id": "nasa_power_methodology",
+   "title": "NASA POWER | Docs | Methodology - NASA POWER | Docs",
+   "institution": "NASA Langley Research Center (POWER)",
+   "url": "https://power.larc.nasa.gov/docs/methodology/",
+   "publication_date": null,
+   "retrieved_at": "2026-11-14",
+   "chars": 7307,
+   "chunks": 11,
+   "kind": "html"
+  },
+  {
+   "document_id": "crossref_lit_jezero_mineralogy",
+   "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+   "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+   "url": "https://api.crossref.org/works/10.1002/2014JE004782",
+   "publication_date": "2015-04",
+   "retrieved_at": "2026-11-14",
+   "chars": 2429,
+   "chunks": 3,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_gale_stratigraphy",
+   "title": "A Habitable Fluvio-Lacustrine Environment at Yellowknife Bay, Gale Crater, Mars",
+   "institution": "Science / American Association for the Advancement of Science (AAAS)",
+   "url": "https://api.crossref.org/works/10.1126/science.1242777",
+   "publication_date": "2014-01-24",
+   "retrieved_at": "2026-11-14",
+   "chars": 8570,
+   "chunks": 11,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_oxia_clays",
+   "title": "Oxia Planum: The Landing Site for the ExoMars “Rosalind Franklin” Rover Mission: Geological Context and Prelanding Interpretation",
+   "institution": "Astrobiology / SAGE Publications",
+   "url": "https://api.crossref.org/works/10.1089/ast.2019.2191",
+   "publication_date": "2021-03",
+   "retrieved_at": "2026-11-14",
+   "chars": 2755,
+   "chunks": 4,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_meridiani_hematite",
+   "title": "Detection of crystalline hematite mineralization on Mars by the Thermal Emission Spectrometer: Evidence for near‐surface water",
+   "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+   "url": "https://api.crossref.org/works/10.1029/1999JE001093",
+   "publication_date": "2000-04-25",
+   "retrieved_at": "2026-11-14",
+   "chars": 4250,
+   "chunks": 6,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_utopia_ice",
+   "title": "SHARAD detection and characterization of subsurface water ice deposits in Utopia Planitia, Mars",
+   "institution": "Geophysical Research Letters / American Geophysical Union (AGU)",
+   "url": "https://api.crossref.org/works/10.1002/2016GL070138",
+   "publication_date": "2016-09-28",
+   "retrieved_at": "2026-11-14",
+   "chars": 1613,
+   "chunks": 2,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_gusev_basalt",
+   "title": "Basaltic Rocks Analyzed by the Spirit Rover in Gusev Crater",
+   "institution": "Science / American Association for the Advancement of Science (AAAS)",
+   "url": "https://api.crossref.org/works/10.1126/science.3050842",
+   "publication_date": "2004-08-06",
+   "retrieved_at": "2026-11-14",
+   "chars": 1928,
+   "chunks": 3,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_golombek_mer_sites",
+   "title": "Selection of the Mars Exploration Rover landing sites",
+   "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+   "url": "https://api.crossref.org/works/10.1029/2003JE002074",
+   "publication_date": "2003-12",
+   "retrieved_at": "2026-11-14",
+   "chars": 2682,
+   "chunks": 4,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_yungay",
+   "title": "Mars-Like Soils in the Atacama Desert, Chile, and the Dry Limit of Microbial Life",
+   "institution": "Science / American Association for the Advancement of Science (AAAS)",
+   "url": "https://api.crossref.org/works/10.1126/science.1089143",
+   "publication_date": "2003-11-07",
+   "retrieved_at": "2026-11-14",
+   "chars": 1594,
+   "chunks": 2,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_dry_valleys",
+   "title": "Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars",
+   "institution": "Icarus / Elsevier BV",
+   "url": "https://api.crossref.org/works/10.1016/j.icarus.2007.06.018",
+   "publication_date": "2007-12",
+   "retrieved_at": "2026-11-14",
+   "chars": 705,
+   "chunks": 1,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_haughton",
+   "title": "Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic",
+   "institution": "Meteoritics &amp; Planetary Science / Wiley",
+   "url": "https://api.crossref.org/works/10.1111/j.1945-5100.2005.tb00147.x",
+   "publication_date": "2005-12",
+   "retrieved_at": "2026-11-14",
+   "chars": 697,
+   "chunks": 1,
+   "kind": "crossref"
+  },
+  {
+   "document_id": "crossref_lit_holuhraun",
+   "title": "Lava field evolution and emplacement dynamics of the 2014–2015 basaltic fissure eruption at Holuhraun, Iceland",
+   "institution": "Journal of Volcanology and Geothermal Research / Elsevier BV",
+   "url": "https://api.crossref.org/works/10.1016/j.jvolgeores.2017.02.027",
+   "publication_date": "2017-06",
+   "retrieved_at": "2026-11-14",
+   "chars": 957,
+   "chunks": 1,
+   "kind": "crossref"
+  }
+ ],
+ "failed": [
+  {
+   "document_id": "marssociety_mdrs",
+   "url": "https://mdrs.marssociety.org/",
+   "reason": "extracted text too short (45 chars): likely a JavaScript-rendered shell"
+  },
+  {
+   "document_id": "nasa_power_home",
+   "url": "https://power.larc.nasa.gov/",
+   "reason": "extracted text too short (584 chars): likely a JavaScript-rendered shell"
+  }
+ ],
+ "note": "Retrieved documents are untrusted input: quoted as evidence, never followed as instructions. Dates are null where no source stated one."
+}

@@ -1,10 +1,11 @@
 {
-  "version": "landing-v1.0",
+  "version": "landing-v1.1",
   "mission_phase": "landing",
   "notes": [
     "Scores are relative decision-support indices on 0-100, not probabilities and not a landing-safety certification.",
     "Every threshold below is a DOCUMENTED ASSUMPTION chosen for regional screening at the ~3.7 km MOLA MEGDR 16 ppd baseline. None is an established universal landing requirement.",
-    "Suitability functions are piecewise-linear: q = 1 at or beyond `full` toward the preferred direction, q = 0 at or beyond `zero`, linear in between."
+    "Suitability functions are piecewise-linear: q = 1 at or beyond `full` toward the preferred direction, q = 0 at or beyond `zero`, linear in between.",
+    "landing-v1.1 (2026-11-14): solar_illumination `full` knee moved from 185 to 178 W/m2 so that q = 1 is attainable (see that criterion's rationale). Default weights, every other knee and both default hard constraints are unchanged from landing-v1.0."
   ],
   "criteria": [
     {
@@ -48,9 +49,9 @@
       "label": "Solar illumination (annual mean, top of atmosphere)",
       "feature_id": "insolation_toa_annual_mean_wm2",
       "unit": "W/m2",
-      "function": {"type": "piecewise_linear", "direction": "higher_is_better", "full": 185.0, "zero": 80.0},
+      "function": {"type": "piecewise_linear", "direction": "higher_is_better", "full": 178.0, "zero": 80.0},
       "default_weight": 10,
-      "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+      "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
     }
   ],
   "default_hard_constraints": [

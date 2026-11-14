@@ -6,17 +6,25 @@
     Similarity = 100 / (1 + D)
 
 Independent of the suitability engine by design. Features missing on either
-side are reported as non-comparable and never imputed.
+side are reported as non-comparable and never imputed; so are values that are
+not finite numbers (NaN/inf cannot be scored or serialised) and numeric
+features whose spec scale is not a positive number.
 """
 from __future__ import annotations
 
 import json
+import math
 from functools import lru_cache
 from pathlib import Path
 
 from app.models import AnalogMatch, AnalogWeight, EarthCandidate, EnvironmentalProfile, FeatureDistance, Site
 
 SPEC_PATH = Path(__file__).resolve().parents[1] / "config" / "analog_spec.json"
+
+# Wording thresholds for shared_characteristics / important_differences, in
+# units of the feature's own comparison scale. They never touch D.
+CLOSE_D = 0.5
+DIFFERENT_D = 1.0
 
 
 @lru_cache
@@ -31,6 +39,10 @@ def jaccard_distance(a: list[str], b: list[str]) -> float:
     return 1.0 - len(sa & sb) / len(sa | sb)
 
 
+def _is_finite_number(v) -> bool:
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
 def _value(profile: EnvironmentalProfile | None, fid: str):
     if profile is None:
         return None, None
@@ -40,30 +52,101 @@ def _value(profile: EnvironmentalProfile | None, fid: str):
     return m.value, m.unit
 
 
+def _echo(v):
+    """A value safe to put in a response: NaN/inf become None."""
+    if isinstance(v, (int, float)) and not isinstance(v, bool) and not math.isfinite(v):
+        return None
+    return v
+
+
+def _tags(v) -> list[str] | None:
+    """A tag list, or None when the value is not a list of strings (a prose
+    sentence must not be split into characters)."""
+    if isinstance(v, list) and all(isinstance(t, str) for t in v):
+        return v
+    return None
+
+
+def _fmt(x, unit: str | None) -> str:
+    u = (unit or "").strip()
+    if u == "m":
+        s = f"{x:,.0f}"
+    elif u == "deg":
+        s = f"{x:.2f}"
+    elif u in ("W/m2", "Pa"):
+        s = f"{x:.0f}"
+    elif u == "degC":
+        s = f"{x:.1f}"
+    elif u == "mm/day":
+        s = f"{x:.2f}"
+    else:
+        s = f"{x:g}"
+    return f"{s} {u}".strip()
+
+
+def _words(tags: list[str]) -> str:
+    return ", ".join(t.replace("_", " ") for t in tags)
+
+
 def feature_distance(fs: dict, mars_p: EnvironmentalProfile, earth_p: EnvironmentalProfile | None, weight: float) -> FeatureDistance:
     fid = fs["feature_id"]
     mv, unit = _value(mars_p, fid)
     ev, _ = _value(earth_p, fid)
-    base = dict(feature_id=fid, label=fs["label"], mars_value=mv, earth_value=ev, unit=unit or fs.get("unit"), scale=fs.get("scale"), raw_weight=weight, normalized_weight=None, contribution=None, method=fs["method"])
-    if mv is None or ev is None:
-        return FeatureDistance(comparable=False, distance=None, note="missing on one side; not imputed", **base)
+    unit = unit or fs.get("unit")
+    # Echo the raw values for the UI, except a non-finite number, which json
+    # cannot carry; the note says why the feature was not compared.
+    base = dict(feature_id=fid, label=fs["label"], mars_value=_echo(mv), earth_value=_echo(ev), unit=unit, scale=fs.get("scale"), raw_weight=weight,
+                normalized_weight=None, contribution=None, method=fs["method"])
+
+    def noncomp(note: str) -> FeatureDistance:
+        return FeatureDistance(comparable=False, distance=None, note=note, **base)
+
+    if mv is None and ev is None:
+        return noncomp(f"{fid} is missing on both the Mars and the Earth side; not imputed, excluded from D")
+    if mv is None:
+        return noncomp(f"{fid} is missing on the Mars side; not imputed, excluded from D")
+    if ev is None:
+        return noncomp(f"{fid} is missing on the Earth side; not imputed, excluded from D")
+
     if fs["method"] == "scaled_absolute_difference":
-        if not isinstance(mv, (int, float)) or not isinstance(ev, (int, float)):
-            return FeatureDistance(comparable=False, distance=None, note="non-numeric value", **base)
-        return FeatureDistance(comparable=True, distance=abs(float(mv) - float(ev)) / float(fs["scale"]), note=None, **base)
+        if not _is_finite_number(mv) or not _is_finite_number(ev):
+            return noncomp("value is not a finite number on at least one side; excluded from D")
+        scale = fs.get("scale")
+        if not _is_finite_number(scale) or scale <= 0:
+            return noncomp(f"spec scale for {fid} is not a positive number; excluded from D")
+        diff = abs(float(mv) - float(ev))
+        d = diff / float(scale)
+        verdict = "close" if d <= CLOSE_D else ("moderately different" if d <= DIFFERENT_D else "very different")
+        if "3.7 km" in fs.get("label", ""):
+            verdict += " at the harmonised ~3.7 km baseline"
+        note = (f"Mars {_fmt(mv, unit)} vs Earth {_fmt(ev, unit)}: |difference| {_fmt(diff, unit)} / scale {_fmt(scale, unit)}"
+                f" = d {d:.2f} ({verdict})")
+        return FeatureDistance(comparable=True, distance=d, note=note, **base)
+
     if fs["method"] == "jaccard_distance":
-        if not isinstance(mv, list) or not isinstance(ev, list):
-            return FeatureDistance(comparable=False, distance=None, note="expected tag lists", **base)
-        return FeatureDistance(comparable=True, distance=jaccard_distance(mv, ev), note=f"shared: {sorted(set(mv) & set(ev)) or 'none'}", **base)
-    return FeatureDistance(comparable=False, distance=None, note=f"unknown method {fs['method']}", **base)
+        mt, et = _tags(mv), _tags(ev)
+        if mt is None or et is None:
+            return noncomp("expected lists of tags on both sides; excluded from D")
+        shared, only_m, only_e = sorted(set(mt) & set(et)), sorted(set(mt) - set(et)), sorted(set(et) - set(mt))
+        d = jaccard_distance(mt, et)
+        union = len(set(mt) | set(et))
+        note = f"shared {len(shared)} of {union} distinct tags" + (f" ({_words(shared)})" if shared else " (none)")
+        if only_m:
+            note += f"; Mars only: {_words(only_m)}"
+        if only_e:
+            note += f"; Earth only: {_words(only_e)}"
+        note += f"; Jaccard distance {d:.2f}"
+        return FeatureDistance(comparable=True, distance=d, note=note, **base)
+
+    return noncomp(f"unknown method {fs['method']}; excluded from D")
 
 
 def _applications(cand: EarthCandidate, shared_terrain: list[str], shared_minerals: list[str]) -> list[str]:
     apps = list(cand.known_analog_use)
     if shared_terrain:
-        apps.append("Terrain-mobility and landing-approach rehearsals on " + ", ".join(t.replace("_", " ") for t in shared_terrain))
+        apps.append("Terrain-mobility and landing-approach rehearsals on " + _words(shared_terrain))
     if shared_minerals:
-        apps.append("Instrument calibration and sample-handling tests against " + ", ".join(m.replace("_", " ") for m in shared_minerals))
+        apps.append("Instrument calibration and sample-handling tests against " + _words(shared_minerals))
     return apps
 
 
@@ -82,14 +165,33 @@ def match(mars_site: Site, mars_p: EnvironmentalProfile, cand: EarthCandidate, e
     weighted = [f for f in fds if f.raw_weight > 0]
     completeness = (len(comparable) / len(weighted)) if weighted else 0.0
 
-    mt, _ = _value(mars_p, "terrain_morphology"); et, _ = _value(earth_p, "terrain_morphology")
-    mm, _ = _value(mars_p, "mineralogy_tags"); em, _ = _value(earth_p, "mineralogy_tags")
-    shared_t = sorted(set(mt or []) & set(et or [])); shared_m = sorted(set(mm or []) & set(em or []))
-    shared = [f"Terrain: {', '.join(shared_t)}" for _ in [0] if shared_t] + [f"Composition: {', '.join(shared_m)}" for _ in [0] if shared_m]
+    mt = _tags(_value(mars_p, "terrain_morphology")[0]) or []
+    et = _tags(_value(earth_p, "terrain_morphology")[0]) or []
+    mm = _tags(_value(mars_p, "mineralogy_tags")[0]) or []
+    em = _tags(_value(earth_p, "mineralogy_tags")[0]) or []
+    shared_t, shared_m = sorted(set(mt) & set(et)), sorted(set(mm) & set(em))
+
+    shared: list[str] = []
+    diffs: list[str] = []
+    if shared_t:
+        shared.append(f"Terrain morphology shared: {_words(shared_t)}")
+    elif mt and et:
+        diffs.append(f"Terrain morphology: no shared tags (Mars: {_words(mt)}; Earth: {_words(et)})")
+    if shared_m:
+        shared.append(f"Composition shared: {_words(shared_m)}")
+    elif mm and em:
+        diffs.append(f"Composition: no shared tags (Mars: {_words(mm)}; Earth: {_words(em)})")
     for f in comparable:
-        if f.method == "scaled_absolute_difference" and f.distance is not None and f.distance <= 0.5:
-            shared.append(f"{f.label}: Mars {f.mars_value:g} vs Earth {f.earth_value:g} {f.unit or ''} (close at the harmonised scale)")
-    diffs = [f"{f.label}: Mars {f.mars_value:g} vs Earth {f.earth_value:g} {f.unit or ''}" for f in comparable if f.method == "scaled_absolute_difference" and f.distance is not None and f.distance > 1.0]
+        if f.method != "scaled_absolute_difference" or f.distance is None:
+            continue
+        short = f.label.split(" (")[0]
+        diff = abs(float(f.mars_value) - float(f.earth_value))
+        pair = f"{short}: Mars {_fmt(f.mars_value, f.unit)} vs Earth {_fmt(f.earth_value, f.unit)}"
+        if f.distance <= CLOSE_D:
+            shared.append(f"{pair} (difference {_fmt(diff, f.unit)}, within half the {_fmt(f.scale, f.unit)} comparison scale)")
+        elif f.distance > DIFFERENT_D:
+            diffs.append(f"{pair} (difference {_fmt(diff, f.unit)}, {f.distance:.1f}x the {_fmt(f.scale, f.unit)} comparison scale)")
+
     noncomp = [f"{f.label}: {f.note}" for f in fds if not f.comparable] + list(spec["noncomparable_disclosures"])
     limitations = [
         "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
@@ -97,7 +199,10 @@ def match(mars_site: Site, mars_p: EnvironmentalProfile, cand: EarthCandidate, e
         "Composition and morphology tags are literature-derived categorical labels, not spectral measurements.",
     ]
     if earth_p is None:
-        limitations.append("Earth candidate has no processed profile; only categorical tags were compared.")
+        limitations.append("Earth candidate has no processed profile in this version; no feature could be compared and similarity is undefined."
+                           if not comparable else "Earth candidate has no processed profile; only features present on both sides were compared.")
+    elif not comparable:
+        limitations.append("No feature with a positive weight is present on both sides; similarity is undefined rather than guessed.")
     citations = sorted(set(cand.sources) | set(mars_p.sources.keys()) | (set(earth_p.sources.keys()) if earth_p else set()))
     return AnalogMatch(mars_site_id=mars_site.id, earth_candidate=cand, similarity=None if sim is None else round(sim, 2), distance=None if D is None else round(D, 4), rank=None,
                        feature_distances=fds, shared_characteristics=shared, important_differences=diffs, noncomparable_variables=noncomp,
@@ -118,6 +223,13 @@ def match_all(mars_site: Site, mars_p: EnvironmentalProfile, candidates: list[tu
         warnings.append("all analog weights are zero; similarity cannot be computed")
     matches = [match(mars_site, mars_p, c, p, w) for c, p in candidates]
     matches.sort(key=lambda m: (-(m.similarity if m.similarity is not None else -1.0), m.earth_candidate.id))
-    for i, m in enumerate(matches, 1):
-        m.rank = i if m.similarity is not None else None
-    return matches[:top_k], warnings
+    n = 0
+    for m in matches:
+        if m.similarity is not None:
+            n += 1
+            m.rank = n
+        else:
+            m.rank = None
+            if sum(w.values()) > 0:
+                warnings.append(f"candidate '{m.earth_candidate.id}' has no comparable weighted feature with '{mars_site.id}'; similarity undefined")
+    return matches[: max(0, top_k)], warnings

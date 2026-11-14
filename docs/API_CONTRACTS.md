@@ -27,10 +27,10 @@ implied.
   "status": "ok",
   "version": "0.1.0",
   "profile_version": "v1",
-  "scoring_spec_version": "landing-v1.0",
+  "scoring_spec_version": "landing-v1.1",
   "services": {
     "data": "ok",
-    "retrieval": "unavailable",
+    "retrieval": "ok",
     "llm": "unconfigured"
   }
 }
@@ -58,7 +58,7 @@ implied.
         "crs": "IAU2000:49900",
         "longitude_convention": "east_-180_180",
         "approx_width_km": 56.2,
-        "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+        "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
       },
       "description": "A ~45 km impact crater holding an ancient lake basin with a well-preserved river delta on its western margin. Chosen for Perseverance for its lacustrine and ...",
       "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
@@ -96,7 +96,7 @@ Every `measurement.source_id` resolves to a key of `profile.sources` (a `Provena
       "crs": "IAU2000:49900",
       "longitude_convention": "east_-180_180",
       "approx_width_km": 56.2,
-      "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+      "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
     },
     "description": "A ~45 km impact crater holding an ancient lake basin with a well-preserved river delta on its western margin. Chosen for Perseverance for its lacustrine and ...",
     "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
@@ -113,7 +113,7 @@ Every `measurement.source_id` resolves to a key of `profile.sources` (a `Provena
     "site_id": "jezero_crater",
     "planet": "mars",
     "profile_version": "v1",
-    "generated_at": "2026-11-14T15:48:04+00:00",
+    "generated_at": "2026-11-14T16:19:15+00:00",
     "pipeline": "scripts/build_mars_profiles.py: MOLA MEGDR 16 ppd footprint sampling + scripts/geo.py terrain statistics + analytic TOA insolation",
     "measurements": [
       {
@@ -134,7 +134,7 @@ Every `measurement.source_id` resolves to a key of `profile.sources` (a `Provena
           "crs": "IAU2000:49900",
           "longitude_convention": "east_-180_180",
           "approx_width_km": 56.2,
-          "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
         "uncertainty": "Cell medians of MOLA shots; interpolated where no shot; relative to GMM3 areoid",
         "quality_flag": "good",
@@ -159,7 +159,7 @@ Every `measurement.source_id` resolves to a key of `profile.sources` (a `Provena
           "crs": "IAU2000:49900",
           "longitude_convention": "east_-180_180",
           "approx_width_km": 56.2,
-          "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
         "uncertainty": null,
         "quality_flag": "good",
@@ -185,20 +185,20 @@ Every `measurement.source_id` resolves to a key of `profile.sources` (a `Provena
         "license": "NASA PDS data are public domain; cite the MOLA Science Team",
         "retrieved_at": "2026-11-14"
       },
-      "derived_toa_insolation": {
-        "source_id": "derived_toa_insolation",
-        "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
-        "institution": "Planetary Explorer pipeline (scripts/geo.py)",
-        "url": "docs/SCIENTIFIC_METHOD.md#insolation",
-        "instrument_or_model": "Analytic daily-mean insolation integrated over one orbit (a=1.52368 AU, e=0.0934, obliquity 25.19 deg, Ls_perihelion 251 deg, S0=1361 W/m2)",
+      "lit_jezero_mineralogy": {
+        "source_id": "lit_jezero_mineralogy",
+        "title": "Goudge et al. (2015), Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, J. Geophys. Res. Planets 120",
+        "institution": "AGU (peer-reviewed literature)",
+        "url": "https://doi.org/10.1002/2014JE004782",
+        "instrument_or_model": null,
         "dataset_id": null,
-        "coverage": "Any latitude",
-        "spatial_resolution": "Latitude only; no terrain or atmosphere",
-        "units": "W/m2",
+        "coverage": null,
+        "spatial_resolution": null,
+        "units": null,
         "observation_period": null,
-        "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven...",
-        "access_method": "computed",
-        "license": "n/a",
+        "uncertainty_notes": null,
+        "access_method": "DOI",
+        "license": null,
         "retrieved_at": null
       },
       "nasa_m2020_landing_site": {
@@ -217,20 +217,20 @@ Every `measurement.source_id` resolves to a key of `profile.sources` (a `Provena
         "license": null,
         "retrieved_at": null
       },
-      "lit_jezero_mineralogy": {
-        "source_id": "lit_jezero_mineralogy",
-        "title": "Goudge et al. (2015), Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, J. Geophys. Res. Planets 120",
-        "institution": "AGU (peer-reviewed literature)",
-        "url": "https://doi.org/10.1002/2014JE004782",
-        "instrument_or_model": null,
+      "derived_toa_insolation": {
+        "source_id": "derived_toa_insolation",
+        "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
+        "institution": "Planetary Explorer pipeline (scripts/geo.py)",
+        "url": "docs/SCIENTIFIC_METHOD.md#insolation",
+        "instrument_or_model": "Analytic daily-mean insolation integrated over one orbit (a=1.52368 AU, e=0.0934, obliquity 25.19 deg, Ls_perihelion 251 deg, S0=1361 W/m2)",
         "dataset_id": null,
-        "coverage": null,
-        "spatial_resolution": null,
-        "units": null,
+        "coverage": "Any latitude",
+        "spatial_resolution": "Latitude only; no terrain or atmosphere",
+        "units": "W/m2",
         "observation_period": null,
-        "uncertainty_notes": null,
-        "access_method": "DOI",
-        "license": null,
+        "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven...",
+        "access_method": "computed",
+        "license": "n/a",
         "retrieved_at": null
       }
     },
@@ -301,7 +301,7 @@ Response (results sorted: `ok` by score desc, then `insufficient_data`, then `in
       "site_id": "chryse_planitia",
       "site_name": "Chryse Planitia (Viking 1)",
       "status": "ok",
-      "score": 98.06,
+      "score": 98.72,
       "rank": 1,
       "factor_scores": [
         {
@@ -316,7 +316,7 @@ Response (results sorted: `ok` by score desc, then `insufficient_data`, then `in
           "weighted_contribution": 38.88888888888889,
           "is_missing": false,
           "excluded_reason": null,
-          "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the..."
+          "rationale": "0.14 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain su..."
         },
         {
           "criterion_id": "elevation_suitability",
@@ -330,7 +330,7 @@ Response (results sorted: `ok` by score desc, then `insufficient_data`, then `in
           "weighted_contribution": 27.77777777777778,
           "is_missing": false,
           "excluded_reason": null,
-          "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER,..."
+          "rationale": "-3,624 m is at or below the -3,000 m fully-suitable knee, so q = 1.00. Lower elevation means a thicker atmospheric column for entry, descent and landing dece..."
         }
       ],
       "eligibility": {
@@ -347,19 +347,19 @@ Response (results sorted: `ok` by score desc, then `insufficient_data`, then `in
         ]
       },
       "favorable": [
-        "Terrain safety (regional slope): 0.144 deg scores 1.00",
-        "Elevation suitability (EDL atmosphere): -3624 m scores 1.00",
+        "Terrain safety 0.14 deg (median over ~55 km footprint) - fully suitable (1.00)",
+        "Elevation suitability -3,624 m (median over ~55 km footprint) - fully suitable (1.00)",
         "... (2 more)"
       ],
       "risks": [],
       "limitations": [
-        "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+        "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crate...",
         "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
         "... (1 more)"
       ]
     }
   ],
-  "scoring_spec_version": "landing-v1.0",
+  "scoring_spec_version": "landing-v1.1",
   "profile_version": "v1",
   "mission": {
     "mission_phase": "landing",
@@ -395,7 +395,7 @@ Response (results sorted: `ok` by score desc, then `insufficient_data`, then `in
     "missing_data_policy": "common_feature_set"
   },
   "warnings": [
-    "criterion 'thermal_conditions' excluded: feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set"
+    "criterion 'thermal_conditions' excluded: feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crate..."
   ],
   "client_request_id": "req-42"
 }
@@ -452,8 +452,8 @@ Response:
           "lit_yungay"
         ]
       },
-      "similarity": 63.46,
-      "distance": 0.5758,
+      "similarity": 63.03,
+      "distance": 0.5866,
       "rank": 1,
       "feature_distances": [
         {
@@ -461,37 +461,40 @@ Response:
           "label": "Regional slope (median, ~3.7 km baseline)",
           "comparable": true,
           "mars_value": 1.077,
-          "earth_value": 1.106,
+          "earth_value": 1.166,
           "unit": "deg",
           "scale": 1.5,
-          "distance": 0.019333333333333425,
+          "distance": 0.059333333333333314,
           "raw_weight": 25.0,
           "normalized_weight": 0.25,
-          "contribution": 0.004833333333333356,
+          "contribution": 0.014833333333333329,
           "method": "scaled_absolute_difference",
-          "note": null
+          "note": "Mars 1.08 deg vs Earth 1.17 deg: |difference| 0.09 deg / scale 1.50 deg = d 0.06 (close at the harmonised ~3.7 km baseline)"
         },
         {
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (~3.7 km cells)",
           "comparable": true,
           "mars_value": 194.4,
-          "earth_value": 126.8,
+          "earth_value": 126.5,
           "unit": "m",
           "scale": 100.0,
-          "distance": 0.676,
+          "distance": 0.679,
           "raw_weight": 25.0,
           "normalized_weight": 0.25,
-          "contribution": 0.169,
+          "contribution": 0.16975,
           "method": "scaled_absolute_difference",
-          "note": null
+          "note": "Mars 194 m vs Earth 126 m: |difference| 68 m / scale 100 m = d 0.68 (moderately different at the harmonised ~3.7 km baseline)"
         }
       ],
       "shared_characteristics": [
-        "Regional slope (median, ~3.7 km baseline): Mars 1.077 vs Earth 1.106 deg (close at the harmonised scale)",
-        "Aridity (mean precipitation): Mars 0 vs Earth 0.02 mm/day (close at the harmonised scale)"
+        "Regional slope: Mars 1.08 deg vs Earth 1.17 deg (difference 0.09 deg, within half the 1.50 deg comparison scale)",
+        "Aridity: Mars 0.00 mm/day vs Earth 0.02 mm/day (difference 0.02 mm/day, within half the 1.00 mm/day comparison scale)"
       ],
-      "important_differences": [],
+      "important_differences": [
+        "Terrain morphology: no shared tags (Mars: impact crater, delta, paleolake basin, crater floor; Earth: desert plain, smooth plains, alluvial fan, hyperarid)",
+        "Composition: no shared tags (Mars: carbonates, clays, olivine, basalt; Earth: nitrates, sulfates, perchlorates, halite, regolith)"
+      ],
       "noncomparable_variables": [
         "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
         "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
@@ -543,15 +546,15 @@ Response (`generated_by` is `llm` or `deterministic_fallback`; every `citations[
   "model": null,
   "sections": {
     "favorable": [
-      "Terrain safety (regional slope): 1.077 deg -> suitability 1.00, contributing 38.9 of 79.8 points.",
-      "Elevation suitability (EDL atmosphere): -2129 m -> suitability 0.83, contributing 22.9 of 79.8 points.",
+      "Terrain safety (regional slope): 1.077 deg -> suitability 1.00, contributing 38.9 of 80.5 points.",
+      "Elevation suitability (EDL atmosphere): -2129 m -> suitability 0.83, contributing 22.9 of 80.5 points.",
       "... (1 more)"
     ],
     "unfavorable": [
-      "Surface roughness (detrended relief): 194.4 m -> suitability 0.38, contributing 8.4 of 79.8 points."
+      "Surface roughness (detrended relief): 194.4 m -> suitability 0.38, contributing 8.4 of 80.5 points."
     ],
     "risks": [
-      "Surface roughness (detrended relief): 194.4 m scores 0.38"
+      "Surface roughness 194 m (~56 km footprint) - poor (0.38)"
     ],
     "influential_factors": [
       "Terrain safety (regional slope) (normalised weight 0.39)",
@@ -559,27 +562,61 @@ Response (`generated_by` is `llm` or `deterministic_fallback`; every `citations[
       "... (2 more)"
     ],
     "research_applications": [
-      "Closest Earth analog: Atacama Desert - Yungay region, similarity 63.46 (Regional slope (median, ~3.7 km baseline): Mars 1.077 vs Earth 1.106 deg (close at th...",
-      "Closest Earth analog: San Rafael Swell - MDRS area, similarity 61.83 (Composition: clays; Regional slope (median, ~3.7 km baseline): Mars 1.077 vs Earth 0.97..."
+      "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars (Journal of Geophysical Research: Planets / American G...",
+      "Mars 2020: Perseverance Rover - NASA Science (NASA Science / JPL) [C5]: Watery Past\n\nThe rover discovered a habitable, stable lake, delta, and river system i...",
+      "... (4 more)"
     ],
     "missing_evidence": [
       "Criterion excluded: thermal_conditions",
       "No measurement for surface_temperature_mean_c in profile v1.",
-      "... (4 more)"
+      "... (3 more)"
     ],
     "future_investigation": [
       "Sample HiRISE/CTX-derived DTMs over the landing ellipse to replace regional MOLA slopes with metre-scale hazard maps.",
       "Integrate THEMIS/TES thermal inertia and rock abundance so the thermal and hazard criteria can be scored."
     ]
   },
-  "supporting_evidence": [],
-  "citations": [],
+  "supporting_evidence": [
+    {
+      "chunk_id": "crossref_lit_jezero_mineralogy#002",
+      "document_id": "crossref_lit_jezero_mineralogy",
+      "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+      "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+      "url": "https://api.crossref.org/works/10.1002/2014JE004782",
+      "publication_date": "2015-04",
+      "geographic_relevance": [
+        "jezero_crater",
+        "Nili Fossae / Isidis basin rim"
+      ],
+      "excerpt": "present results from geomorphic mapping and visible to near\u2010infrared spectral analyses of the Jezero crater paleolake basin and its associated watershed. The...",
+      "score": 0.022541
+    }
+  ],
+  "citations": [
+    {
+      "citation_id": "[C1]",
+      "chunk_id": "crossref_lit_jezero_mineralogy#002",
+      "document_id": "crossref_lit_jezero_mineralogy",
+      "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+      "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+      "url": "https://api.crossref.org/works/10.1002/2014JE004782"
+    },
+    {
+      "citation_id": "[C2]",
+      "chunk_id": "nasa_m2020_overview#007",
+      "document_id": "nasa_m2020_overview",
+      "title": "Mars 2020: Perseverance Rover - NASA Science",
+      "institution": "NASA Science / JPL",
+      "url": "https://science.nasa.gov/mission/mars-2020-perseverance/"
+    },
+    "... (4 more)"
+  ],
   "limitations": [
     "Deterministic template assembled from measurements, scoring results and retrieved excerpts; no language model was used.",
     "Citations point at retrieved passages only; read the source before relying on a claim."
   ],
   "cached": false,
-  "generated_at": "2026-11-14T15:56:06+00:00"
+  "generated_at": "2026-11-14T16:22:18+00:00"
 }
 ```
 

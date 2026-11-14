@@ -1,0 +1,1568 @@
+{
+  "site": {
+    "site": {
+      "id": "jezero_crater",
+      "planet": "mars",
+      "name": "Jezero Crater",
+      "region": "Nili Fossae / Isidis basin rim",
+      "lat": 18.4447,
+      "lon_east": 77.4508,
+      "footprint": {
+        "shape": "square",
+        "center_lat": 18.4447,
+        "center_lon_east": 77.4508,
+        "half_width_deg": 0.5,
+        "radius_km": null,
+        "crs": "IAU2000:49900",
+        "longitude_convention": "east_-180_180",
+        "approx_width_km": 56.2,
+        "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+      },
+      "description": "A ~45 km impact crater holding an ancient lake basin with a well-preserved river delta on its western margin. Chosen for Perseverance for its lacustrine and deltaic deposits.",
+      "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
+      "tags": [
+        "basalt",
+        "carbonates",
+        "clays",
+        "crater_floor",
+        "delta",
+        "impact_crater",
+        "olivine",
+        "paleolake_basin"
+      ],
+      "coordinate_sources": [
+        "nasa_m2020_landing_site"
+      ]
+    },
+    "profile": {
+      "site_id": "jezero_crater",
+      "planet": "mars",
+      "profile_version": "v1",
+      "generated_at": "2026-11-14T15:48:04+00:00",
+      "pipeline": "scripts/build_mars_profiles.py: MOLA MEGDR 16 ppd footprint sampling + scripts/geo.py terrain statistics + analytic TOA insolation",
+      "measurements": [
+        {
+          "feature_id": "elevation_median_m",
+          "label": "Elevation (footprint median)",
+          "category": "ground",
+          "value": -2129,
+          "unit": "m",
+          "source_id": "mola_megdr_16ppd",
+          "measurement_type": "measured",
+          "spatial_resolution": "~3.7 km cells (16 ppd); 289 cells in footprint",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": "Cell medians of MOLA shots; interpolated where no shot; relative to GMM3 areoid",
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": null
+        },
+        {
+          "feature_id": "elevation_p10_m",
+          "label": "Elevation (10th percentile)",
+          "category": "ground",
+          "value": -2641.4,
+          "unit": "m",
+          "source_id": "mola_megdr_16ppd",
+          "measurement_type": "measured",
+          "spatial_resolution": "~3.7 km cells (16 ppd); 289 cells in footprint",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": null
+        },
+        {
+          "feature_id": "elevation_p90_m",
+          "label": "Elevation (90th percentile)",
+          "category": "ground",
+          "value": -1907.4,
+          "unit": "m",
+          "source_id": "mola_megdr_16ppd",
+          "measurement_type": "measured",
+          "spatial_resolution": "~3.7 km cells (16 ppd); 289 cells in footprint",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": null
+        },
+        {
+          "feature_id": "elevation_std_m",
+          "label": "Elevation variability (std)",
+          "category": "ground",
+          "value": 282.1,
+          "unit": "m",
+          "source_id": "mola_megdr_16ppd",
+          "measurement_type": "derived",
+          "spatial_resolution": "~3.7 km cells (16 ppd); 289 cells in footprint",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "regional_scale_only",
+          "is_missing": false,
+          "notes": "Regional statistic at a ~3.7 km baseline; cannot resolve lander-scale hazards."
+        },
+        {
+          "feature_id": "slope_regional_median_deg",
+          "label": "Regional slope (median)",
+          "category": "ground",
+          "value": 1.077,
+          "unit": "deg",
+          "source_id": "mola_megdr_16ppd",
+          "measurement_type": "derived",
+          "spatial_resolution": "~3.7 km cells (16 ppd); 289 cells in footprint",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": "Central-difference gradient between adjacent ~3.7 km cells",
+          "quality_flag": "regional_scale_only",
+          "is_missing": false,
+          "notes": "Regional statistic at a ~3.7 km baseline; cannot resolve lander-scale hazards."
+        },
+        {
+          "feature_id": "slope_regional_p90_deg",
+          "label": "Regional slope (90th percentile)",
+          "category": "ground",
+          "value": 3.233,
+          "unit": "deg",
+          "source_id": "mola_megdr_16ppd",
+          "measurement_type": "derived",
+          "spatial_resolution": "~3.7 km cells (16 ppd); 289 cells in footprint",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "regional_scale_only",
+          "is_missing": false,
+          "notes": "Regional statistic at a ~3.7 km baseline; cannot resolve lander-scale hazards."
+        },
+        {
+          "feature_id": "roughness_regional_m",
+          "label": "Detrended relief (plane-removed std)",
+          "category": "ground",
+          "value": 194.4,
+          "unit": "m",
+          "source_id": "mola_megdr_16ppd",
+          "measurement_type": "derived",
+          "spatial_resolution": "~3.7 km cells (16 ppd); 289 cells in footprint",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "regional_scale_only",
+          "is_missing": false,
+          "notes": "Regional statistic at a ~3.7 km baseline; cannot resolve lander-scale hazards. Not a proxy for rock abundance."
+        },
+        {
+          "feature_id": "latitude_abs_deg",
+          "label": "Absolute latitude",
+          "category": "light",
+          "value": 18.4447,
+          "unit": "deg",
+          "source_id": "nasa_m2020_landing_site",
+          "measurement_type": "measured",
+          "spatial_resolution": "point",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": "Used by the default latitude-band hard constraint."
+        },
+        {
+          "feature_id": "insolation_toa_annual_mean_wm2",
+          "label": "Annual-mean insolation (top of atmosphere)",
+          "category": "light",
+          "value": 170.4,
+          "unit": "W/m2",
+          "source_id": "derived_toa_insolation",
+          "measurement_type": "derived",
+          "spatial_resolution": "latitude only",
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": "Model; ignores dust and horizon",
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": "Seasonal variation not yet exposed as a separate metric."
+        },
+        {
+          "feature_id": "terrain_morphology",
+          "label": "Terrain morphology",
+          "category": "ground",
+          "value": [
+            "impact_crater",
+            "delta",
+            "paleolake_basin",
+            "crater_floor"
+          ],
+          "unit": null,
+          "source_id": "nasa_m2020_landing_site",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": null
+        },
+        {
+          "feature_id": "mineralogy_tags",
+          "label": "Mineral / compositional evidence",
+          "category": "composition",
+          "value": [
+            "carbonates",
+            "clays",
+            "olivine",
+            "basalt"
+          ],
+          "unit": null,
+          "source_id": "lit_jezero_mineralogy",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": "Qualitative tags from the cited source",
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": null
+        },
+        {
+          "feature_id": "water_ice_evidence",
+          "label": "Water / ice evidence",
+          "category": "water_ice",
+          "value": "Ancient lake and delta deposits (literature); no present-day ice detected at this latitude.",
+          "unit": null,
+          "source_id": "lit_jezero_mineralogy",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": null
+        },
+        {
+          "feature_id": "precipitation_mm_day",
+          "label": "Mean precipitation",
+          "category": "atmosphere_thermal",
+          "value": 0,
+          "unit": "mm/day",
+          "source_id": "nasa_m2020_landing_site",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": "Mars has no liquid precipitation; stated as a physical fact for the aridity comparison, not a measurement."
+        },
+        {
+          "feature_id": "surface_temperature_mean_c",
+          "label": "Mean surface temperature",
+          "category": "atmosphere_thermal",
+          "value": null,
+          "unit": "degC",
+          "source_id": null,
+          "measurement_type": "measured",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "missing",
+          "is_missing": true,
+          "notes": "Not yet integrated. Candidate sources: THEMIS/TES-derived surface temperature or thermal inertia (PDS), Mars Climate Database. Engineer 2 task."
+        },
+        {
+          "feature_id": "atmospheric_pressure_pa",
+          "label": "Surface atmospheric pressure",
+          "category": "atmosphere_thermal",
+          "value": null,
+          "unit": "Pa",
+          "source_id": null,
+          "measurement_type": "measured",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "missing",
+          "is_missing": true,
+          "notes": "Not yet integrated; depends on elevation and season (lander records exist for Viking, InSight, Curiosity, Perseverance)."
+        },
+        {
+          "feature_id": "rock_abundance_pct",
+          "label": "Rock abundance",
+          "category": "hazards",
+          "value": null,
+          "unit": "%",
+          "source_id": null,
+          "measurement_type": "measured",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "missing",
+          "is_missing": true,
+          "notes": "Not yet integrated. Candidate source: IRTM/TES rock abundance maps (Christensen 1986; Nowicki & Christensen 2007)."
+        },
+        {
+          "feature_id": "dust_cover_index",
+          "label": "Dust cover",
+          "category": "hazards",
+          "value": null,
+          "unit": null,
+          "source_id": null,
+          "measurement_type": "measured",
+          "spatial_resolution": null,
+          "geographic_footprint": {
+            "shape": "square",
+            "center_lat": 18.4447,
+            "center_lon_east": 77.4508,
+            "half_width_deg": 0.5,
+            "radius_km": null,
+            "crs": "IAU2000:49900",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 56.2,
+            "description": "1.0 deg square centred on the site; ~16x16 MOLA 16 ppd cells"
+          },
+          "uncertainty": null,
+          "quality_flag": "missing",
+          "is_missing": true,
+          "notes": "Not yet integrated. Candidate source: TES Dust Cover Index (Ruff & Christensen 2002)."
+        }
+      ],
+      "sources": {
+        "mola_megdr_16ppd": {
+          "source_id": "mola_megdr_16ppd",
+          "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+          "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+          "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+          "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+          "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+          "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+          "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+          "units": "metres (planetary radius minus areoid radius)",
+          "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+          "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. Individual shot vertical accuracy is ~1 m; interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+          "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+          "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+          "retrieved_at": "2026-11-14"
+        },
+        "derived_toa_insolation": {
+          "source_id": "derived_toa_insolation",
+          "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
+          "institution": "Planetary Explorer pipeline (scripts/geo.py)",
+          "url": "docs/SCIENTIFIC_METHOD.md#insolation",
+          "instrument_or_model": "Analytic daily-mean insolation integrated over one orbit (a=1.52368 AU, e=0.0934, obliquity 25.19 deg, Ls_perihelion 251 deg, S0=1361 W/m2)",
+          "dataset_id": null,
+          "coverage": "Any latitude",
+          "spatial_resolution": "Latitude only; no terrain or atmosphere",
+          "units": "W/m2",
+          "observation_period": null,
+          "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven proxy only.",
+          "access_method": "computed",
+          "license": "n/a",
+          "retrieved_at": null
+        },
+        "nasa_m2020_landing_site": {
+          "source_id": "nasa_m2020_landing_site",
+          "title": "Mars 2020 Perseverance Rover - Science (Jezero Crater landing site)",
+          "institution": "NASA Science / JPL",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/science/",
+          "instrument_or_model": null,
+          "dataset_id": null,
+          "coverage": null,
+          "spatial_resolution": null,
+          "units": null,
+          "observation_period": null,
+          "uncertainty_notes": null,
+          "access_method": "web page",
+          "license": null,
+          "retrieved_at": null
+        },
+        "lit_jezero_mineralogy": {
+          "source_id": "lit_jezero_mineralogy",
+          "title": "Goudge et al. (2015), Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, J. Geophys. Res. Planets 120",
+          "institution": "AGU (peer-reviewed literature)",
+          "url": "https://doi.org/10.1002/2014JE004782",
+          "instrument_or_model": null,
+          "dataset_id": null,
+          "coverage": null,
+          "spatial_resolution": null,
+          "units": null,
+          "observation_period": null,
+          "uncertainty_notes": null,
+          "access_method": "DOI",
+          "license": null,
+          "retrieved_at": null
+        }
+      },
+      "completeness": {
+        "features_requested": 17,
+        "features_available": 13,
+        "fraction": 0.765,
+        "missing_feature_ids": [
+          "surface_temperature_mean_c",
+          "atmospheric_pressure_pa",
+          "rock_abundance_pct",
+          "dust_cover_index"
+        ]
+      }
+    }
+  },
+  "evaluate": {
+    "results": [
+      {
+        "site_id": "chryse_planitia",
+        "site_name": "Chryse Planitia (Viking 1)",
+        "status": "ok",
+        "score": 98.06,
+        "rank": 1,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 0.144,
+            "unit": "deg",
+            "suitability": 1,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 38.88888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -3624,
+            "unit": "m",
+            "suitability": 1,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 27.77777777777778,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 19.5,
+            "unit": "m",
+            "suitability": 1,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 22.22222222222222,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 166.7,
+            "unit": "W/m2",
+            "suitability": 0.8257142857142856,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 9.174603174603174,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Terrain safety (regional slope): 0.144 deg scores 1.00",
+          "Elevation suitability (EDL atmosphere): -3624 m scores 1.00",
+          "Surface roughness (detrended relief): 19.5 m scores 1.00",
+          "Solar illumination (annual mean, top of atmosphere): 166.7 W/m2 scores 0.83"
+        ],
+        "risks": [],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      },
+      {
+        "site_id": "elysium_planitia",
+        "site_name": "Elysium Planitia (InSight)",
+        "status": "ok",
+        "score": 96.43,
+        "rank": 2,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 0.159,
+            "unit": "deg",
+            "suitability": 1,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 38.88888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -2647,
+            "unit": "m",
+            "suitability": 0.9294,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 25.816666666666666,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 31.1,
+            "unit": "m",
+            "suitability": 0.9603571428571428,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 21.34126984126984,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 178.1,
+            "unit": "W/m2",
+            "suitability": 0.9342857142857143,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 10.38095238095238,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Terrain safety (regional slope): 0.159 deg scores 1.00",
+          "Elevation suitability (EDL atmosphere): -2647 m scores 0.93",
+          "Surface roughness (detrended relief): 31.1 m scores 0.96",
+          "Solar illumination (annual mean, top of atmosphere): 178.1 W/m2 scores 0.93"
+        ],
+        "risks": [],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      },
+      {
+        "site_id": "oxia_planum",
+        "site_name": "Oxia Planum",
+        "status": "ok",
+        "score": 95.91,
+        "rank": 3,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 0.336,
+            "unit": "deg",
+            "suitability": 1,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 38.88888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -3069,
+            "unit": "m",
+            "suitability": 1,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 27.77777777777778,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 52.3,
+            "unit": "m",
+            "suitability": 0.8846428571428571,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 19.658730158730155,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 170.6,
+            "unit": "W/m2",
+            "suitability": 0.8628571428571428,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 9.587301587301585,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Terrain safety (regional slope): 0.336 deg scores 1.00",
+          "Elevation suitability (EDL atmosphere): -3069 m scores 1.00",
+          "Surface roughness (detrended relief): 52.3 m scores 0.88",
+          "Solar illumination (annual mean, top of atmosphere): 170.6 W/m2 scores 0.86"
+        ],
+        "risks": [],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      },
+      {
+        "site_id": "utopia_planitia",
+        "site_name": "Utopia Planitia (Viking 2)",
+        "status": "ok",
+        "score": 93.76,
+        "rank": 4,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 0.232,
+            "unit": "deg",
+            "suitability": 1,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 38.88888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -4498,
+            "unit": "m",
+            "suitability": 1,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 27.77777777777778,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 22.3,
+            "unit": "m",
+            "suitability": 0.9917857142857143,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 22.039682539682538,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 127.8,
+            "unit": "W/m2",
+            "suitability": 0.4552380952380952,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 5.058201058201058,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Terrain safety (regional slope): 0.232 deg scores 1.00",
+          "Elevation suitability (EDL atmosphere): -4498 m scores 1.00",
+          "Surface roughness (detrended relief): 22.3 m scores 0.99"
+        ],
+        "risks": [],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      },
+      {
+        "site_id": "gusev_crater",
+        "site_name": "Gusev Crater (Spirit)",
+        "status": "ok",
+        "score": 91.39,
+        "rank": 5,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 0.167,
+            "unit": "deg",
+            "suitability": 1,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 38.88888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -1907,
+            "unit": "m",
+            "suitability": 0.7814,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 21.705555555555556,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 36.7,
+            "unit": "m",
+            "suitability": 0.9403571428571429,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 20.896825396825395,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 173.5,
+            "unit": "W/m2",
+            "suitability": 0.8904761904761904,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 9.894179894179894,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Terrain safety (regional slope): 0.167 deg scores 1.00",
+          "Elevation suitability (EDL atmosphere): -1907 m scores 0.78",
+          "Surface roughness (detrended relief): 36.7 m scores 0.94",
+          "Solar illumination (annual mean, top of atmosphere): 173.5 W/m2 scores 0.89"
+        ],
+        "risks": [],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      },
+      {
+        "site_id": "meridiani_planum",
+        "site_name": "Meridiani Planum (Opportunity)",
+        "status": "ok",
+        "score": 85.52,
+        "rank": 6,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 0.242,
+            "unit": "deg",
+            "suitability": 1,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 38.88888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -1434,
+            "unit": "m",
+            "suitability": 0.6868,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 19.077777777777776,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 84.1,
+            "unit": "m",
+            "suitability": 0.7710714285714286,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 17.134920634920636,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 178.5,
+            "unit": "W/m2",
+            "suitability": 0.9380952380952381,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 10.423280423280422,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Terrain safety (regional slope): 0.242 deg scores 1.00",
+          "Surface roughness (detrended relief): 84.1 m scores 0.77",
+          "Solar illumination (annual mean, top of atmosphere): 178.5 W/m2 scores 0.94"
+        ],
+        "risks": [],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      },
+      {
+        "site_id": "jezero_crater",
+        "site_name": "Jezero Crater",
+        "status": "ok",
+        "score": 79.77,
+        "rank": 7,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 1.077,
+            "unit": "deg",
+            "suitability": 1,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 38.88888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -2129,
+            "unit": "m",
+            "suitability": 0.8258,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 22.93888888888889,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 194.4,
+            "unit": "m",
+            "suitability": 0.3771428571428571,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 8.38095238095238,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 170.4,
+            "unit": "W/m2",
+            "suitability": 0.860952380952381,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 9.566137566137566,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Terrain safety (regional slope): 1.077 deg scores 1.00",
+          "Elevation suitability (EDL atmosphere): -2129 m scores 0.83",
+          "Solar illumination (annual mean, top of atmosphere): 170.4 W/m2 scores 0.86"
+        ],
+        "risks": [
+          "Surface roughness (detrended relief): 194.4 m scores 0.38"
+        ],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      },
+      {
+        "site_id": "gale_crater",
+        "site_name": "Gale Crater (Bradbury Landing)",
+        "status": "ok",
+        "score": 63.41,
+        "rank": 8,
+        "factor_scores": [
+          {
+            "criterion_id": "terrain_safety",
+            "label": "Terrain safety (regional slope)",
+            "feature_id": "slope_regional_median_deg",
+            "feature_value": 4.806,
+            "unit": "deg",
+            "suitability": 0.64925,
+            "raw_weight": 35,
+            "normalized_weight": 0.3888888888888889,
+            "weighted_contribution": 25.248611111111114,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+          },
+          {
+            "criterion_id": "elevation_suitability",
+            "label": "Elevation suitability (EDL atmosphere)",
+            "feature_id": "elevation_median_m",
+            "feature_value": -3745,
+            "unit": "m",
+            "suitability": 1,
+            "raw_weight": 25,
+            "normalized_weight": 0.2777777777777778,
+            "weighted_contribution": 27.77777777777778,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+          },
+          {
+            "criterion_id": "surface_roughness",
+            "label": "Surface roughness (detrended relief)",
+            "feature_id": "roughness_regional_m",
+            "feature_value": 1139.2,
+            "unit": "m",
+            "suitability": 0,
+            "raw_weight": 20,
+            "normalized_weight": 0.2222222222222222,
+            "weighted_contribution": 0,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+          },
+          {
+            "criterion_id": "thermal_conditions",
+            "label": "Thermal conditions",
+            "feature_id": "surface_temperature_mean_c",
+            "feature_value": null,
+            "unit": "degC",
+            "suitability": null,
+            "raw_weight": 10,
+            "normalized_weight": null,
+            "weighted_contribution": null,
+            "is_missing": true,
+            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+            "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+          },
+          {
+            "criterion_id": "solar_illumination",
+            "label": "Solar illumination (annual mean, top of atmosphere)",
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "feature_value": 178.1,
+            "unit": "W/m2",
+            "suitability": 0.9342857142857143,
+            "raw_weight": 10,
+            "normalized_weight": 0.1111111111111111,
+            "weighted_contribution": 10.38095238095238,
+            "is_missing": false,
+            "excluded_reason": null,
+            "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+          }
+        ],
+        "eligibility": {
+          "eligible": true,
+          "failed_constraints": [],
+          "unevaluated_constraints": []
+        },
+        "completeness": {
+          "criteria_requested": 5,
+          "criteria_supported": 4,
+          "fraction": 0.8,
+          "excluded_criteria": [
+            "thermal_conditions"
+          ]
+        },
+        "favorable": [
+          "Elevation suitability (EDL atmosphere): -3745 m scores 1.00",
+          "Solar illumination (annual mean, top of atmosphere): 178.1 W/m2 scores 0.93"
+        ],
+        "risks": [
+          "Surface roughness (detrended relief): 1139.2 m scores 0.00"
+        ],
+        "limitations": [
+          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set",
+          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
+          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+        ]
+      }
+    ],
+    "scoring_spec_version": "landing-v1.0",
+    "profile_version": "v1",
+    "mission": {
+      "mission_phase": "landing",
+      "criteria": [
+        {
+          "criterion_id": "terrain_safety",
+          "weight": 35
+        },
+        {
+          "criterion_id": "elevation_suitability",
+          "weight": 25
+        },
+        {
+          "criterion_id": "surface_roughness",
+          "weight": 20
+        },
+        {
+          "criterion_id": "thermal_conditions",
+          "weight": 10
+        },
+        {
+          "criterion_id": "solar_illumination",
+          "weight": 10
+        }
+      ],
+      "hard_constraints": [
+        {
+          "constraint_id": "max_elevation",
+          "feature_id": "elevation_median_m",
+          "operator": "<=",
+          "threshold": 2000,
+          "rationale": "ASSUMPTION: footprints with median elevation above +2 km leave too little atmosphere for current EDL architectures. Historical mission limits were lower; this is a permissive screening bound.",
+          "is_assumption": true
+        },
+        {
+          "constraint_id": "latitude_band",
+          "feature_id": "latitude_abs_deg",
+          "operator": "<=",
+          "threshold": 50,
+          "rationale": "ASSUMPTION: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions screened candidate zones to within 50 degrees of the equator for solar power and thermal reasons. Applied here as a documented default, not as a rule for robotic landers.",
+          "is_assumption": true
+        }
+      ],
+      "missing_data_policy": "common_feature_set"
+    },
+    "warnings": [
+      "criterion 'thermal_conditions' excluded: feature surface_temperature_mean_c missing on 8/8 sites; excluded for all under common_feature_set"
+    ],
+    "client_request_id": "req-42"
+  },
+  "default_mission": {
+    "mission": {
+      "mission_phase": "landing",
+      "criteria": [
+        {
+          "criterion_id": "terrain_safety",
+          "weight": 35
+        },
+        {
+          "criterion_id": "elevation_suitability",
+          "weight": 25
+        },
+        {
+          "criterion_id": "surface_roughness",
+          "weight": 20
+        },
+        {
+          "criterion_id": "thermal_conditions",
+          "weight": 10
+        },
+        {
+          "criterion_id": "solar_illumination",
+          "weight": 10
+        }
+      ],
+      "hard_constraints": [
+        {
+          "constraint_id": "max_elevation",
+          "feature_id": "elevation_median_m",
+          "operator": "<=",
+          "threshold": 2000,
+          "rationale": "ASSUMPTION: footprints with median elevation above +2 km leave too little atmosphere for current EDL architectures. Historical mission limits were lower; this is a permissive screening bound.",
+          "is_assumption": true
+        },
+        {
+          "constraint_id": "latitude_band",
+          "feature_id": "latitude_abs_deg",
+          "operator": "<=",
+          "threshold": 50,
+          "rationale": "ASSUMPTION: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions screened candidate zones to within 50 degrees of the equator for solar power and thermal reasons. Applied here as a documented default, not as a rule for robotic landers.",
+          "is_assumption": true
+        }
+      ],
+      "missing_data_policy": "common_feature_set"
+    },
+    "scoring_spec_version": "landing-v1.0",
+    "criteria": [
+      {
+        "criterion_id": "terrain_safety",
+        "label": "Terrain safety (regional slope)",
+        "feature_id": "slope_regional_median_deg",
+        "unit": "deg",
+        "default_weight": 35,
+        "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards.",
+        "function": {
+          "type": "piecewise_linear",
+          "direction": "lower_is_better",
+          "full": 2,
+          "zero": 10
+        }
+      },
+      {
+        "criterion_id": "elevation_suitability",
+        "label": "Elevation suitability (EDL atmosphere)",
+        "feature_id": "elevation_median_m",
+        "unit": "m",
+        "default_weight": 25,
+        "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system.",
+        "function": {
+          "type": "piecewise_linear",
+          "direction": "lower_is_better",
+          "full": -3000,
+          "zero": 2000
+        }
+      },
+      {
+        "criterion_id": "surface_roughness",
+        "label": "Surface roughness (detrended relief)",
+        "feature_id": "roughness_regional_m",
+        "unit": "m",
+        "default_weight": 20,
+        "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness.",
+        "function": {
+          "type": "piecewise_linear",
+          "direction": "lower_is_better",
+          "full": 20,
+          "zero": 300
+        }
+      },
+      {
+        "criterion_id": "thermal_conditions",
+        "label": "Thermal conditions",
+        "feature_id": "surface_temperature_mean_c",
+        "unit": "degC",
+        "default_weight": 10,
+        "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored.",
+        "function": {
+          "type": "piecewise_linear",
+          "direction": "higher_is_better",
+          "full": -40,
+          "zero": -100
+        }
+      },
+      {
+        "criterion_id": "solar_illumination",
+        "label": "Solar illumination (annual mean, top of atmosphere)",
+        "feature_id": "insolation_toa_annual_mean_wm2",
+        "unit": "W/m2",
+        "default_weight": 10,
+        "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). Near-equatorial latitudes approach ~185 W/m2; the poles approach ~80 W/m2. Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement.",
+        "function": {
+          "type": "piecewise_linear",
+          "direction": "higher_is_better",
+          "full": 185,
+          "zero": 80
+        }
+      }
+    ],
+    "notes": [
+      "Scores are relative decision-support indices on 0-100, not probabilities and not a landing-safety certification.",
+      "Every threshold below is a DOCUMENTED ASSUMPTION chosen for regional screening at the ~3.7 km MOLA MEGDR 16 ppd baseline. None is an established universal landing requirement.",
+      "Suitability functions are piecewise-linear: q = 1 at or beyond `full` toward the preferred direction, q = 0 at or beyond `zero`, linear in between."
+    ]
+  }
+}

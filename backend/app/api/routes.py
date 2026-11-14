@@ -42,7 +42,7 @@ def health() -> HealthResponse:
     except DataError:
         data = "error"
     retrieval = get_retriever().status()
-    llm = "configured" if s.anthropic_api_key else "unconfigured"
+    llm = explanation_engine.llm_status()   # configured | unconfigured | error (a call failed recently)
     return HealthResponse(status="ok" if data == "ok" else "degraded", version=s.app_version, profile_version=s.profile_version,
                           scoring_spec_version=scoring_engine.load_spec()["version"], services=ServiceStatus(data=data, retrieval=retrieval, llm=llm))
 
