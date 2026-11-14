@@ -1,3 +1,4 @@
+import type { ComparisonCatalog, SiteImagery, SensitivityRequest, SensitivityResponse } from "@/types";
 // Typed fetch wrapper for the Planetary Explorer backend.
 //
 // Every non-2xx response from the API is `{ error: { code, message, details } }`
@@ -10,7 +11,11 @@ import type {
   EvaluateRequest,
   EvaluateResponse,
   ExplainRequest,
+  GuidanceRequest,
+  GuidanceResponse,
   HealthResponse,
+  InterpretRequest,
+  InterpretResponse,
   MatchRequest,
   MatchResponse,
   ResearchExplanation,
@@ -97,6 +102,9 @@ function post<T>(path: string, body: unknown): Promise<T> {
 }
 
 export const api = {
+  comparisonCatalog: () => request<ComparisonCatalog>("/comparison/catalog"),
+  imagery: (siteId: string) => request<SiteImagery>(`/sites/${encodeURIComponent(siteId)}/imagery`),
+  sensitivity: (body: SensitivityRequest, signal?: AbortSignal) => request<SensitivityResponse>("/scoring/sensitivity", { method: "POST", body: JSON.stringify(body), signal }),
   health: () => request<HealthResponse>("/health"),
   sites: (planet = "mars") => request<SiteListResponse>(`/sites?planet=${encodeURIComponent(planet)}`),
   site: (siteId: string) => request<SiteWithProfile>(`/sites/${encodeURIComponent(siteId)}`),
@@ -104,6 +112,10 @@ export const api = {
   evaluate: (body: EvaluateRequest) => post<EvaluateResponse>("/scoring/evaluate", body),
   matchAnalogs: (body: MatchRequest) => post<MatchResponse>("/analogs/match", body),
   explain: (body: ExplainRequest) => post<ResearchExplanation>("/research/explain", body),
+  /** Reads a free-text objective into a reviewable weight proposal; never applies anything itself. */
+  interpret: (body: InterpretRequest) => post<InterpretResponse>("/mission/interpret", body),
+  /** Objective-aware guidance after a slider settles; numbers come from the scoring engine. */
+  guidance: (body: GuidanceRequest) => post<GuidanceResponse>("/mission/guidance", body),
 };
 
 export type Api = typeof api;

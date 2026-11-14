@@ -1,12 +1,13 @@
+import { useEffect, useRef } from "react";
+import { useAppStore } from "@/store/useAppStore";
 import { MapPin } from "lucide-react";
-import { Section, EmptyNote } from "@/components/ui/Section";
+import { Section, EmptyNote, BulletList } from "@/components/ui/Section";
 import { Spinner } from "@/components/ui/Spinner";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { Badge } from "@/components/ui/Badge";
 import { EnvironmentalProfilePanel } from "@/components/sites/EnvironmentalProfilePanel";
 import { SourcesList } from "@/components/sites/SourcesList";
 import { SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
-import { ExplanationPanel } from "@/components/intelligence/ExplanationPanel";
 import { useSiteProfile } from "@/hooks/useSites";
 import { formatLatLon, formatNumber, humanize } from "@/lib/format";
 import type { EvaluateResponse, MissionProfile } from "@/types";
@@ -18,13 +19,25 @@ interface Props {
   mission: MissionProfile | null;
 }
 
-export function RightSidebar({ selectedId, evaluation, evaluationPending, mission }: Props) {
+export function RightSidebar({ selectedId, evaluation, evaluationPending }: Props) {
   const q = useSiteProfile(selectedId);
+  const openResearch = useAppStore(s => s.setActiveTab);
+  const panel = useRef<HTMLElement>(null);
+  const revision = useAppStore(s => s.selectionRevision);
+  useEffect(() => {
+    if (!selectedId || !panel.current) return;
+    panel.current.scrollTop = 0;
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    if (window.matchMedia?.("(max-width: 1023px)")?.matches) panel.current.scrollIntoView?.({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    if (!reduced) {
+      panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px #f0a03c", backgroundColor: "#313131" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });
+    }
+  }, [selectedId, revision]);
   const result = evaluation?.results.find((r) => r.site_id === selectedId);
   const ranked = evaluation?.results.filter((r) => r.status === "ok").length;
 
   return (
-    <aside aria-label="Site detail" className="scroll-thin flex h-full flex-col overflow-y-auto bg-bg-elev">
+    <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-full flex-col overflow-y-auto bg-bg-elev">
       {!selectedId ? (
         <Section title="Site">
           <EmptyNote>Click a marker on the globe or a row in the ranked list.</EmptyNote>
@@ -60,12 +73,21 @@ export function RightSidebar({ selectedId, evaluation, evaluationPending, missio
             )}
           </Section>
 
-          <EnvironmentalProfilePanel profile={q.data.profile} />
-
-          <div className="border-y-2 border-copper/40 bg-copper/5 px-4 py-1.5 text-[10.5px] uppercase tracking-[0.14em] text-copper">Mission-dependent results</div>
-          <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />
-          <ExplanationPanel siteId={selectedId} mission={mission} />
-          <SourcesList sources={q.data.profile.sources} />
+          <div>
+            <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />
+            <Section title="Research potential" subtitle="Turn this site's characteristics into questions to investigate.">
+              <button type="button" onClick={() => openResearch("research")} className="w-full rounded-lg border border-info/50 bg-info/10 p-3 text-left text-sm font-semibold text-info">Explore study ideas and supporting evidence →</button>
+            </Section>
+            <details className="m-4 rounded-lg border border-line">
+              <summary className="cursor-pointer p-3 text-sm text-fg">All environmental measurements and sources</summary>
+              <EnvironmentalProfilePanel profile={q.data.profile} />
+              <SourcesList sources={q.data.profile.sources} />
+            </details>
+            <Section title="Risks and limitations" subtitle="Scope and evidence gaps to review before relying on this ranking">
+              <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
+              <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>
+            </Section>
+          </div>
         </>
       ) : null}
     </aside>

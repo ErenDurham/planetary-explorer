@@ -38,6 +38,16 @@ export type ResearchExplanation = S["ResearchExplanation"];
 export type ExplanationSections = S["ExplanationSections"];
 export type EvidenceChunk = S["EvidenceChunk"];
 export type Citation = S["Citation"];
+export type SourceDigest = S["SourceDigest"];
+export type StudyCard = S["StudyCard"];
+
+export type InterpretRequest = S["InterpretRequest"];
+export type InterpretResponse = S["InterpretResponse"];
+export type WeightSuggestion = S["WeightSuggestion"];
+export type GuidanceRequest = S["GuidanceRequest"];
+export type GuidanceResponse = S["GuidanceResponse"];
+export type InfluenceDelta = S["InfluenceDelta"];
+export type RankDelta = S["RankDelta"];
 
 export type HealthResponse = S["HealthResponse"];
 export type ServiceStatus = S["ServiceStatus"];
@@ -77,3 +87,13 @@ export interface DefaultMissionResponse {
   criteria: CriterionSpec[];
   notes: string[];
 }
+
+export type SiteImagery = S["SiteImagery"];
+export type ImageryEntry = S["ImageryEntry"];
+export type SensitivityRequest = S["SensitivityRequest"];
+export type SensitivityResponse = S["SensitivityResponse"];
+export type SensitivityPoint = S["SensitivityPoint"];
+
+export type ComparisonCatalog = S["ComparisonCatalog"];
+export type ComparisonLocation = S["ComparisonLocation"];
+export type BodyReference = S["BodyReference"];

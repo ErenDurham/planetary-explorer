@@ -162,3 +162,13 @@ def test_health_reports_llm_state(client):
     body = client.get("/api/v1/health").json()
     assert body["services"]["llm"] in ("configured", "unconfigured", "error")
     assert body["services"]["retrieval"] in ("ok", "unavailable")
+
+
+def test_research_applications_are_proposals_not_scraped_excerpts(ctx):
+    site, prof, result, evidence = ctx
+    evidence[0].excerpt = "Explore Resources. View raw images. Launch Vehicle: example."
+    out = ee.deterministic(site, prof, result, evidence, None)
+    assert out.sections.research_applications
+    assert all(line.startswith("Proposed") for line in out.sections.research_applications)
+    assert "Explore Resources" not in " ".join(out.sections.research_applications)
+    assert "has not been performed" in " ".join(out.sections.research_applications)

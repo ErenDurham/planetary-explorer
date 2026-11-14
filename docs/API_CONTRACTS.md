@@ -620,6 +620,195 @@ Response (`generated_by` is `llm` or `deterministic_fallback`; every `citations[
 }
 ```
 
+### `POST /mission/interpret` : `InterpretRequest` → `InterpretResponse`
+Free-text objective → PROPOSED weights for the existing criteria. The model (when configured) or the rule-based reader proposes; deterministic code validates ids, clamps 0-100, forces data-unavailable criteria to 0 and requires a positive total. `hard_constraints` are not part of this contract. `confidence` describes the reading of the text, never site suitability. `objective_hash` lets the client refuse a stale "interpreted" label once the draft changes.
+Request: ```json
+{
+  "objective": "Prioritise landing safety over sunlight; ignore solar",
+  "current_weights": null,
+  "excluded_criteria": [
+    "thermal_conditions"
+  ]
+}
+```
+Response:
+```json
+{
+  "objective": "Prioritise landing safety over sunlight; ignore solar",
+  "objective_hash": "ac7ffbd73f2cf0d5",
+  "generated_by": "rule_based",
+  "model": null,
+  "suggestions": [
+    {
+      "criterion_id": "terrain_safety",
+      "label": "Terrain safety (regional slope)",
+      "weight": 75,
+      "previous_weight": 35,
+      "reason": "\"safety\" is ranked above \"sunlight\" in the objective, so it is raised.",
+      "data_available": true
+    },
+    {
+      "criterion_id": "elevation_suitability",
+      "label": "Elevation suitability (EDL atmosphere)",
+      "weight": 25,
+      "previous_weight": 25,
+      "reason": "Unchanged: the objective did not mention this factor.",
+      "data_available": true
+    },
+    "... (3 more)"
+  ],
+  "rationale": [
+    "Read \"Prioritise landing safety over sunlight\" as a trade-off: Terrain safety (regional slope) up, Solar illumination (annual mean, top of atmosphere) down.",
+    "Clause \"ignore solar\": Solar illumination (annual mean, top of atmosphere) -> 0."
+  ],
+  "tradeoffs": [
+    "Terrain safety (regional slope) over Solar illumination (annual mean, top of atmosphere) (from: \"Prioritise landing safety over sunlight\").",
+    "Solar illumination (annual mean, top of atmosphere) excluded (\"ignore solar\")."
+  ],
+  "unsupported_needs": [],
+  "clarifying_questions": [],
+  "confidence": "high",
+  "confidence_note": "Confidence describes how clearly the text matched the rule lexicon; it says nothing about how suitable any site is. Rule-based reading: lexicon matches plus ...",
+  "validation_notes": [
+    "Thermal conditions set to 0: no site carries the measurement, so it cannot influence any score."
+  ],
+  "scoring_spec_version": "landing-v1.1",
+  "cached": false,
+  "generated_at": "2026-11-14T17:56:34+00:00"
+}
+```
+
+### `POST /mission/guidance` : `GuidanceRequest` → `GuidanceResponse`
+Objective-aware guidance after a priority change. The scoring engine evaluates the previous and new weights (default hard constraints, common feature set) and reports effective influence before/after, de-emphasised factors, rank deltas, the leader, and missing data; a model may only phrase `summary` (numeric guard), otherwise `generated_by` is `rule_based`. Debounce on the client; `client_request_id` is echoed so stale answers can be dropped. Earth-comparison weights are never involved.
+Request: ```json
+{
+  "objective": "land safely",
+  "previous_weights": {
+    "terrain_safety": 35,
+    "elevation_suitability": 25,
+    "surface_roughness": 20,
+    "thermal_conditions": 10,
+    "solar_illumination": 10
+  },
+  "new_weights": {
+    "terrain_safety": 35,
+    "elevation_suitability": 100,
+    "surface_roughness": 20,
+    "thermal_conditions": 10,
+    "solar_illumination": 10
+  },
+  "changed_criterion_id": "elevation_suitability",
+  "client_request_id": "g-7"
+}
+```
+Response:
+```json
+{
+  "generated_by": "rule_based",
+  "model": null,
+  "summary": "Elevation suitability (EDL atmosphere) now carries 60.6% of the effective influence (was 27.8%). This de-emphasises Terrain safety (regional slope), Surface ...",
+  "de_emphasised": [
+    "Terrain safety (regional slope)",
+    "Surface roughness (detrended relief)",
+    "... (1 more)"
+  ],
+  "leader_changed": false,
+  "leader": "Chryse Planitia (Viking 1)",
+  "rank_changes": [
+    {
+      "site_id": "oxia_planum",
+      "site_name": "Oxia Planum",
+      "previous_rank": 3,
+      "new_rank": 2,
+      "previous_score": 96.6,
+      "new_score": 98.14
+    },
+    {
+      "site_id": "utopia_planitia",
+      "site_name": "Utopia Planitia (Viking 2)",
+      "previous_rank": 4,
+      "new_rank": 3,
+      "previous_score": 94.13,
+      "new_score": 96.8
+    },
+    "... (4 more)"
+  ],
+  "influence": [
+    {
+      "criterion_id": "terrain_safety",
+      "label": "Terrain safety (regional slope)",
+      "previous_pct": 38.9,
+      "new_pct": 21.2,
+      "excluded_reason": null
+    },
+    {
+      "criterion_id": "elevation_suitability",
+      "label": "Elevation suitability (EDL atmosphere)",
+      "previous_pct": 27.8,
+      "new_pct": 60.6,
+      "excluded_reason": null
+    },
+    "... (3 more)"
+  ],
+  "missing_data_notes": [
+    "criterion 'thermal_conditions' excluded: feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crate..."
+  ],
+  "client_request_id": "g-7",
+  "cached": false,
+  "generated_at": "2026-11-14T17:56:34+00:00"
+}
+```
+
+### `ResearchExplanation` additions (digests and study cards)
+`POST /research/explain` now accepts `objective` and returns `source_digests` (one per unique source URL; `chunk_ids`/`citation_ids` are the exact passages the digest was written from; `support_level` ∈ supports | context | insufficient; `generated_by` ∈ extractive | llm), `research_studies` (at most three `StudyCard`s, `kind` ∈ proposed_study | documented_campaign, with `motivating_citation_ids` and `cannot_infer`) and `evidence_gap` (set when nothing can be motivated). Retrieval returns up to 8 chunks with at most 2 per source.
+```json
+{
+  "source_digests": [
+    {
+      "document_id": "crossref_lit_jezero_mineralogy",
+      "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+      "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+      "url": "https://api.crossref.org/works/10.1002/2014JE004782",
+      "publication_date": "2015-04",
+      "purpose_label": "Peer-reviewed record",
+      "chunk_ids": [
+        "crossref_lit_jezero_mineralogy#002",
+        "crossref_lit_jezero_mineralogy#001"
+      ],
+      "citation_ids": [
+        "[C1]",
+        "[C4]"
+      ],
+      "what_it_tells_us": "Two fan deposits located within the basin have distinct visible to near\u2010infrared mineralogic signatures measured by the Compact Reconnaissance Imaging Spectr...",
+      "why_it_matters": "Relevant because it names jezero, olivine, paleolake.",
+      "limitation": "Bibliographic record and abstract only; the full paper was not retrieved, so detailed results are not available here.",
+      "support_level": "supports",
+      "generated_by": "extractive"
+    }
+  ],
+  "research_studies": [
+    {
+      "kind": "proposed_study",
+      "title": "Does the regional terrain statistic predict landing-scale hazards at Jezero Crater?",
+      "research_question": "Do the ~3.7 km MOLA slope and relief values that rank Jezero Crater here (median slope 1.077 deg, detrended relief 194.4 m) correspond to metre-scale slopes ...",
+      "method": "Sample HiRISE/CTX-derived digital terrain models at 1-5 m baselines over the footprint, count rocks from HiRISE images, and compare the distributions with th...",
+      "why_here": "Jezero Crater has a complete regional terrain profile and retrieved documentation of the topographic data and its sampling caveats, so the comparison can be ...",
+      "motivating_citation_ids": [
+        "[C2]",
+        "[C7]"
+      ],
+      "cannot_infer": "Regional statistics cannot resolve lander-scale hazards, and the suitability score is a screening index; neither establishes that a landing would be safe.",
+      "analog_candidate_id": null
+    }
+  ],
+  "evidence_gap": null
+}
+```
+`AnalogMatch` now carries `documented_analog_use` (historical programmes from the data files; `research_applications` is a deprecated alias) and `proposed_studies` (StudyCard dicts motivated only by the characteristics the two sites actually share).
+
+### `GET /sites/{id}/imagery` → `SiteImagery` and `GET /imagery/{entry_id}/asset`
+Verified imagery for a site: `entries` (`ImageryEntry`: view orbital|surface, image_type, title, institution, credit, license, instrument, mission, source_page_url, asset_url, local_asset, mime_type, width_px, height_px, bytes, acquisition_date (null unless verified), acquisition_note, release_date (publication, distinct), spatial_resolution_m_per_px, resolution_note, bounds (only georeferenced CTX mosaics), coverage_evidence, relationship exact_location|landing_ellipse|candidate_region|nearby_scene, distance_from_site_km, relevance, appearance_note, verified_on), `missing_views` and `notes`. The asset endpoint serves the backend-cached file; if the cache is missing it fetches the manifest's own `asset_url` from an allow-listed host with a 6 MB cap and an image decode check. The frontend never loads external URLs directly. 404 for unknown site/entry; 502 `asset_not_allowed` / `asset_rejected` / `asset_fetch_failed`; 503 `imagery_unavailable` when the manifest has not been built.
+
 ### Errors
 ```json
 {
@@ -660,3 +849,16 @@ Response (`generated_by` is `llm` or `deterministic_fallback`; every `citations[
 cd frontend && npm run gen:types     # openapi-typescript http://localhost:8000/openapi.json -> src/types/api.ts
 ```
 `src/types/api.ts` is committed so the frontend builds without a running backend; regenerate it whenever a model changes.
+
+
+### `POST /scoring/sensitivity` → `SensitivityResponse`
+Read-only priority sweep for a selected site. Send the applied `mission`, `focus_site_id`, the same `site_ids` as the evaluation, `range_pp` (default 5) and `step_pp` (default 1). Returns an applied baseline, per-factor scenario points, sampled rank/leader changes and excluded factors. Other active factors retain their mutual proportions. No mission state is written. Scenario endpoints with too few active factors are unscorable. Changes are bounded to the requested range; breakpoints are bracketed by samples, not exact thresholds. This is weight sensitivity, not measurement confidence.
+
+Analyze uses full-precision factor contributions for comparator gaps and points below the model's weighted ideal. It keeps the engine's reported rank and discloses ties at displayed precision. The sensitivity viewer does not apply scenario weights; return to the mission controls to change the applied allocation.
+
+
+### `GET /comparison/catalog` → `ComparisonCatalog`
+
+Read-only Earth, Mars and Moon comparison catalogue. `bodies` contains NASA-sourced planetary reference conditions (gravity, atmosphere, normal incident solar irradiance and mean solar day). `locations` contains independent location selectors, coverage, unchanged Earth/Mars measurements and provenance, plus two curated lunar landing-region descriptions. Moon solar-day hours are converted from the 29.53-day synodic period.
+
+This does not extend the Mars scoring model to another body. Lunar locations currently contain qualitative terrain/material descriptions and mission coordinates only. Numeric lunar site measurements remain absent, and the UI renders them as unavailable. Earth POWER temperature is 2 m air temperature; Earth EGM2008 and Mars areoid elevations are not subtracted. Regional slope/relief differences use the existing harmonised Earth/Mars grids.

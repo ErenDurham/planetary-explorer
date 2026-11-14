@@ -82,6 +82,21 @@ CHUNK_MAX = 1000
 CHUNK_MIN = 700
 CHUNK_OVERLAP = 150
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from app.services.text_cleaning import clean_passage  # noqa: E402  shared debris filter
+
+
+def drop_debris_paragraphs(text: str) -> str:
+    """Keep only paragraphs that survive the shared cleaner (navigation labels,
+    captions, credits and fact-sheet metadata are removed), so chunks are prose."""
+    keep = []
+    for para in re.split(r"\n\s*\n", text):
+        if not para.strip():
+            continue
+        if clean_passage(para):
+            keep.append(para.strip())
+    return "\n\n".join(keep)
+
 
 # --------------------------------------------------------------------------
 # The document list. Hand-curated; every URL is a real public page.
@@ -479,9 +494,19 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
             "char_count": len(text),
             "text": text,
         }
+    # Chunk the PROSE only: paragraphs that are navigation labels, captions,
+    # credits or fact-sheet metadata are dropped first (shared filter), so a
+    # chunk is never a run of page chrome. Offsets below index the filtered
+    # text; the raw page text stays in corpus/<id>.json as the record.
+    raw = doc.get("raw_text", doc["text"])
+    prose = drop_debris_paragraphs(raw) if doc.get("kind") != "crossref" else raw
+    doc["raw_text"] = raw                      # the page as extracted, kept as the record
+    doc["text"] = prose                        # what is chunked and cited; offsets index this
+    doc["char_count"] = len(prose)
+    doc["raw_char_count"] = len(raw)
     chunks = []
-    for n, (s, e) in enumerate(chunk_text(doc["text"]), 1):
-        ctext = doc["text"][s:e]
+    for n, (s, e) in enumerate(chunk_text(prose), 1):
+        ctext = prose[s:e]
         geo = list(dict.fromkeys(list(doc["default_geographic_relevance"]) + detect_relevance(ctext, aliases, regions)
                                  + [regions[g] for g in doc["default_geographic_relevance"] if g in regions]))
         chunks.append({
@@ -495,6 +520,7 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
             "text": ctext,
             "char_start": s,
             "char_end": e,
+            "offsets_in": "text",
             "retrieved_at": doc["retrieved_at"],
         })
     return doc, chunks, None

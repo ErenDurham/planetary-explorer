@@ -21,7 +21,7 @@ export function EnvironmentalProfilePanel({ profile }: { profile: EnvironmentalP
       title="Environmental profile"
       subtitle={
         <span>
-          Completeness <span className="num text-fg">{c.features_available}/{c.features_requested}</span> features ({formatPercent(c.fraction)}) · profile {profile.profile_version}
+          Available <span className="num text-fg">{c.features_available}/{c.features_requested}</span> fields ({formatPercent(c.fraction)})
         </span>
       }
     >
@@ -34,7 +34,7 @@ export function EnvironmentalProfilePanel({ profile }: { profile: EnvironmentalP
         </div>
       )}
       {groups.length === 0 ? (
-        <EmptyNote>This profile carries no measurements.</EmptyNote>
+        <EmptyNote>No measurements are available for this site.</EmptyNote>
       ) : (
         <div className="space-y-3">
           {groups.map(([category, items]) => (
@@ -61,9 +61,11 @@ export function EnvironmentalProfilePanel({ profile }: { profile: EnvironmentalP
           ))}
         </div>
       )}
-      <p className="mt-3 text-[10.5px] leading-snug text-fg-faint">
-        Pipeline: {profile.pipeline}. Terrain statistics are regional (~3.7 km MOLA baseline).
-      </p>
+      <p className="mt-3 text-xs text-fg-muted">Terrain measurements cover regional features (~3.7 km cells), not lander-scale hazards.</p>
+      <details className="mt-2 text-xs text-fg-muted">
+        <summary className="cursor-pointer">Processing details</summary>
+        <p className="mt-2">Profile {profile.profile_version} · {profile.pipeline}</p>
+      </details>
     </Section>
   );
 }

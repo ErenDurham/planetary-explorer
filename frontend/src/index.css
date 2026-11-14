@@ -46,6 +46,8 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px rgba(240,160,60,.35); }
+/* visible, not colour-only, focus ring on the share sliders */
+input[type="range"]:focus-visible { outline: 2px solid var(--color-copper-bright); outline-offset: 4px; border-radius: 4px; }
 input[type="range"]::-moz-range-thumb {
   width: 14px; height: 14px; border-radius: 50%;
   background: var(--color-fg); border: 2px solid var(--color-copper); cursor: pointer;
@@ -64,4 +66,43 @@ input[type="range"]::-moz-range-thumb {
 @keyframes pulse-ring {
   0% { transform: scale(0.9); opacity: 0.9; }
   100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Feedback stays visible without relying on motion or colour alone. */
+button:focus-visible, summary:focus-visible, textarea:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--color-copper-bright); outline-offset: 4px; }
+button:not(:disabled):active { transform: translateY(1px); }
+textarea { resize: vertical; }
+input[type="range"]:disabled { opacity: .35; }
+
+/* mission drawer: dense share rows, a muted unavailable row, animated bar
+   segments (disabled under prefers-reduced-motion by the rule below) */
+.mission-row input[type="range"] { height: 3px; }
+.mission-row input[type="range"]::-webkit-slider-thumb { width: 12px; height: 12px; }
+.mission-row input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; }
+.mission-row-unavailable input[type="range"] { background: var(--color-line); }
+.mission-row-unavailable input[type="range"]::-webkit-slider-thumb { background: var(--color-line-strong); border-color: var(--color-line-strong); }
+.mission-bar > span { transition: width .2s ease-out; }
+input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* One horizontal surface keeps metric rows aligned across all three worlds. */
+.compare-table-wrap { max-height: 76vh; overflow: auto; }
+.compare-table { width: 100%; min-width: 1000px; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+.compare-table.compare-pair { min-width: 740px; }
+.compare-label-col { width: 23%; }
+.compare-table th, .compare-table td { text-align: left; vertical-align: top; padding: 20px; border-bottom: 1px solid var(--color-line); border-right: 1px solid var(--color-line); overflow-wrap: anywhere; }
+.compare-table th:last-child, .compare-table td:last-child { border-right: 0; }
+.compare-table thead th { background: var(--color-bg-elev); }
+.compare-table .compare-metric { position: sticky; left: 0; z-index: 1; background: var(--color-bg-elev); }
+.compare-table thead { position: sticky; top: 0; z-index: 3; }
+.compare-table thead .compare-metric { z-index: 4; }
+.compare-table .compare-group { background: var(--color-bg-elev-2); padding: 12px 20px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.compare-table tbody tr:hover td { background: var(--color-bg-elev); }
+@media (max-width: 767px) {
+  .compare-table { min-width: 900px; }
+  .compare-table.compare-pair { min-width: 690px; }
+  .compare-label-col { width: 170px; }
+  .compare-table th, .compare-table td { padding: 16px; }
+  .compare-table thead { position: static; }
+  .compare-table-wrap { max-height: none; }
 }

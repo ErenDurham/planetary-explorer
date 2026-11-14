@@ -1,0 +1,60 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import fixture from "@/test/fixtures/api_examples.json";
+import response from "@/test/fixtures/mission_examples.json";
+import { useAppStore } from "@/store/useAppStore";
+import { PrioritySliders } from "./PrioritySliders";
+import { RecommendationCard } from "./RecommendationCard";
+import { LeftSidebar } from "@/components/layout/LeftSidebar";
+import type { DefaultMissionResponse, EvaluateResponse } from "@/types";
+const defaults=fixture.default_mission as unknown as DefaultMissionResponse;
+const start={terrain_safety:27,elevation_suitability:19,surface_roughness:23,thermal_conditions:0,solar_illumination:31};
+const json=(body:unknown)=>new Response(JSON.stringify(body),{status:200,headers:{"Content-Type":"application/json"}});
+const mount=()=>render(<><PrioritySliders criteria={defaults.criteria}/><RecommendationCard criteria={defaults.criteria}/></>);
+beforeEach(()=>useAppStore.setState({...useAppStore.getInitialState(),defaultWeights:{...start},weights:{...start},recommendedWeights:{...start},appliedObjective:"Safe landing with solar energy"}));
+afterEach(()=>vi.restoreAllMocks());
+describe("Priority shares and settled guidance",()=>{
+  it("keeps shares at 100 and sends one request after a burst with the preceding allocation",async()=>{
+    const calls:Record<string,unknown>[]=[];
+    vi.spyOn(globalThis,"fetch").mockImplementation(async(_input,init)=>{const body=JSON.parse(String(init?.body));calls.push(body);return json({...response.guidance,summary:"Settled allocation",client_request_id:body.client_request_id});});
+    mount();const slider=screen.getByLabelText("Gentler terrain share of priorities");
+    fireEvent.pointerDown(slider);
+    for(const v of [30,35,40])fireEvent.change(slider,{target:{value:String(v)}});
+    expect(Object.values(useAppStore.getState().weights).reduce((a,b)=>a+b,0)).toBe(100);
+    expect(calls).toHaveLength(0);
+    await waitFor(()=>expect(calls).toHaveLength(1),{timeout:2500});
+    expect(calls[0].previous_weights).toEqual(start);
+    expect(calls[0].new_weights).toEqual(useAppStore.getState().weights);
+    expect(await screen.findByText("Settled allocation")).toBeInTheDocument();
+    const beforeSecond={...useAppStore.getState().weights};
+    fireEvent.pointerDown(slider);fireEvent.change(slider,{target:{value:"20"}});
+    await waitFor(()=>expect(calls).toHaveLength(2),{timeout:2500});
+    expect(calls[1].previous_weights).toEqual(beforeSecond);
+    expect(useAppStore.getState().priorityChange?.previous).toEqual(beforeSecond);
+  });
+  it("drops a late older response",async()=>{
+    const pending:Array<{body:Record<string,unknown>;resolve:(r:Response)=>void}>=[];
+    vi.spyOn(globalThis,"fetch").mockImplementation((_input,init)=>new Promise(resolve=>pending.push({body:JSON.parse(String(init?.body)),resolve})));
+    mount();const slider=screen.getByLabelText("Gentler terrain share of priorities");
+    fireEvent.change(slider,{target:{value:"40"}});await waitFor(()=>expect(pending).toHaveLength(1),{timeout:2500});
+    fireEvent.pointerDown(slider);fireEvent.change(slider,{target:{value:"20"}});await waitFor(()=>expect(pending).toHaveLength(2),{timeout:2500});
+    pending[1].resolve(json({...response.guidance,summary:"New result",client_request_id:pending[1].body.client_request_id}));
+    expect(await screen.findByText("New result")).toBeInTheDocument();
+    pending[0].resolve(json({...response.guidance,summary:"Stale result",client_request_id:pending[0].body.client_request_id}));
+    await new Promise(r=>setTimeout(r,50));expect(screen.queryByText("Stale result")).toBeNull();
+  });
+  it("keeps local feedback when guidance fails",async()=>{
+    vi.spyOn(globalThis,"fetch").mockRejectedValue(new TypeError("offline"));mount();
+    fireEvent.change(screen.getByLabelText("Gentler terrain share of priorities"),{target:{value:"30"}});
+    expect(await screen.findByText(/Guidance unavailable/,{},{timeout:2500})).toBeInTheDocument();
+    expect(screen.getByTestId("last-change")).toHaveTextContent("Gentler terrain gained");
+  });
+  it("does not disable an available factor after its share is set to zero",()=>{
+    const ev=structuredClone(fixture.evaluate) as unknown as EvaluateResponse;
+    ev.results[0].factor_scores=ev.results[0].factor_scores.map(f=>f.criterion_id==="terrain_safety"?{...f,is_missing:false,raw_weight:0,excluded_reason:"weight is 0"}:f);
+    useAppStore.setState({weights:{...start,terrain_safety:0,solar_illumination:58}});
+    render(<LeftSidebar defaults={defaults} defaultsError={null} evaluation={ev} evaluationError={null}/>);
+    const slider=screen.getByLabelText("Gentler terrain share of priorities");expect(slider).toBeEnabled();
+    fireEvent.change(slider,{target:{value:"20"}});expect(useAppStore.getState().weights.terrain_safety).toBe(20);
+  });
+});

@@ -589,6 +589,72 @@ from this repository. Every LLM-path test uses a mocked `_call_llm`, and
 `generated_by: deterministic_fallback`. The "no number in LLM output that is
 not in the inputs" acceptance check has been exercised only against the mock.
 
+### 7.5 Passage cleaning, source diversification and evidence digests
+
+Agency pages carry navigation labels, captions, credits and fact-sheet lines
+between the prose. `app/services/text_cleaning.py` strips those lexically
+(whole-line patterns, caption cues, credit lines, sentence-level debris) and is
+applied in three places so they agree: at ingestion (`scripts/ingest_documents.py`
+chunks only the paragraphs that survive the filter; the raw page text is kept
+in `corpus/<id>.json` as `raw_text`), at retrieval (a chunk whose cleaned text
+is under 120 characters is demoted below every clean chunk) and before any
+passage reaches a model. Retrieval returns up to 8 chunks with at most 2 per
+source document, so a repeated link means a repeated passage and never
+pretends to be independent corroboration.
+
+A **source digest** (`SourceDigest`) is one per unique source URL. The
+extractive producer picks the one or two cleaned sentences sharing the most
+content words with the site, its tags, the scored factors and the applied
+objective; `support_level` is `supports` when the picked text names at least
+two site-specific terms (generic words such as "crater", "nasa" or "landing"
+do not count) or one plus an objective term, `context` when it is background,
+and `insufficient` when no sentence overlaps at all - in which case the digest
+says so rather than inventing relevance. A model digest is admitted only if
+its `document_id` is a retrieved source, every `chunk_id` belongs to that
+source, every number it states occurs in that source's passages, and at least
+45% of its content words occur in those passages. That overlap test is
+lexical: it shows the wording came from the passage, not that the claim is
+scientifically right. A mission overview can document landing context without
+validating a model score.
+
+### 7.6 Research study cards
+
+`research_studies` holds at most three `StudyCard`s. The deterministic
+builder proposes a card only when the inputs motivate it: a measured regional
+terrain profile plus a retrieved passage about the topographic dataset or
+landing-site selection; cited composition or aqueous tags plus a passage that
+mentions them; an Earth analog whose SHARED characteristics are terrain (a
+mineralogy-only match does not motivate a traverse). Every card states a
+research question, a method, why this site or analog helps, the exact
+motivating citation handles and what cannot be inferred. Documented analog
+campaigns come from `candidates.json` and are labelled `documented_campaign`
+on the Compare page, never as proposals. Model-proposed cards pass
+`accept_llm_card`: cited handles must exist, the cited passages must
+lexically support the question, no unknown numbers, and `kind` must be
+`proposed_study`. When nothing can be motivated the list is empty and
+`evidence_gap` explains why.
+
+### 7.7 Objective interpretation and priority guidance
+
+`POST /mission/interpret` turns free text into PROPOSED weights for the
+existing criteria. The rule-based reader (lexicon per criterion; emphasis,
+exclusion and de-emphasis cues; "X over Y" trade-offs; a list of out-of-scope
+needs such as ice, a permanent base, the Moon or radiation that it refuses to
+score) always runs; a configured model may propose instead. Both proposals
+pass `validate_proposal`: unknown criterion ids are dropped, weights are
+integers clamped to 0-100, criteria the client reports as data-unavailable
+(thermal in v1) are forced to 0, and at least one available criterion must be
+positive. Hard constraints and scoring thresholds are not part of the request
+or response. Confidence refers to the reading of the text, never to site
+suitability.
+
+`POST /mission/guidance` evaluates the previous and new weights with the
+scoring engine and reports effective influence before and after,
+de-emphasised factors, rank deltas, the leader and missing data; the only
+thing a model may do is phrase the summary, and the numeric guard rejects any
+number not present in those facts. The Earth-comparison weights are not
+involved.
+
 ## 8. Validation performed
 
 ### 8.1 Quality check before store

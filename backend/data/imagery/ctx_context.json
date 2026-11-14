@@ -1,0 +1,306 @@
+{
+  "jezero_crater_ctx_regional": {
+    "bounds": {
+      "west": 76.9921875,
+      "east": 78.046875,
+      "north": 18.984375,
+      "south": 17.9296875,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 202-204, cols 731-733"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 77.22,
+    "width_km_ns": 62.5,
+    "file": "jezero_crater_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 63134,
+    "verified_on": "2026-11-14"
+  },
+  "jezero_crater_ctx_local": {
+    "bounds": {
+      "west": 77.3876953125,
+      "east": 77.51953125,
+      "north": 18.5009765625,
+      "south": 18.369140625,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 1627-1629, cols 5857-5859"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 9.65,
+    "width_km_ns": 7.8,
+    "file": "jezero_crater_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 49394,
+    "verified_on": "2026-11-14"
+  },
+  "gale_crater_ctx_regional": {
+    "bounds": {
+      "west": 136.7578125,
+      "east": 137.8125,
+      "north": -4.21875,
+      "south": -5.2734375,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 268-270, cols 901-903"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 81.14,
+    "width_km_ns": 62.5,
+    "file": "gale_crater_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 58264,
+    "verified_on": "2026-11-14"
+  },
+  "gale_crater_ctx_local": {
+    "bounds": {
+      "west": 137.373046875,
+      "east": 137.5048828125,
+      "north": -4.5263671875,
+      "south": -4.658203125,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 2151-2153, cols 7222-7224"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 10.14,
+    "width_km_ns": 7.8,
+    "file": "gale_crater_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 36749,
+    "verified_on": "2026-11-14"
+  },
+  "elysium_planitia_ctx_regional": {
+    "bounds": {
+      "west": 135.0,
+      "east": 136.0546875,
+      "north": 4.921875,
+      "south": 3.8671875,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 242-244, cols 896-898"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 81.15,
+    "width_km_ns": 62.5,
+    "file": "elysium_planitia_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 50734,
+    "verified_on": "2026-11-14"
+  },
+  "elysium_planitia_ctx_local": {
+    "bounds": {
+      "west": 135.5712890625,
+      "east": 135.703125,
+      "north": 4.5703125,
+      "south": 4.4384765625,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 1944-1946, cols 7181-7183"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 10.14,
+    "width_km_ns": 7.8,
+    "file": "elysium_planitia_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 112819,
+    "verified_on": "2026-11-14"
+  },
+  "oxia_planum_ctx_regional": {
+    "bounds": {
+      "west": -25.3125,
+      "east": -24.2578125,
+      "north": 18.6328125,
+      "south": 17.578125,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 203-205, cols 440-442"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 77.3,
+    "width_km_ns": 62.5,
+    "file": "oxia_planum_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 62417,
+    "verified_on": "2026-11-14"
+  },
+  "oxia_planum_ctx_local": {
+    "bounds": {
+      "west": -24.697265625,
+      "east": -24.5654296875,
+      "north": 18.3251953125,
+      "south": 18.193359375,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 1631-1633, cols 3534-3536"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 9.66,
+    "width_km_ns": 7.8,
+    "file": "oxia_planum_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 79961,
+    "verified_on": "2026-11-14"
+  },
+  "utopia_planitia_ctx_regional": {
+    "bounds": {
+      "west": 133.59375,
+      "east": 134.6484375,
+      "north": 48.1640625,
+      "south": 47.109375,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 119-121, cols 892-894"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 54.82,
+    "width_km_ns": 62.5,
+    "file": "utopia_planitia_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 59321,
+    "verified_on": "2026-11-14"
+  },
+  "utopia_planitia_ctx_local": {
+    "bounds": {
+      "west": 134.208984375,
+      "east": 134.3408203125,
+      "north": 47.724609375,
+      "south": 47.5927734375,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 962-964, cols 7150-7152"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 6.85,
+    "width_km_ns": 7.8,
+    "file": "utopia_planitia_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 90625,
+    "verified_on": "2026-11-14"
+  },
+  "chryse_planitia_ctx_regional": {
+    "bounds": {
+      "west": -48.515625,
+      "east": -47.4609375,
+      "north": 22.8515625,
+      "south": 21.796875,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 191-193, cols 374-376"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 75.33,
+    "width_km_ns": 62.5,
+    "file": "chryse_planitia_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 59809,
+    "verified_on": "2026-11-14"
+  },
+  "chryse_planitia_ctx_local": {
+    "bounds": {
+      "west": -48.0322265625,
+      "east": -47.900390625,
+      "north": 22.32421875,
+      "south": 22.1923828125,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 1540-1542, cols 3003-3005"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 9.42,
+    "width_km_ns": 7.8,
+    "file": "chryse_planitia_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 80895,
+    "verified_on": "2026-11-14"
+  },
+  "meridiani_planum_ctx_regional": {
+    "bounds": {
+      "west": -5.9765625,
+      "east": -4.921875,
+      "north": -1.40625,
+      "south": -2.4609375,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 260-262, cols 495-497"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 81.35,
+    "width_km_ns": 62.5,
+    "file": "meridiani_planum_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 29464,
+    "verified_on": "2026-11-14"
+  },
+  "meridiani_planum_ctx_local": {
+    "bounds": {
+      "west": -5.5810546875,
+      "east": -5.44921875,
+      "north": -1.8896484375,
+      "south": -2.021484375,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 2091-2093, cols 3969-3971"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 10.17,
+    "width_km_ns": 7.8,
+    "file": "meridiani_planum_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 47609,
+    "verified_on": "2026-11-14"
+  },
+  "gusev_crater_ctx_regional": {
+    "bounds": {
+      "west": 175.078125,
+      "east": 176.1328125,
+      "north": -14.0625,
+      "south": -15.1171875,
+      "source": "WMTS/ArcGIS tile grid, zoom 9, rows 296-298, cols 1010-1012"
+    },
+    "zoom": 9,
+    "tiles": 3,
+    "px_m_ns": 81.4,
+    "px_m_ew": 78.78,
+    "width_km_ns": 62.5,
+    "file": "gusev_crater_ctx_regional.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 63349,
+    "verified_on": "2026-11-14"
+  },
+  "gusev_crater_ctx_local": {
+    "bounds": {
+      "west": 175.3857421875,
+      "east": 175.517578125,
+      "north": -14.501953125,
+      "south": -14.6337890625,
+      "source": "WMTS/ArcGIS tile grid, zoom 12, rows 2378-2380, cols 8087-8089"
+    },
+    "zoom": 12,
+    "tiles": 3,
+    "px_m_ns": 10.18,
+    "px_m_ew": 9.85,
+    "width_km_ns": 7.8,
+    "file": "gusev_crater_ctx_local.jpg",
+    "width_px": 768,
+    "height_px": 768,
+    "bytes": 63709,
+    "verified_on": "2026-11-14"
+  }
+}

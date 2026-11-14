@@ -2,7 +2,7 @@
 // heuristic index over comparable features and is a different concept from
 // landing suitability; the two never share a chart or a number.
 import { useMemo, useState } from "react";
-import { RotateCcw, ExternalLink } from "lucide-react";
+import { RotateCcw, ExternalLink, BookOpenCheck } from "lucide-react";
 import { Section, BulletList, EmptyNote } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import { Spinner } from "@/components/ui/Spinner";
@@ -11,7 +11,15 @@ import { useAnalogs } from "@/hooks/useAnalogs";
 import { useAppStore } from "@/store/useAppStore";
 import { formatLatLon, formatNumber, formatUnit, formatPercent, humanize } from "@/lib/format";
 import { AnalogFactorChart } from "@/components/charts/AnalogFactorChart";
-import type { AnalogMatch, FeatureDistance, Site, Provenance } from "@/types";
+import { StudyCardView } from "@/components/intelligence/StudyCard";
+import type { AnalogMatch, FeatureDistance, Site, Provenance, StudyCard } from "@/types";
+
+/** proposed_studies arrives as loosely typed dicts; accept only well-formed cards. */
+function isStudyCard(x: unknown): x is StudyCard {
+  if (!x || typeof x !== "object") return false;
+  const o = x as Record<string, unknown>;
+  return (o.kind === "proposed_study" || o.kind === "documented_campaign") && typeof o.title === "string" && typeof o.research_question === "string" && typeof o.method === "string" && typeof o.why_here === "string" && typeof o.cannot_infer === "string";
+}
 
 const ANALOG_FEATURES: Array<{ feature_id: string; label: string; default_weight: number }> = [
   { feature_id: "slope_regional_median_deg", label: "Regional slope", default_weight: 25 },
@@ -22,6 +30,15 @@ const ANALOG_FEATURES: Array<{ feature_id: string; label: string; default_weight
   { feature_id: "insolation_toa_annual_mean_wm2", label: "TOA insolation (informational)", default_weight: 0 },
 ];
 
+const ANALOG_GUIDE: Record<string, {label: string; effect: string}> = {
+  slope_regional_median_deg: { label: "Similar slopes", effect: "Favours Earth terrain with a similar regional slope. Useful for broad mobility studies." },
+  roughness_regional_m: { label: "Similar terrain relief", effect: "Favours a similar amount of regional unevenness after removing the broad tilt." },
+  terrain_morphology: { label: "Similar landforms", effect: "Matches literature tags such as crater floors or smooth plains. Tags are not detailed terrain maps." },
+  mineralogy_tags: { label: "Similar materials", effect: "Matches documented composition tags. Useful for choosing a geology analogue; this is not a spectral match." },
+  precipitation_mm_day: { label: "Similar dryness", effect: "Favours lower rainfall closer to Mars. Earth rainfall alone cannot reproduce Martian conditions." },
+  insolation_toa_annual_mean_wm2: { label: "Similar sunlight above the atmosphere", effect: "Off by default. Compares modelled annual sunlight, not surface lighting or panel output. Raising it includes this feature in the match." },
+};
+
 export function AnalogComparison({ site, sources }: { site: Site | null; sources?: Record<string, Provenance> }) {
   const q = useAnalogs(site?.id ?? null, 5);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -29,6 +46,8 @@ export function AnalogComparison({ site, sources }: { site: Site | null; sources
   const setAnalogWeight = useAppStore((s) => s.setAnalogWeight);
   const resetAnalogWeights = useAppStore((s) => s.resetAnalogWeights);
 
+  const [changedFeature, setChangedFeature] = useState<string | null>(null);
+  const effectiveTotal = ANALOG_FEATURES.reduce((sum, f) => sum + (analogWeights?.[f.feature_id] ?? f.default_weight), 0);
   const matches = q.data?.matches ?? [];
   const active: AnalogMatch | undefined = useMemo(() => matches.find((m) => m.earth_candidate.id === activeId) ?? matches[0], [matches, activeId]);
 
@@ -77,35 +96,43 @@ export function AnalogComparison({ site, sources }: { site: Site | null; sources
           )}
         </Section>
 
+        <details className="m-4 rounded-lg border border-line-strong">
+        <summary className="cursor-pointer p-3 text-sm font-semibold text-fg">Adjust comparison priorities {analogWeights ? "· customised" : "· defaults"}</summary>
         <Section
-          title="Analog weights"
-          subtitle="Optional: re-weight the comparable features (0–100)"
+          title="What should match on Earth?"
+          subtitle="These controls reorder Earth analogs only. They do not change the Mars landing ranking or the measurements."
           actions={
             <button type="button" onClick={resetAnalogWeights} disabled={!analogWeights} className="inline-flex items-center gap-1 rounded border border-line px-2 py-1 text-[10.5px] text-fg-muted hover:text-fg disabled:opacity-40" aria-label="Reset analog weights to spec defaults">
               <RotateCcw className="h-3 w-3" aria-hidden /> Defaults
             </button>
           }
         >
-          <ul className="space-y-2.5">
+          <p className="mb-3 text-xs text-fg-muted">Keep the defaults for a broad comparison. Adjust them when planning a specific field experiment. Percentages show the relative emphasis; a larger distance bar means a worse match.</p>
+          <ul className="space-y-4">
             {ANALOG_FEATURES.map((f) => {
               const w = analogWeights?.[f.feature_id] ?? f.default_weight;
               const id = `aw-${f.feature_id}`;
               return (
                 <li key={f.feature_id}>
                   <div className="mb-0.5 flex justify-between text-[11px]">
-                    <label htmlFor={id} className="text-fg">{f.label}</label>
-                    <span className="num text-fg-muted">{w}</span>
+                    <label htmlFor={id} className="text-sm text-fg">{ANALOG_GUIDE[f.feature_id].label}</label>
+                    <span className="num text-sm text-fg-muted">{effectiveTotal ? Math.round(w / effectiveTotal * 100) : 0}%</span>
                   </div>
-                  <input id={id} type="range" min={0} max={100} step={1} value={w} aria-label={`${f.label} analog weight`} style={{ ["--pct" as string]: `${w}%` }} onChange={(e) => {
+                  <p id={`${id}-effect`} className="mb-2 text-xs text-fg-muted">{ANALOG_GUIDE[f.feature_id].effect}</p>
+                  <input aria-describedby={`${id}-effect`} id={id} type="range" min={0} max={100} step={1} value={w} aria-label={`${f.label} analog weight`} style={{ ["--pct" as string]: `${w}%` }} onChange={(e) => {
                     // seed all defaults on first touch so the request carries every feature
                     if (!analogWeights) for (const g of ANALOG_FEATURES) setAnalogWeight(g.feature_id, g.default_weight);
                     setAnalogWeight(f.feature_id, Number(e.target.value));
+                    setChangedFeature(f.feature_id);
                   }} />
                 </li>
               );
             })}
           </ul>
+          {effectiveTotal === 0 && <p role="alert" className="mt-3 text-sm text-warn">Choose at least one feature to compare.</p>}
+          {changedFeature && <p role="status" className="mt-4 rounded-lg border border-info/50 bg-info/10 p-3 text-sm text-fg">More emphasis on {ANALOG_GUIDE[changedFeature].label.toLowerCase()} rewards Earth locations closer on that feature. Other features have less relative influence. The Earth ranking updates above; Mars landing scores stay unchanged.</p>}
         </Section>
+        </details>
 
         <Section title="Planetary differences" subtitle="Never compared; always disclosed">
           <BulletList items={q.data?.planetary_differences} tone="warn" />
@@ -123,6 +150,11 @@ function AnalogDetail({ match, marsSite, sources }: { match: AnalogMatch; marsSi
   const c = match.earth_candidate;
   const comparable = match.feature_distances.filter((d) => d.comparable);
   const nonComparable = match.feature_distances.filter((d) => !d.comparable);
+  // documented_analog_use is authoritative; research_applications is its
+  // deprecated alias and known_analog_use the candidate's own list. One set,
+  // so a campaign is never shown twice.
+  const documented = [...new Set([...(match.documented_analog_use ?? match.research_applications ?? []), ...(c.known_analog_use ?? [])])];
+  const proposed = (match.proposed_studies ?? []).filter(isStudyCard);
   return (
     <>
       <Section title="Analog detail" subtitle={<span>Earth candidate matched to <span className="text-fg">{marsSite.name}</span></span>}>
@@ -194,15 +226,28 @@ function AnalogDetail({ match, marsSite, sources }: { match: AnalogMatch; marsSi
       <Section title="Non-comparable variables" subtitle="Planetary differences that no Earth site can match">
         <BulletList items={match.noncomparable_variables} tone="warn" />
       </Section>
-      <Section title="Research applications">
-        {(c.known_analog_use ?? []).length > 0 && (
-          <div className="mb-1.5 flex flex-wrap gap-1">
-            {(c.known_analog_use ?? []).map((u) => (
-              <Badge key={u} tone="info">{u}</Badge>
+      <Section title="Documented analog use" subtitle="Historical programmes recorded for this Earth site; not proposals">
+        {documented.length === 0 ? (
+          <EmptyNote>No documented analog campaigns recorded for this site.</EmptyNote>
+        ) : (
+          <ul className="space-y-1.5" aria-label="Documented analog programmes">
+            {documented.map((u) => (
+              <li key={u} className="flex items-center gap-2 text-xs text-fg">
+                <Badge tone="ok"><BookOpenCheck className="h-3 w-3" aria-hidden /> Documented programme</Badge>
+                <span>{u}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
-        <BulletList items={match.research_applications} empty="No documented analog campaigns." />
+      </Section>
+      <Section title="Proposed studies (hypotheses)" subtitle="Motivated by the matched characteristics · similarity is a heuristic index, not a validated transfer">
+        {proposed.length === 0 ? (
+          <EmptyNote>The matched characteristics do not motivate a study for this pairing.</EmptyNote>
+        ) : (
+          <ol className="space-y-3" aria-label="Proposed studies">
+            {proposed.map((s, i) => <StudyCardView key={`${s.title}-${i}`} study={s} analogName={c.name} similarityNote />)}
+          </ol>
+        )}
       </Section>
       <Section title="Limitations">
         <BulletList items={match.limitations} tone="warn" />

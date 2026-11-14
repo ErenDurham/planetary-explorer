@@ -16,6 +16,7 @@ from .common import (
     QualityFlag,
 )
 from .health import HealthResponse, ServiceStatus
+from .imagery import ImageBounds, ImageryEntry, ImageryManifest, SiteImagery
 from .mission import (
     ConstraintResult,
     CriteriaCompleteness,
@@ -30,7 +31,17 @@ from .mission import (
     MissionProfile,
     SuitabilityResult,
 )
-from .research import Citation, EvidenceChunk, ExplainRequest, ExplanationSections, ResearchExplanation
+from .objective import GuidanceRequest, GuidanceResponse, InfluenceDelta, InterpretRequest, InterpretResponse, RankDelta, WeightSuggestion
+from .research import Citation, EvidenceChunk, ExplainRequest, ExplanationSections, ResearchExplanation, SourceDigest, StudyCard
+from .sensitivity import (
+    ExcludedCriterion,
+    ScenarioSiteOutcome,
+    SensitivityBreakpoint,
+    SensitivityPoint,
+    SensitivityRequest,
+    SensitivityResponse,
+    SensitivitySweep,
+)
 from .site import (
     Completeness,
     EnvironmentalMeasurement,

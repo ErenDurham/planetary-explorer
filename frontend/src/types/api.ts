@@ -127,6 +127,128 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/mission/interpret": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Interpret Objective
+         * @description Free-text objective -> PROPOSED weights for the existing criteria, with
+         *     rationale, trade-offs, unsupported needs and clarifying questions. The
+         *     proposal is validated deterministically; hard constraints and thresholds
+         *     are never exposed to free text.
+         */
+        post: operations["interpret_objective_api_v1_mission_interpret_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mission/guidance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Priority Guidance
+         * @description Objective-aware guidance after a priority change: effective influence
+         *     before/after, de-emphasised factors, rank deltas and missing data, all
+         *     computed by the scoring engine; a model may only phrase them.
+         */
+        post: operations["priority_guidance_api_v1_mission_guidance_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sites/{site_id}/imagery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Site Imagery */
+        get: operations["site_imagery_api_v1_sites__site_id__imagery_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/imagery/{entry_id}/asset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Imagery Asset */
+        get: operations["imagery_asset_api_v1_imagery__entry_id__asset_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scoring/sensitivity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sensitivity
+         * @description One-at-a-time weight sweep around the applied mission for one focus site.
+         *     Every point is re-scored by scoring_engine.evaluate + ranking_engine.rank.
+         */
+        post: operations["sensitivity_api_v1_scoring_sensitivity_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/comparison/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Comparison Catalog
+         * @description Earth, Mars and Moon locations, original measurements and body references.
+         *
+         *     No cross-body landing score is computed by this endpoint.
+         */
+        get: operations["get_comparison_catalog_api_v1_comparison_catalog_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -156,8 +278,23 @@ export interface components {
             important_differences?: string[];
             /** Noncomparable Variables */
             noncomparable_variables?: string[];
-            /** Research Applications */
+            /**
+             * Research Applications
+             * @description DEPRECATED alias of documented_analog_use; kept for older clients
+             */
             research_applications?: string[];
+            /**
+             * Documented Analog Use
+             * @description Historical analog campaigns recorded for this Earth site; not proposals
+             */
+            documented_analog_use?: string[];
+            /**
+             * Proposed Studies
+             * @description StudyCard dicts proposed from the matched characteristics; hypotheses, not validated transfers
+             */
+            proposed_studies?: {
+                [key: string]: unknown;
+            }[];
             /** Limitations */
             limitations?: string[];
             /**
@@ -193,6 +330,26 @@ export interface components {
                 [key: string]: unknown;
             } | unknown[] | string | null;
         };
+        /** BodyReference */
+        BodyReference: {
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "earth" | "mars" | "moon";
+            /** Name */
+            name: string;
+            /** Gravity Ms2 */
+            gravity_ms2: number;
+            /** Solar Irradiance Wm2 */
+            solar_irradiance_wm2: number;
+            /** Solar Day Hours */
+            solar_day_hours: number;
+            /** Atmosphere */
+            atmosphere: string;
+            fact_source: components["schemas"]["Provenance"];
+            atmosphere_source: components["schemas"]["Provenance"];
+        };
         /** Citation */
         Citation: {
             /**
@@ -210,6 +367,45 @@ export interface components {
             institution: string;
             /** Url */
             url: string;
+        };
+        /** ComparisonCatalog */
+        ComparisonCatalog: {
+            /** Version */
+            version: string;
+            /** Bodies */
+            bodies: components["schemas"]["BodyReference"][];
+            /** Locations */
+            locations: components["schemas"]["ComparisonLocation"][];
+        };
+        /** ComparisonLocation */
+        ComparisonLocation: {
+            /** Id */
+            id: string;
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "earth" | "mars" | "moon";
+            /** Name */
+            name: string;
+            /** Region */
+            region: string;
+            /** Description */
+            description: string;
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
+            /** Coverage */
+            coverage: string;
+            /** Measurements */
+            measurements: components["schemas"]["EnvironmentalMeasurement"][];
+            /** Sources */
+            sources: {
+                [key: string]: components["schemas"]["Provenance"];
+            };
+            /** Source Ids */
+            source_ids?: string[];
         };
         /** Completeness */
         Completeness: {
@@ -465,6 +661,15 @@ export interface components {
              */
             score?: number | null;
         };
+        /** ExcludedCriterion */
+        ExcludedCriterion: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Label */
+            label: string;
+            /** Reason */
+            reason: string;
+        };
         /** ExplainRequest */
         ExplainRequest: {
             /** Site Id */
@@ -481,6 +686,11 @@ export interface components {
              * @description Optional focus question; treated as a hint, never as instructions
              */
             question?: string | null;
+            /**
+             * Objective
+             * @description The applied mission objective, so digests can say why a source matters to it; untrusted text
+             */
+            objective?: string | null;
         };
         /** ExplanationSections */
         ExplanationSections: {
@@ -619,6 +829,67 @@ export interface components {
             /** Description */
             description?: string | null;
         };
+        /** GuidanceRequest */
+        GuidanceRequest: {
+            /** Objective */
+            objective?: string | null;
+            /** Previous Weights */
+            previous_weights: {
+                [key: string]: number;
+            };
+            /** New Weights */
+            new_weights: {
+                [key: string]: number;
+            };
+            /** Changed Criterion Id */
+            changed_criterion_id?: string | null;
+            /** Client Request Id */
+            client_request_id?: string | null;
+        };
+        /** GuidanceResponse */
+        GuidanceResponse: {
+            /**
+             * Generated By
+             * @enum {string}
+             */
+            generated_by: "llm" | "rule_based";
+            /** Model */
+            model?: string | null;
+            /**
+             * Summary
+             * @description Short objective-aware guidance; phrased by the model or by rules, numbers from the scoring engine only
+             */
+            summary: string;
+            /** De Emphasised */
+            de_emphasised?: string[];
+            /** Leader Changed */
+            leader_changed: boolean;
+            /** Leader */
+            leader?: string | null;
+            /**
+             * Rank Changes
+             * @description Sites whose rank moved
+             */
+            rank_changes?: components["schemas"]["RankDelta"][];
+            /** Influence */
+            influence: components["schemas"]["InfluenceDelta"][];
+            /** Missing Data Notes */
+            missing_data_notes?: string[];
+            /** Client Request Id */
+            client_request_id?: string | null;
+            /**
+             * Cached
+             * @default false
+             */
+            cached: boolean;
+            /** Generated At */
+            generated_at: string;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /**
          * HardConstraint
          * @description A mandatory requirement. A site failing one is ineligible whatever its score.
@@ -658,6 +929,218 @@ export interface components {
             /** Scoring Spec Version */
             scoring_spec_version: string;
             services: components["schemas"]["ServiceStatus"];
+        };
+        /**
+         * ImageBounds
+         * @description Geographic extent, east-positive degrees, -180..180. Only present when
+         *     the extent is known from the tiling scheme or a georeferenced product.
+         */
+        ImageBounds: {
+            /** West */
+            west: number;
+            /** East */
+            east: number;
+            /** South */
+            south: number;
+            /** North */
+            north: number;
+            /**
+             * Source
+             * @description How the bounds were established, e.g. 'WMTS tile grid, zoom 11'
+             */
+            source: string;
+        };
+        /** ImageryEntry */
+        ImageryEntry: {
+            /** Entry Id */
+            entry_id: string;
+            /** Site Id */
+            site_id: string;
+            /**
+             * View
+             * @enum {string}
+             */
+            view: "orbital" | "surface";
+            /**
+             * Image Type
+             * @enum {string}
+             */
+            image_type: "orbital_mosaic" | "orbital_image" | "surface_panorama" | "surface_image" | "orbital_map";
+            /** Title */
+            title: string;
+            /** Institution */
+            institution: string;
+            /** Credit */
+            credit: string;
+            /** License */
+            license: string;
+            /** Instrument */
+            instrument?: string | null;
+            /** Mission */
+            mission?: string | null;
+            /**
+             * Source Page Url
+             * @description Authoritative page describing the product
+             */
+            source_page_url: string;
+            /**
+             * Asset Url
+             * @description Allow-listed original asset URL
+             */
+            asset_url: string;
+            /**
+             * Local Asset
+             * @description Cached copy under data/imagery/assets, served by the API
+             */
+            local_asset?: string | null;
+            /** Mime Type */
+            mime_type?: string | null;
+            /** Width Px */
+            width_px?: number | null;
+            /** Height Px */
+            height_px?: number | null;
+            /** Bytes */
+            bytes?: number | null;
+            /**
+             * Acquisition Date
+             * @description ISO date the data was ACQUIRED; null if not verified
+             */
+            acquisition_date?: string | null;
+            /** Acquisition Note */
+            acquisition_note?: string | null;
+            /**
+             * Release Date
+             * @description Date the source published the product; not an acquisition date
+             */
+            release_date?: string | null;
+            /**
+             * Spatial Resolution M Per Px
+             * @description Ground sampling of THIS asset if known
+             */
+            spatial_resolution_m_per_px?: number | null;
+            /** Resolution Note */
+            resolution_note?: string | null;
+            bounds?: components["schemas"]["ImageBounds"] | null;
+            /**
+             * Coverage Evidence
+             * @description Why we believe this image covers the stated location
+             */
+            coverage_evidence: string;
+            /**
+             * Relationship
+             * @enum {string}
+             */
+            relationship: "exact_location" | "landing_ellipse" | "candidate_region" | "nearby_scene";
+            /**
+             * Distance From Site Km
+             * @description Approximate offset of the scene centre from the candidate point, if known
+             */
+            distance_from_site_km?: number | null;
+            /**
+             * Relevance
+             * @description Human-readable relevance and caveat shown beside the image
+             */
+            relevance: string;
+            /**
+             * Appearance Note
+             * @description Processing / colour caveats, e.g. stretched or false colour
+             */
+            appearance_note?: string | null;
+            /** Verified On */
+            verified_on: string;
+        };
+        /** InfluenceDelta */
+        InfluenceDelta: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Label */
+            label: string;
+            /**
+             * Previous Pct
+             * @description Effective normalised influence before (null = unscored)
+             */
+            previous_pct?: number | null;
+            /** New Pct */
+            new_pct?: number | null;
+            /** Excluded Reason */
+            excluded_reason?: string | null;
+        };
+        /** InterpretRequest */
+        InterpretRequest: {
+            /**
+             * Objective
+             * @description Free text; treated as untrusted data
+             */
+            objective: string;
+            /**
+             * Current Weights
+             * @description Slider state to start from; null = scoring spec defaults
+             */
+            current_weights?: {
+                [key: string]: number;
+            } | null;
+            /**
+             * Excluded Criteria
+             * @description Criteria the client knows are unscorable (no data); forced to 0
+             */
+            excluded_criteria?: string[];
+        };
+        /** InterpretResponse */
+        InterpretResponse: {
+            /** Objective */
+            objective: string;
+            /**
+             * Objective Hash
+             * @description Stable hash of the interpreted text; the client uses it to avoid stale 'interpreted' labels
+             */
+            objective_hash: string;
+            /**
+             * Generated By
+             * @enum {string}
+             */
+            generated_by: "llm" | "rule_based";
+            /** Model */
+            model?: string | null;
+            /** Suggestions */
+            suggestions: components["schemas"]["WeightSuggestion"][];
+            /** Rationale */
+            rationale?: string[];
+            /**
+             * Tradeoffs
+             * @description Explicit 'X over Y' or negations found in the text
+             */
+            tradeoffs?: string[];
+            /**
+             * Unsupported Needs
+             * @description Goals the landing-phase model cannot optimise
+             */
+            unsupported_needs?: string[];
+            /** Clarifying Questions */
+            clarifying_questions?: string[];
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "low" | "medium" | "high";
+            /**
+             * Confidence Note
+             * @description What the confidence refers to: the reading of the text, never the suitability science
+             */
+            confidence_note: string;
+            /**
+             * Validation Notes
+             * @description Deterministic corrections applied to the proposal
+             */
+            validation_notes?: string[];
+            /** Scoring Spec Version */
+            scoring_spec_version: string;
+            /**
+             * Cached
+             * @default false
+             */
+            cached: boolean;
+            /** Generated At */
+            generated_at: string;
         };
         /** MatchRequest */
         MatchRequest: {
@@ -747,6 +1230,21 @@ export interface components {
              */
             retrieved_at?: string | null;
         };
+        /** RankDelta */
+        RankDelta: {
+            /** Site Id */
+            site_id: string;
+            /** Site Name */
+            site_name: string;
+            /** Previous Rank */
+            previous_rank: number | null;
+            /** New Rank */
+            new_rank: number | null;
+            /** Previous Score */
+            previous_score: number | null;
+            /** New Score */
+            new_score: number | null;
+        };
         /** ResearchExplanation */
         ResearchExplanation: {
             /** Site Id */
@@ -763,6 +1261,21 @@ export interface components {
             supporting_evidence: components["schemas"]["EvidenceChunk"][];
             /** Citations */
             citations: components["schemas"]["Citation"][];
+            /**
+             * Source Digests
+             * @description One per unique source URL, in evidence order
+             */
+            source_digests?: components["schemas"]["SourceDigest"][];
+            /**
+             * Research Studies
+             * @description At most three structured study cards
+             */
+            research_studies?: components["schemas"]["StudyCard"][];
+            /**
+             * Evidence Gap
+             * @description Set when the corpus cannot support a useful proposal
+             */
+            evidence_gap?: string | null;
             /** Limitations */
             limitations?: string[];
             /**
@@ -772,6 +1285,215 @@ export interface components {
             cached: boolean;
             /** Generated At */
             generated_at: string;
+        };
+        /** ScenarioSiteOutcome */
+        ScenarioSiteOutcome: {
+            /** Site Id */
+            site_id: string;
+            /** Site Name */
+            site_name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "insufficient_data" | "ineligible";
+            /** Score */
+            score: number | null;
+            /** Rank */
+            rank: number | null;
+        };
+        /** SensitivityBreakpoint */
+        SensitivityBreakpoint: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "leader" | "focus_rank";
+            /** From Delta Pp */
+            from_delta_pp: number;
+            /** To Delta Pp */
+            to_delta_pp: number;
+            /** Before */
+            before: string;
+            /** After */
+            after: string;
+        };
+        /** SensitivityPoint */
+        SensitivityPoint: {
+            /**
+             * Delta Pp
+             * @description Requested change in the swept criterion's effective share, percentage points
+             */
+            delta_pp: number;
+            /**
+             * Share
+             * @description Realised normalised weight of the swept criterion under this scenario; null when it dropped out (weight 0)
+             */
+            share?: number | null;
+            /**
+             * Weights
+             * @description Raw weights sent to the scoring engine for this scenario (active criteria sum to 100)
+             */
+            weights: {
+                [key: string]: number;
+            };
+            /**
+             * Active Count
+             * @description Criteria actually scored under this scenario
+             */
+            active_count: number;
+            /**
+             * Focus Status
+             * @description null when the focus site is not in the candidate set
+             */
+            focus_status?: ("ok" | "insufficient_data" | "ineligible") | null;
+            /** Focus Score */
+            focus_score?: number | null;
+            /** Focus Rank */
+            focus_rank?: number | null;
+            /** Leader Site Id */
+            leader_site_id?: string | null;
+            /** Leader Site Name */
+            leader_site_name?: string | null;
+            /** Leader Score */
+            leader_score?: number | null;
+            /** Runner Up Site Id */
+            runner_up_site_id?: string | null;
+            /** Runner Up Site Name */
+            runner_up_site_name?: string | null;
+            /** Runner Up Score */
+            runner_up_score?: number | null;
+            /**
+             * Gap To Alternative
+             * @description focus score minus the leader's (or minus the runner-up's when the focus site leads); positive = focus ahead
+             */
+            gap_to_alternative?: number | null;
+            /** Ranking */
+            ranking: components["schemas"]["ScenarioSiteOutcome"][];
+        };
+        /** SensitivityRequest */
+        SensitivityRequest: {
+            /**
+             * Planet
+             * @default mars
+             * @constant
+             */
+            planet: "mars";
+            /**
+             * Site Ids
+             * @description Candidate subset; null = all sites. Must match the applied evaluation's set.
+             */
+            site_ids?: string[] | null;
+            /** @description The applied mission; it is read, never modified */
+            mission: components["schemas"]["MissionProfile"];
+            /**
+             * Focus Site Id
+             * @description The selected site whose rank and score are tracked across the sweep
+             */
+            focus_site_id: string;
+            /**
+             * Range Pp
+             * @description Half-width of the sweep in percentage points of effective share (default +/-5)
+             * @default 5
+             */
+            range_pp: number;
+            /**
+             * Step Pp
+             * @description Sweep resolution in percentage points; breakpoints are only located to this resolution
+             * @default 1
+             */
+            step_pp: number;
+            /**
+             * Client Request Id
+             * @description Echoed back so the client can drop stale responses
+             */
+            client_request_id?: string | null;
+        };
+        /** SensitivityResponse */
+        SensitivityResponse: {
+            /** Focus Site Id */
+            focus_site_id: string;
+            /** Focus Site Name */
+            focus_site_name: string | null;
+            /**
+             * Active Criteria
+             * @description Criteria scored under the applied mission (weight > 0 and data on every candidate)
+             */
+            active_criteria: string[];
+            /** Inactive */
+            inactive?: components["schemas"]["ExcludedCriterion"][];
+            /**
+             * Base Shares
+             * @description Effective normalised weights under the applied mission, active criteria only
+             */
+            base_shares: {
+                [key: string]: number;
+            };
+            /** @description The applied mission re-evaluated (delta 0); identical to POST /scoring/evaluate */
+            base: components["schemas"]["SensitivityPoint"];
+            /** Sweeps */
+            sweeps: components["schemas"]["SensitivitySweep"][];
+            /** Range Pp */
+            range_pp: number;
+            /** Step Pp */
+            step_pp: number;
+            /**
+             * Assumption
+             * @description How the remaining share is redistributed, stated for display
+             */
+            assumption: string;
+            /**
+             * Too Few Active
+             * @description True when fewer than two criteria are active, so no one-at-a-time sweep is possible
+             */
+            too_few_active: boolean;
+            /** Scoring Spec Version */
+            scoring_spec_version: string;
+            /** Profile Version */
+            profile_version: string;
+            mission: components["schemas"]["MissionProfile"];
+            /** Warnings */
+            warnings?: string[];
+            /** Client Request Id */
+            client_request_id?: string | null;
+        };
+        /** SensitivitySweep */
+        SensitivitySweep: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Label */
+            label: string;
+            /**
+             * Base Share
+             * @description Effective share of this criterion under the applied mission
+             */
+            base_share: number;
+            /** Points */
+            points: components["schemas"]["SensitivityPoint"][];
+            /**
+             * Breakpoints
+             * @description Changes located between adjacent sweep points, to the sweep resolution only
+             */
+            breakpoints?: components["schemas"]["SensitivityBreakpoint"][];
+            /** Focus Rank Min */
+            focus_rank_min?: number | null;
+            /** Focus Rank Max */
+            focus_rank_max?: number | null;
+            /**
+             * Focus Rank Stable
+             * @description True when the focus site's rank is the same at every point in the tested range
+             */
+            focus_rank_stable: boolean;
+            /**
+             * Leader Stable
+             * @description True when the same site leads at every point in the tested range
+             */
+            leader_stable: boolean;
+            /**
+             * Note
+             * @description Plain reading of the sweep, always qualified as 'within the tested range'
+             */
+            note: string;
         };
         /** ServiceStatus */
         ServiceStatus: {
@@ -833,6 +1555,20 @@ export interface components {
              */
             coordinate_sources?: string[];
         };
+        /** SiteImagery */
+        SiteImagery: {
+            /** Site Id */
+            site_id: string;
+            /** Entries */
+            entries: components["schemas"]["ImageryEntry"][];
+            /**
+             * Missing Views
+             * @description Views with no verified imagery for this site
+             */
+            missing_views?: ("orbital" | "surface")[];
+            /** Notes */
+            notes?: string[];
+        };
         /** SiteListResponse */
         SiteListResponse: {
             /**
@@ -849,6 +1585,88 @@ export interface components {
         SiteWithProfile: {
             site: components["schemas"]["Site"];
             profile: components["schemas"]["EnvironmentalProfile"];
+        };
+        /**
+         * SourceDigest
+         * @description One retrieved SOURCE (URL), summarised from its retrieved passages only.
+         *     `chunk_ids`/`citation_ids` are the exact passages the digest was written
+         *     from; grouping by source never remaps a claim to a different passage.
+         */
+        SourceDigest: {
+            /** Document Id */
+            document_id: string;
+            /** Title */
+            title: string;
+            /** Institution */
+            institution: string;
+            /** Url */
+            url: string;
+            /** Publication Date */
+            publication_date?: string | null;
+            /**
+             * Purpose Label
+             * @description e.g. 'Mission context', 'Dataset documentation', 'Peer-reviewed record', 'Analog programme'
+             */
+            purpose_label: string;
+            /** Chunk Ids */
+            chunk_ids: string[];
+            /** Citation Ids */
+            citation_ids: string[];
+            /** What It Tells Us */
+            what_it_tells_us: string;
+            /** Why It Matters */
+            why_it_matters: string;
+            /** Limitation */
+            limitation?: string | null;
+            /**
+             * Support Level
+             * @enum {string}
+             */
+            support_level: "supports" | "context" | "insufficient";
+            /**
+             * Generated By
+             * @enum {string}
+             */
+            generated_by: "llm" | "extractive";
+        };
+        /**
+         * StudyCard
+         * @description A research application. A proposed study is a hypothesis to test, never
+         *     something this tool or anyone has shown; a documented campaign is a
+         *     historical analog programme recorded in the data files.
+         */
+        StudyCard: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "proposed_study" | "documented_campaign";
+            /** Title */
+            title: string;
+            /** Research Question */
+            research_question: string;
+            /**
+             * Method
+             * @description Proposed measurements or procedure
+             */
+            method: string;
+            /**
+             * Why Here
+             * @description Why this site (or this Earth analog) helps answer the question
+             */
+            why_here: string;
+            /**
+             * Motivating Citation Ids
+             * @description Exact [C#] handles whose passages motivate the card
+             */
+            motivating_citation_ids?: string[];
+            /**
+             * Cannot Infer
+             * @description What the study, the data or the analog similarity cannot establish
+             */
+            cannot_infer: string;
+            /** Analog Candidate Id */
+            analog_candidate_id?: string | null;
         };
         /** SuitabilityResult */
         SuitabilityResult: {
@@ -881,6 +1699,37 @@ export interface components {
             risks?: string[];
             /** Limitations */
             limitations?: string[];
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
+        /** WeightSuggestion */
+        WeightSuggestion: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Label */
+            label: string;
+            /** Weight */
+            weight: number;
+            /** Previous Weight */
+            previous_weight: number;
+            /**
+             * Reason
+             * @description Why this weight was proposed; a preference, not a scientific finding
+             */
+            reason: string;
+            /** Data Available */
+            data_available: boolean;
         };
     };
     responses: never;
@@ -1295,6 +2144,322 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    interpret_objective_api_v1_mission_interpret_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InterpretRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InterpretResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    priority_guidance_api_v1_mission_guidance_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuidanceRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuidanceResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    site_imagery_api_v1_sites__site_id__imagery_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                site_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteImagery"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    imagery_asset_api_v1_imagery__entry_id__asset_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                entry_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    sensitivity_api_v1_scoring_sensitivity_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SensitivityRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SensitivityResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    get_comparison_catalog_api_v1_comparison_catalog_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComparisonCatalog"];
                 };
             };
         };

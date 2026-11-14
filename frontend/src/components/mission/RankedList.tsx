@@ -21,11 +21,12 @@ export function RankedList({ results, selectedId, onSelect, isPending, warnings 
       subtitle="Relative suitability index 0–100 under the current priorities. Not a probability."
       actions={isPending ? <Spinner label="Scoring" /> : undefined}
     >
+      <p className="mb-3 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
       {warnings && warnings.length > 0 && (
         <ul className="mb-2 space-y-1" aria-label="Scoring warnings">
           {warnings.map((w, i) => (
             <li key={i} className="rounded border border-warn/40 bg-warn/10 px-2 py-1 text-[11px] leading-snug text-warn">
-              {w}
+              {w.includes("thermal_conditions") ? "Temperature data is unavailable. Thermal conditions are excluded; the remaining priorities are rescaled fairly across every site." : w}
             </li>
           ))}
         </ul>
@@ -43,6 +44,15 @@ export function RankedList({ results, selectedId, onSelect, isPending, warnings 
                 <button
                   type="button"
                   onClick={() => onSelect(r.site_id)}
+                  onKeyDown={e => {
+                    if (e.altKey || e.ctrlKey || e.metaKey) return;
+                    if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
+                    const buttons = Array.from(e.currentTarget.closest("ol")?.querySelectorAll<HTMLButtonElement>("button") ?? []);
+                    const i = buttons.indexOf(e.currentTarget);
+                    const next = e.key === "Home" ? 0 : e.key === "End" ? buttons.length - 1 : Math.max(0, Math.min(buttons.length - 1, i + (e.key === "ArrowDown" ? 1 : -1)));
+                    e.preventDefault();
+                    buttons[next]?.focus();
+                  }}
                   aria-pressed={selected}
                   aria-label={`${r.site_name}, ${r.rank != null ? `rank ${r.rank}, ` : ""}${r.score != null ? `index ${formatNumber(r.score, { maxFractionDigits: 1 })}, ` : ""}${st.label}`}
                   className={`group grid w-full grid-cols-[22px_1fr_auto] items-center gap-2 rounded border px-2 py-1.5 text-left transition-colors ${selected ? "border-copper bg-copper/10" : "border-transparent hover:border-line-strong hover:bg-bg-elev-2"}`}

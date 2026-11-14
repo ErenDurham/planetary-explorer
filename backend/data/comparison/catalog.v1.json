@@ -1,0 +1,199 @@
+{
+  "version": "comparison-v1",
+  "bodies": [
+    {
+      "id": "earth",
+      "name": "Earth",
+      "gravity_ms2": 9.82,
+      "solar_irradiance_wm2": 1361,
+      "atmosphere": "Dense atmosphere; mostly nitrogen and oxygen.",
+      "fact_source": {
+        "source_id": "earth_facts",
+        "title": "Earth Fact Sheet",
+        "institution": "NASA",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+        "retrieved_at": "2026-11-14"
+      },
+      "atmosphere_source": {
+        "source_id": "earth_atmosphere",
+        "title": "Earth atmosphere",
+        "institution": "NASA",
+        "url": "https://science.nasa.gov/earth/facts/",
+        "retrieved_at": "2026-11-14"
+      },
+      "solar_day_hours": 24
+    },
+    {
+      "id": "mars",
+      "name": "Mars",
+      "gravity_ms2": 3.73,
+      "solar_irradiance_wm2": 586.2,
+      "atmosphere": "Thin atmosphere; mostly carbon dioxide.",
+      "fact_source": {
+        "source_id": "mars_facts",
+        "title": "Mars Fact Sheet",
+        "institution": "NASA",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+        "retrieved_at": "2026-11-14"
+      },
+      "atmosphere_source": {
+        "source_id": "mars_atmosphere",
+        "title": "Mars atmosphere",
+        "institution": "NASA",
+        "url": "https://science.nasa.gov/mars/facts/",
+        "retrieved_at": "2026-11-14"
+      },
+      "solar_day_hours": 24.6597
+    },
+    {
+      "id": "moon",
+      "name": "Moon",
+      "gravity_ms2": 1.62,
+      "solar_irradiance_wm2": 1361,
+      "atmosphere": "Tenuous exosphere; effectively a vacuum for surface operations.",
+      "fact_source": {
+        "source_id": "moon_facts",
+        "title": "Moon Fact Sheet",
+        "institution": "NASA",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+        "retrieved_at": "2026-11-14"
+      },
+      "atmosphere_source": {
+        "source_id": "moon_atmosphere",
+        "title": "Moon atmosphere",
+        "institution": "NASA",
+        "url": "https://science.nasa.gov/moon/lunar-atmosphere/",
+        "retrieved_at": "2026-11-14"
+      },
+      "solar_day_hours": 708.72
+    }
+  ],
+  "locations": [
+    {
+      "id": "apollo_11",
+      "body": "moon",
+      "name": "Tranquility Base (Apollo 11)",
+      "region": "Mare Tranquillitatis",
+      "lat": 0.67,
+      "lon_east": 23.47,
+      "description": "Historic landing site on a basaltic mare plain. Apollo 11 samples provide direct evidence of volcanic materials.",
+      "coverage": "Landing-region description \u00b7 no numeric profile",
+      "measurements": [
+        {
+          "feature_id": "terrain_morphology",
+          "label": "Landforms",
+          "category": "ground",
+          "value": [
+            "mare_plain"
+          ],
+          "unit": null,
+          "source_id": "apollo_11_geology",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": "Literature description of the landing region; no quantitative analysis footprint has been ingested."
+        },
+        {
+          "feature_id": "mineralogy_tags",
+          "label": "Materials",
+          "category": "composition",
+          "value": [
+            "basalt"
+          ],
+          "unit": null,
+          "source_id": "apollo_11_geology",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": "Literature description of the landing region; no quantitative analysis footprint has been ingested."
+        }
+      ],
+      "sources": {
+        "apollo_11_mission": {
+          "source_id": "apollo_11_mission",
+          "title": "Tranquility Base (Apollo 11) mission summary",
+          "institution": "NASA",
+          "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo11info.html",
+          "retrieved_at": "2026-11-14"
+        },
+        "apollo_11_geology": {
+          "source_id": "apollo_11_geology",
+          "title": "Tranquility Base (Apollo 11) geology and samples",
+          "institution": "NASA",
+          "url": "https://ares.jsc.nasa.gov/astromaterials3d/sample-catalog.htm?origin=A11",
+          "retrieved_at": "2026-11-14"
+        }
+      },
+      "source_ids": [
+        "apollo_11_mission",
+        "apollo_11_geology"
+      ]
+    },
+    {
+      "id": "apollo_15",
+      "body": "moon",
+      "name": "Hadley\u2013Apennine (Apollo 15)",
+      "region": "Hadley Rille / Apennine front",
+      "lat": 26.13,
+      "lon_east": 3.63,
+      "description": "Historic landing region where a mare plain, a sinuous rille and a mountain front can be studied together.",
+      "coverage": "Landing-region description \u00b7 no numeric profile",
+      "measurements": [
+        {
+          "feature_id": "terrain_morphology",
+          "label": "Landforms",
+          "category": "ground",
+          "value": [
+            "mare_plain",
+            "rille",
+            "mountain_front"
+          ],
+          "unit": null,
+          "source_id": "apollo_15_geology",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": "Literature description of the landing region; no quantitative analysis footprint has been ingested."
+        },
+        {
+          "feature_id": "mineralogy_tags",
+          "label": "Materials",
+          "category": "composition",
+          "value": [
+            "mare_basalt"
+          ],
+          "unit": null,
+          "source_id": "apollo_15_geology",
+          "measurement_type": "literature",
+          "spatial_resolution": null,
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": "Literature description of the landing region; no quantitative analysis footprint has been ingested."
+        }
+      ],
+      "sources": {
+        "apollo_15_mission": {
+          "source_id": "apollo_15_mission",
+          "title": "Hadley\u2013Apennine (Apollo 15) mission summary",
+          "institution": "NASA",
+          "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo15info.html",
+          "retrieved_at": "2026-11-14"
+        },
+        "apollo_15_geology": {
+          "source_id": "apollo_15_geology",
+          "title": "Hadley\u2013Apennine (Apollo 15) geology and samples",
+          "institution": "Lunar and Planetary Institute",
+          "url": "https://www.lpi.usra.edu/lunar/missions/apollo/apollo_15/index.shtml",
+          "retrieved_at": "2026-11-14"
+        }
+      },
+      "source_ids": [
+        "apollo_15_mission",
+        "apollo_15_geology"
+      ]
+    }
+  ]
+}

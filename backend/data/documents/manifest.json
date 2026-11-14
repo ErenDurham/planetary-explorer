@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-14T16:17:31+00:00",
+ "built_at": "2026-11-14T17:50:57+00:00",
  "pipeline": "scripts/ingest_documents.py",
  "chunking": {
   "target_chars": 900,
@@ -9,7 +9,7 @@
  },
  "documents_ingested": 36,
  "documents_failed": 2,
- "chunks": 311,
+ "chunks": 270,
  "ingested": [
   {
    "document_id": "nasa_m2020_overview",
@@ -18,8 +18,8 @@
    "url": "https://science.nasa.gov/mission/mars-2020-perseverance/",
    "publication_date": "2017-12-05",
    "retrieved_at": "2026-11-14",
-   "chars": 9713,
-   "chunks": 13,
+   "chars": 7437,
+   "chunks": 12,
    "kind": "html"
   },
   {
@@ -29,7 +29,7 @@
    "url": "https://science.nasa.gov/mission/mars-2020-perseverance/science/",
    "publication_date": "2024-04-16",
    "retrieved_at": "2026-11-14",
-   "chars": 3775,
+   "chars": 3140,
    "chunks": 5,
    "kind": "html"
   },
@@ -40,8 +40,8 @@
    "url": "https://science.nasa.gov/mission/msl-curiosity/",
    "publication_date": "2017-11-30",
    "retrieved_at": "2026-11-14",
-   "chars": 6247,
-   "chunks": 9,
+   "chars": 5077,
+   "chunks": 8,
    "kind": "html"
   },
   {
@@ -51,8 +51,8 @@
    "url": "https://science.nasa.gov/mission/msl-curiosity/science/",
    "publication_date": "2024-04-16",
    "retrieved_at": "2026-11-14",
-   "chars": 4892,
-   "chunks": 7,
+   "chars": 3954,
+   "chunks": 5,
    "kind": "html"
   },
   {
@@ -62,8 +62,8 @@
    "url": "https://science.nasa.gov/mission/insight/",
    "publication_date": "2017-12-04",
    "retrieved_at": "2026-11-14",
-   "chars": 5364,
-   "chunks": 8,
+   "chars": 4298,
+   "chunks": 6,
    "kind": "html"
   },
   {
@@ -73,8 +73,8 @@
    "url": "https://science.nasa.gov/mission/insight/science/",
    "publication_date": "2024-03-25",
    "retrieved_at": "2026-11-14",
-   "chars": 3356,
-   "chunks": 5,
+   "chars": 2958,
+   "chunks": 4,
    "kind": "html"
   },
   {
@@ -84,8 +84,8 @@
    "url": "https://science.nasa.gov/mission/viking/",
    "publication_date": "2023-09-19",
    "retrieved_at": "2026-11-14",
-   "chars": 8472,
-   "chunks": 12,
+   "chars": 6664,
+   "chunks": 10,
    "kind": "html"
   },
   {
@@ -95,8 +95,8 @@
    "url": "https://science.nasa.gov/mission/viking-1/",
    "publication_date": "2017-12-06",
    "retrieved_at": "2026-11-14",
-   "chars": 7469,
-   "chunks": 11,
+   "chars": 6543,
+   "chunks": 10,
    "kind": "html"
   },
   {
@@ -106,8 +106,8 @@
    "url": "https://science.nasa.gov/mission/viking-2/",
    "publication_date": "2017-12-06",
    "retrieved_at": "2026-11-14",
-   "chars": 5711,
-   "chunks": 8,
+   "chars": 4774,
+   "chunks": 7,
    "kind": "html"
   },
   {
@@ -117,8 +117,8 @@
    "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/",
    "publication_date": "2024-03-22",
    "retrieved_at": "2026-11-14",
-   "chars": 5825,
-   "chunks": 9,
+   "chars": 4391,
+   "chunks": 6,
    "kind": "html"
   },
   {
@@ -128,8 +128,8 @@
    "url": "https://science.nasa.gov/mission/mer-spirit/",
    "publication_date": "2017-12-05",
    "retrieved_at": "2026-11-14",
-   "chars": 12575,
-   "chunks": 17,
+   "chars": 11534,
+   "chunks": 16,
    "kind": "html"
   },
   {
@@ -139,8 +139,8 @@
    "url": "https://science.nasa.gov/mission/mer-opportunity/",
    "publication_date": "2017-12-05",
    "retrieved_at": "2026-11-14",
-   "chars": 17619,
-   "chunks": 25,
+   "chars": 16041,
+   "chunks": 23,
    "kind": "html"
   },
   {
@@ -150,8 +150,8 @@
    "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 11560,
-   "chunks": 17,
+   "chars": 9788,
+   "chunks": 14,
    "kind": "html"
   },
   {
@@ -161,8 +161,8 @@
    "url": "https://planetarynames.wr.usgs.gov/DescriptorTerms",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 4591,
-   "chunks": 6,
+   "chars": 3926,
+   "chunks": 5,
    "kind": "html"
   },
   {
@@ -172,8 +172,8 @@
    "url": "https://planetarynames.wr.usgs.gov/Page/MARS/system",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 2663,
-   "chunks": 5,
+   "chars": 2529,
+   "chunks": 4,
    "kind": "html"
   },
   {
@@ -183,7 +183,7 @@
    "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
    "publication_date": "2003-04-03",
    "retrieved_at": "2026-11-14",
-   "chars": 4720,
+   "chars": 4719,
    "chunks": 6,
    "kind": "text"
   },
@@ -194,7 +194,7 @@
    "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/aareadme.txt",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 10254,
+   "chars": 9728,
    "chunks": 16,
    "kind": "text"
   },
@@ -205,7 +205,7 @@
    "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/catalog/megdrds.cat",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 12175,
+   "chars": 11860,
    "chunks": 19,
    "kind": "text"
   },
@@ -216,8 +216,8 @@
    "url": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 12371,
-   "chunks": 17,
+   "chars": 5121,
+   "chunks": 7,
    "kind": "html"
   },
   {
@@ -227,8 +227,8 @@
    "url": "https://www.hou.usra.edu/meetings/explorationzone2015/",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 3368,
-   "chunks": 5,
+   "chars": 2929,
+   "chunks": 4,
    "kind": "html"
   },
   {
@@ -238,8 +238,8 @@
    "url": "https://www.nasa.gov/analog-missions/",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 9508,
-   "chunks": 13,
+   "chars": 7669,
+   "chunks": 10,
    "kind": "html"
   },
   {
@@ -249,8 +249,8 @@
    "url": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/",
    "publication_date": "2019-09-19",
    "retrieved_at": "2026-11-14",
-   "chars": 8929,
-   "chunks": 15,
+   "chars": 8312,
+   "chunks": 13,
    "kind": "html"
   },
   {
@@ -260,8 +260,8 @@
    "url": "https://www.marsinstitute.no/hmp",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 7346,
-   "chunks": 11,
+   "chars": 5928,
+   "chunks": 9,
    "kind": "html"
   },
   {
@@ -271,8 +271,8 @@
    "url": "https://registry.opendata.aws/copernicus-dem/",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 2406,
-   "chunks": 3,
+   "chars": 1525,
+   "chunks": 2,
    "kind": "html"
   },
   {
@@ -282,7 +282,7 @@
    "url": "https://power.larc.nasa.gov/docs/methodology/",
    "publication_date": null,
    "retrieved_at": "2026-11-14",
-   "chars": 7307,
+   "chars": 7164,
    "chunks": 11,
    "kind": "html"
   },
@@ -412,12 +412,12 @@
   {
    "document_id": "marssociety_mdrs",
    "url": "https://mdrs.marssociety.org/",
-   "reason": "extracted text too short (45 chars): likely a JavaScript-rendered shell"
+   "reason": "offline and not in corpus/"
   },
   {
    "document_id": "nasa_power_home",
    "url": "https://power.larc.nasa.gov/",
-   "reason": "extracted text too short (584 chars): likely a JavaScript-rendered shell"
+   "reason": "offline and not in corpus/"
   }
  ],
  "note": "Retrieved documents are untrusted input: quoted as evidence, never followed as instructions. Dates are null where no source stated one."

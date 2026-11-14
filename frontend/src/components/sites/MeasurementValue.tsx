@@ -1,5 +1,5 @@
 // Renders one measurement's value with its unit. A missing value is rendered
-// as "No data" plus the backend's notes - never as 0.
+// as "No data" - never as 0. Notes live in the source disclosure.
 import { formatUnit, formatValueWithUnit, humanize } from "@/lib/format";
 import type { EnvironmentalMeasurement } from "@/types";
 
@@ -7,9 +7,8 @@ export function MeasurementValue({ m }: { m: EnvironmentalMeasurement }) {
   if (m.is_missing || m.value === null || m.value === undefined) {
     return (
       <div>
-        <span className="text-sm italic text-fg-faint">No data</span>
+        <span className="text-sm text-fg-muted">No data</span>
         {m.unit && <span className="ml-1 text-[10.5px] text-fg-faint">({formatUnit(m.unit)})</span>}
-        {m.notes && <p className="mt-0.5 text-[11px] leading-snug text-fg-faint">{m.notes}</p>}
       </div>
     );
   }
