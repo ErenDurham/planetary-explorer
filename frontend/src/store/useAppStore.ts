@@ -11,7 +11,7 @@ import { create } from "zustand";
 import { setShare, toShares } from "@/lib/allocation";
 import type { HardConstraint } from "@/types";
 
-export type Tab = "explore" | "analyze" | "compare" | "research";
+export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
 
 /** Where the applied objective's weights came from. "offline_rule_based" is the
  * client fallback used when POST /mission/interpret could not be reached; it

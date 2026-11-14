@@ -17,7 +17,6 @@ import { RankedList } from "@/components/mission/RankedList";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 
 export default function App() {
-  const appliedObjective = useAppStore(s => s.appliedObjective);
   const activeTab = useAppStore((s) => s.activeTab);
   const setActiveTab = useAppStore((s) => s.setActiveTab);
   const focusToken = useAppStore((s) => s.selectionRevision);
@@ -87,18 +86,20 @@ export default function App() {
       </div>
       <TopNav active={activeTab} onChange={setActiveTab} right={<HealthChip />} />
       <StatusBanner />
-      {(activeTab === "explore" || activeTab === "analyze") && <>
-        <details className="shrink-0 border-b border-line bg-bg-elev">
-          <summary className="cursor-pointer px-4 py-3 text-sm text-fg"><span className="font-semibold text-copper-bright">Edit mission</span><span className="ml-3 text-fg-muted">{appliedObjective || "Loading mission…"}</span></summary>
-          <div className="scroll-thin max-h-[40vh] overflow-y-auto"><LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} /></div>
-        </details>
+      {(activeTab === "explore" || activeTab === "analyze") && (
         <div className="flex shrink-0 items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">
           <label htmlFor="mobile-candidate" className="text-sm text-fg-muted">Candidate</label>
           <select id="mobile-candidate" value={selectedId ?? ""} onChange={e => selectSite(e.target.value)} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="" disabled>Select a ranked site</option>{evaluation.data?.results.map(r => <option key={r.site_id} value={r.site_id}>{r.rank ?? "—"}. {r.site_name} · {r.score?.toFixed(1) ?? r.status.replace(/_/g, " ")}</option>)}</select>
         </div>
-      </>}
+      )}
       <main id="workspace" tabIndex={-1} className="min-h-0 flex-1">
-        {activeTab === "compare" || activeTab === "research" ? (
+        {/* Mission Design stays mounted (only hidden) on other tabs, as the old
+            drawer did, so a draft objective and the excluded-factor sync survive
+            switching tabs. */}
+        <div hidden={activeTab !== "mission"} className="scroll-thin h-full overflow-y-auto border-b border-line bg-bg-elev">
+          <LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} />
+        </div>
+        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" ? (
           <div className="h-full">{centre}</div>
         ) : (
           // Candidates scroll independently of mission settings and reasoning.

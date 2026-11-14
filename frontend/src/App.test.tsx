@@ -49,7 +49,7 @@ function renderApp() {
       <App />
     </QueryClientProvider>,
   );
-  fireEvent.click(screen.getByText("Edit mission").closest("summary")!);
+  fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
   return view;
 }
 
@@ -64,7 +64,6 @@ describe("App", () => {
   it("seeds sliders from the default mission, evaluates once, and ranks sites", async () => {
     renderApp();
     expect(screen.getByText("Planetary Explorer")).toBeInTheDocument();
-    expect(screen.getByTestId("globe-stub")).toBeInTheDocument();
 
     // sliders come from GET /scoring/default-mission
     const slider = await screen.findByLabelText("Gentler terrain share of priorities");
@@ -74,6 +73,8 @@ describe("App", () => {
     // debounced POST /scoring/evaluate with a client_request_id, result rendered
     await waitFor(() => expect(evaluateCalls.length).toBe(1), { timeout: 2000 });
     expect(evaluateCalls[0].client_request_id).toMatch(/^evaluate-/);
+    fireEvent.click(screen.getByRole("button", { name: "Explore" }));
+    expect(screen.getByTestId("globe-stub")).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: /Chryse Planitia.*rank 1/ })).toBeInTheDocument();
     expect(screen.getByText(/Temperature data is unavailable\. Thermal conditions/)).toBeInTheDocument();
     expect(screen.getByTestId("globe-stub")).toHaveTextContent(`${fixture_sites.sites.length} markers`);
@@ -94,6 +95,7 @@ describe("App", () => {
     expect(evaluateCalls[1].client_request_id).not.toBe(evaluateCalls[0].client_request_id);
 
     // selecting a site loads its profile into the right sidebar
+    fireEvent.click(screen.getByRole("button", { name: "Explore" }));
     fireEvent.click(screen.getByRole("button", { name: /Chryse Planitia/ }));
     const measurements = await screen.findByText("All environmental measurements and sources");
     fireEvent.click(measurements);
