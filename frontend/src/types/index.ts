@@ -97,3 +97,19 @@ export type SensitivityPoint = S["SensitivityPoint"];
 export type ComparisonCatalog = S["ComparisonCatalog"];
 export type ComparisonLocation = S["ComparisonLocation"];
 export type BodyReference = S["BodyReference"];
+
+// Earth-Mars release: body-aware analog ranking and the task reading.
+export type AnalogRankRequest = S["AnalogRankRequest"];
+export type AnalogRankResponse = S["AnalogRankResponse"];
+export type RankedCandidate = S["RankedCandidate"];
+export type LocationRef = S["LocationRef"];
+export type ExcludedFeature = S["ExcludedFeature"];
+export type TaskInterpretation = S["TaskInterpretation"];
+export type SiteReference = S["SiteReference"];
+export type SiteCandidate = S["SiteCandidate"];
+export type DirectionOption = S["DirectionOption"];
+export type AnalogWeightSuggestion = S["AnalogWeightSuggestion"];
+export type BodyKind = LocationRef["body"];
+
+// Georeferenced imagery extent (only CTX / GIBS mosaics carry bounds).
+export type ImageBounds = S["ImageBounds"];

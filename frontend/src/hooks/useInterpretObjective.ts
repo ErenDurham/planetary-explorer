@@ -15,8 +15,9 @@
 import { useCallback, useRef, useState } from "react";
 import { api } from "@/services/api";
 import { recommendObjective } from "@/lib/objective";
-import type { AppliedInterpretation, ObjectiveMeta, ObjectiveSource } from "@/store/useAppStore";
-import type { InterpretResponse, WeightSuggestion } from "@/types";
+import type { AppliedInterpretation, InterpretationApplication, ObjectiveMeta, ObjectiveSource } from "@/store/useAppStore";
+import { toAnalogShares } from "@/lib/analogFeatures";
+import type { DirectionOption, InterpretResponse, SiteReference, TaskInterpretation, WeightSuggestion } from "@/types";
 
 export interface InterpretResult {
   response: InterpretResponse;
@@ -107,6 +108,50 @@ function clamp(n: number): number {
   return Math.max(0, Math.min(100, Math.round(n)));
 }
 
+/** What the review UI settled that the reading left open. */
+export interface TaskResolution {
+  /** The direction the user picked when `task === "ambiguous"`. */
+  direction?: DirectionOption | null;
+  /** The site the user picked for an unresolved mention (never guessed). */
+  reference?: SiteReference | null;
+  /** Analog shares after the user edited the proposal, if they did. */
+  analogShares?: Record<string, number> | null;
+}
+
+/**
+ * Turn the task reading into the ONE store application a reviewed objective
+ * makes, or null when it cannot be applied yet: an ambiguous task with no
+ * direction chosen. The recognised reference wins over a user pick only when
+ * the reading actually recognised one; an unresolved mention is never
+ * guessed.
+ */
+export function taskApplicationFromInterpretation(ti: TaskInterpretation | null | undefined, objectiveHash: string | null, resolution: TaskResolution = {}): InterpretationApplication | null {
+  if (!ti) return null;
+  let task = ti.task;
+  let focus = ti.focus_body ?? null;
+  if (task === "ambiguous") {
+    if (!resolution.direction || resolution.direction.task === "ambiguous") return null;
+    task = resolution.direction.task;
+    focus = resolution.direction.focus_body;
+  }
+  const picked = ti.reference_site ?? resolution.reference ?? null;
+  const reference = picked ? { body: picked.body, id: picked.id, name: picked.name } : null;
+  // an analog search looks on the body OPPOSITE the reference when the text did not say
+  if (!focus) focus = task === "landing_screening" ? "mars" : reference ? (reference.body === "earth" ? "mars" : "earth") : null;
+  const suggestions = ti.analog_suggestions ?? [];
+  // an empty or all-zero proposal says nothing, so the current shares are kept (null = keep)
+  const proposed = suggestions.some((a) => a.weight > 0) ? Object.fromEntries(suggestions.map((a) => [a.feature_id, a.weight])) : null;
+  const analogWeights = resolution.analogShares ?? (proposed ? toAnalogShares(proposed) : null);
+  return {
+    task,
+    focusBody: focus,
+    missionDestination: ti.mission_destination ?? (task === "landing_screening" ? "mars" : null),
+    reference,
+    analogWeights,
+    objectiveHash,
+  };
+}
+
 /** Turn a proposal (optionally with user-edited shares) into what the store
  * applies. Excluded or no-data factors are forced to 0 here; the store's
  * applyObjective converts the rest to shares summing to 100. */
@@ -115,6 +160,7 @@ export function applicationFromInterpretation(
   excluded: string[],
   source: ObjectiveSource,
   edited?: Record<string, number>,
+  resolution: TaskResolution = {},
 ): { weights: Record<string, number>; notes: string[]; meta: ObjectiveMeta } {
   const weights: Record<string, number> = {};
   const reasons: Record<string, string> = {};
@@ -143,7 +189,8 @@ export function applicationFromInterpretation(
     ...(r.unsupported_needs ?? []).map((n) => `Cannot be scored by this model: ${n}`),
     ...(editedByUser ? ["You edited the proposed shares before applying them."] : []),
   ];
-  return { weights, notes, meta: { objectiveHash: r.objective_hash, source, model: r.model ?? null, interpretation } };
+  const taskApplication = taskApplicationFromInterpretation(r.task_interpretation, r.objective_hash, resolution);
+  return { weights, notes, meta: { objectiveHash: r.objective_hash, source, model: r.model ?? null, interpretation, taskApplication } };
 }
 
 export function useInterpretObjective() {

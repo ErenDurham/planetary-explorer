@@ -6,14 +6,16 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Stars, useProgress } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import { Quaternion, Spherical, Vector3 } from "three";
+import { Quaternion, Spherical, Vector3, type Mesh } from "three";
 import { RotateCcw, Pause, Play, LocateFixed } from "lucide-react";
-import { MarsSphere, PlaceholderSphere } from "./MarsSphere";
+import { PlanetSphere, PlaceholderSphere } from "./PlanetSphere";
 import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { GlobeLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
-import type { MarkerDatum } from "./MarkerData";
+import type { MarkerDatum, MarkerMode } from "./MarkerData";
+import type { RankPalette } from "@/lib/rankColor";
+import { formatNumber } from "@/lib/format";
 
 export interface PlanetViewerProps {
   config: PlanetConfig;
@@ -27,17 +29,26 @@ export interface PlanetViewerProps {
   resetToken: number;
   onRequestReset: () => void;
   statusLine?: string;
+  /** Which legend and marker encoding is in force. Defaults to landing. */
+  mode?: MarkerMode;
+  palette?: RankPalette;
+  onPaletteChange?: (p: RankPalette) => void;
+  /** Analog mode: names the reference in the legend, e.g. "Earth matches to Elysium Planitia (InSight)". */
+  legendHeading?: string;
+  rankedCount?: number | null;
 }
 
 const DEFAULT_CAMERA = new Vector3(0, 0.6, 3.1);
 
 export function PlanetViewer(props: PlanetViewerProps) {
-  const { config, markers, selectedId, onSelect, autoRotate, onAutoRotateChange, resetToken, onRequestReset, statusLine } = props;
+  const { config, markers, selectedId, onSelect, autoRotate, onAutoRotateChange, resetToken, onRequestReset, statusLine, mode = "landing", palette = "roygbiv", onPaletteChange, legendHeading, rankedCount } = props;
   const selected = markers.find(m => m.id === selectedId);
+  const body = config.displayName;
   const [focusRequest, setFocusRequest] = useState(0);
   const [navigation, setNavigation] = useState({ id: 0, action: "" });
+  const planetRef = useRef<Mesh>(null);
   return (
-    <div tabIndex={0} role="region" aria-label="Interactive Mars globe" aria-describedby="globe-keyboard-help" className="relative h-full w-full min-h-[320px] overflow-hidden bg-[#06090d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
+    <div tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-[#06090d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
       onKeyDown={e => {
         if (e.target !== e.currentTarget || e.altKey || e.ctrlKey || e.metaKey) return;
         const key = e.key.toLowerCase();
@@ -48,7 +59,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         else if (key === "f") setFocusRequest(n => n + 1);
         else setNavigation(n => ({ id: n.id + 1, action: key }));
       }}>
-      <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit Mars. Plus and minus zoom. F focuses the selected site. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space.</p>
+      <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit {body}. Plus and minus zoom. F focuses the selected site. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km; {markers.length} candidate {markers.length === 1 ? "location is" : "locations are"} marked at their real coordinates.</p>
       <Canvas
         camera={{ position: DEFAULT_CAMERA.toArray(), fov: 42, near: 0.1, far: 100 }}
         dpr={[1, 2]}
@@ -60,14 +71,14 @@ export function PlanetViewer(props: PlanetViewerProps) {
         <directionalLight position={[5, 2, 4]} intensity={2.2} color="#fff2e0" />
         <directionalLight position={[-6, -1, -3]} intensity={0.25} color="#8aa0c8" />
         <Stars radius={60} depth={30} count={2500} factor={2.5} saturation={0} fade speed={0.2} />
-        <Suspense fallback={<PlaceholderSphere config={config} />}>
-          <MarsSphere config={config} />
+        <Suspense fallback={<PlaceholderSphere config={config} meshRef={planetRef} />}>
+          <PlanetSphere config={config} meshRef={planetRef} />
         </Suspense>
-        <SiteMarkers config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} />
-        <Controls autoRotate={autoRotate} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} />
+        <SiteMarkers config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} planetRef={planetRef} />
+        <Controls bodyId={config.id} autoRotate={autoRotate} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} />
       </Canvas>
 
-      <LoadingOverlay />
+      <LoadingOverlay body={body} />
 
       {/* HUD */}
       <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">
@@ -96,9 +107,9 @@ export function PlanetViewer(props: PlanetViewerProps) {
         </div>
         {statusLine && <div className="pointer-events-auto rounded border border-line bg-bg-elev/90 px-2.5 py-1.5 text-[10.5px] text-fg-muted">{statusLine}</div>}
       </div>
-      {selected && <div className="pointer-events-none absolute left-3 right-3 top-16 rounded-lg border border-line bg-bg-elev/90 p-3 text-sm text-fg" role="status">{selected.name}<p className="mt-1 text-xs text-fg-muted">Regional orbital mosaic. Surface photographs and local terrain detail are not loaded in this view.</p></div>}
+      {selected && <div className="pointer-events-none absolute left-3 right-3 top-16 max-w-md rounded-lg border border-line bg-bg-elev/90 p-3 text-sm text-fg" role="status">{selected.name}{mode === "analog" && <span className="num ml-2 text-xs text-fg-muted">{selected.rank != null ? `match rank ${selected.rank}` : "Not ranked"}{selected.similarity != null ? ` · similarity ${formatNumber(selected.similarity, { maxFractionDigits: 1 })}` : ""}</span>}<p className="mt-1 text-xs text-fg-muted">{config.textureNote}</p></div>}
       <div className="pointer-events-none absolute bottom-3 left-3">
-        <GlobeLegend config={config} />
+        <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />
       </div>
       <div className="pointer-events-none absolute bottom-3 right-3 text-[10.5px] text-fg-faint">
         <span className="hidden xl:inline">Focus globe: arrows orbit · + / − zoom · F focus · R reset</span><span className="xl:hidden">Tab to globe for keyboard controls</span>
@@ -107,7 +118,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
   );
 }
 
-function LoadingOverlay() {
+function LoadingOverlay({ body }: { body: string }) {
   const { active, progress } = useProgress();
   const [show, setShow] = useState(true);
   useEffect(() => {
@@ -121,14 +132,18 @@ function LoadingOverlay() {
   return (
     <div role="status" aria-live="polite" className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#06090d]/60">
       <div className="rounded border border-line bg-bg-elev/90 px-4 py-2 text-xs text-fg-muted">
-        Loading Mars texture… <span className="num">{Math.round(progress)}%</span>
+        Loading {body} texture… <span className="num">{Math.round(progress)}%</span>
       </div>
     </div>
   );
 }
 
-/** OrbitControls with auto-rotate that pauses while the user interacts, plus reset. */
-function Controls({ autoRotate, resetToken, radius, selectedId, lat, lonEast, focusToken, navigation }: { autoRotate: boolean; resetToken: number; radius: number; selectedId: string | null; lat?: number; lonEast?: number; focusToken: string; navigation: { id: number; action: string } }) {
+interface CameraMemory { position: Vector3; target: Vector3 }
+
+/** OrbitControls with auto-rotate that pauses while the user interacts, reset,
+ * and a per-body camera memory: switching Earth <-> Mars saves the current
+ * orbit and restores the other body's last orbit (default on first visit). */
+function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lonEast, focusToken, navigation }: { bodyId: string; autoRotate: boolean; resetToken: number; radius: number; selectedId: string | null; lat?: number; lonEast?: number; focusToken: string; navigation: { id: number; action: string } }) {
   const ref = useRef<OrbitControlsImpl>(null);
   const { camera } = useThree();
   const [interacting, setInteracting] = useState(false);
@@ -136,7 +151,25 @@ function Controls({ autoRotate, resetToken, radius, selectedId, lat, lonEast, fo
   const flight = useRef<{ start: Vector3; turn: Quaternion; distance: number; elapsed: number } | null>(null);
   const direction = useRef(new Vector3());
   const rotation = useRef(new Quaternion());
+  const memory = useRef(new Map<string, CameraMemory>());
+  const lastBody = useRef(bodyId);
+  // set when a body switch just restored the camera, so the selection-flight
+  // effect below does not immediately override the restored orbit
+  const switched = useRef(false);
   useEffect(() => () => { if (idleTimer.current) window.clearTimeout(idleTimer.current); }, []);
+
+  useEffect(() => {
+    const c = ref.current;
+    if (!c || lastBody.current === bodyId) return;
+    memory.current.set(lastBody.current, { position: camera.position.clone(), target: c.target.clone() });
+    lastBody.current = bodyId;
+    flight.current = null;
+    const saved = memory.current.get(bodyId);
+    camera.position.copy(saved?.position ?? DEFAULT_CAMERA);
+    c.target.copy(saved?.target ?? new Vector3(0, 0, 0));
+    c.update();
+    switched.current = true;
+  }, [bodyId, camera]);
 
   useEffect(() => {
     const c = ref.current;
@@ -148,6 +181,7 @@ function Controls({ autoRotate, resetToken, radius, selectedId, lat, lonEast, fo
   }, [resetToken, camera]);
 
   useEffect(() => {
+    if (switched.current) { switched.current = false; return; }
     if (!selectedId || lat === undefined || lonEast === undefined || !ref.current) return;
     const target = latLonToVector3(lat, lonEast, 1).normalize();
     const start = camera.position.clone().normalize();

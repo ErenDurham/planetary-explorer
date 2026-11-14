@@ -172,6 +172,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/analogs/rank": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rank Analogs
+         * @description Body-aware analog ranking: every candidate on one body ranked against a
+         *     reference on the other, on a common positive-weight feature basis. The
+         *     pairwise maths is the same as /analogs/match (unchanged).
+         */
+        post: operations["rank_analogs_api_v1_analogs_rank_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sites/{site_id}/imagery": {
         parameters: {
             query?: never;
@@ -305,12 +327,92 @@ export interface components {
             /** Completeness Fraction */
             completeness_fraction: number;
         };
+        /** AnalogRankRequest */
+        AnalogRankRequest: {
+            /**
+             * Reference Body
+             * @enum {string}
+             */
+            reference_body: "earth" | "mars";
+            /** Reference Id */
+            reference_id: string;
+            /**
+             * Candidate Body
+             * @description Defaults to the other body; must differ from reference_body
+             */
+            candidate_body?: ("earth" | "mars") | null;
+            /**
+             * Weights
+             * @description Analog feature weights; null = analog spec defaults
+             */
+            weights?: components["schemas"]["AnalogWeight"][] | null;
+            /**
+             * Client Request Id
+             * @description Echoed so the client can discard stale responses
+             */
+            client_request_id?: string | null;
+        };
+        /** AnalogRankResponse */
+        AnalogRankResponse: {
+            reference: components["schemas"]["LocationRef"];
+            /**
+             * Candidate Body
+             * @enum {string}
+             */
+            candidate_body: "earth" | "mars";
+            /**
+             * Basis Features
+             * @description Positive-weight features comparable for every candidate in the pool
+             */
+            basis_features: string[];
+            /** Excluded Features */
+            excluded_features: components["schemas"]["ExcludedFeature"][];
+            /**
+             * Effective Weights
+             * @description Normalised weights over the basis features (sum to 1)
+             */
+            effective_weights: {
+                [key: string]: number;
+            };
+            /**
+             * Candidates
+             * @description Sorted by rank; unrankable candidates last
+             */
+            candidates: components["schemas"]["RankedCandidate"][];
+            /** Pool Size */
+            pool_size: number;
+            /** Ranked Count */
+            ranked_count: number;
+            /** Tie Rule */
+            tie_rule: string;
+            /** Analog Spec Version */
+            analog_spec_version: string;
+            /** Profile Version */
+            profile_version: string;
+            /** Planetary Differences */
+            planetary_differences: string[];
+            /** Warnings */
+            warnings?: string[];
+            /** Client Request Id */
+            client_request_id?: string | null;
+        };
         /** AnalogWeight */
         AnalogWeight: {
             /** Feature Id */
             feature_id: string;
             /** Weight */
             weight: number;
+        };
+        /** AnalogWeightSuggestion */
+        AnalogWeightSuggestion: {
+            /** Feature Id */
+            feature_id: string;
+            /** Label */
+            label: string;
+            /** Weight */
+            weight: number;
+            /** Reason */
+            reason: string;
         };
         /**
          * ApiError
@@ -490,6 +592,23 @@ export interface components {
             /** Notes */
             notes?: string[];
         };
+        /** DirectionOption */
+        DirectionOption: {
+            /**
+             * Task
+             * @enum {string}
+             */
+            task: "landing_screening" | "analog_site_selection" | "ambiguous";
+            /**
+             * Focus Body
+             * @enum {string}
+             */
+            focus_body: "earth" | "mars";
+            /** Label */
+            label: string;
+            /** Description */
+            description: string;
+        };
         /** EarthCandidate */
         EarthCandidate: {
             /** Id */
@@ -665,6 +784,15 @@ export interface components {
         ExcludedCriterion: {
             /** Criterion Id */
             criterion_id: string;
+            /** Label */
+            label: string;
+            /** Reason */
+            reason: string;
+        };
+        /** ExcludedFeature */
+        ExcludedFeature: {
+            /** Feature Id */
+            feature_id: string;
             /** Label */
             label: string;
             /** Reason */
@@ -1134,6 +1262,8 @@ export interface components {
             validation_notes?: string[];
             /** Scoring Spec Version */
             scoring_spec_version: string;
+            /** @description Task / body / reference reading; additive to the landing-weight proposal */
+            task_interpretation?: components["schemas"]["TaskInterpretation"] | null;
             /**
              * Cached
              * @default false
@@ -1141,6 +1271,22 @@ export interface components {
             cached: boolean;
             /** Generated At */
             generated_at: string;
+        };
+        /** LocationRef */
+        LocationRef: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "earth" | "mars";
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
         };
         /** MatchRequest */
         MatchRequest: {
@@ -1244,6 +1390,45 @@ export interface components {
             previous_score: number | null;
             /** New Score */
             new_score: number | null;
+        };
+        /** RankedCandidate */
+        RankedCandidate: {
+            location: components["schemas"]["LocationRef"];
+            /**
+             * Rank
+             * @description 1 = strongest match over the full ranked pool; null when unrankable
+             */
+            rank?: number | null;
+            /**
+             * Rank Color Position
+             * @description 0 = strongest ... 1 = weakest over the ranked pool; the client maps it onto its colour scale
+             */
+            rank_color_position?: number | null;
+            /** Similarity */
+            similarity?: number | null;
+            /** Distance */
+            distance?: number | null;
+            /**
+             * Feature Distances
+             * @description Canonical mars_value/earth_value regardless of direction
+             */
+            feature_distances: components["schemas"]["FeatureDistance"][];
+            /**
+             * Coverage Fraction
+             * @description basis features comparable for this pair / basis features
+             */
+            coverage_fraction: number;
+            /** Unrankable Reason */
+            unrankable_reason?: string | null;
+            /** Shared Characteristics */
+            shared_characteristics?: string[];
+            /** Important Differences */
+            important_differences?: string[];
+            /**
+             * Sources
+             * @description source_ids of both locations' profiles
+             */
+            sources?: string[];
         };
         /** ResearchExplanation */
         ResearchExplanation: {
@@ -1555,10 +1740,26 @@ export interface components {
              */
             coordinate_sources?: string[];
         };
+        /**
+         * SiteCandidate
+         * @description An ambiguous or partial site mention the user must resolve with a selector; never a guessed coordinate.
+         */
+        SiteCandidate: {
+            /** Matched Text */
+            matched_text: string;
+            /** Options */
+            options: components["schemas"]["SiteReference"][];
+        };
         /** SiteImagery */
         SiteImagery: {
             /** Site Id */
             site_id: string;
+            /**
+             * Body
+             * @default mars
+             * @enum {string}
+             */
+            body: "mars" | "earth";
             /** Entries */
             entries: components["schemas"]["ImageryEntry"][];
             /**
@@ -1580,6 +1781,23 @@ export interface components {
             sites: components["schemas"]["Site"][];
             /** Profile Version */
             profile_version: string;
+        };
+        /** SiteReference */
+        SiteReference: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "earth" | "mars";
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Matched Text
+             * @description The words in the objective that named this site
+             */
+            matched_text: string;
         };
         /** SiteWithProfile */
         SiteWithProfile: {
@@ -1699,6 +1917,38 @@ export interface components {
             risks?: string[];
             /** Limitations */
             limitations?: string[];
+        };
+        /**
+         * TaskInterpretation
+         * @description What the objective asks for, separately from the landing-priority weights.
+         *     `focus_body` is where the user is looking for a location; `mission_destination`
+         *     is where the mission flies (a Mars mission can use Earth test sites).
+         */
+        TaskInterpretation: {
+            /**
+             * Task
+             * @enum {string}
+             */
+            task: "landing_screening" | "analog_site_selection" | "ambiguous";
+            /** Focus Body */
+            focus_body?: ("earth" | "mars") | null;
+            /** Mission Destination */
+            mission_destination?: ("earth" | "mars") | null;
+            reference_site?: components["schemas"]["SiteReference"] | null;
+            /** Unresolved Sites */
+            unresolved_sites?: components["schemas"]["SiteCandidate"][];
+            /**
+             * Direction Options
+             * @description Offered when the text does not settle the search direction
+             */
+            direction_options?: components["schemas"]["DirectionOption"][];
+            /**
+             * Analog Suggestions
+             * @description Proposed analog-match preferences (separate from landing priorities)
+             */
+            analog_suggestions?: components["schemas"]["AnalogWeightSuggestion"][];
+            /** Rationale */
+            rationale?: string[];
         };
         /** ValidationError */
         ValidationError: {
@@ -2228,6 +2478,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GuidanceResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    rank_analogs_api_v1_analogs_rank_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalogRankRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalogRankResponse"];
                 };
             };
             /** @description Not Found */

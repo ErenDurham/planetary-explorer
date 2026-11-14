@@ -10,17 +10,32 @@ import { SourcesList } from "@/components/sites/SourcesList";
 import { SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
 import { useSiteProfile } from "@/hooks/useSites";
 import { formatLatLon, formatNumber, humanize } from "@/lib/format";
-import type { EvaluateResponse, MissionProfile } from "@/types";
+import { AnalogMatchPanel, EarthLocationPanel } from "@/components/sites/LocationPanels";
+import type { RankPalette } from "@/lib/rankColor";
+import type { AnalogRankResponse, ComparisonLocation, EvaluateResponse, MissionProfile } from "@/types";
+
+/** Analog-mode detail for the selected location, when the globe is in analog match mode. */
+export interface SidebarAnalog {
+  response: AnalogRankResponse | undefined;
+  referenceName: string | null;
+  palette: RankPalette;
+}
 
 interface Props {
+  /** The visible body; Earth locations have no /sites profile and no landing score. */
+  body?: "earth" | "mars";
   selectedId: string | null;
   evaluation: EvaluateResponse | undefined;
   evaluationPending: boolean;
   mission: MissionProfile | null;
+  /** Catalogue entry for the selected Earth location. */
+  earthLocation?: ComparisonLocation | null;
+  earthPending?: boolean;
+  analog?: SidebarAnalog | null;
 }
 
-export function RightSidebar({ selectedId, evaluation, evaluationPending }: Props) {
-  const q = useSiteProfile(selectedId);
+export function RightSidebar({ body = "mars", selectedId, evaluation, evaluationPending, earthLocation, earthPending, analog }: Props) {
+  const q = useSiteProfile(body === "mars" ? selectedId : null);
   const openResearch = useAppStore(s => s.setActiveTab);
   const panel = useRef<HTMLElement>(null);
   const revision = useAppStore(s => s.selectionRevision);
@@ -35,9 +50,31 @@ export function RightSidebar({ selectedId, evaluation, evaluationPending }: Prop
   }, [selectedId, revision]);
   const result = evaluation?.results.find((r) => r.site_id === selectedId);
   const ranked = evaluation?.results.filter((r) => r.status === "ok").length;
+  const analogPanel = analog ? <AnalogMatchPanel candidate={analog.response?.candidates.find((c) => c.location.id === selectedId)} response={analog.response} palette={analog.palette} referenceName={analog.referenceName} /> : null;
+
+  if (body === "earth") {
+    return (
+      <aside ref={panel} aria-label="Location detail" className="scroll-thin flex h-full flex-col overflow-y-auto bg-bg-elev" data-body="earth">
+        {!selectedId ? (
+          <Section title="Earth location">
+            <EmptyNote>Click a marker on the globe or a row in the candidate list.</EmptyNote>
+          </Section>
+        ) : earthLocation ? (
+          <>
+            {analogPanel}
+            <EarthLocationPanel location={earthLocation} />
+          </>
+        ) : earthPending ? (
+          <div className="p-4"><Spinner label="Loading Earth location" /></div>
+        ) : (
+          <Section title="Earth location"><EmptyNote>No catalogue entry for “{selectedId}”.</EmptyNote></Section>
+        )}
+      </aside>
+    );
+  }
 
   return (
-    <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-full flex-col overflow-y-auto bg-bg-elev">
+    <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-full flex-col overflow-y-auto bg-bg-elev" data-body="mars">
       {!selectedId ? (
         <Section title="Site">
           <EmptyNote>Click a marker on the globe or a row in the ranked list.</EmptyNote>
@@ -74,6 +111,7 @@ export function RightSidebar({ selectedId, evaluation, evaluationPending }: Prop
           </Section>
 
           <div>
+            {analogPanel}
             <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />
             <Section title="Research potential" subtitle="Turn this site's characteristics into questions to investigate.">
               <button type="button" onClick={() => openResearch("research")} className="w-full rounded-lg border border-info/50 bg-info/10 p-3 text-left text-sm font-semibold text-info">Explore study ideas and supporting evidence →</button>
