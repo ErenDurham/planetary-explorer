@@ -36,7 +36,9 @@ def test_manifest_validates_and_covers_every_site_with_verified_fields():
             assert e.relationship in ("exact_location", "landing_ellipse", "candidate_region", "nearby_scene")
             if e.image_type == "orbital_mosaic":
                 assert e.bounds is not None and e.bounds.west < e.bounds.east and e.bounds.south < e.bounds.north
-                assert e.spatial_resolution_m_per_px and e.acquisition_date is None  # a mosaic has no single acquisition date
+                assert e.spatial_resolution_m_per_px
+                # a multi-orbit mosaic has no single acquisition date; a single-day image (MODIS fallback) does
+                assert e.acquisition_date is None or "Single-day" in (e.acquisition_note or "")
             # acquisition and release dates are distinct fields; a release date never fills an acquisition date
             if e.acquisition_date is not None:
                 assert e.acquisition_note and "Caption" in e.acquisition_note
