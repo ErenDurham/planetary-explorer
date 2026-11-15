@@ -59,8 +59,7 @@ export function PriorityPie({ factors, shares: values }: { factors: PriorityFact
             {slices.map((s) => {
               const common = {
                 fill: s.factor.color,
-                className: "stroke-bg-elev cursor-pointer outline-none transition-opacity duration-150",
-                strokeWidth: 2,
+                className: "cursor-pointer outline-none transition-opacity duration-150",
                 opacity: hover && hover.id !== s.id ? 0.45 : 1,
                 tabIndex: 0,
                 role: "img",

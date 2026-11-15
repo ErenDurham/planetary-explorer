@@ -44,6 +44,7 @@ from app.models import EarthWeightSuggestion, EvidenceCitation, InterpretRequest
 from app.services import evidence, llm_client
 from app.config.settings import get_settings
 from app.services.scoring_engine import load_spec
+from app.services.task_interpreter import aliases as site_aliases
 from app.services.task_interpreter import interpret_task
 
 log = logging.getLogger(__name__)
@@ -145,11 +146,61 @@ How to decide:
 9. confidence is about how clearly the text maps onto the criteria: high (explicit), medium (inferred from general wording), low (little maps, or the text contradicts itself).
 10. unsupported_needs: at most two short sentences.
 11. earth_weights: the same criteria weighted again for choosing an Earth site for this mission: a field-test or analog site that must reproduce the conditions the mission's hardware and crew must be tested against. Earth has no Mars entry, descent and landing, so weigh each criterion by how much the Earth site must reproduce it for testing; do not copy the Mars weights. Integers 0-100, not all 0; data_available=false criteria are 0. earth_reasons: at most 8 words per criterion, never empty, no numbers. (Earth reuses the research you cite in evidence.)
-12. Answer with compact JSON on a single line: no indentation, no line breaks."""
+12. Never ask the user to clarify: always guess. focus_body: the planet the user is choosing a site on (earth for field-test or analog sites on Earth, mars for landing or mission sites on Mars). site_guess: when the text mentions a site vaguely ("the crater", "that valley"), the id of the site from the site list the user most likely means; otherwise "none".
+13. Answer with compact JSON on a single line: no indentation, no line breaks."""
+
+
+# ---------------------------------------------------------------------------
+# Task reading: never hand an ambiguity back to the user. The language model
+# guesses the planet the user is choosing a site on and the site a vague
+# mention most likely means; without a model the common case is assumed.
+# ---------------------------------------------------------------------------
+def site_ids() -> list[str]:
+    return list(dict.fromkeys(ref.id for _, ref in site_aliases()))
+
+
+def _sites_block() -> str:
+    seen: dict[str, str] = {}
+    for _, ref in site_aliases():
+        seen.setdefault(ref.id, f"{ref.name} ({ref.body})")
+    return json.dumps(seen, ensure_ascii=False, separators=(",", ":"))
+
+
+def resolve_task(ti, focus_guess: str | None, site_guess: str | None):
+    """Turn an ambiguous or partly resolved task reading into a definite one,
+    using the model's guesses when given: a direction is chosen and a vague
+    site mention is resolved, so the user is never asked."""
+    if ti is None:
+        return ti
+    update: dict = {}
+    notes = list(ti.rationale or [])
+    task, focus = ti.task, ti.focus_body
+    if task == "ambiguous":
+        opts = list(ti.direction_options or [])
+        pick = next((o for o in opts if o.focus_body == focus_guess), None) or (opts[0] if opts else None)
+        if pick is not None:
+            task, focus = pick.task, pick.focus_body
+            notes.append(f"Direction guessed: {pick.label}.")
+        else:
+            task, focus = "landing_screening", "mars"
+        update.update(task=task, focus_body=focus, direction_options=[])
+    if ti.reference_site is None and ti.unresolved_sites:
+        ref_body = "mars" if focus == "earth" else "earth" if task == "analog_site_selection" else "mars"
+        options = [o for u in ti.unresolved_sites for o in u.options]
+        pick = next((o for o in options if o.id == site_guess), None) or next((o for o in options if o.body == ref_body), None) or (options[0] if options else None)
+        if pick is not None:
+            update["reference_site"] = pick
+            notes.append(f"Site guessed for \"{ti.unresolved_sites[0].matched_text}\": {pick.name}.")
+        update["unresolved_sites"] = []
+    if not update:
+        return ti
+    update["rationale"] = notes
+    return ti.model_copy(update=update)
 
 
 def system_prompt() -> str:
-    return _SYSTEM_RULES + "\n\n## Evidence registry (the only research you may cite)\n" + evidence.prompt_block()
+    return (_SYSTEM_RULES + "\n\n## Evidence registry (the only research you may cite)\n" + evidence.prompt_block()
+            + "\n\n## Sites (id: name (planet)), for site_guess\n" + _sites_block())
 
 _cache: dict[tuple, InterpretResponse] = {}
 
@@ -322,7 +373,7 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
                              rationale=rationale, tradeoffs=tradeoffs, unsupported_needs=unsupported, clarifying_questions=questions[:2],
                              confidence=confidence, confidence_note=note, validation_notes=notes, mission_profile=profile,
                              constraint_evidence=evidence.for_constraints(), evidence_version=evidence.version(),
-                             scoring_spec_version=load_spec()["version"], task_interpretation=interpret_task(text), cached=False, generated_at=_now())
+                             scoring_spec_version=load_spec()["version"], task_interpretation=resolve_task(interpret_task(text), None, None), cached=False, generated_at=_now())
 
 
 # --------------------------------------------------------------------------
@@ -353,8 +404,10 @@ def _schema() -> dict:
             "earth_reasons": per_criterion({"type": "string"}),
             "unsupported_needs": {"type": "array", "items": {"type": "string"}},
             "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+            "focus_body": {"type": "string", "enum": ["earth", "mars"]},
+            "site_guess": {"type": "string", "enum": [*site_ids(), "none"]},
         },
-        "required": ["mission_profile", "weights", "reasons", "evidence", "earth_weights", "earth_reasons", "unsupported_needs", "confidence"],
+        "required": ["mission_profile", "weights", "reasons", "evidence", "earth_weights", "earth_reasons", "unsupported_needs", "confidence", "focus_body", "site_guess"],
         "additionalProperties": False,
     }
 
@@ -486,7 +539,8 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
                                 clarifying_questions=[str(q) for q in data.get("clarifying_questions") or []][:2], confidence=conf,
                                 confidence_note="Confidence describes how clearly the language model could map the text onto the five criteria; it is not a judgement of any site. Weights were validated deterministically (ids, 0-100, data availability, positive total).",
                                 validation_notes=notes, mission_profile=profile, constraint_evidence=evidence.for_constraints(),
-                                evidence_version=evidence.version(), scoring_spec_version=load_spec()["version"], task_interpretation=interpret_task(req.objective),
+                                evidence_version=evidence.version(), scoring_spec_version=load_spec()["version"],
+                                task_interpretation=resolve_task(interpret_task(req.objective), data.get("focus_body"), data.get("site_guess")),
                                 cached=False, generated_at=_now())
     except Exception as e:  # noqa: BLE001 - any model/parse/validation failure degrades to the rule reader
         llm_client.record_error(e)

@@ -4,12 +4,13 @@
 // and cited research). The sliders (most of the width) then slide in beside the
 // priority pie. Mission focus (Earth / Mars) switches between the two sets;
 // each keeps its own values, and both use the same slider, pie and "Why"
-// components. When the reading's task half needs a decision (an ambiguous
-// direction or site name) the task panel appears under the mission text. It
+// components. The reading's task half (which planet, which reference site)
+// is always settled by the backend - the model guesses rather than asking. It
 // also tells the store which Mars factors the latest evaluation excluded, so
 // no-data factors are hidden and left out of the shares.
 import { useEffect, useState } from "react";
 import { MissionFocus } from "@/components/mission/MissionFocus";
+import { SpaceDecor } from "@/components/mission/SpaceDecor";
 import { earthFactors, marsFactors } from "@/components/mission/priorityFactors";
 import { MissionObjective } from "@/components/mission/MissionObjective";
 import { Spinner } from "@/components/ui/Spinner";
@@ -17,11 +18,10 @@ import { ErrorNote } from "@/components/ui/ErrorNote";
 import { PrioritySliders } from "@/components/mission/PrioritySliders";
 import { PriorityPie } from "@/components/mission/PriorityPie";
 import { WhyThesePriorities } from "@/components/mission/WhyThesePriorities";
-import { TaskResolver, needsTaskInput } from "@/components/mission/TaskReview";
 import { useAppStore, type ObjectiveSource } from "@/store/useAppStore";
 import { useInterpretObjective, applicationFromInterpretation } from "@/hooks/useInterpretObjective";
 import { toShares } from "@/lib/allocation";
-import type { DefaultMissionResponse, EvaluateResponse, TaskInterpretation } from "@/types";
+import type { DefaultMissionResponse, EvaluateResponse } from "@/types";
 
 interface Props {
   defaults: DefaultMissionResponse | undefined;
@@ -64,13 +64,10 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
   const [missionText, setMissionText] = useState<string | null>(null);
   /** True once the first saved mission has been applied, so the sliders slide in with its shares. */
   const [designed, setDesigned] = useState(false);
-  /** A task reading that needs the user's choice before it can be applied. */
-  const [openTask, setOpenTask] = useState<{ ti: TaskInterpretation; hash: string } | null>(null);
   const pending = interpret.status === "pending";
 
   const save = async (text: string) => {
     setMissionText(text);
-    setOpenTask(null);
     const { weights, defaultWeights } = useAppStore.getState();
     const current = Object.keys(weights).length ? weights : toShares(defaultWeights, excludedIds);
     const result = await interpret.run(text, current, excludedIds);
@@ -79,8 +76,6 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
     const app = applicationFromInterpretation(result.response, useAppStore.getState().excludedCriteria, source);
     // the weights and, when it is clear, the task reading go in one store action
     apply(result.requestedText, app.weights, app.notes, app.meta);
-    const ti = result.response.task_interpretation;
-    if (ti && needsTaskInput(ti)) setOpenTask({ ti, hash: result.response.objective_hash });
     // the same reading's Earth weights (the Mars ones if the backend was unreachable)
     useAppStore.getState().applyEarthSuggestion(app.earthWeights ?? app.weights);
     setMissionDraftDirty(false);
@@ -89,9 +84,9 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
   };
 
   return (
-    <div aria-label="Mission settings" className="mission-panel min-h-full bg-bg-elev">
+    <div aria-label="Mission settings" className="mission-panel relative min-h-full bg-bg-elev">
+      <SpaceDecor openSky={!designed} />
       <MissionObjective submitted={missionText !== null} missionText={missionText ?? ""} pending={pending} canSave={canSave} onSave={(t) => void save(t)} />
-      {openTask && !pending && <TaskResolver key={openTask.hash} ti={openTask.ti} objectiveHash={openTask.hash} onDone={() => setOpenTask(null)} />}
       {missionText === null && defaultsError ? (
         <div className="mx-auto max-w-2xl px-4"><ErrorNote error={defaultsError} context="scoring/default-mission" /></div>
       ) : null}

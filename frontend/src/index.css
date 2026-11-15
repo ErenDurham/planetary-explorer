@@ -85,6 +85,21 @@ input[type="range"]:disabled { opacity: .35; }
 @keyframes mission-slide-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 .mission-text-enter { animation: mission-slide-up .45s ease-out backwards; }
 .mission-enter { animation: mission-slide-up .5s ease-out .1s backwards; }
+
+/* Mission Design decoration: twinkling stars and a gently floating rocket */
+@keyframes twinkle { 0%, 100% { opacity: .2; transform: scale(.75); } 50% { opacity: 1; transform: scale(1.1); } }
+.star { animation: twinkle var(--twinkle-duration, 3s) ease-in-out var(--twinkle-delay, 0s) infinite; transform-origin: center; }
+@keyframes rocket-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.rocket-float { animation: rocket-float 4s ease-in-out infinite; }
+@keyframes rocket-flame { 0%, 100% { opacity: 1; transform: scaleY(1); } 50% { opacity: .65; transform: scaleY(.75); } }
+.rocket-flame { animation: rocket-flame .4s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
+/* loading indicator: a star circling like a spinner */
+@keyframes star-spin { to { transform: rotate(360deg); } }
+.star-spinner { animation: star-spin 1s linear infinite; transform-origin: 50% 50%; }
+@media (prefers-reduced-motion: reduce) {
+  .star, .rocket-float, .rocket-flame { animation: none !important; }
+  .star-spinner { animation: none !important; }
+}
 input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 

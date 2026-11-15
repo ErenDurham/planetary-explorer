@@ -168,7 +168,7 @@ def test_ollama_timeout_falls_back_and_keep_alive_is_sent_as_ollama_expects(olla
 
 def test_interpret_schema_asks_only_for_what_the_tab_shows():
     req = oe._schema()["required"]
-    assert set(req) == {"mission_profile", "weights", "reasons", "evidence", "unsupported_needs", "confidence", "earth_weights", "earth_reasons"}
+    assert set(req) == {"mission_profile", "weights", "reasons", "evidence", "unsupported_needs", "confidence", "earth_weights", "earth_reasons", "focus_body", "site_guess"}
 
 
 def test_one_reading_gives_earth_priorities_on_the_same_factors(monkeypatch):
@@ -210,3 +210,36 @@ def test_the_timeout_is_a_total_limit_even_while_tokens_keep_arriving(ollama, mo
     with pytest.raises(RuntimeError, match="longer than 0.3 s"):
         llm_client.call_json("s", "u", {"type": "object"})
     assert time.monotonic() - start < 0.6
+
+
+def _answer(**extra):
+    ids = ("terrain_safety", "elevation_suitability", "surface_roughness", "thermal_conditions", "solar_illumination")
+    base = {"mission_profile": "other", "weights": {k: 20 for k in ids}, "reasons": {k: "From the text." for k in ids}, "evidence": {},
+            "earth_weights": {k: 20 for k in ids}, "earth_reasons": {k: "From the text." for k in ids}, "unsupported_needs": [], "confidence": "medium"}
+    base.update(extra)
+    return base
+
+
+def test_the_model_guesses_direction_and_site_instead_of_asking(monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
+    monkeypatch.setattr(oe, "_call_llm", lambda system, user, schema: json.dumps(_answer(focus_body="mars", site_guess="haughton_crater")))
+    r = oe.interpret(InterpretRequest(objective="Compare the crater on Earth and Mars", excluded_criteria=EXCL))
+    ti = r.task_interpretation
+    assert ti.task == "analog_site_selection" and ti.focus_body == "mars"       # the model's direction
+    assert ti.reference_site and ti.reference_site.id == "haughton_crater"       # the model's site
+    assert not ti.direction_options and not ti.unresolved_sites                  # nothing left for the user to answer
+
+
+def test_without_a_usable_guess_the_common_case_is_assumed(monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
+    monkeypatch.setattr(oe, "_call_llm", lambda system, user, schema: json.dumps(_answer(focus_body="earth", site_guess="none")))
+    ti = oe.interpret(InterpretRequest(objective="Compare the crater on Earth and Mars", excluded_criteria=EXCL)).task_interpretation
+    assert ti.task == "analog_site_selection" and ti.focus_body == "earth"
+    assert ti.reference_site and ti.reference_site.body == "mars"                # an Earth search needs a Mars reference
+    assert not ti.direction_options and not ti.unresolved_sites
+
+
+def test_the_model_sees_the_site_list_and_may_only_answer_with_its_ids():
+    schema = oe._schema()
+    assert "gale_crater" in schema["properties"]["site_guess"]["enum"] and "none" in schema["properties"]["site_guess"]["enum"]
+    assert "Gale" in oe.system_prompt() and "Never ask the user to clarify" in oe.system_prompt()

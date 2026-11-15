@@ -46,5 +46,9 @@ def test_interpret_response_carries_task_interpretation(client):
     ti = body["task_interpretation"]
     assert ti["task"] == "analog_site_selection" and ti["focus_body"] == "mars" and ti["reference_site"]["id"] == "haughton_crater"
     assert body["suggestions"]  # landing weights still proposed separately
+    # the reader alone flags the ambiguity, but a response never hands it back to the user: a direction is guessed
+    assert oe.interpret_task("Compare Earth and Mars geology").task == "ambiguous"
     r = oe.rule_based(InterpretRequest(objective="Compare Earth and Mars geology"))
-    assert r.task_interpretation and r.task_interpretation.task == "ambiguous"
+    ti = r.task_interpretation
+    assert ti and ti.task == "analog_site_selection" and ti.focus_body in ("earth", "mars") and not ti.direction_options
+    assert any("Direction guessed" in n for n in ti.rationale)

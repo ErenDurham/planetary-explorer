@@ -15,14 +15,13 @@
   - `frontend/src/components/layout/TopNav.tsx` — the tab buttons; "Mission Design" is the first entry in `TABS`.
 
 - **Components on the tab** (`frontend/src/components/`)
-  - `layout/LeftSidebar.tsx` — the tab's controller. Keeps local state (saved text, sliders shown yet, open task panel), runs `save()`, and shows: chat box → task panel (only if needed) → Mission focus → the priorities of the chosen planet. Mars and Earth use the same components, fed different factors and values.
+  - `layout/LeftSidebar.tsx` — the tab's controller. Keeps local state (saved text, sliders shown yet, open task panel), runs `save()`, and shows: chat box → Mission focus → the priorities of the chosen planet. Nothing ever asks the user to clarify: the backend's `resolve_task()` applies the model's guesses (planet, vague site name). Mars and Earth use the same components, fed different factors and values.
   - `mission/MissionObjective.tsx` — heading, text box (Enter = save, Shift+Enter = new line), saved text, Edit Mission, "Applied task" line, warnings. Flags unsaved edits with `setMissionDraftDirty`, which disables the footer button.
   - `mission/PrioritySliders.tsx` — the sliders for either planet (shares always total 100%), Reset, (i) tips, hover popups on factor names. Takes the factors, values and what Reset does as props; the "?" button comes in through `headerExtra`.
   - `mission/WhyThesePriorities.tsx` — the "?" button and its pop-up, for either planet. Per factor: the model's one-line reason and the cited findings (linked). Mars also lists needs the model can't score and the hard constraints with their sources.
   - `mission/PriorityPie.tsx` — pie of the current shares for either planet (hand-drawn SVG); numbers appear only on hover.
   - `mission/priorityFactors.ts` — describes each planet's factors: `marsFactors()` (the landing factors, no-data ones left out) and `earthFactors()` (the SAME factors; only the (i) text says what the Earth data are and which ones drive the Earth ranking). Name, colour and hover sentence come from `PRIORITY_GUIDE`.
   - `mission/PriorityHoverCard.tsx` — the hover popup content (big % + one fixed sentence), used by the pie and the slider names.
-  - `mission/TaskReview.tsx` — panel shown only when the task reading is ambiguous (unclear direction or site name); the user picks, then clicks Apply task.
   - `mission/MissionFocus.tsx` — Earth/Mars buttons, shown after the first save. Both planets show the same sliders with their own values; switching keeps each planet's values.
   - `mission/TaskMissionObjective.tsx`, `mission/MissionScoringPanel.tsx`, `mission/HardConstraints.tsx` — not shown on this tab any more; kept for other code and their tests.
   - `ui/Floating.tsx` — places every popup so it stays 8 px inside the screen and flips above when there's no room below.
