@@ -49,7 +49,7 @@ export function DiscoveryStage({ badge, title, lede, stats, facts, view, onView,
           <button type="button" onClick={() => setActiveTab("mission")} className="ml-auto text-xs text-fg-muted underline underline-offset-4">Edit mission</button>
         </div>
       </nav>
-      {(facts || caption) && <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="survey-context">{facts}{caption && <p className="mt-1 text-[10.5px] leading-relaxed text-fg-faint">{caption}</p>}</div>}
+      {(facts || caption) && <div className="hidden shrink-0 border-b border-line px-3 py-2 text-xs lg:block" data-testid="survey-context">{facts}{caption && <p className="mt-1 text-[10.5px] leading-relaxed text-fg-faint">{caption}</p>}</div>}
       <div id="discovery-stage-body" className={`relative min-h-0 flex-1 ${mapOnPhone ? "h-[60vh]" : "hidden"} lg:block lg:h-auto`}>{children}</div>
     </div>
   );
