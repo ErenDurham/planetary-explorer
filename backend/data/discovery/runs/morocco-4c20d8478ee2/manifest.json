@@ -1,0 +1,71 @@
+{
+  "bytes": 241583,
+  "catalog_sha256": "0707661e4346a8d3b8d06da844bb1bea066fc1560b4c05d1ac5cdfdfaf0147ed",
+  "created_at": "2026-11-15T04:39:54+00:00",
+  "engine_version": "discovery-v1",
+  "optional": {
+    "power": {
+      "sha256": "1b40f489db532dc87728ad6bfdd5a4c960fce780ee7c9c4cf020f903c1013e64",
+      "status": "available",
+      "url": "https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=T2M,PRECTOTCORR&community=RE&latitude=31.5&longitude=-2.5&format=JSON"
+    },
+    "worldcover": {
+      "bytes_read": 16384,
+      "etag": "\"e12cb04d89de80ece8822ac05c05fa6a-3\"",
+      "http_status": 206,
+      "retrieved_at": "2026-11-15T04:36:15+00:00",
+      "status": "header_access_verified_only",
+      "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30W003_Map.tif"
+    }
+  },
+  "pipeline_sha256": "673dfe57e236fa5ec40d0564733b08b3ecfb837f578a4ca78487a7b756f883a3",
+  "run_id": "morocco-4c20d8478ee2",
+  "sha256": "7f129175b6fc75e5686539db1c8a384fe5af7280c75b66fe27a61d22ef1e47b8",
+  "sources": [
+    [
+      "cop_21849bc69f71d570",
+      "21849bc69f71d570aa7c24f2aa98ef4ea9fb08f7e881fd6e24dd74bbc886d830"
+    ],
+    [
+      "cop_305ab53f4b54c021",
+      "305ab53f4b54c021ea276ab943b53ea4893d329606e702ff0a70626e1ef3ecf0"
+    ],
+    [
+      "cop_78dfec88c649366d",
+      "78dfec88c649366d6b417df46492753c8ab86eacdbb214a1834fc86845ee030a"
+    ],
+    [
+      "cop_874752cc01868e8b",
+      "874752cc01868e8baab45b15239c659dfaca081b986c3cd70d671a74ef8284aa"
+    ],
+    [
+      "cop_a453befc46d091ee",
+      "a453befc46d091ee375353481699c1d960d54022e715647f40cbecc6c92b9475"
+    ],
+    [
+      "cop_ae0247b18ce04e8b",
+      "ae0247b18ce04e8b92ae4b8865e4430471686c5fb4a6f986b48dc27a03ff5202"
+    ],
+    [
+      "cop_c154aea83404e624",
+      "c154aea83404e624e388d10e485189eec523db4fc37347f1c443ff6f45b1ee68"
+    ],
+    [
+      "cop_d905435c6f8bd6bf",
+      "d905435c6f8bd6bfa3fe9cec7e563c3f3e7fa20e05531f90b1f098f8b67bf4b4"
+    ],
+    [
+      "cop_fc77a68f7d4b01d3",
+      "fc77a68f7d4b01d39a9765275801a539a7a7e2587d271f52fefdf1fcaf5647c3"
+    ],
+    [
+      "nasa_mola_megdr_16ppd",
+      "d18d9b9ab8c5516d02e157dd2cde0f1d0d160c21940e953ba22391269a545e7b"
+    ],
+    [
+      "nasa_power_survey_context",
+      "1b40f489db532dc87728ad6bfdd5a4c960fce780ee7c9c4cf020f903c1013e64"
+    ]
+  ],
+  "spec_sha256": "9337f012bdee45732f88da8ffdce5e59d50e3b7067306b1dd064f423db3e5005"
+}

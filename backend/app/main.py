@@ -10,6 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from app.api.discovery_routes import router as discovery_router
 from app.api.expedition_routes import router as expedition_router
 from app.api.comparison_routes import router as comparison_router
 from app.api.mission_assessment_routes import router as mission_assessment_router
@@ -43,6 +44,7 @@ app.include_router(analysis_router)
 app.include_router(mission_assessment_router)
 app.include_router(comparison_router)
 app.include_router(expedition_router)
+app.include_router(discovery_router)
 
 
 def _envelope(code: str, message: str, details=None, status: int = 500) -> JSONResponse:

@@ -1,3 +1,7 @@
+import { ResearchStatusBadge } from "./ResearchStatusBadge";
+import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
+import { useDiscoveryStore } from "../store/useDiscoveryStore";
+import { useAppStore } from "@/store/useAppStore";
 // Evidence card for one proposed candidate: current scores from the rank
 // response, immutable inputs from the detail endpoint. Every number is the
 // server's; absent context is reported as absent.
@@ -16,6 +20,7 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
   /** Open the established-analog view for the nearest known site, when it is in the curated catalogue. */
   onCompareKnown?: (siteId: string) => void;
 }) {
+  const runId = useDiscoveryStore(s => s.runId);
   const nov = noveltyRelation(candidate.novelty);
   const known = established.find(s => s.id === candidate.novelty.nearest_known_site_id);
   const dists = candidate.feature_distances ?? [];
@@ -23,11 +28,12 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
   const missing: string[] = [];
   if (!ctx || ctx.climate == null) missing.push("Climate context: not available for this footprint (optional source absent; not scored).");
   if (!ctx || ctx.land_cover == null) missing.push("Land-cover context: not available for this footprint (not scored; absence does not mean bare ground).");
-  missing.push("Geology: not assessed. No mineralogy or landform evidence exists for this footprint; none is inferred.");
-  if (candidate.novelty.review_status === "not_reviewed") missing.push("Literature review: not performed for this footprint.");
+  missing.push("Geology: not assessed. No mineralogy or landform evidence is recorded for this footprint; none is inferred.");
+  if (candidate.research_status !== "literature_reviewed") missing.push("Candidate literature review: not completed. Small desktop checks do not establish a researched analog.");
   return (
     <article aria-label={`Candidate evidence: ${candidate.name}`} className="rounded-xl border border-line-strong bg-bg-elev p-4 text-sm">
       <p className="rounded-lg border border-info/40 bg-info/10 px-3 py-2 text-xs font-semibold text-info"><FlaskConical className="mr-1 inline h-3.5 w-3.5" aria-hidden />{PROPOSED_LABEL}</p>
+      <div className="mt-3 flex flex-wrap items-center gap-3"><ResearchStatusBadge status={candidate.research_status} /><button type="button" disabled={!runId} className="rounded-lg border border-copper px-3 py-2 text-sm font-semibold text-copper-bright disabled:opacity-40" onClick={() => { if (runId) { useCandidateResearchTarget.getState().open(runId, candidate.id); useAppStore.getState().setActiveTab("research"); } }}>Research this candidate</button></div>
       <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
         <div><p className="eyebrow">Rank {candidate.display_rank ?? "—"}{candidate.raw_rank != null && candidate.raw_rank !== candidate.display_rank ? ` · raw rank ${candidate.raw_rank} before diversification` : ""}</p><h2 className="mt-1 text-xl font-semibold tracking-tight text-fg">{candidate.name}</h2><p className="num text-xs text-fg-muted">{candidate.lat.toFixed(4)}°, {candidate.lon_east.toFixed(4)}°E · 60 km footprint centre</p></div>
         <div className="text-right"><p className="num text-3xl text-copper-bright">{candidate.similarity_index != null ? candidate.similarity_index.toFixed(1) : "—"}<span className="ml-1 text-sm text-fg-muted">/ 100</span></p><p className="text-[10.5px] text-fg-faint">two-feature terrain index · D = {candidate.distance?.toFixed(3) ?? "—"}</p></div>

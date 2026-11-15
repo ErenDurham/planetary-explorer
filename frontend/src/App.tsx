@@ -1,3 +1,4 @@
+import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
 // App shell. The store separates the MISSION (task, destination, selections on
 // each body) from the VIEW (which globe is shown, which map mode colours it).
 // This component turns server data into one marker list for the visible body:
@@ -38,6 +39,7 @@ import { EmptyNote } from "@/components/ui/Section";
 import type { AnalogRankResponse } from "@/types";
 
 export default function App() {
+  const candidateResearchTarget = useCandidateResearchTarget(s => s.target);
   const [sitePanelWidth,setSitePanelWidth]=useState(380);
   const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
   const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
@@ -336,7 +338,7 @@ export default function App() {
           </div>
         )}
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || activeTab === "discover" ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || activeTab === "discover" || (activeTab === "research" && candidateResearchTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );

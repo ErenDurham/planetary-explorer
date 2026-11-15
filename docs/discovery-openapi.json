@@ -1,0 +1,1696 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Planetary Explorer discovery-v1",
+    "version": "discovery-v1"
+  },
+  "paths": {
+    "/api/v1/discovery/capabilities": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Capabilities",
+        "operationId": "capabilities_api_v1_discovery_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryCapabilities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/rank": {
+      "post": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Rank",
+        "operationId": "rank_api_v1_discovery_rank_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoveryRankRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryRankResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Detail",
+        "operationId": "detail_api_v1_discovery_runs__run_id__candidates__candidate_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryCandidateDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/runs/{run_id}/export": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Export",
+        "operationId": "export_api_v1_discovery_runs__run_id__export_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryExport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}/research": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Research Dossier",
+        "operationId": "research_dossier_api_v1_discovery_runs__run_id__candidates__candidate_id__research_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          },
+          {
+            "name": "question",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 1000,
+              "default": "",
+              "title": "Question"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchDossier"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Save Research",
+        "operationId": "save_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResearchUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DiscoveryAuditRow": {
+        "properties": {
+          "candidate": {
+            "$ref": "#/components/schemas/DiscoveryCandidate"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiscoveryProfile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "screening_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Screening Reasons"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "candidate",
+          "profile",
+          "screening_reasons"
+        ],
+        "title": "DiscoveryAuditRow"
+      },
+      "DiscoveryBounds": {
+        "properties": {
+          "west": {
+            "type": "number",
+            "title": "West"
+          },
+          "south": {
+            "type": "number",
+            "title": "South"
+          },
+          "east": {
+            "type": "number",
+            "title": "East"
+          },
+          "north": {
+            "type": "number",
+            "title": "North"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "west",
+          "south",
+          "east",
+          "north"
+        ],
+        "title": "DiscoveryBounds"
+      },
+      "DiscoveryCandidate": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "footprint_geojson": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Footprint Geojson"
+          },
+          "research_status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Research Status",
+            "default": "unresearched"
+          },
+          "raw_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Rank"
+          },
+          "display_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Rank"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "similarity_index": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity Index"
+          },
+          "feature_distances": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryFeatureDistance"
+            },
+            "type": "array",
+            "title": "Feature Distances"
+          },
+          "terrain_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Terrain Valid Fraction"
+          },
+          "novelty": {
+            "$ref": "#/components/schemas/DiscoveryNovelty"
+          },
+          "context": {
+            "$ref": "#/components/schemas/DiscoveryContext"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "lat",
+          "lon_east",
+          "footprint_geojson",
+          "terrain_valid_fraction",
+          "novelty",
+          "sources",
+          "limitations"
+        ],
+        "title": "DiscoveryCandidate"
+      },
+      "DiscoveryCandidateDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "footprint_geojson": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Footprint Geojson"
+          },
+          "research_status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Research Status",
+            "default": "unresearched"
+          },
+          "raw_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Rank"
+          },
+          "display_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Rank"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "similarity_index": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity Index"
+          },
+          "feature_distances": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryFeatureDistance"
+            },
+            "type": "array",
+            "title": "Feature Distances"
+          },
+          "terrain_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Terrain Valid Fraction"
+          },
+          "novelty": {
+            "$ref": "#/components/schemas/DiscoveryNovelty"
+          },
+          "context": {
+            "$ref": "#/components/schemas/DiscoveryContext"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiscoveryProfile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "screening_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Screening Reasons"
+          },
+          "source_manifest": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Source Manifest"
+          },
+          "proposed_field_validation": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Proposed Field Validation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "lat",
+          "lon_east",
+          "footprint_geojson",
+          "terrain_valid_fraction",
+          "novelty",
+          "sources",
+          "limitations",
+          "profile",
+          "screening_reasons",
+          "source_manifest",
+          "proposed_field_validation"
+        ],
+        "title": "DiscoveryCandidateDetail"
+      },
+      "DiscoveryCapabilities": {
+        "properties": {
+          "engine_version": {
+            "type": "string",
+            "const": "discovery-v1",
+            "title": "Engine Version",
+            "default": "discovery-v1"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "unavailable"
+            ],
+            "title": "State"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/DiscoveryReference"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryRunSummary"
+            },
+            "type": "array",
+            "title": "Runs"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryCriterion"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "default_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Default Weights"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "state",
+          "runs",
+          "criteria",
+          "default_weights",
+          "limitations"
+        ],
+        "title": "DiscoveryCapabilities"
+      },
+      "DiscoveryContext": {
+        "properties": {
+          "climate": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Climate"
+          },
+          "land_cover": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Land Cover"
+          },
+          "geology_status": {
+            "type": "string",
+            "const": "not_assessed",
+            "title": "Geology Status",
+            "default": "not_assessed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DiscoveryContext"
+      },
+      "DiscoveryCriterion": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "scale": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Scale"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "feature_id",
+          "label",
+          "unit",
+          "scale"
+        ],
+        "title": "DiscoveryCriterion"
+      },
+      "DiscoveryExport": {
+        "properties": {
+          "manifest": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Manifest"
+          },
+          "specification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Specification"
+          },
+          "survey": {
+            "$ref": "#/components/schemas/DiscoverySurvey"
+          },
+          "reference_profile": {
+            "$ref": "#/components/schemas/DiscoveryProfile"
+          },
+          "audit_rows": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryAuditRow"
+            },
+            "type": "array",
+            "title": "Audit Rows"
+          },
+          "exclusions": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Exclusions"
+          },
+          "provenance": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Provenance"
+          },
+          "validation": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Validation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "manifest",
+          "specification",
+          "survey",
+          "reference_profile",
+          "audit_rows",
+          "exclusions",
+          "provenance",
+          "validation"
+        ],
+        "title": "DiscoveryExport"
+      },
+      "DiscoveryFeatureDistance": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "earth_value": {
+            "type": "number",
+            "title": "Earth Value"
+          },
+          "mars_value": {
+            "type": "number",
+            "title": "Mars Value"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "scale": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Scale"
+          },
+          "normalized_weight": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Normalized Weight"
+          },
+          "distance": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Distance"
+          },
+          "contribution": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Contribution"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "feature_id",
+          "earth_value",
+          "mars_value",
+          "unit",
+          "scale",
+          "normalized_weight",
+          "distance",
+          "contribution"
+        ],
+        "title": "DiscoveryFeatureDistance"
+      },
+      "DiscoveryNovelty": {
+        "properties": {
+          "catalog_version": {
+            "type": "string",
+            "title": "Catalog Version"
+          },
+          "nearest_known_site_id": {
+            "type": "string",
+            "title": "Nearest Known Site Id"
+          },
+          "nearest_known_site_distance_km": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Nearest Known Site Distance Km"
+          },
+          "buffer_rule": {
+            "type": "string",
+            "title": "Buffer Rule"
+          },
+          "outside_catalog_buffer": {
+            "type": "boolean",
+            "title": "Outside Catalog Buffer"
+          },
+          "review_status": {
+            "type": "string",
+            "enum": [
+              "not_reviewed",
+              "desktop_reviewed"
+            ],
+            "title": "Review Status",
+            "default": "not_reviewed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "catalog_version",
+          "nearest_known_site_id",
+          "nearest_known_site_distance_km",
+          "buffer_rule",
+          "outside_catalog_buffer"
+        ],
+        "title": "DiscoveryNovelty"
+      },
+      "DiscoveryProfile": {
+        "properties": {
+          "measurements": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TerrainMeasurement"
+            },
+            "type": "object",
+            "title": "Measurements"
+          },
+          "grid": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grid"
+          },
+          "terrain_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Terrain Valid Fraction"
+          },
+          "gradient_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Gradient Valid Fraction"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "measurements",
+          "grid",
+          "terrain_valid_fraction",
+          "gradient_valid_fraction"
+        ],
+        "title": "DiscoveryProfile"
+      },
+      "DiscoveryRankRequest": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "title": "Run Id"
+          },
+          "reference_id": {
+            "type": "string",
+            "const": "jezero_crater",
+            "title": "Reference Id",
+            "default": "jezero_crater"
+          },
+          "weights": {
+            "$ref": "#/components/schemas/DiscoveryWeights"
+          },
+          "top_k": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Top K",
+            "default": 5
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id"
+        ],
+        "title": "DiscoveryRankRequest"
+      },
+      "DiscoveryRankResponse": {
+        "properties": {
+          "engine_version": {
+            "type": "string",
+            "const": "discovery-v1",
+            "title": "Engine Version",
+            "default": "discovery-v1"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/DiscoveryReference"
+          },
+          "survey": {
+            "$ref": "#/components/schemas/DiscoverySurvey"
+          },
+          "basis_features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Basis Features"
+          },
+          "effective_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Effective Weights"
+          },
+          "eligible_pool_count": {
+            "type": "integer",
+            "title": "Eligible Pool Count"
+          },
+          "returned_count": {
+            "type": "integer",
+            "title": "Returned Count"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryCandidate"
+            },
+            "type": "array",
+            "title": "Candidates"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "reference",
+          "survey",
+          "basis_features",
+          "effective_weights",
+          "eligible_pool_count",
+          "returned_count",
+          "candidates",
+          "limitations"
+        ],
+        "title": "DiscoveryRankResponse"
+      },
+      "DiscoveryReference": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "const": "mars",
+            "title": "Body",
+            "default": "mars"
+          },
+          "id": {
+            "type": "string",
+            "const": "jezero_crater",
+            "title": "Id",
+            "default": "jezero_crater"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": "Jezero Crater"
+          },
+          "lat": {
+            "type": "number",
+            "title": "Lat",
+            "default": 18.4447
+          },
+          "lon_east": {
+            "type": "number",
+            "title": "Lon East",
+            "default": 77.4508
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DiscoveryReference"
+      },
+      "DiscoveryRunSummary": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "bounds": {
+            "$ref": "#/components/schemas/DiscoveryBounds"
+          },
+          "total_sampled": {
+            "type": "integer",
+            "title": "Total Sampled"
+          },
+          "eligible_count": {
+            "type": "integer",
+            "title": "Eligible Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "label",
+          "created_at",
+          "bounds",
+          "total_sampled",
+          "eligible_count"
+        ],
+        "title": "DiscoveryRunSummary"
+      },
+      "DiscoverySource": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "license": {
+            "type": "string",
+            "title": "License"
+          },
+          "retrieved_at": {
+            "type": "string",
+            "title": "Retrieved At"
+          },
+          "observation_period": {
+            "type": "string",
+            "title": "Observation Period"
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sha256"
+          },
+          "etag": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Etag"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source_id",
+          "title",
+          "institution",
+          "url",
+          "license",
+          "retrieved_at",
+          "observation_period"
+        ],
+        "title": "DiscoverySource"
+      },
+      "DiscoverySurvey": {
+        "properties": {
+          "bounds": {
+            "$ref": "#/components/schemas/DiscoveryBounds"
+          },
+          "generated_count": {
+            "type": "integer",
+            "title": "Generated Count"
+          },
+          "terrain_valid_count": {
+            "type": "integer",
+            "title": "Terrain Valid Count"
+          },
+          "eligible_count": {
+            "type": "integer",
+            "title": "Eligible Count"
+          },
+          "exclusion_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Exclusion Counts"
+          },
+          "sampling_centres": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Sampling Centres"
+          },
+          "grid_specification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grid Specification"
+          },
+          "footprint_specification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Footprint Specification"
+          },
+          "dataset_versions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Dataset Versions"
+          },
+          "spec_version": {
+            "type": "string",
+            "title": "Spec Version"
+          },
+          "diversification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Diversification"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "bounds",
+          "generated_count",
+          "terrain_valid_count",
+          "eligible_count",
+          "exclusion_counts",
+          "sampling_centres",
+          "grid_specification",
+          "footprint_specification",
+          "dataset_versions",
+          "spec_version",
+          "diversification"
+        ],
+        "title": "DiscoverySurvey"
+      },
+      "DiscoveryWeights": {
+        "properties": {
+          "slope_regional_median_deg": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Slope Regional Median Deg",
+            "default": 50
+          },
+          "roughness_regional_m": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Roughness Regional M",
+            "default": 50
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DiscoveryWeights"
+      },
+      "EvidenceChunk": {
+        "properties": {
+          "chunk_id": {
+            "type": "string",
+            "title": "Chunk Id"
+          },
+          "document_id": {
+            "type": "string",
+            "title": "Document Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "publication_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publication Date"
+          },
+          "geographic_relevance": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Geographic Relevance",
+            "description": "site ids / regions this chunk is about"
+          },
+          "excerpt": {
+            "type": "string",
+            "title": "Excerpt"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score",
+            "description": "retrieval score; higher is more relevant"
+          }
+        },
+        "type": "object",
+        "required": [
+          "chunk_id",
+          "document_id",
+          "title",
+          "institution",
+          "url",
+          "excerpt"
+        ],
+        "title": "EvidenceChunk"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ResearchDossier": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/DiscoveryCandidateDetail"
+          },
+          "record": {
+            "$ref": "#/components/schemas/ResearchRecord"
+          },
+          "research_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Research Questions"
+          },
+          "search_tasks": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchSearchTask"
+            },
+            "type": "array",
+            "title": "Search Tasks"
+          },
+          "research_brief": {
+            "type": "string",
+            "title": "Research Brief"
+          },
+          "background_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceChunk"
+            },
+            "type": "array",
+            "title": "Background Evidence"
+          },
+          "retrieval_status": {
+            "type": "string",
+            "enum": [
+              "background_available",
+              "unavailable"
+            ],
+            "title": "Retrieval Status"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "candidate_id",
+          "candidate",
+          "record",
+          "research_questions",
+          "search_tasks",
+          "research_brief",
+          "background_evidence",
+          "retrieval_status",
+          "limitations"
+        ],
+        "title": "ResearchDossier"
+      },
+      "ResearchFinding": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "minLength": 3,
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 2048,
+            "title": "Url"
+          },
+          "finding": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 20,
+            "title": "Finding"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "candidate_specific",
+              "regional_background",
+              "contradictory"
+            ],
+            "title": "Scope"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "url",
+          "finding",
+          "scope"
+        ],
+        "title": "ResearchFinding"
+      },
+      "ResearchRecord": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Status",
+            "default": "unresearched"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 12000,
+            "title": "Notes",
+            "default": ""
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchFinding"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Findings"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "candidate_id"
+        ],
+        "title": "ResearchRecord"
+      },
+      "ResearchSearchTask": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "label",
+          "query",
+          "url"
+        ],
+        "title": "ResearchSearchTask"
+      },
+      "ResearchUpdate": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Status",
+            "default": "unresearched"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 12000,
+            "title": "Notes",
+            "default": ""
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchFinding"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Findings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ResearchUpdate"
+      },
+      "TerrainMeasurement": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "deg",
+              "m"
+            ],
+            "title": "Unit"
+          },
+          "measurement_type": {
+            "type": "string",
+            "const": "derived",
+            "title": "Measurement Type",
+            "default": "derived"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "unit"
+        ],
+        "title": "TerrainMeasurement"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

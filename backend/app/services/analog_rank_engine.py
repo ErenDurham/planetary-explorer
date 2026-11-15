@@ -111,11 +111,14 @@ def rank_pool(req: AnalogRankRequest, store) -> AnalogRankResponse:
         warnings.append("no positive-weight feature is comparable across the whole pool; the pool is unrankable")
 
     cands: list[RankedCandidate] = []
+    full_distances: dict[str, float] = {}
     for loc, mp, ep, fds in per_cand:
         for f in fds:
             f.normalized_weight = eff.get(f.feature_id) if f.feature_id in eff else None
             f.contribution = (f.normalized_weight * (f.distance or 0.0)) if f.normalized_weight is not None and f.distance is not None else None
         D = sum(f.contribution for f in fds if f.contribution is not None) if basis else None
+        if D is not None:
+            full_distances[loc.id] = D
         sim = None if D is None else 100.0 / (1.0 + D)
         shared, diffs = _narrative(fds, mp, ep)
         srcs = sorted(set(mp.sources.keys()) | (set(ep.sources.keys()) if ep else set()))
@@ -124,7 +127,7 @@ def rank_pool(req: AnalogRankRequest, store) -> AnalogRankResponse:
                                      unrankable_reason=None if basis else "no common comparable feature basis in this pool",
                                      shared_characteristics=shared, important_differences=diffs, sources=srcs))
     ranked = [c for c in cands if c.distance is not None]
-    ranked.sort(key=lambda c: (c.distance, c.location.id))
+    ranked.sort(key=lambda c: (full_distances[c.location.id], c.location.id))
     n = len(ranked)
     for i, c in enumerate(ranked, 1):
         c.rank = i

@@ -1,0 +1,2277 @@
+{
+  "desktop_review": [
+    {
+      "candidate_id": "region-03-03",
+      "class_counts": {
+        "bare_sparse": 14400
+      },
+      "manual_observations": "Inspected source-derived contact sheet: broad regional elevation variation with localized high cells; independent WorldCover centre sample is uniformly bare/sparse class. This does not validate slope/relief transfer, full-footprint land cover, geology or access.",
+      "sample_count": 14400,
+      "scope": "Native 10m classification in 0.01 degree square at centre only; NOT full footprint, not geology, access or field validation.",
+      "source": {
+        "dataset": "ESA WorldCover 2021 v200 10m",
+        "etag": "\"e12cb04d89de80ece8822ac05c05fa6a-3\"",
+        "license": "CC BY 4.0; ESA WorldCover project 2021",
+        "sha256": "f3846d1386326313bf69d03f4c89c61f804d16141409b14a909b928569796d1f",
+        "shape": [
+          120,
+          120
+        ],
+        "source_id": "esa_worldcover_2021_v200",
+        "transform": [
+          8.333333333333333e-05,
+          0.0,
+          -2.13,
+          0.0,
+          -8.333333333333333e-05,
+          31.88
+        ],
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30W003_Map.tif"
+      },
+      "status": "independent_land_cover_sample_available"
+    },
+    {
+      "candidate_id": "region-03-01",
+      "class_counts": {
+        "bare_sparse": 14400
+      },
+      "manual_observations": "Inspected contact sheet: broad low-elevation corridor and higher northern/eastern terrain; independent centre sample is uniformly bare/sparse. Centre context cannot establish the suitability of the full footprint.",
+      "sample_count": 14400,
+      "scope": "Native 10m classification in 0.01 degree square at centre only; NOT full footprint, not geology, access or field validation.",
+      "source": {
+        "dataset": "ESA WorldCover 2021 v200 10m",
+        "etag": "\"e12cb04d89de80ece8822ac05c05fa6a-3\"",
+        "license": "CC BY 4.0; ESA WorldCover project 2021",
+        "sha256": "f3846d1386326313bf69d03f4c89c61f804d16141409b14a909b928569796d1f",
+        "shape": [
+          120,
+          120
+        ],
+        "source_id": "esa_worldcover_2021_v200",
+        "transform": [
+          8.333333333333333e-05,
+          0.0,
+          -2.63,
+          0.0,
+          -8.333333333333333e-05,
+          31.88
+        ],
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30W003_Map.tif"
+      },
+      "status": "independent_land_cover_sample_available"
+    },
+    {
+      "candidate_id": "region-00-02",
+      "class_counts": {
+        "bare_sparse": 14400
+      },
+      "manual_observations": "Inspected contact sheet: regional elevation variation with higher cells toward the northeast; independent centre sample is uniformly bare/sparse. Its lower terrain rank is not a geological or operational judgment.",
+      "sample_count": 14400,
+      "scope": "Native 10m classification in 0.01 degree square at centre only; NOT full footprint, not geology, access or field validation.",
+      "source": {
+        "dataset": "ESA WorldCover 2021 v200 10m",
+        "etag": "\"e12cb04d89de80ece8822ac05c05fa6a-3\"",
+        "license": "CC BY 4.0; ESA WorldCover project 2021",
+        "sha256": "f3846d1386326313bf69d03f4c89c61f804d16141409b14a909b928569796d1f",
+        "shape": [
+          120,
+          120
+        ],
+        "source_id": "esa_worldcover_2021_v200",
+        "transform": [
+          8.333333333333333e-05,
+          0.0,
+          -2.38,
+          0.0,
+          -8.333333333333333e-05,
+          31.13
+        ],
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30W003_Map.tif"
+      },
+      "status": "independent_land_cover_sample_available"
+    }
+  ],
+  "desktop_review_method": "Agent visual inspection of separately normalized 15x15 DEM and independent native WorldCover centre samples; top, middle and bottom raw terrain ranks. No expert or field assessment.",
+  "field_validation": "not_performed",
+  "independent_evidence_limit": "WorldCover is independent of the terrain score but checks only central land-cover samples. It does not validate analog ranking or geological similarity.",
+  "literature_context": [
+    {
+      "scope": "Regional eastern Morocco imagery context, not candidate-specific validation",
+      "url": "https://www.jpl.nasa.gov/images/pia01863-space-radar-image-of-eastern-morocco/"
+    },
+    {
+      "scope": "Regional Morocco-Algeria mountain/desert context; no inference of accessibility",
+      "url": "https://www.nesdis.noaa.gov/news/the-high-atlas-mountains-separating-morocco-algeria"
+    }
+  ],
+  "processing_seconds": 9.038013834011508,
+  "run_id": "morocco-4c20d8478ee2",
+  "weight_scale_and_origin_sensitivity": {
+    "default_order": [
+      "region-03-03",
+      "region-02-03",
+      "region-01-03",
+      "region-03-00",
+      "region-03-02",
+      "region-01-00",
+      "region-02-02",
+      "region-01-02",
+      "region-03-01",
+      "region-00-00",
+      "region-02-00",
+      "region-02-01",
+      "region-00-03",
+      "region-01-01",
+      "region-00-01",
+      "region-00-02"
+    ],
+    "grid_origin_scenarios": [
+      {
+        "candidate_values": {
+          "region-00-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 48.4504434355905
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3642266242258736
+            }
+          },
+          "region-00-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 37.14709772302763
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.23982767678677128
+            }
+          },
+          "region-00-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 34.05554877820642
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.2721928109379408
+            }
+          },
+          "region-00-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.34096715693239
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.314726758905175
+            }
+          },
+          "region-01-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 50.63081965832486
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.41760046605141976
+            }
+          },
+          "region-01-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 36.20760930848228
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.33996701885738295
+            }
+          },
+          "region-01-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 51.29519817747734
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.32991262709523445
+            }
+          },
+          "region-01-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 87.91558588897549
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.4630619899075929
+            }
+          },
+          "region-02-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.68502097690225
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.32258398192172
+            }
+          },
+          "region-02-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.740596728704894
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.28456686028897804
+            }
+          },
+          "region-02-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 53.442405262549414
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3045658003880634
+            }
+          },
+          "region-02-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 101.6154587763021
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.4762241223238407
+            }
+          },
+          "region-03-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 64.49301376835697
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.32257480223174956
+            }
+          },
+          "region-03-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 50.1381111334774
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3290681416116878
+            }
+          },
+          "region-03-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 62.48967685279595
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.37030023845827265
+            }
+          },
+          "region-03-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 119.11135149000192
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.6056439291333582
+            }
+          }
+        },
+        "offset_east_north_m": [
+          1000,
+          0
+        ],
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-02",
+          "region-03-00",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-00-00",
+          "region-03-01",
+          "region-02-00",
+          "region-00-03",
+          "region-02-01",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "reference_values": {
+          "roughness_regional_m": {
+            "measurement_type": "derived",
+            "unit": "m",
+            "value": 185.21931485345786
+          },
+          "slope_regional_median_deg": {
+            "measurement_type": "derived",
+            "unit": "deg",
+            "value": 1.003755666271836
+          }
+        },
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "candidate_values": {
+          "region-00-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 47.9002487998775
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.36782421938764664
+            }
+          },
+          "region-00-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 37.68168520528232
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.2544826654280274
+            }
+          },
+          "region-00-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 35.26512547129745
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.2603842100181123
+            }
+          },
+          "region-00-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 41.998437710385716
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.32726998292368603
+            }
+          },
+          "region-01-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 52.433995760456824
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.43045831627804726
+            }
+          },
+          "region-01-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 36.71906133102701
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.35247026516419283
+            }
+          },
+          "region-01-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 50.94207445125292
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3409026211399986
+            }
+          },
+          "region-01-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 86.22934200140676
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.4554096195191841
+            }
+          },
+          "region-02-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.96949545732418
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.35257233081475414
+            }
+          },
+          "region-02-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 43.88473213547399
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3110510065619201
+            }
+          },
+          "region-02-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 51.613397689438855
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.31782163130398644
+            }
+          },
+          "region-02-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 97.6315402831189
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.4512793975091928
+            }
+          },
+          "region-03-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 65.04201387686028
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.34095527998899
+            }
+          },
+          "region-03-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 51.762371786154596
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3352003118133851
+            }
+          },
+          "region-03-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 60.295988452628144
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.361443503499926
+            }
+          },
+          "region-03-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 114.0701779950167
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.5475917560640087
+            }
+          }
+        },
+        "offset_east_north_m": [
+          -1000,
+          0
+        ],
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-03-01",
+          "region-01-02",
+          "region-02-02",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "reference_values": {
+          "roughness_regional_m": {
+            "measurement_type": "derived",
+            "unit": "m",
+            "value": 178.48224325447092
+          },
+          "slope_regional_median_deg": {
+            "measurement_type": "derived",
+            "unit": "deg",
+            "value": 0.9492305250393669
+          }
+        },
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "candidate_values": {
+          "region-00-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 49.02403282604192
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3792532467453449
+            }
+          },
+          "region-00-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 38.06832155959262
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.24331866682747658
+            }
+          },
+          "region-00-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 34.27300681054523
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.2652903506752542
+            }
+          },
+          "region-00-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.74883792682806
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3323203562673871
+            }
+          },
+          "region-01-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 52.18866694494884
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.43050793170885665
+            }
+          },
+          "region-01-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 37.477961535226065
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3467512386042832
+            }
+          },
+          "region-01-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 51.35263016037471
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.35113477807306637
+            }
+          },
+          "region-01-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 89.21770585847243
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.4539570455310743
+            }
+          },
+          "region-02-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.727582479430694
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3284722610712777
+            }
+          },
+          "region-02-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.81490730275388
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.30385208958600807
+            }
+          },
+          "region-02-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 54.36730755144869
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3116528077496733
+            }
+          },
+          "region-02-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 101.71086851906087
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.4511970978915704
+            }
+          },
+          "region-03-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 65.4402804655086
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3703609350205575
+            }
+          },
+          "region-03-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 51.33288483641488
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.34044603913705296
+            }
+          },
+          "region-03-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 61.41818402126342
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3642666572811988
+            }
+          },
+          "region-03-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 118.76258425039663
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.6301528260222452
+            }
+          }
+        },
+        "offset_east_north_m": [
+          0,
+          1000
+        ],
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-00-00",
+          "region-03-01",
+          "region-00-03",
+          "region-02-00",
+          "region-02-01",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "reference_values": {
+          "roughness_regional_m": {
+            "measurement_type": "derived",
+            "unit": "m",
+            "value": 176.44554540301533
+          },
+          "slope_regional_median_deg": {
+            "measurement_type": "derived",
+            "unit": "deg",
+            "value": 1.0092011099749958
+          }
+        },
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "candidate_values": {
+          "region-00-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 47.39602765475623
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.35504802544374664
+            }
+          },
+          "region-00-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 36.60440597299757
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.22860971354108084
+            }
+          },
+          "region-00-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 34.380827756283395
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.2500012584686751
+            }
+          },
+          "region-00-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 41.70229013045915
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.31272027739759134
+            }
+          },
+          "region-01-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 51.577623950068855
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.42030602223472263
+            }
+          },
+          "region-01-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 35.94145180528929
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.32405897889852014
+            }
+          },
+          "region-01-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 50.93066885084443
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.34226304771417265
+            }
+          },
+          "region-01-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 86.72978243801157
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.4497312780197661
+            }
+          },
+          "region-02-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 42.33862332757081
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3396902430886412
+            }
+          },
+          "region-02-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 43.7813583362515
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.31362824168238823
+            }
+          },
+          "region-02-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 52.81459594315567
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3168488148406448
+            }
+          },
+          "region-02-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 100.87860656950689
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.43767941771659247
+            }
+          },
+          "region-03-00": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 64.74750229535024
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.32047284202787923
+            }
+          },
+          "region-03-01": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 51.600808223576436
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.33552074460712905
+            }
+          },
+          "region-03-02": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 59.906450092903974
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.3398008265783763
+            }
+          },
+          "region-03-03": {
+            "roughness_regional_m": {
+              "measurement_type": "derived",
+              "unit": "m",
+              "value": 115.5513439944821
+            },
+            "slope_regional_median_deg": {
+              "measurement_type": "derived",
+              "unit": "deg",
+              "value": 0.5647936989000505
+            }
+          }
+        },
+        "offset_east_north_m": [
+          0,
+          -1000
+        ],
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-03-01",
+          "region-02-02",
+          "region-01-02",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "reference_values": {
+          "roughness_regional_m": {
+            "measurement_type": "derived",
+            "unit": "m",
+            "value": 180.2822517831383
+          },
+          "slope_regional_median_deg": {
+            "measurement_type": "derived",
+            "unit": "deg",
+            "value": 1.0409795356350184
+          }
+        },
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      }
+    ],
+    "interpretation": "Robustness to explicitly chosen parameters, not calibrated confidence or independent truth. Physical shifts change footprint support as well as grid origin.",
+    "weight_scale_scenarios": [
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          0.5
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          1
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          2
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          0.5
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          1
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          2
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          0.5
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          1
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          2
+        ],
+        "slope_weight": 0,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          0.5
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          1
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-01-02",
+          "region-02-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          2
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          0.5
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          1
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          2
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-02-02",
+          "region-01-00",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-00-01",
+          "region-01-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          0.5
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          1
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          2
+        ],
+        "slope_weight": 0.25,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          0.5
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-02",
+          "region-03-00",
+          "region-01-00",
+          "region-01-02",
+          "region-00-00",
+          "region-02-02",
+          "region-03-01",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          0.5,
+          1
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-03-02",
+          "region-03-00",
+          "region-00-00",
+          "region-01-02",
+          "region-03-01",
+          "region-02-02",
+          "region-02-00",
+          "region-01-01",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          0.5,
+          2
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          0.5
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          1
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-02",
+          "region-03-00",
+          "region-01-00",
+          "region-01-02",
+          "region-00-00",
+          "region-02-02",
+          "region-03-01",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          2
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-01",
+          "region-02-00",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          0.5
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          1
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          2
+        ],
+        "slope_weight": 0.5,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-03-02",
+          "region-03-00",
+          "region-01-02",
+          "region-00-00",
+          "region-03-01",
+          "region-02-02",
+          "region-02-00",
+          "region-02-01",
+          "region-01-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          0.5,
+          0.5
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-03-02",
+          "region-03-00",
+          "region-00-00",
+          "region-01-02",
+          "region-03-01",
+          "region-02-02",
+          "region-02-00",
+          "region-01-01",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          0.5,
+          1
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-03-02",
+          "region-00-00",
+          "region-01-02",
+          "region-03-00",
+          "region-03-01",
+          "region-02-02",
+          "region-02-00",
+          "region-01-01",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          0.5,
+          2
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-01-02",
+          "region-02-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          1,
+          0.5
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-03-02",
+          "region-03-00",
+          "region-01-02",
+          "region-00-00",
+          "region-03-01",
+          "region-02-02",
+          "region-02-00",
+          "region-02-01",
+          "region-01-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          1,
+          1
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-03-02",
+          "region-03-00",
+          "region-00-00",
+          "region-01-02",
+          "region-03-01",
+          "region-02-02",
+          "region-02-00",
+          "region-01-01",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          1,
+          2
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-02-02",
+          "region-01-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          0.5
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-03-00",
+          "region-03-02",
+          "region-01-00",
+          "region-01-02",
+          "region-02-02",
+          "region-03-01",
+          "region-00-00",
+          "region-02-00",
+          "region-02-01",
+          "region-00-03",
+          "region-01-01",
+          "region-00-01",
+          "region-00-02"
+        ],
+        "scale_multipliers": [
+          2,
+          1
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-03-02",
+          "region-03-00",
+          "region-01-02",
+          "region-00-00",
+          "region-03-01",
+          "region-02-02",
+          "region-02-00",
+          "region-02-01",
+          "region-01-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          2,
+          2
+        ],
+        "slope_weight": 0.75,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          0.5,
+          0.5
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          0.5,
+          1
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          0.5,
+          2
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          1,
+          0.5
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          1,
+          1
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          1,
+          2
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          2,
+          0.5
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          2,
+          1
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      },
+      {
+        "ordered_ids": [
+          "region-03-03",
+          "region-02-03",
+          "region-01-03",
+          "region-01-00",
+          "region-00-00",
+          "region-03-02",
+          "region-01-02",
+          "region-01-01",
+          "region-03-01",
+          "region-02-00",
+          "region-02-02",
+          "region-03-00",
+          "region-02-01",
+          "region-00-03",
+          "region-00-02",
+          "region-00-01"
+        ],
+        "scale_multipliers": [
+          2,
+          2
+        ],
+        "slope_weight": 1,
+        "top3_overlap_with_default": 3,
+        "top_candidate": "region-03-03"
+      }
+    ]
+  }
+}

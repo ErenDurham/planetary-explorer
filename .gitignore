@@ -21,3 +21,9 @@ frontend/.vite/
 .DS_Store
 .idea/
 .vscode/
+
+# Offline discovery acquisition and private inspection cache
+backend/data/raw/discovery/
+
+# Local analyst research notes, separate from immutable discovery runs
+backend/data/discovery/research/

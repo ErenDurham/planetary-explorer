@@ -90,9 +90,9 @@ def _words(tags: list[str]) -> str:
 
 def feature_distance(fs: dict, mars_p: EnvironmentalProfile, earth_p: EnvironmentalProfile | None, weight: float) -> FeatureDistance:
     fid = fs["feature_id"]
-    mv, unit = _value(mars_p, fid)
-    ev, _ = _value(earth_p, fid)
-    unit = unit or fs.get("unit")
+    mv, mars_unit = _value(mars_p, fid)
+    ev, earth_unit = _value(earth_p, fid)
+    unit = mars_unit or fs.get("unit")
     # Echo the raw values for the UI, except a non-finite number, which json
     # cannot carry; the note says why the feature was not compared.
     base = dict(feature_id=fid, label=fs["label"], mars_value=_echo(mv), earth_value=_echo(ev), unit=unit, scale=fs.get("scale"), raw_weight=weight,
@@ -109,6 +109,9 @@ def feature_distance(fs: dict, mars_p: EnvironmentalProfile, earth_p: Environmen
         return noncomp(f"{fid} is missing on the Earth side; not imputed, excluded from D")
 
     if fs["method"] == "scaled_absolute_difference":
+        expected_unit = fs.get("unit")
+        if mars_unit != expected_unit or earth_unit != expected_unit:
+            return noncomp(f"incompatible units (Mars {mars_unit}, Earth {earth_unit}, expected {expected_unit}); excluded from D")
         if not _is_finite_number(mv) or not _is_finite_number(ev):
             return noncomp("value is not a finite number on at least one side; excluded from D")
         scale = fs.get("scale")
@@ -244,7 +247,9 @@ def match_all(mars_site: Site, mars_p: EnvironmentalProfile, candidates: list[tu
     if sum(w.values()) <= 0:
         warnings.append("all analog weights are zero; similarity cannot be computed")
     matches = [match(mars_site, mars_p, c, p, w) for c, p in candidates]
-    matches.sort(key=lambda m: (-(m.similarity if m.similarity is not None else -1.0), m.earth_candidate.id))
+    # Contributions retain full precision even though response distance/index are rounded.
+    matches.sort(key=lambda m: (sum(f.contribution for f in m.feature_distances if f.contribution is not None)
+                                if m.similarity is not None else float("inf"), m.earth_candidate.id))
     n = 0
     for m in matches:
         if m.similarity is not None:

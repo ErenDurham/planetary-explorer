@@ -1,3 +1,4 @@
+import { ResearchStatusBadge } from "./ResearchStatusBadge";
 // The server's diversified shortlist: display rank, raw rank before
 // diversification, similarity index, terrain coverage and catalog relation.
 import { Badge } from "@/components/ui/Badge";
@@ -19,7 +20,7 @@ export function CandidateList({ candidates, selectedId, onSelect, palette = "roy
                 <span className="num mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-black" style={{ background: color }} aria-hidden>{c.display_rank ?? "—"}</span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline justify-between gap-2"><span className="truncate text-sm text-fg">{c.name}</span><span className="num shrink-0 text-sm text-fg">{c.similarity_index != null ? `${c.similarity_index.toFixed(1)} / 100` : "—"}</span></span>
-                  <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[10.5px] text-fg-muted"><span className="num">{c.lat.toFixed(3)}°, {c.lon_east.toFixed(3)}°E</span>{c.raw_rank != null && c.raw_rank !== c.display_rank && <span>raw rank {c.raw_rank}</span>}<span className="num">terrain valid {(c.terrain_valid_fraction * 100).toFixed(0)}%</span><Badge tone={nov.tone}>{nov.label}</Badge></span>
+                  <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[10.5px] text-fg-muted"><span className="num">{c.lat.toFixed(3)}°, {c.lon_east.toFixed(3)}°E</span>{c.raw_rank != null && c.raw_rank !== c.display_rank && <span>raw rank {c.raw_rank}</span>}<span className="num">terrain valid {(c.terrain_valid_fraction * 100).toFixed(0)}%</span><Badge tone={nov.tone}>{nov.label}</Badge><ResearchStatusBadge status={c.research_status} /></span>
                 </span>
               </button>
             </li>

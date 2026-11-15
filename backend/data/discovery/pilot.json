@@ -1,0 +1,18 @@
+{
+  "spec_version": "discovery-v1.0",
+  "label": "Eastern Morocco systematic terrain pilot",
+  "bounds": {"west": -3.0, "south": 31.0, "east": -2.0, "north": 32.0},
+  "samples_per_axis": 4,
+  "selection_rationale": "Fixed before inspecting scores: bounded inland eastern Morocco survey for a manageable anonymous DEM workload, away from the seven curated examples. Semi-arid regional context is a geographic hypothesis, not a measured eligibility claim. No candidate coordinate is selected by its score.",
+  "reference_id": "jezero_crater",
+  "cell_m": 4000,
+  "footprint_m": 60000,
+  "min_cell_valid_fraction": 0.95,
+  "min_terrain_valid_fraction": 0.95,
+  "min_gradient_valid_fraction": 0.80,
+  "catalog_buffer_km": 100,
+  "minimum_center_distance_km": 40,
+  "scales": {"slope_regional_median_deg": 1.5, "roughness_regional_m": 100.0},
+  "default_weights": {"slope_regional_median_deg": 50, "roughness_regional_m": 50},
+  "assumptions": ["Physical grids, coverage cutoffs, distance scales, catalog buffer and diversification are unvalidated screening choices, not NASA operating requirements.", "Regional terrain similarity alone does not establish geological analogy, aridity, accessibility or safe field conditions."]
+}

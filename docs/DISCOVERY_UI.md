@@ -45,3 +45,22 @@ nearest contract tab for its context.
 
 `npm run typecheck`, `npx vitest run` (discovery tests under `features/discovery/**`), `npm run build`,
 and a headless-Chrome walkthrough against the live backend (screenshots in `docs/screenshots/discovery-*.jpg`).
+
+## Candidate deep research
+
+Results and evidence cards now show **Unresearched**, **Research in progress**, or
+**Literature reviewed**. A limited desktop check never implies literature review.
+**Research this candidate** opens the Research pane on that run/candidate, independent
+of curated Earth/Mars selections. Mars site research and the expedition planner remain
+available through **Mars site research**.
+
+The candidate workspace contains measured inputs, an investigation brief, targeted
+external literature/map/access searches, question-driven local RAG background passages,
+and a persistent cited-findings notebook. It does not claim to autonomously browse the
+web. Retrieved background is labelled as such; opening/retrieving never advances status.
+Only explicitly saving notes changes status. Review completion requires a substantive
+summary and a direct or contradictory source finding, still labelled analyst supplied.
+Notes persist on the backend and are included in discovery exports; use durable storage
+for hosted deployments. Geology, access and field validation remain separate evidence gaps.
+
+Browser verification used isolated data: Discover → ranked candidate → Research dossier → save in-progress notes → return to Discover with updated tag. Real candidate notebooks were not modified. Unsaved notes survive evidence queries; the Mars-context assistant is hidden in the candidate research workspace.

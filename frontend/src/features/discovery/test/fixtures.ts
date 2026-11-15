@@ -13,7 +13,7 @@ function square(lat: number, lon: number, half = 0.27) {
   return { type: "Polygon", coordinates: [[[lon - half, lat - half], [lon + half, lat - half], [lon + half, lat + half], [lon - half, lat + half], [lon - half, lat - half]]] };
 }
 export function candidate(id: string, lat: number, lon: number, rank: number, sim: number, extra: Partial<DiscoveryCandidate> = {}): DiscoveryCandidate {
-  return { id, name: `Footprint ${id}`, lat, lon_east: lon, footprint_geojson: square(lat, lon), raw_rank: rank, display_rank: rank, distance: 100 / sim - 1, similarity_index: sim,
+  return { research_status: "unresearched", id, name: `Footprint ${id}`, lat, lon_east: lon, footprint_geojson: square(lat, lon), raw_rank: rank, display_rank: rank, distance: 100 / sim - 1, similarity_index: sim,
     feature_distances: [{ feature_id: "slope_regional_median_deg", earth_value: 1.3, mars_value: 1.077, unit: "deg", scale: 1.5, normalized_weight: 0.5, distance: 0.149, contribution: 0.074 }, { feature_id: "roughness_regional_m", earth_value: 150.2, mars_value: 194.4, unit: "m", scale: 100, normalized_weight: 0.5, distance: 0.442, contribution: 0.221 }],
     terrain_valid_fraction: 0.99, novelty: { catalog_version: "known-analogs-v1", nearest_known_site_id: "atacama_yungay", nearest_known_site_distance_km: 8120, buffer_rule: "100 km centre buffer", outside_catalog_buffer: true, review_status: "not_reviewed" },
     context: { climate: null, land_cover: null, geology_status: "not_assessed" }, sources: [source], limitations: ["4 km cells do not resolve rover hazards."], ...extra };

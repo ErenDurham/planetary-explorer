@@ -14,7 +14,7 @@ export function noveltyRelation(n: DiscoveryNovelty): { label: string; tone: "in
 }
 
 export function reviewStatusLabel(s: DiscoveryNovelty["review_status"]): string {
-  return s === "desktop_reviewed" ? "Desktop review recorded (not field validation)" : "Literature and desktop review not performed";
+  return s === "desktop_reviewed" ? "Desktop review recorded (not field validation)" : "Desktop check not recorded; candidate literature review is tracked separately";
 }
 
 export function formatKm(km: number): string {
