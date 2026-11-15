@@ -11,6 +11,7 @@ import fixture from "@/test/fixtures/api_examples.json";
 import mission from "@/test/fixtures/mission_examples.json";
 import { roverSharesFrom, useAppStore } from "@/store/useAppStore";
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
+import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 import { InfoTip } from "@/components/ui/InfoTip";
 import type { DefaultMissionResponse, EvaluateResponse, EvidenceCitation } from "@/types";
 
@@ -72,6 +73,31 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("Mission Design chat box", () => {
+  it("previews the built-in mission, fills it on Tab and submits it on Enter", async () => {
+    mockInterpret();
+    renderTab();
+    const box = screen.getByLabelText("Your mission objective");
+    expect(box).toHaveValue("");
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    // Tab in the empty box adopts the preview, with the hint gone and Save enabled
+    fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveValue(DEFAULT_MISSION_OBJECTIVE);
+    expect(screen.queryByTestId("mission-suggestion-hint")).toBeNull();
+    expect(screen.getByRole("button", { name: "Save" })).toBeEnabled();
+    // Tab with text present is ordinary focus movement, not a second fill
+    fireEvent.change(box, { target: { value: "My own words" } });
+    fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveValue("My own words");
+    // back to empty: the "use it" button does the same as Tab, then Enter submits the suggestion
+    fireEvent.change(box, { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: "use it" }));
+    expect(box).toHaveValue(DEFAULT_MISSION_OBJECTIVE);
+    fireEvent.keyDown(box, { key: "Enter" });
+    await screen.findByTestId("mission-text");
+    expect(interpretCalls[0].objective).toBe(DEFAULT_MISSION_OBJECTIVE);
+    expect(screen.getByTestId("mission-text")).toHaveTextContent(/new candidate Earth regions beyond established analog sites/);
+  });
+
   it("opens on the chat box alone, then Enter interprets, applies and brings in the sliders and pie", async () => {
     mockInterpret();
     const { container } = renderTab();
@@ -80,7 +106,8 @@ describe("Mission Design chat box", () => {
     expect(screen.getByText("Tell us what your mission is")).toBeInTheDocument();
     const box = screen.getByLabelText("Your mission objective");
     expect(box).toHaveValue("");
-    expect(box).toHaveAttribute("placeholder", "We want to land on Mars to establish a Research Base.");
+    expect(box).toHaveAttribute("placeholder", DEFAULT_MISSION_OBJECTIVE);
+    expect(screen.getByTestId("mission-suggestion-hint")).toHaveTextContent(/Press Tab or use it, then Enter to save/);
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
     expect(screen.queryByText("Priority distribution")).toBeNull();
     expect(screen.queryByRole("button", { name: /Edit Mission/ })).toBeNull();
