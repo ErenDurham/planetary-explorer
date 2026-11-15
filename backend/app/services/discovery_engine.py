@@ -241,6 +241,24 @@ def dimension_scores(factors, weights) -> list[DiscoveryDimensionScore]:
     return out
 
 
+def score_measurements(run, features, weights, values: dict[str, float]):
+    """The index for ONE set of measurements against the run's reference.
+
+    Shared by the survey ranking and the dropped-pin probe, so a probe is scored
+    the way a candidate is by construction: scaled absolute distance per feature,
+    weighted sum, 100 / (1 + D).
+    """
+    factors = []
+    for fid, (_, unit, scale, _, _) in features.items():
+        earth = values[fid]
+        mars = run.reference_profile.measurements[fid].value
+        d = abs(earth-mars)/scale
+        factors.append(DiscoveryFeatureDistance(feature_id=fid, earth_value=earth, mars_value=mars,
+            unit=unit, scale=scale, normalized_weight=weights[fid], distance=d, contribution=d*weights[fid]))
+    distance = sum(f.contribution for f in factors)
+    return factors, dimension_scores(factors, weights), distance, 100/(1+distance)
+
+
 def rank(req: DiscoveryRankRequest):
     run, _ = load_run(req.run_id)
     features = basis(run)
@@ -252,17 +270,8 @@ def rank(req: DiscoveryRankRequest):
         c = row.candidate.model_copy(deep=True)
         from app.services.discovery_research import get_record
         c.research_status = get_record(run.run_id, c.id).status
-        factors = []
-        for fid, (_, unit, scale, _, _) in features.items():
-            earth = row.profile.measurements[fid].value
-            mars = run.reference_profile.measurements[fid].value
-            d = abs(earth-mars)/scale
-            factors.append(DiscoveryFeatureDistance(feature_id=fid, earth_value=earth, mars_value=mars,
-                unit=unit, scale=scale, normalized_weight=weights[fid], distance=d, contribution=d*weights[fid]))
-        c.feature_distances = factors
-        c.dimension_scores = dimension_scores(factors, weights)
-        c.distance = sum(f.contribution for f in factors)
-        c.similarity_index = 100/(1+c.distance)
+        c.feature_distances, c.dimension_scores, c.distance, c.similarity_index = score_measurements(
+            run, features, weights, {fid: row.profile.measurements[fid].value for fid in features})
         ranked.append(c)
     ranked.sort(key=lambda c: (c.distance, c.id))
     chosen = []

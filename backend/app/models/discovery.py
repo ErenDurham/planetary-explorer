@@ -203,6 +203,66 @@ class DiscoveryRankRequest(Record):
         return self
 
 
+class DiscoveryProbeRequest(Record):
+    """One user-chosen Earth point to score with a run's own pipeline and the caller's weights."""
+    run_id: str = Field(min_length=1, max_length=100, pattern=r"^[a-zA-Z0-9_-]+$")
+    reference_id: Literal["jezero_crater"] = "jezero_crater"
+    lat: float = Field(ge=-90, le=90)
+    lon_east: float = Field(ge=-180, le=180)
+    weights: dict[str, float] | None = None
+    client_request_id: str | None = Field(None, max_length=200)
+
+    @model_validator(mode="after")
+    def usable_weights(self):
+        if self.weights is None:
+            return self
+        if not self.weights:
+            raise ValueError("weights need at least one feature")
+        for feature, value in self.weights.items():
+            if not re.fullmatch(r"[a-z0-9_]{1,60}", feature):
+                raise ValueError(f"invalid feature id: {feature}")
+            if not math.isfinite(value) or value < 0:
+                raise ValueError("weights must be finite and non-negative")
+        total = sum(self.weights.values())
+        if not math.isfinite(total) or total <= 0:
+            raise ValueError("weights need a finite positive total")
+        return self
+
+
+class DiscoveryProbePlacement(Record):
+    """Where the probe sits relative to the survey: geography and, when scored, the pool."""
+    inside_survey_bounds: bool
+    nearest_survey_candidate_id: str | None = None
+    nearest_survey_candidate_distance_km: float | None = Field(None, ge=0)
+    # eligible candidates strictly closer to the reference under the same weights; None while unscored
+    closer_survey_candidates: int | None = Field(None, ge=0)
+    eligible_pool_count: int = Field(ge=0)
+
+
+class DiscoveryProbeResponse(Record):
+    """A probe is scored only when every feature the run scores was measured at the point."""
+    engine_version: EngineVersion = "discovery-v2"
+    run_id: str
+    reference: DiscoveryReference
+    status: Literal["scored", "terrain_unavailable", "insufficient_terrain_coverage", "features_unavailable"]
+    reasons: list[str] = Field(default_factory=list)
+    lat: float = Field(ge=-90, le=90)
+    lon_east: float = Field(ge=-180, le=180)
+    footprint_geojson: dict[str, Any] | None = None
+    profile: DiscoveryProfile | None = None
+    effective_weights: dict[str, float]
+    feature_distances: list[DiscoveryFeatureDistance] = Field(default_factory=list)
+    dimension_scores: list[DiscoveryDimensionScore] = Field(default_factory=list)
+    distance: float | None = Field(None, ge=0)
+    similarity_index: float | None = Field(None, ge=0, le=100)
+    placement: DiscoveryProbePlacement | None = None
+    novelty: DiscoveryNovelty | None = None
+    sources: list[DiscoverySource] = Field(default_factory=list)
+    limitations: list[str]
+    client_request_id: str | None = None
+    computed_at: str
+
+
 class DiscoverySurvey(Record):
     bounds: DiscoveryBounds
     generated_count: int

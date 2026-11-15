@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from app.models.discovery import DiscoveryCapabilities, DiscoveryRankRequest, DiscoveryRankResponse, DiscoveryCandidateDetail, DiscoveryExport
+from app.models.discovery import DiscoveryCapabilities, DiscoveryRankRequest, DiscoveryRankResponse, DiscoveryCandidateDetail, DiscoveryExport, DiscoveryProbeRequest, DiscoveryProbeResponse
 from app.services import discovery_engine as engine
+from app.services import discovery_probe
 
 router = APIRouter(prefix="/api/v1/discovery", tags=["discovery"])
 
@@ -24,6 +25,12 @@ def capabilities():
 @router.post("/rank", response_model=DiscoveryRankResponse)
 def rank(request: DiscoveryRankRequest):
     return invoke(engine.rank, request)
+
+
+@router.post("/probe", response_model=DiscoveryProbeResponse)
+def probe(request: DiscoveryProbeRequest):
+    """Score a user-chosen Earth point with the run's own pipeline; never part of the ranking."""
+    return invoke(discovery_probe.probe, request)
 
 
 @router.get("/runs/{run_id}/candidates/{candidate_id}", response_model=DiscoveryCandidateDetail)

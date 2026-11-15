@@ -38,6 +38,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/discovery/probe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Probe
+         * @description Score a user-chosen Earth point with the run's own pipeline; never part of the ranking.
+         */
+        post: operations["probe_api_v1_discovery_probe_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}": {
         parameters: {
             query?: never;
@@ -135,6 +155,10 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /** Region Id */
+            region_id?: string | null;
+            /** Region Name */
+            region_name?: string | null;
             /** Lat */
             lat: number;
             /** Lon East */
@@ -159,6 +183,8 @@ export interface components {
             similarity_index?: number | null;
             /** Feature Distances */
             feature_distances?: components["schemas"]["DiscoveryFeatureDistance"][];
+            /** Dimension Scores */
+            dimension_scores?: components["schemas"]["DiscoveryDimensionScore"][];
             /** Terrain Valid Fraction */
             terrain_valid_fraction: number;
             novelty: components["schemas"]["DiscoveryNovelty"];
@@ -174,6 +200,10 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /** Region Id */
+            region_id?: string | null;
+            /** Region Name */
+            region_name?: string | null;
             /** Lat */
             lat: number;
             /** Lon East */
@@ -198,6 +228,8 @@ export interface components {
             similarity_index?: number | null;
             /** Feature Distances */
             feature_distances?: components["schemas"]["DiscoveryFeatureDistance"][];
+            /** Dimension Scores */
+            dimension_scores?: components["schemas"]["DiscoveryDimensionScore"][];
             /** Terrain Valid Fraction */
             terrain_valid_fraction: number;
             novelty: components["schemas"]["DiscoveryNovelty"];
@@ -218,10 +250,10 @@ export interface components {
         DiscoveryCapabilities: {
             /**
              * Engine Version
-             * @default discovery-v1
-             * @constant
+             * @default discovery-v2
+             * @enum {string}
              */
-            engine_version: "discovery-v1";
+            engine_version: "discovery-v1" | "discovery-v2";
             /**
              * State
              * @enum {string}
@@ -255,6 +287,36 @@ export interface components {
              * @constant
              */
             geology_status: "not_assessed";
+            /** Measurements */
+            measurements?: components["schemas"]["DiscoveryContextMeasurement"][];
+        };
+        /**
+         * DiscoveryContextMeasurement
+         * @description An Earth dimension carried for honesty, never for scoring.
+         *
+         *     `mars_value` is null whenever this release holds no measured Mars counterpart;
+         *     the UI must present these as differences it cannot rank, not as a match.
+         */
+        DiscoveryContextMeasurement: {
+            /** Feature Id */
+            feature_id: string;
+            /** Label */
+            label: string;
+            /** Group */
+            group: string;
+            /** Earth Value */
+            earth_value: number;
+            /** Mars Value */
+            mars_value?: number | null;
+            /** Unit */
+            unit: string;
+            /**
+             * Comparable
+             * @default false
+             */
+            comparable: boolean;
+            /** Note */
+            note: string;
         };
         /** DiscoveryCriterion */
         DiscoveryCriterion: {
@@ -266,6 +328,39 @@ export interface components {
             unit: string;
             /** Scale */
             scale: number;
+            /**
+             * Group
+             * @default terrain
+             */
+            group: string;
+            /**
+             * Group Label
+             * @default Terrain and landform
+             */
+            group_label: string;
+            /**
+             * Rationale
+             * @default
+             */
+            rationale: string;
+        };
+        /**
+         * DiscoveryDimensionScore
+         * @description Similarity restricted to one dimension group, on the same index as the total.
+         */
+        DiscoveryDimensionScore: {
+            /** Group */
+            group: string;
+            /** Label */
+            label: string;
+            /** Feature Ids */
+            feature_ids: string[];
+            /** Weight Share */
+            weight_share: number;
+            /** Distance */
+            distance: number;
+            /** Similarity Index */
+            similarity_index: number;
         };
         /** DiscoveryExport */
         DiscoveryExport: {
@@ -330,6 +425,99 @@ export interface components {
              */
             review_status: "not_reviewed" | "desktop_reviewed";
         };
+        /**
+         * DiscoveryProbePlacement
+         * @description Where the probe sits relative to the survey: geography and, when scored, the pool.
+         */
+        DiscoveryProbePlacement: {
+            /** Inside Survey Bounds */
+            inside_survey_bounds: boolean;
+            /** Nearest Survey Candidate Id */
+            nearest_survey_candidate_id?: string | null;
+            /** Nearest Survey Candidate Distance Km */
+            nearest_survey_candidate_distance_km?: number | null;
+            /** Closer Survey Candidates */
+            closer_survey_candidates?: number | null;
+            /** Eligible Pool Count */
+            eligible_pool_count: number;
+        };
+        /**
+         * DiscoveryProbeRequest
+         * @description One user-chosen Earth point to score with a run's own pipeline and the caller's weights.
+         */
+        DiscoveryProbeRequest: {
+            /** Run Id */
+            run_id: string;
+            /**
+             * Reference Id
+             * @default jezero_crater
+             * @constant
+             */
+            reference_id: "jezero_crater";
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
+            /** Weights */
+            weights?: {
+                [key: string]: number;
+            } | null;
+            /** Client Request Id */
+            client_request_id?: string | null;
+        };
+        /**
+         * DiscoveryProbeResponse
+         * @description A probe is scored only when every feature the run scores was measured at the point.
+         */
+        DiscoveryProbeResponse: {
+            /**
+             * Engine Version
+             * @default discovery-v2
+             * @enum {string}
+             */
+            engine_version: "discovery-v1" | "discovery-v2";
+            /** Run Id */
+            run_id: string;
+            reference: components["schemas"]["DiscoveryReference"];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "scored" | "terrain_unavailable" | "insufficient_terrain_coverage" | "features_unavailable";
+            /** Reasons */
+            reasons?: string[];
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
+            /** Footprint Geojson */
+            footprint_geojson?: {
+                [key: string]: unknown;
+            } | null;
+            profile?: components["schemas"]["DiscoveryProfile"] | null;
+            /** Effective Weights */
+            effective_weights: {
+                [key: string]: number;
+            };
+            /** Feature Distances */
+            feature_distances?: components["schemas"]["DiscoveryFeatureDistance"][];
+            /** Dimension Scores */
+            dimension_scores?: components["schemas"]["DiscoveryDimensionScore"][];
+            /** Distance */
+            distance?: number | null;
+            /** Similarity Index */
+            similarity_index?: number | null;
+            placement?: components["schemas"]["DiscoveryProbePlacement"] | null;
+            novelty?: components["schemas"]["DiscoveryNovelty"] | null;
+            /** Sources */
+            sources?: components["schemas"]["DiscoverySource"][];
+            /** Limitations */
+            limitations: string[];
+            /** Client Request Id */
+            client_request_id?: string | null;
+            /** Computed At */
+            computed_at: string;
+        };
         /** DiscoveryProfile */
         DiscoveryProfile: {
             /** Measurements */
@@ -345,7 +533,10 @@ export interface components {
             /** Gradient Valid Fraction */
             gradient_valid_fraction: number;
         };
-        /** DiscoveryRankRequest */
+        /**
+         * DiscoveryRankRequest
+         * @description Weights name features; the engine rejects any the chosen run does not score.
+         */
         DiscoveryRankRequest: {
             /** Run Id */
             run_id: string;
@@ -355,10 +546,13 @@ export interface components {
              * @constant
              */
             reference_id: "jezero_crater";
-            weights?: components["schemas"]["DiscoveryWeights"];
+            /** Weights */
+            weights?: {
+                [key: string]: number;
+            } | null;
             /**
              * Top K
-             * @default 5
+             * @default 6
              */
             top_k: number;
             /** Client Request Id */
@@ -368,10 +562,10 @@ export interface components {
         DiscoveryRankResponse: {
             /**
              * Engine Version
-             * @default discovery-v1
-             * @constant
+             * @default discovery-v2
+             * @enum {string}
              */
-            engine_version: "discovery-v1";
+            engine_version: "discovery-v1" | "discovery-v2";
             /** Run Id */
             run_id: string;
             reference: components["schemas"]["DiscoveryReference"];
@@ -436,6 +630,21 @@ export interface components {
             total_sampled: number;
             /** Eligible Count */
             eligible_count: number;
+            /**
+             * Region Count
+             * @default 1
+             */
+            region_count: number;
+            /** Regions */
+            regions?: {
+                [key: string]: unknown;
+            }[];
+            /** Criteria */
+            criteria?: components["schemas"]["DiscoveryCriterion"][];
+            /** Default Weights */
+            default_weights?: {
+                [key: string]: number;
+            };
         };
         /** DiscoverySource */
         DiscoverySource: {
@@ -493,19 +702,14 @@ export interface components {
             diversification: {
                 [key: string]: unknown;
             };
-        };
-        /** DiscoveryWeights */
-        DiscoveryWeights: {
-            /**
-             * Slope Regional Median Deg
-             * @default 50
-             */
-            slope_regional_median_deg: number;
-            /**
-             * Roughness Regional M
-             * @default 50
-             */
-            roughness_regional_m: number;
+            /** Regions */
+            regions?: {
+                [key: string]: unknown;
+            }[];
+            /** Context Features */
+            context_features?: {
+                [key: string]: unknown;
+            }[];
         };
         /** EvidenceChunk */
         EvidenceChunk: {
@@ -648,7 +852,10 @@ export interface components {
             /** Findings */
             findings?: components["schemas"]["ResearchFinding"][];
         };
-        /** TerrainMeasurement */
+        /**
+         * TerrainMeasurement
+         * @description One scored quantity. Units are closed: a new unit is a contract change.
+         */
         TerrainMeasurement: {
             /** Value */
             value: number;
@@ -656,13 +863,13 @@ export interface components {
              * Unit
              * @enum {string}
              */
-            unit: "deg" | "m";
+            unit: "deg" | "m" | "W/m2" | "mm/day";
             /**
              * Measurement Type
              * @default derived
-             * @constant
+             * @enum {string}
              */
-            measurement_type: "derived";
+            measurement_type: "derived" | "measured";
         };
         /** ValidationError */
         ValidationError: {
@@ -726,6 +933,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DiscoveryRankResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    probe_api_v1_discovery_probe_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DiscoveryProbeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryProbeResponse"];
                 };
             };
             /** @description Validation Error */

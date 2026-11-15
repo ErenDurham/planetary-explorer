@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     data_dir: Path = BACKEND_DIR / "data"
     profile_version: str = "v1"
+    # The dropped-pin probe scores from terrain tiles already in the verified cache. Set
+    # DISCOVERY_PROBE_FETCH=true on a local API to let it fetch missing Copernicus tiles on
+    # demand; the default keeps the contract's rule that request handlers never acquire data.
+    discovery_probe_fetch: bool = False
     # "anthropic" (Claude API, needs a key) or "ollama" (a local model, free)
     llm_provider: str = "anthropic"
     llm_model: str = "claude-opus-5-5"

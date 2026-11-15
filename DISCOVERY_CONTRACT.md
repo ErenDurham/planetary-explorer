@@ -118,3 +118,32 @@ Unknown IDs return 404; unavailable artifacts or unreadable selected notebooks
 return 503. Other candidates' notebooks are excluded and cannot block this export.
 Fable should save pending edits before requesting this export, or explicitly
 label the download as the last saved version. Offer raw JSON alongside Markdown.
+
+## Dropped-pin probe (additive)
+
+`POST /api/v1/discovery/probe` → `DiscoveryProbeResponse`. Request `DiscoveryProbeRequest`:
+`run_id, reference_id, lat, lon_east, weights?, client_request_id?` (weights validated exactly as
+for rank and resolved against the run's own basis; a feature the run does not score is 422).
+
+The probe measures ONE user-chosen 60 km footprint with the survey's own terrain code
+(`scripts/discovery_terrain`, the run's `cell_m`, `footprint_m` and coverage cut-offs) and scores it with
+the same `score_measurements` the ranking uses, against the run's reference profile and scales. It is
+never a candidate: it does not enter `rank`, is not written into any artifact, and the response
+labels it so. `status` is one of `scored`, `terrain_unavailable`, `insufficient_terrain_coverage`,
+`features_unavailable`; an index is present only when `status == "scored"`, i.e. when every feature
+the run scores was measured at the point (a feature with no provider at an arbitrary point, such as a
+climate record, leaves the probe unscored rather than partially scored). `placement` reports whether
+the point lies inside the surveyed bounds, the nearest survey candidate and, when scored, how many
+eligible candidates are strictly closer to the reference under the same weights (context, not a
+rank). `novelty` applies the run's stored catalog and buffer. `footprint_geojson`, `profile` and
+`sources` carry the measured footprint's provenance.
+
+Data acquisition: by default the probe reads terrain tiles from the verified cache only and never
+downloads on request (status `terrain_unavailable` says so when no cached tile covers the point).
+`DISCOVERY_PROBE_FETCH=true` on a local API opts in to fetching missing Copernicus tiles into the same
+content-verified cache. Where raster libraries are absent (the GitHub Pages runtime) the endpoint
+answers 503 `data_unavailable` and the UI shows the probe as unavailable.
+
+UI obligations: present the probe apart from the shortlist, label it as not a candidate, show the
+reasons verbatim when unscored, and keep the discovery index separate from curated analog scores.
+

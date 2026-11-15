@@ -67,6 +67,48 @@
         }
       }
     },
+    "/api/v1/discovery/probe": {
+      "post": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Probe",
+        "description": "Score a user-chosen Earth point with the run's own pipeline; never part of the ranking.",
+        "operationId": "probe_api_v1_discovery_probe_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoveryProbeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryProbeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}": {
       "get": {
         "tags": [
@@ -406,6 +448,28 @@
             "type": "string",
             "title": "Name"
           },
+          "region_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Id"
+          },
+          "region_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Name"
+          },
           "lat": {
             "type": "number",
             "maximum": 90.0,
@@ -483,6 +547,13 @@
             },
             "type": "array",
             "title": "Feature Distances"
+          },
+          "dimension_scores": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryDimensionScore"
+            },
+            "type": "array",
+            "title": "Dimension Scores"
           },
           "terrain_valid_fraction": {
             "type": "number",
@@ -536,6 +607,28 @@
             "type": "string",
             "title": "Name"
           },
+          "region_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Id"
+          },
+          "region_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Name"
+          },
           "lat": {
             "type": "number",
             "maximum": 90.0,
@@ -613,6 +706,13 @@
             },
             "type": "array",
             "title": "Feature Distances"
+          },
+          "dimension_scores": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryDimensionScore"
+            },
+            "type": "array",
+            "title": "Dimension Scores"
           },
           "terrain_valid_fraction": {
             "type": "number",
@@ -695,9 +795,12 @@
         "properties": {
           "engine_version": {
             "type": "string",
-            "const": "discovery-v1",
+            "enum": [
+              "discovery-v1",
+              "discovery-v2"
+            ],
             "title": "Engine Version",
-            "default": "discovery-v1"
+            "default": "discovery-v2"
           },
           "state": {
             "type": "string",
@@ -781,11 +884,74 @@
             "const": "not_assessed",
             "title": "Geology Status",
             "default": "not_assessed"
+          },
+          "measurements": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryContextMeasurement"
+            },
+            "type": "array",
+            "title": "Measurements"
           }
         },
         "additionalProperties": false,
         "type": "object",
         "title": "DiscoveryContext"
+      },
+      "DiscoveryContextMeasurement": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "group": {
+            "type": "string",
+            "title": "Group"
+          },
+          "earth_value": {
+            "type": "number",
+            "title": "Earth Value"
+          },
+          "mars_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mars Value"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "comparable": {
+            "type": "boolean",
+            "title": "Comparable",
+            "default": false
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "feature_id",
+          "label",
+          "group",
+          "earth_value",
+          "unit",
+          "note"
+        ],
+        "title": "DiscoveryContextMeasurement",
+        "description": "An Earth dimension carried for honesty, never for scoring.\n\n`mars_value` is null whenever this release holds no measured Mars counterpart;\nthe UI must present these as differences it cannot rank, not as a match."
       },
       "DiscoveryCriterion": {
         "properties": {
@@ -805,6 +971,21 @@
             "type": "number",
             "exclusiveMinimum": 0.0,
             "title": "Scale"
+          },
+          "group": {
+            "type": "string",
+            "title": "Group",
+            "default": "terrain"
+          },
+          "group_label": {
+            "type": "string",
+            "title": "Group Label",
+            "default": "Terrain and landform"
+          },
+          "rationale": {
+            "type": "string",
+            "title": "Rationale",
+            "default": ""
           }
         },
         "additionalProperties": false,
@@ -816,6 +997,54 @@
           "scale"
         ],
         "title": "DiscoveryCriterion"
+      },
+      "DiscoveryDimensionScore": {
+        "properties": {
+          "group": {
+            "type": "string",
+            "title": "Group"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "feature_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Feature Ids"
+          },
+          "weight_share": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Weight Share"
+          },
+          "distance": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Distance"
+          },
+          "similarity_index": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Similarity Index"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "group",
+          "label",
+          "feature_ids",
+          "weight_share",
+          "distance",
+          "similarity_index"
+        ],
+        "title": "DiscoveryDimensionScore",
+        "description": "Similarity restricted to one dimension group, on the same index as the total."
       },
       "DiscoveryExport": {
         "properties": {
@@ -974,6 +1203,306 @@
         ],
         "title": "DiscoveryNovelty"
       },
+      "DiscoveryProbePlacement": {
+        "properties": {
+          "inside_survey_bounds": {
+            "type": "boolean",
+            "title": "Inside Survey Bounds"
+          },
+          "nearest_survey_candidate_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nearest Survey Candidate Id"
+          },
+          "nearest_survey_candidate_distance_km": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nearest Survey Candidate Distance Km"
+          },
+          "closer_survey_candidates": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closer Survey Candidates"
+          },
+          "eligible_pool_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Eligible Pool Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "inside_survey_bounds",
+          "eligible_pool_count"
+        ],
+        "title": "DiscoveryProbePlacement",
+        "description": "Where the probe sits relative to the survey: geography and, when scored, the pool."
+      },
+      "DiscoveryProbeRequest": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "title": "Run Id"
+          },
+          "reference_id": {
+            "type": "string",
+            "const": "jezero_crater",
+            "title": "Reference Id",
+            "default": "jezero_crater"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "weights": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weights"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "lat",
+          "lon_east"
+        ],
+        "title": "DiscoveryProbeRequest",
+        "description": "One user-chosen Earth point to score with a run's own pipeline and the caller's weights."
+      },
+      "DiscoveryProbeResponse": {
+        "properties": {
+          "engine_version": {
+            "type": "string",
+            "enum": [
+              "discovery-v1",
+              "discovery-v2"
+            ],
+            "title": "Engine Version",
+            "default": "discovery-v2"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/DiscoveryReference"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "scored",
+              "terrain_unavailable",
+              "insufficient_terrain_coverage",
+              "features_unavailable"
+            ],
+            "title": "Status"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "footprint_geojson": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Footprint Geojson"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiscoveryProfile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "effective_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Effective Weights"
+          },
+          "feature_distances": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryFeatureDistance"
+            },
+            "type": "array",
+            "title": "Feature Distances"
+          },
+          "dimension_scores": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryDimensionScore"
+            },
+            "type": "array",
+            "title": "Dimension Scores"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "similarity_index": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity Index"
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiscoveryProbePlacement"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "novelty": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiscoveryNovelty"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          },
+          "computed_at": {
+            "type": "string",
+            "title": "Computed At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "reference",
+          "status",
+          "lat",
+          "lon_east",
+          "effective_weights",
+          "limitations",
+          "computed_at"
+        ],
+        "title": "DiscoveryProbeResponse",
+        "description": "A probe is scored only when every feature the run scores was measured at the point."
+      },
       "DiscoveryProfile": {
         "properties": {
           "measurements": {
@@ -1027,14 +1556,25 @@
             "default": "jezero_crater"
           },
           "weights": {
-            "$ref": "#/components/schemas/DiscoveryWeights"
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weights"
           },
           "top_k": {
             "type": "integer",
-            "maximum": 20.0,
+            "maximum": 40.0,
             "minimum": 1.0,
             "title": "Top K",
-            "default": 5
+            "default": 6
           },
           "client_request_id": {
             "anyOf": [
@@ -1054,15 +1594,19 @@
         "required": [
           "run_id"
         ],
-        "title": "DiscoveryRankRequest"
+        "title": "DiscoveryRankRequest",
+        "description": "Weights name features; the engine rejects any the chosen run does not score."
       },
       "DiscoveryRankResponse": {
         "properties": {
           "engine_version": {
             "type": "string",
-            "const": "discovery-v1",
+            "enum": [
+              "discovery-v1",
+              "discovery-v2"
+            ],
             "title": "Engine Version",
-            "default": "discovery-v1"
+            "default": "discovery-v2"
           },
           "run_id": {
             "type": "string",
@@ -1195,6 +1739,33 @@
           "eligible_count": {
             "type": "integer",
             "title": "Eligible Count"
+          },
+          "region_count": {
+            "type": "integer",
+            "title": "Region Count",
+            "default": 1
+          },
+          "regions": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryCriterion"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "default_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Default Weights"
           }
         },
         "additionalProperties": false,
@@ -1332,6 +1903,22 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Diversification"
+          },
+          "regions": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "context_features": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Context Features"
           }
         },
         "additionalProperties": false,
@@ -1350,25 +1937,6 @@
           "diversification"
         ],
         "title": "DiscoverySurvey"
-      },
-      "DiscoveryWeights": {
-        "properties": {
-          "slope_regional_median_deg": {
-            "type": "number",
-            "minimum": 0.0,
-            "title": "Slope Regional Median Deg",
-            "default": 50
-          },
-          "roughness_regional_m": {
-            "type": "number",
-            "minimum": 0.0,
-            "title": "Roughness Regional M",
-            "default": 50
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "DiscoveryWeights"
       },
       "EvidenceChunk": {
         "properties": {
@@ -1736,13 +2304,18 @@
             "type": "string",
             "enum": [
               "deg",
-              "m"
+              "m",
+              "W/m2",
+              "mm/day"
             ],
             "title": "Unit"
           },
           "measurement_type": {
             "type": "string",
-            "const": "derived",
+            "enum": [
+              "derived",
+              "measured"
+            ],
             "title": "Measurement Type",
             "default": "derived"
           }
@@ -1753,7 +2326,8 @@
           "value",
           "unit"
         ],
-        "title": "TerrainMeasurement"
+        "title": "TerrainMeasurement",
+        "description": "One scored quantity. Units are closed: a new unit is a contract change."
       },
       "ValidationError": {
         "properties": {
