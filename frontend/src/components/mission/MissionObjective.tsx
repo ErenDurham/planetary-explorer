@@ -13,6 +13,7 @@
 // in the box so it can be read and edited; Enter or Save then submits it like
 // any other text. Tab is only intercepted while the box is empty, so keyboard
 // navigation out of a box with text in it is unchanged.
+import { ContourArtwork } from "@/components/atlas/AtlasSurface";
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 import { Pencil, TriangleAlert } from "lucide-react";
@@ -79,7 +80,8 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
   const noModel = missionType === "landing" && submitted && !pending && !composing && appliedSource !== null && appliedSource !== "llm";
 
   return (
-    <div className={`mx-auto w-full px-4 text-center transition-[max-width,padding] duration-500 ease-out ${submitted ? "max-w-3xl pb-5 pt-6" : "max-w-2xl pb-8 pt-[16vh]"}`}>
+    <div data-pane="mission-objective" data-composing={composing} className={`mx-auto w-full px-4 text-center transition-[max-width,padding] duration-500 ease-out ${submitted ? "max-w-3xl pb-5 pt-6" : "max-w-2xl pb-8 pt-[16vh]"}`}>
+      <ContourArtwork />
       <h2 className={`font-semibold tracking-tight text-fg transition-[font-size] duration-500 ${submitted ? "text-3xl" : "text-4xl"}`}>Mission Design</h2>
       {!submitted && <p className="mt-2 text-base text-fg-muted">Tell us what your mission is</p>}
 

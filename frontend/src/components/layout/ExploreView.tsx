@@ -80,7 +80,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
   const destinationLabel = destination === missionBody ? "Mission suitability" : "Analog match";
   const switchBody = (b: Body) => { setView("globe"); navigateExplore(b === missionBody ? "mission" : "analogs", initialMissionId); };
 
-  return <div className="flex h-full min-h-0 flex-col">
+  return <div data-pane="explore" className="flex h-full min-h-0 flex-col">
     <nav aria-label="Explore views" className="shrink-0 border-b border-line bg-bg-elev px-3 py-3">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
       <ExploreModeSwitch className="shrink-0" />

@@ -37,7 +37,7 @@ export function SitePanelShell({
   };
   return (
     <section
-      aria-label="Site information panel"
+      data-pane="site" aria-label="Site information panel"
       className="relative flex h-auto min-h-0 flex-col bg-bg-elev lg:h-full"
     >
       <div

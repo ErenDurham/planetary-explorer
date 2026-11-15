@@ -86,7 +86,7 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
   };
 
   return (
-    <div aria-label="Mission settings" className="mission-panel relative min-h-full bg-bg-elev">
+    <div data-pane="mission" aria-label="Mission settings" className="mission-panel relative min-h-full bg-bg-elev">
       <SpaceDecor openSky={!designed} />
       <MissionObjective submitted={missionText !== null} missionText={missionText ?? ""} pending={pending} canSave={canSave} onSave={(t) => void save(t)} />
       {missionText === null && defaultsError ? (

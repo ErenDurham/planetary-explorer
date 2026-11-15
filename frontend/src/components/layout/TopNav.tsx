@@ -11,7 +11,7 @@ const TABS: Array<{ id: Tab; label: string; hint: string }> = [
 
 export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t: Tab) => void; right?: React.ReactNode }) {
   return (
-    <header className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-bg-elev px-4 py-2 sm:h-12 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:py-0">
+    <header data-pane="navigation" className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-bg-elev px-4 py-2 sm:h-12 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:py-0">
       <div className="flex min-w-0 items-center gap-3">
         <span className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-semibold tracking-tight text-fg">
           <Orbit className="h-4 w-4 text-copper-bright" aria-hidden />

@@ -32,3 +32,6 @@ backend/data/discovery/research/
 frontend/public/pages-data/
 
 work-pages-dist/
+
+# Local agent worktrees (separate Git checkouts)
+.claude/worktrees/
