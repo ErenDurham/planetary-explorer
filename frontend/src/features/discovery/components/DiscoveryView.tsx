@@ -20,7 +20,7 @@ import { useDiscoveryCandidate } from "../hooks/useDiscoveryCandidate";
 import { useDiscoveryStore, useRunState } from "../store/useDiscoveryStore";
 import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
 import { wantsDiscovery } from "../lib/objective";
-import { extentKm, formatPoint } from "../lib/geo";
+import { extentKm } from "../lib/geo";
 import { DiscoveryStage } from "./DiscoveryStage";
 import { DiscoveryCandidateList } from "./DiscoveryCandidateList";
 import { DiscoveryPanel } from "./DiscoveryPanel";
@@ -142,7 +142,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
 
   return (
     <div className="grid h-full grid-cols-1 overflow-y-auto lg:grid-cols-[250px_minmax(0,1fr)_var(--discovery-panel-width)] lg:overflow-hidden" style={{ "--discovery-panel-width": `${width}px` } as CSSProperties} data-testid="discovery-view">
-      <aside id="discovery-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 hidden h-full min-h-0 overflow-hidden border-r border-line bg-bg-elev lg:order-1 lg:block">
+      <aside id="discovery-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 max-h-[45vh] min-h-0 overflow-hidden border-b border-line bg-bg-elev lg:order-1 lg:max-h-none lg:h-full lg:border-b-0 lg:border-r">
         <DiscoveryCandidateList
           candidates={candidates}
           evaluated={evaluated}
@@ -157,7 +157,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           weights={weights}
         />
       </aside>
-      <div className="relative order-1 h-[72vh] min-h-[320px] lg:order-2 lg:h-full">
+      <div className="relative order-1 lg:order-2 lg:h-full">
         <DiscoveryStage
           badge={badge}
           title={`Find Earth terrain resembling ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
@@ -169,14 +169,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           view={store.view}
           onView={store.setView}
           viewEnabled={ready}
-          mobile={candidates && candidates.length > 0 ? (
-            <label className="flex items-center gap-1 text-xs text-fg-muted lg:hidden">Candidate
-              <select value={run.selectedCandidateId ?? ""} onChange={e => store.selectCandidate(e.target.value || null)} aria-label="Candidate" className="min-w-0 rounded border border-line-strong bg-bg px-2 py-1 text-xs text-fg">
-                <option value="">None selected</option>
-                {candidates.map(c => <option key={c.id} value={c.id}>{c.display_rank ?? "—"}. {formatPoint(c.lat, c.lon_east)} · {c.similarity_index?.toFixed(1) ?? "—"}</option>)}
-              </select>
-            </label>
-          ) : null}
+          mobile={null}
           caption={caption}
         >
           {body}

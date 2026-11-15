@@ -18,6 +18,13 @@ vi.mock("@/components/globe/PlanetViewer", () => ({
 
 import App from "./App";
 
+/** Mission Design, Analyze and Compare live behind the Advanced menu in the primary navigation. */
+function openAdvanced(label: string) {
+  fireEvent.click(screen.getByTestId("advanced-nav"));
+  fireEvent.click(screen.getByRole("menuitem", { name: new RegExp(`^${label}`) }));
+}
+
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 
 let evaluateCalls: Array<{ client_request_id: string | null | undefined }> = [];
@@ -51,7 +58,7 @@ async function renderApp() {
       <App />
     </QueryClientProvider>,
   );
-  fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
+  openAdvanced("Mission Design");
   // the tab opens on the chat box; saving a mission brings in the sliders.
   // No priority keyword matches this text, so the seeded shares are kept.
   const box = screen.getByLabelText("Your mission objective");
@@ -100,7 +107,7 @@ describe("App", () => {
     useAppStore.setState({viewedBody:"earth"});
     fireEvent.click(start);
     expect(useAppStore.getState()).toMatchObject({activeTab: "explore", exploreMode: "browse",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
-    fireEvent.click(screen.getByRole("button", {name:"Mission Design"}));
+    openAdvanced("Mission Design");
     fireEvent.click(screen.getByRole("button", {name:/Edit Mission/}));
     fireEvent.change(screen.getByLabelText("Your mission objective"), {target:{value:"An unapplied objective"}});
     expect(screen.getByRole("button", {name:"Head to explore mission →"})).toBeDisabled();
@@ -109,7 +116,7 @@ describe("App", () => {
   it("keeps the Mission Design tab to the chat box alone until a mission is saved", () => {
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
-    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
+    openAdvanced("Mission Design");
     expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Head to explore mission →" })).toBeNull();
     expect(document.querySelector("div.absolute.inset-0.z-\\[60\\]")).toHaveClass("hidden"); // Astro overlay

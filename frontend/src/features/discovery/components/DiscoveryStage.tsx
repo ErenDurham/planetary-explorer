@@ -3,7 +3,7 @@
 // mission link), then a facts bar about the survey, then the globe or the
 // schematic survey map. It is a layout shell; DiscoveryView supplies every
 // value so nothing here can invent one.
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Globe2, Map as MapIcon } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { ExploreModeSwitch } from "./ExploreModeSwitch";
@@ -27,6 +27,8 @@ export function DiscoveryStage({ badge, title, lede, stats, facts, view, onView,
   children: ReactNode;
 }) {
   const setActiveTab = useAppStore(s => s.setActiveTab);
+  // phones: the list and the evidence come first; the map is one tap away
+  const [mapOnPhone, setMapOnPhone] = useState(false);
   return (
     <div className="flex h-full min-h-0 flex-col">
       <nav aria-label="Explore views" className="shrink-0 border-b border-line bg-bg-elev px-3 py-3">
@@ -42,12 +44,13 @@ export function DiscoveryStage({ badge, title, lede, stats, facts, view, onView,
               </button>
             ))}
           </div>
+          <button type="button" onClick={() => setMapOnPhone(v => !v)} aria-expanded={mapOnPhone} aria-controls="discovery-stage-body" className="rounded border border-line-strong px-2.5 py-1.5 text-xs text-fg lg:hidden" data-testid="phone-map-toggle">{mapOnPhone ? "Hide map" : "Show map"}</button>
           {mobile}
           <button type="button" onClick={() => setActiveTab("mission")} className="ml-auto text-xs text-fg-muted underline underline-offset-4">Edit mission</button>
         </div>
       </nav>
       {(facts || caption) && <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="survey-context">{facts}{caption && <p className="mt-1 text-[10.5px] leading-relaxed text-fg-faint">{caption}</p>}</div>}
-      <div className="relative min-h-0 flex-1">{children}</div>
+      <div id="discovery-stage-body" className={`relative min-h-0 flex-1 ${mapOnPhone ? "h-[60vh]" : "hidden"} lg:block lg:h-auto`}>{children}</div>
     </div>
   );
 }

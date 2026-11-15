@@ -19,6 +19,13 @@ vi.mock("@/components/globe/PlanetViewer", () => ({
 
 import App from "./App";
 
+/** Mission Design, Analyze and Compare live behind the Advanced menu in the primary navigation. */
+function openAdvanced(label: string) {
+  fireEvent.click(screen.getByTestId("advanced-nav"));
+  fireEvent.click(screen.getByRole("menuitem", { name: new RegExp(`^${label}`) }));
+}
+
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 const sitesFixture = { planet: "mars", sites: fixture.evaluate.results.map((r) => ({ ...fixture.site.site, id: r.site_id, name: r.site_name })), profile_version: "v1" };
 const earthIds = (catalog as { locations: Array<{ id: string; body: string }> }).locations.filter((l) => l.body === "earth").map((l) => l.id);
@@ -94,7 +101,7 @@ describe("Earth and Mars markers", () => {
   });
   it("explicit Earth focus opens scored mission profiles, then ranks Mars analogs against the Earth selection", async () => {
     renderApp();
-    fireEvent.click(screen.getByRole("button",{name:"Mission Design"}));
+    openAdvanced("Mission Design");
     // the tab opens on the chat box alone; Mission focus appears once a mission is saved
     const box=screen.getByLabelText("Your mission objective");
     fireEvent.change(box,{target:{value:"Test a rover on Earth terrain"}});
