@@ -19,6 +19,13 @@ vi.mock("@/components/globe/PlanetViewer", () => ({
 
 import App from "./App";
 
+/** Mission Design, Analyze and Compare live behind the Advanced menu in the primary navigation. */
+function openAdvanced(label: string) {
+  fireEvent.click(screen.getByTestId("advanced-nav"));
+  fireEvent.click(screen.getByRole("menuitem", { name: new RegExp(`^${label}`) }));
+}
+
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 const sitesFixture = { planet: "mars", sites: fixture.evaluate.results.map((r) => ({ ...fixture.site.site, id: r.site_id, name: r.site_name })), profile_version: "v1" };
 const earthIds = (catalog as { locations: Array<{ id: string; body: string }> }).locations.filter((l) => l.body === "earth").map((l) => l.id);
@@ -48,7 +55,7 @@ function rankResponse(body: Record<string, unknown>) {
 beforeEach(() => {
   useAppStore.setState(useAppStore.getInitialState(), true);
   rankCalls = [];
-  useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars", mapMode: "landing_suitability", followObjective: true, activeTab: "explore", suggestedSelection: null, missionDesigned: true });   // past the first-run Mission Design prompt
+  useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars", mapMode: "landing_suitability", followObjective: true, activeTab: "explore", exploreMode: "browse", missionDesigned: true, suggestedSelection: null });
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const url = String(input);
     if (url.endsWith("/api/v1/health")) return json({ status: "ok", version: "0.1.0", profile_version: "v1", scoring_spec_version: "landing-v1.0", services: { data: "ok", retrieval: "unavailable", llm: "unconfigured" } });
@@ -94,7 +101,7 @@ describe("Earth and Mars markers", () => {
   });
   it("explicit Earth focus opens scored mission profiles, then ranks Mars analogs against the Earth selection", async () => {
     renderApp();
-    fireEvent.click(screen.getByRole("button",{name:"Mission Design"}));
+    openAdvanced("Mission Design");
     // the tab opens on the chat box alone; Mission focus appears once a mission is saved
     const box=screen.getByLabelText("Your mission objective");
     fireEvent.change(box,{target:{value:"Test a rover on Earth terrain"}});

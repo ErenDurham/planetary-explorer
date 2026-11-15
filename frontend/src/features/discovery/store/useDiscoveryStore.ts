@@ -11,6 +11,8 @@ interface RunState {
   /** The user asked for this run to be ranked (ranking is never automatic on load). */
   ranked: boolean;
   selectedCandidateId: string | null;
+  /** The first result was selected once when the first ranking arrived; never repeated, so a cleared or changed selection stays. */
+  autoSelected: boolean;
 }
 
 interface DiscoveryState {
@@ -31,9 +33,11 @@ interface DiscoveryState {
   setView: (v: DiscoveryMapView) => void;
   requestRank: () => void;
   selectCandidate: (id: string | null) => void;
+  /** Select the first result once per run; a no-op when something is already selected or it has run before. */
+  autoSelectFirst: (id: string) => void;
 }
 
-const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null };
+const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null, autoSelected: false };
 
 export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   runId: null,
@@ -54,7 +58,8 @@ export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   setTopK: (n) => set({ topK: clampTopK(n) }),
   setView: (view) => set({ view }),
   requestRank: () => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), ranked: true } } })); },
-  selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ selectionRevision: id ? s.selectionRevision + 1 : s.selectionRevision, runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id } } })); },
+  selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ selectionRevision: id ? s.selectionRevision + 1 : s.selectionRevision, runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id, autoSelected: true } } })); },
+  autoSelectFirst: (id) => { const { runId } = get(); if (!runId) return; set((s) => { const r = s.runs[runId] ?? EMPTY_RUN; if (r.autoSelected || r.selectedCandidateId) return {}; return { selectionRevision: s.selectionRevision + 1, runs: { ...s.runs, [runId]: { ...r, selectedCandidateId: id, autoSelected: true } } }; }); },
 }));
 
 export function useRunState(): RunState {

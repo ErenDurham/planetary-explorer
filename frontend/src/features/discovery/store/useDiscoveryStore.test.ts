@@ -8,9 +8,9 @@ describe("discovery store", () => {
     const s = useDiscoveryStore.getState();
     useAppStore.setState({ selectedEarthId: "atacama_yungay" });
     s.setRun("r1"); s.requestRank(); s.selectCandidate("c1");
-    expect(useDiscoveryStore.getState().runs.r1).toEqual({ ranked: true, selectedCandidateId: "c1" });
+    expect(useDiscoveryStore.getState().runs.r1).toEqual({ ranked: true, selectedCandidateId: "c1", autoSelected: true });
     s.setRun("r2");
-    expect(useDiscoveryStore.getState().runs.r2).toEqual({ ranked: false, selectedCandidateId: null });
+    expect(useDiscoveryStore.getState().runs.r2).toEqual({ ranked: false, selectedCandidateId: null, autoSelected: false });
     expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
   });
   it("seeds defaults from capabilities without overwriting an edited weight", () => {

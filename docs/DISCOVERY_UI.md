@@ -12,6 +12,44 @@ two-feature terrain index, and never writes to the curated selection. It is reac
 from a Mars region's detail panel ("Find Earth analogs", enabled for the service's reference region),
 from the Earth analog bar in Browse Regions, and from the Research page's candidate panel.
 
+## The journey (as of 2026-11-15)
+
+Explore opens on **Find Earth Analogs** for the supported Jezero pilot; no mission design or
+weight editing is needed first. The stage heading is "Find Earth terrain resembling Jezero." with a
+one-sentence scope line bound to the run and the response (footprints sampled, area and size,
+reference, the two features compared, results shown; "a bounded pilot, not a global search").
+Browse Regions is the labelled secondary mode for the established analogs and mission scoring.
+The first result is selected once when the first ranking arrives, never over an explicit or cleared
+selection and never again on re-ranking (`useDiscoveryStore.autoSelectFirst`).
+
+The primary navigation is **Explore** and **Research**; Mission Design, Analyze and Compare are
+behind an **Advanced** menu in `TopNav` (which also names whichever of them is open), and Compare
+stays contextual in Explore. On phones the discovery workspace orders the stage header, the
+candidate list, then the evidence panel, with the globe or map behind a **Show map** toggle; the
+whole journey works with keyboard alone (list rows are buttons; the globe is never required).
+
+Research (`CandidateResearchPanel`) opens with **Back to this candidate in Explore** and the
+ranking context the candidate arrived with (rank of returned count, index, weights, from this
+session's cached ranking), then the notebook, the research checklist and prepared searches, the
+downloadable brief, and only then the background passages. Drafts live in
+`useCandidateResearchTarget` keyed by run and candidate, so leaving the tab or re-ranking never
+loses them; an unsaved draft is marked, can be discarded, warns before unload, and a failed save
+keeps it and says nothing was saved. Each status is explained in `RESEARCH_STATUS_MEANING`; status
+changes only on an explicit save under the backend's rule.
+
+**Download research brief** (`lib/researchBrief.ts`) writes one Markdown file from responses
+already loaded: candidate, reference and run, ranking settings and measurements, the factor table,
+the catalog-relative statement, what was not compared, notes, cited findings with contradictions
+listed separately, open questions, sources, background passages labelled as such, and limitations.
+Unsaved edits are included and the file is marked DRAFT. The JSON audit export is unchanged;
+neither path calls save.
+
+Screenshots: `docs/screenshots/discovery-journey-{explore,research,phone,pages-restored}.jpg`
+(the last one is the GitHub Pages build after a reload, with saved notes restored from browser
+storage). `features/discovery/journey.test.tsx` covers default results → selection → research →
+save → return with status → export, re-ranking with an explicit selection, a draft surviving the
+round trip, a listed survey whose artifacts are missing, a failed save, and the Advanced menu.
+
 ## Layout
 
 Find Earth Analogs uses the same three-column workspace as Browse Regions, drawn by
@@ -21,7 +59,7 @@ Find Earth Analogs uses the same three-column workspace as Browse Regions, drawn
 |---|---|---|
 | left, 250px | `DiscoveryCandidateList` | one compact row per presented candidate (rank badge in its rank colour, coordinates, the server name, the index, the catalog-relation and research chips), then `WeightControls` and `ExportPanel` |
 | centre | `DiscoveryStage` | the Explore chrome (mode switch, heading, lede, the four headline counts, a **Globe / Survey map** toggle, Edit mission), a facts bar (`SurveyPicker`, "Earth was not searched globally", the reference, the established-analogs link, a caption for the current view), then `DiscoveryGlobe` or `SurveyMap` |
-| right, resizable | `DiscoveryPanel` inside `SitePanelShell` ("Candidate details") | `DiscoverySurveyPanel` until a candidate is chosen, then `CandidateDetail`; scrolls to the top and flashes on each new selection |
+| right, resizable | `DiscoveryPanel` inside `SitePanelShell` ("Candidate details") | `DiscoverySurveyPanel` when nothing is selected, otherwise `CandidateDetail`: What matches, What differs, What we still need to investigate, then Methods and data disclosures; scrolls to the top and flashes on each new selection |
 
 Selection lives in `useDiscoveryStore` (per-run `selectedCandidateId` plus a `selectionRevision`
 the globe reads as its focus token) and never touches `selectedEarthId`. A click in the list, on a

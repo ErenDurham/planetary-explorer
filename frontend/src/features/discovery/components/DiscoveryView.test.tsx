@@ -3,7 +3,7 @@
 // evidence panel). Also that discovery selections never touch the curated
 // analog selection, and that the Explore page points at this view.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -43,8 +43,7 @@ describe("DiscoveryView", () => {
     setDiscoveryService(svc);
     mount();
     expect(await screen.findByText("Survey installed · discovery-v1")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Find Earth regions with terrain similar to Jezero Crater" })).toBeInTheDocument();
-    expect(screen.getByText(/promising starting points for research, not confirmed planetary analogs/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Find Earth terrain resembling Jezero." })).toBeInTheDocument();
     expect(screen.getByText(/Your mission objective asks for new regions/)).toBeInTheDocument();
     expect(screen.getByRole("radiogroup", { name: "Explore mode" })).toBeInTheDocument();
     // the one installed survey is named, the area searched is stated, and ranking starts on its own
@@ -52,6 +51,8 @@ describe("DiscoveryView", () => {
     expect(screen.getByText(/Earth was not searched globally/)).toBeInTheDocument();
     const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
     expect(svc.calls).toHaveLength(1);
+    // the scope line is bound to the run and the response: sampled count, area, reference, features, results shown
+    expect(screen.getByText(/A bounded pilot, not a global search: 16 footprints sampled across Eastern Morocco pilot \(about 95 × 111 km\), compared with Jezero Crater on regional slope and relief, 3 spatially separated results shown\. Candidates for research, not confirmed analogs\./)).toBeInTheDocument();
     expect(svc.calls[0]).toMatchObject({ run_id: run.run_id, reference_id: "jezero_crater", top_k: 5, weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 } });
     // headline numbers bound to the response: evaluated, presented, footprint, resolution
     const stats = screen.getByTestId("survey-stats");
@@ -67,11 +68,19 @@ describe("DiscoveryView", () => {
     expect(first).toHaveTextContent(/Not near a catalog location/);
     expect(first.textContent).not.toMatch(/Outside catalog buffer/);
     expect(screen.getByRole("heading", { name: /Candidates · 3/ })).toBeInTheDocument();
-    // before any selection the evidence panel explains the survey rather than sitting blank
+    // the first result is selected once on arrival, so the evidence panel is never blank; clearing it shows the survey overview
     const panel = screen.getByTestId("discovery-panel");
+    expect(within(list).getByRole("button", { name: /Rank 1.*Footprint c_31_25_m2_75/ })).toHaveAttribute("aria-pressed", "true");
+    expect(within(panel).getByRole("article", { name: /Candidate evidence: Footprint c_31_25_m2_75/ })).toBeInTheDocument();
+    act(() => useDiscoveryStore.getState().selectCandidate(null));
     expect(panel).toHaveTextContent(/Select a candidate on the globe or in the list/);
     expect(panel).toHaveTextContent(/Reference region.*Jezero Crater · Mars/);
     expect(panel).toHaveTextContent(/How the index is calculated/);
+    // a cleared selection stays cleared across a re-render and a re-ranking (auto-select runs once per run)
+    fireEvent.change(screen.getByRole("spinbutton", { name: "Shortlist size" }), { target: { value: "4" } });
+    await waitFor(() => expect(svc.calls).toHaveLength(2));
+    await screen.findByRole("list", { name: "Ranked proposed candidates" });
+    expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBeNull();
     // survey boundary, sampling coverage, footprints, established site in view, counts
     expect(screen.getByTestId("survey-boundary")).toBeInTheDocument();
     expect(screen.getAllByTestId("sampling-centre")).toHaveLength(16);
@@ -103,10 +112,10 @@ describe("DiscoveryView", () => {
     expect(card.textContent).not.toMatch(/unknown to science|validated analog|safe to|accessible/i);
     // the curated selection is untouched
     expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
-    // re-weight: new request keyed on the new weights; the fake reverses the order when relief dominates
+    // re-weight: new request keyed on the new weights; the fake reverses the order when relief dominates; the explicit selection survives
     fireEvent.change(screen.getByRole("slider", { name: /Detrended regional relief weight share/ }), { target: { value: "80" } });
-    await waitFor(() => expect(svc.calls).toHaveLength(2));
-    expect(svc.calls[1].weights).toEqual({ slope_regional_median_deg: 20, roughness_regional_m: 80 });
+    await waitFor(() => expect(svc.calls).toHaveLength(3));
+    expect(svc.calls[2].weights).toEqual({ slope_regional_median_deg: 20, roughness_regional_m: 80 });
     await waitFor(() => expect(within(screen.getByRole("list", { name: "Ranked proposed candidates" })).getByRole("article", { name: /Rank 1: Footprint c_31_25_m2_25/ })).toBeInTheDocument());
     // the selected candidate's detail follows the new rank response
     expect(screen.getByRole("article", { name: /Candidate evidence/ })).toHaveTextContent("Rank 2");
@@ -169,6 +178,7 @@ describe("DiscoveryView", () => {
     // the footprints, bounds and centres are drawn on the sphere and selection flies in close
     expect(globe).toHaveTextContent(/overlays drawn/);
     expect(globe).toHaveTextContent(/focus 1\.1/);
+    act(() => useDiscoveryStore.getState().selectCandidate(null));
     const before = useDiscoveryStore.getState().selectionRevision;
     fireEvent.click(within(globe).getByRole("button", { name: "Footprint c_31_25_m2_75" }));
     expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBe("c_31_25_m2_75");
@@ -176,7 +186,7 @@ describe("DiscoveryView", () => {
     // the list row and the panel follow the globe click
     expect(within(screen.getByRole("list", { name: "Ranked proposed candidates" })).getByRole("button", { name: /Footprint c_31_25_m2_75/ })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("article", { name: /Candidate evidence: Footprint c_31_25_m2_75/ })).toBeInTheDocument();
-    fireEvent.click(within(globe).getByRole("button", { name: /Atacama Desert - Yungay region \(established analog\)/ }));
+    fireEvent.click(within(globe).getByRole("button", { name: /Atacama Desert - Yungay region \(catalog context site, not a candidate\)/ }));
     expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBe("c_31_25_m2_75");
     expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
   });

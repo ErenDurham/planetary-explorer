@@ -317,7 +317,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   navigateExplore: (stage, initialMissionId) => set(s => {
     const body = stage === "mission" ? s.selectionBody : otherBody(s.selectionBody);
     const id = selectedIdFor(s, s.selectionBody) ?? initialMissionId;
-    return { activeTab: "explore", exploreStage: stage, viewedBody: body, followObjective: stage === "mission",
+    return { activeTab: "explore", exploreMode: "browse" as ExploreMode, exploreStage: stage, viewedBody: body, followObjective: stage === "mission",
       mapMode: stage === "mission" ? missionViewMode(s.selectionBody,s.missionType) : "analog_match",
       ...(id ? s.selectionBody === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id } : {}),
       exploreRevision: s.exploreRevision + 1, selectionRevision: s.selectionRevision + 1, autoRotate: false };
@@ -355,7 +355,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   setComparison: (patch) => set(s => ({ comparison: { ...s.comparison, ...patch } })),
   activeTab: "explore",
   setActiveTab: (tab) => set({ activeTab: tab }),
-  exploreMode: "browse",
+  // Explore opens on the supported discovery pilot; Browse Regions (established analogs, mission scoring) is the secondary mode
+  exploreMode: "find_analogs",
   setExploreMode: (exploreMode) => set({ exploreMode }),
   openFindAnalogs: () => set({ activeTab: "explore", exploreMode: "find_analogs" }),
 

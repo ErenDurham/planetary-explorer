@@ -18,6 +18,13 @@ vi.mock("@/components/globe/PlanetViewer", () => ({
 
 import App from "./App";
 
+/** Mission Design, Analyze and Compare live behind the Advanced menu in the primary navigation. */
+function openAdvanced(label: string) {
+  fireEvent.click(screen.getByTestId("advanced-nav"));
+  fireEvent.click(screen.getByRole("menuitem", { name: new RegExp(`^${label}`) }));
+}
+
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 
 let evaluateCalls: Array<{ client_request_id: string | null | undefined }> = [];
@@ -51,7 +58,7 @@ async function renderApp() {
       <App />
     </QueryClientProvider>,
   );
-  fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
+  openAdvanced("Mission Design");
   // the tab opens on the chat box; saving a mission brings in the sliders.
   // No priority keyword matches this text, so the seeded shares are kept.
   const box = screen.getByLabelText("Your mission objective");
@@ -65,7 +72,7 @@ describe("App", () => {
   beforeEach(() => {
     evaluateCalls = [];
     interpretCalls = [];
-    useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore", missionDesigned: false, missionDraftDirty: false });
+    useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore", exploreMode: "browse", missionDesigned: false, missionDraftDirty: false });
     mockFetch();
   });
   afterEach(() => vi.restoreAllMocks());
@@ -99,8 +106,8 @@ describe("App", () => {
     await waitFor(() => expect(start).toBeEnabled());
     useAppStore.setState({viewedBody:"earth"});
     fireEvent.click(start);
-    expect(useAppStore.getState()).toMatchObject({activeTab:"explore",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
-    fireEvent.click(screen.getByRole("button", {name:"Mission Design"}));
+    expect(useAppStore.getState()).toMatchObject({activeTab: "explore", exploreMode: "browse",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
+    openAdvanced("Mission Design");
     fireEvent.click(screen.getByRole("button", {name:/Edit Mission/}));
     fireEvent.change(screen.getByLabelText("Your mission objective"), {target:{value:"An unapplied objective"}});
     expect(screen.getByRole("button", {name:"Head to explore mission →"})).toBeDisabled();
@@ -109,7 +116,7 @@ describe("App", () => {
   it("keeps the Mission Design tab to the chat box alone until a mission is saved", () => {
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
-    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
+    openAdvanced("Mission Design");
     expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Head to explore mission →" })).toBeNull();
     expect(document.querySelector("div.absolute.inset-0.z-\\[60\\]")).toHaveClass("hidden"); // Astro overlay
@@ -146,43 +153,24 @@ describe("App", () => {
     expect(await screen.findByRole("heading", {name:"Mission suitability"})).toBeInTheDocument();
   });
 
-  it("opens on Explore and, until a mission is designed, any click asks for a Mission Design first", async () => {
-    useAppStore.setState(useAppStore.getInitialState(), true);   // a real first open
+  it("opens directly in discovery without requiring mission design and keeps advanced tools reachable", async () => {
+    useAppStore.setState(useAppStore.getInitialState(), true);
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
     expect(useAppStore.getState().activeTab).toBe("explore");
-    // the first screen is the rotating Earth, before the startup reading has returned
-    expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-planet", "earth");
-    expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-rotating", "true");
-    expect(screen.getByRole("button", { name: "Expand site panel" })).toBeInTheDocument();   // site pane collapsed
-    expect(screen.queryByRole("dialog")).toBeNull();          // nothing pops up until the user clicks
-    fireEvent.click(screen.getByRole("button", { name: "Analyze" }));
-    const gate = screen.getByRole("dialog", { name: "Try Entering a Mission Design before getting started!" });
-    expect(useAppStore.getState().activeTab).toBe("explore");  // the click did not act
-    fireEvent.keyDown(window, { key: "Escape" });
-    expect(screen.queryByRole("dialog")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Compare" }));
-    fireEvent.click(screen.getByRole("button", { name: "Close" }));   // the X closes it too
-    expect(screen.queryByRole("dialog")).toBeNull();
-    expect(useAppStore.getState().activeTab).toBe("explore");
-    fireEvent.pointerDown(screen.getByTestId("globe-stub"));
-    expect(screen.getByTestId("mission-gate")).toBeInTheDocument();
-    expect(gate).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Go to Mission Design" }));
+    expect(useAppStore.getState().exploreMode).toBe("find_analogs");
+    fireEvent.click(screen.getByRole("button", {name:"Research"}));
+    expect(screen.queryByTestId("mission-gate")).toBeNull();
+    openAdvanced("Mission Design");
     expect(useAppStore.getState().activeTab).toBe("mission");
-    expect(screen.queryByRole("dialog")).toBeNull();
-    // the Mission Design tab itself is never blocked
-    useAppStore.setState({ activeTab: "explore" });
-    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
-    expect(useAppStore.getState().activeTab).toBe("mission");
-    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.queryByTestId("mission-gate")).toBeNull();
   });
 
   it("never asks once a mission is designed", async () => {
     useAppStore.setState({ missionDesigned: true });
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
-    fireEvent.click(screen.getByRole("button", { name: "Analyze" }));
+    openAdvanced("Analyze");
     expect(useAppStore.getState().activeTab).toBe("analyze");
     expect(screen.queryByRole("dialog")).toBeNull();
   });

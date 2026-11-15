@@ -3,7 +3,7 @@
 // mission link), then a facts bar about the survey, then the globe or the
 // schematic survey map. It is a layout shell; DiscoveryView supplies every
 // value so nothing here can invent one.
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Globe2, Map as MapIcon } from "lucide-react";
 import { ExploreModeSwitch } from "./ExploreModeSwitch";
 import type { DiscoveryMapView } from "../store/useDiscoveryStore";
@@ -25,6 +25,8 @@ export function DiscoveryStage({ badge, title, lede, stats, facts, view, onView,
   caption?: ReactNode;
   children: ReactNode;
 }) {
+  // phones: the list and the evidence come first; the map is one tap away
+  const [mapOnPhone, setMapOnPhone] = useState(false);
   return (
     <div className="flex h-full min-h-0 flex-col">
       <nav aria-label="Explore views" className="shrink-0 border-b border-line bg-bg-elev px-3 py-3">
@@ -40,11 +42,12 @@ export function DiscoveryStage({ badge, title, lede, stats, facts, view, onView,
               </button>
             ))}
           </div>
+          <button type="button" onClick={() => setMapOnPhone(v => !v)} aria-expanded={mapOnPhone} aria-controls="discovery-stage-body" className="rounded border border-line-strong px-2.5 py-1.5 text-xs text-fg lg:hidden" data-testid="phone-map-toggle">{mapOnPhone ? "Hide map" : "Show map"}</button>
           {mobile}
         </div>
       </nav>
-      {(facts || caption) && <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="survey-context">{facts}{caption && <p className="mt-1 text-[10.5px] leading-relaxed text-fg-faint">{caption}</p>}</div>}
-      <div className="relative min-h-0 flex-1">{children}</div>
+      {(facts || caption) && <div className="hidden shrink-0 border-b border-line px-3 py-2 text-xs lg:block" data-testid="survey-context">{facts}{caption && <p className="mt-1 text-[10.5px] leading-relaxed text-fg-faint">{caption}</p>}</div>}
+      <div id="discovery-stage-body" className={`relative min-h-0 flex-1 ${mapOnPhone ? "h-[60vh]" : "hidden"} lg:block lg:h-auto`}>{children}</div>
     </div>
   );
 }

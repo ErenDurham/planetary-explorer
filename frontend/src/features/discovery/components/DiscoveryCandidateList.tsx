@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { NOT_RANKED_COLOR, rankColor, rankPosition, type RankPalette } from "@/lib/rankColor";
 import type { Shares } from "@/lib/allocation";
-import { noveltyRelation } from "../lib/copy";
+import { PROPOSED_LABEL, noveltyRelation } from "../lib/copy";
 import { formatPoint } from "../lib/geo";
 import { ResearchStatusBadge } from "./ResearchStatusBadge";
 import { WeightControls } from "./WeightControls";
@@ -42,6 +42,8 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
           <h2 id="candidate-list" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-muted">Candidates · {candidates ? n : "—"}</h2>
           {pending ? <span role="status" className="text-[10.5px] text-copper-bright">Re-ranking…</span> : candidates && evaluated != null ? <span className="num text-[10.5px] text-fg-faint">{n} of {evaluated} evaluated</span> : null}
         </div>
+        <p className="mt-1 text-[10.5px] leading-snug text-fg-faint">{PROPOSED_LABEL}</p>
+        {candidates && n > 0 && <p className="mt-1 text-[10.5px] leading-snug text-fg-faint">Index: terrain similarity to the reference on slope and relief, 0–100. Not a probability.</p>}
         {error ? <div className="mt-3">{error}</div>
           : !candidates ? <div className="mt-3">{status}</div>
           : n === 0 ? <p className="mt-3 rounded-lg border border-dashed border-line px-3 py-2 text-xs text-fg-muted">No footprint in this survey passed screening, so there is nothing to rank. The survey coverage section in the panel lists why each sampled footprint was excluded.</p>
@@ -56,14 +58,14 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
                     <article aria-label={`Rank ${c.display_rank ?? "—"}: ${c.name}, similarity index ${c.similarity_index?.toFixed(1) ?? "not ranked"}`}>
                       <button type="button" onClick={() => onSelect(c.id)} aria-pressed={sel} className={`w-full rounded-lg border px-2.5 py-2 text-left transition-colors ${sel ? "border-copper bg-copper/10" : "border-transparent hover:border-line-strong"}`}>
                         <span className="flex items-start gap-2.5">
-                          <span className="num mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-black" style={{ background: color }} aria-hidden>{c.display_rank ?? "—"}</span>
+                          <span className="num mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-black" style={{ background: color }} aria-label={`Rank ${c.display_rank ?? "unranked"}`}>{c.display_rank ?? "—"}</span>
                           <span className="min-w-0 flex-1">
                             <span className="num block text-[11px] leading-tight text-fg">{formatPoint(c.lat, c.lon_east)}</span>
                             <span className="block truncate text-[10.5px] text-fg-muted">{c.name}</span>
+                            <span className="mt-1 flex flex-wrap items-center gap-1"><Badge tone={nov.tone}>{nov.label}</Badge><ResearchStatusBadge status={c.research_status} /></span>
                           </span>
-                          <span className="num shrink-0 text-right text-xs text-copper-bright">{c.similarity_index != null ? c.similarity_index.toFixed(1) : "—"}<span className="ml-0.5 text-[9px] text-fg-faint">/100</span></span>
                         </span>
-                        <span className="mt-1.5 flex flex-wrap items-center gap-1"><Badge tone={nov.tone}>{nov.label}</Badge><ResearchStatusBadge status={c.research_status} /></span>
+                        <span className="num mt-1.5 block text-[10.5px] text-fg-muted" title="Two-feature terrain similarity index (slope and relief), 0 to 100. Not a probability.">index <span className="text-copper-bright">{c.similarity_index != null ? c.similarity_index.toFixed(1) : "—"}</span> / 100</span>
                       </button>
                     </article>
                   </li>

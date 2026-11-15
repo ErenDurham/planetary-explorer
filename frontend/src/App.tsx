@@ -97,9 +97,10 @@ export default function App() {
   // site is selected, collapsed while nothing is. The user can still toggle it.
   useEffect(() => { if (sitePanelWidth !== COLLAPSED_SITE_WIDTH) openPanelWidth.current = sitePanelWidth; }, [sitePanelWidth]);
   useEffect(() => { setSitePanelWidth(selectedId ? openPanelWidth.current : COLLAPSED_SITE_WIDTH); }, [selectedId]);
-  // Until a mission is designed, any click outside Mission Design opens the
-  // "enter a mission design first" prompt instead of acting (the globe keeps rotating).
-  const gated = !missionDesigned && activeTab !== "mission";
+  // Mission tools retain their first-run prompt; discovery and candidate research
+  // are usable immediately without designing a mission.
+  const discoveryResearch = activeTab === "research" && candidateResearchTarget != null;
+  const gated = !missionDesigned && activeTab !== "mission" && !findAnalogs && !discoveryResearch;
   const gate = (e: React.SyntheticEvent) => {
     if (!gated) return;
     if ((e.target as Element | null)?.closest?.("[data-gate-allow]")) return;
