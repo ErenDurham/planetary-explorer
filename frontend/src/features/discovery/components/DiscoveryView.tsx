@@ -145,7 +145,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const weights = ready ? { shares: store.weights, defaults: store.defaultWeights, criteria, onChange: store.setWeight, onReset: store.resetWeights, topK: store.topK, onTopK: store.setTopK, disabled: !run.ranked } : null;
 
   return (
-    <div className="grid h-full grid-cols-1 overflow-y-auto lg:grid-cols-[250px_minmax(0,1fr)_var(--discovery-panel-width)] lg:overflow-hidden" style={{ "--discovery-panel-width": `${width}px` } as CSSProperties} data-testid="discovery-view">
+    <div className="grid h-full grid-cols-1 overflow-y-auto lg:grid-cols-[290px_minmax(0,1fr)_var(--discovery-panel-width)] lg:overflow-hidden" style={{ "--discovery-panel-width": `${width}px` } as CSSProperties} data-testid="discovery-view">
       <aside id="discovery-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 max-h-[45vh] min-h-0 overflow-hidden border-b border-line bg-bg-elev lg:order-1 lg:max-h-none lg:h-full lg:border-b-0 lg:border-r">
         <DiscoveryCandidateList
           candidates={candidates}

@@ -18,7 +18,7 @@ vi.mock("@/components/globe/PlanetViewer", () => ({
 import { DiscoveryView } from "./DiscoveryView";
 import { setDiscoveryService, DiscoveryRequestRejected } from "../adapter";
 import { useDiscoveryStore } from "../store/useDiscoveryStore";
-import { candidates, capabilities, connectedService, deadService, rankResponse, run, unavailableService } from "../test/fixtures";
+import { candidates, capabilities, connectedService, deadService, rankResponse, regions, run, unavailableService } from "../test/fixtures";
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 const catalog = { locations: [{ body: "earth", id: "atacama_yungay", name: "Atacama Desert - Yungay region", region: "Chile", lat: -24.08, lon_east: -69.95, measurements: [] }, { body: "earth", id: "near_site", name: "A site inside the view", region: "Morocco", lat: 31.5, lon_east: -2.5, measurements: [] }] };
@@ -85,7 +85,8 @@ describe("DiscoveryView", () => {
     await screen.findByRole("list", { name: "Ranked proposed candidates" });
     expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBeNull();
     // survey boundary, sampling coverage, footprints, established site in view, counts
-    expect(screen.getByTestId("survey-boundary")).toBeInTheDocument();
+    // one dashed outline per region actually searched, never a single box drawn around them all
+    expect(screen.getAllByTestId("survey-boundary")).toHaveLength(regions.length);
     expect(screen.getAllByTestId("sampling-centre")).toHaveLength(16);
     expect(screen.getAllByTestId("candidate-footprint")).toHaveLength(3);
     expect(screen.getAllByTestId("established-site")).toHaveLength(1);

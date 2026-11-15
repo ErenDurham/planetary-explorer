@@ -20,6 +20,11 @@ import type { DiscoveryBounds, DiscoveryCandidate, DiscoverySurvey } from "../ad
  * area still fits the view (about 500 km across at a 42 degree field of view). */
 export const FOOTPRINT_FOCUS_DISTANCE = 1.1;
 
+/** The view a survey opens on: far enough back to see a shortlist spread across
+ * continents. A survey of many regions is mostly a statement about WHERE the
+ * candidates are, and diving straight to one footprint throws that away. */
+export const SURVEY_OVERVIEW_DISTANCE = 3.1;
+
 export function DiscoveryGlobe({ candidates, established, selectedId, onSelect, palette, runLabel, focusToken = 0, bounds = null, survey = null }: {
   candidates: DiscoveryCandidate[]; established: EarthSite[]; selectedId: string | null; onSelect: (id: string | null) => void; palette: RankPalette; runLabel: string; focusToken?: number;
   /** The surveyed area, drawn as a dashed ring. */
@@ -28,6 +33,10 @@ export function DiscoveryGlobe({ candidates, established, selectedId, onSelect, 
   survey?: DiscoverySurvey | null;
 }) {
   const [autoRotate, setAutoRotate] = useState(false);
+  // The first selection a run makes is automatic, to fill the evidence panel; it must not
+  // crop the map down to one footprint. The camera closes in once the reader chooses a
+  // candidate themselves, which is what advances the store's selection revision.
+  const chosen = focusToken > 0;
   const [resetToken, setResetToken] = useState(0);
   const n = candidates.length;
   const overlays = useMemo(() => discoveryOverlays({ bounds, survey, candidates, selectedId, palette }), [bounds, survey, candidates, selectedId, palette]);
@@ -43,7 +52,7 @@ export function DiscoveryGlobe({ candidates, established, selectedId, onSelect, 
         statusLine={`${n} proposed candidate footprints and ${overlays.dots.length} evaluated centres from ${runLabel} · the dashed ring is the area searched`} mode="analog" palette={palette}
         legendHeading={`${n} shortlist candidates ranked against Jezero Crater · grey markers are catalog context sites, not candidates`} rankedCount={n}
         overlays={<SurfaceOverlays radius={EARTH_CONFIG.radius} rings={overlays.rings} dots={overlays.dots} onPick={id => onSelect(id)} />}
-        focusDistance={FOOTPRINT_FOCUS_DISTANCE} />
+        focusDistance={chosen ? FOOTPRINT_FOCUS_DISTANCE : SURVEY_OVERVIEW_DISTANCE} />
     </div>
   );
 }

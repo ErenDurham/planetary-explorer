@@ -9,6 +9,9 @@ import type { EarthSite } from "@/hooks/useEarthSites";
 import { boundsPath, footprintRings, makeFrame, padBounds, project, pxPerKm, readSamplingCentre, ringPath, ringsBounds, unionBounds, type Frame } from "../lib/geo";
 import type { DiscoveryCandidate, DiscoveryRunSummary, DiscoverySurvey } from "../adapter";
 
+/** Round distances a scale bar may show, from a footprint to a continent. */
+export const SCALE_LADDER = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000] as const;
+
 export function SurveyMap({ run, survey, candidates, selectedId, onSelect, established = [], palette = "roygbiv", className = "h-[420px]" }: {
   run: DiscoveryRunSummary; survey: DiscoverySurvey | null; candidates: DiscoveryCandidate[]; selectedId: string | null; onSelect: (id: string) => void; established?: EarthSite[]; palette?: RankPalette; className?: string;
 }) {
@@ -22,14 +25,20 @@ export function SurveyMap({ run, survey, candidates, selectedId, onSelect, estab
     return () => ro?.disconnect();
   }, []);
   const rings = useMemo(() => candidates.map(c => ({ id: c.id, rings: footprintRings(c.footprint_geojson) })), [candidates]);
-  const extent = useMemo(() => padBounds(unionBounds([run.bounds, ...rings.map(r => ringsBounds(r.rings))]) ?? run.bounds, 0.06), [run.bounds, rings]);
+  const extent = useMemo(() => padBounds(unionBounds([run.bounds, ...rings.map(r => ringsBounds(r.rings))]) ?? run.bounds, 0.06), [run.bounds, rings]);  // eslint-disable-line react-hooks/exhaustive-deps
   const frame: Frame = useMemo(() => makeFrame(extent, size.w, size.h), [extent, size]);
   const centres = useMemo(() => (survey?.sampling_centres ?? []).map(readSamplingCentre).filter((c): c is NonNullable<typeof c> => !!c), [survey]);
   const inView = (lat: number, lon: number) => lat >= extent.south && lat <= extent.north && lon >= extent.west && lon <= extent.east;
   const known = established.filter(s => inView(s.lat, s.lonEast));
   const n = candidates.length;
   const kmPx = pxPerKm(frame);
-  const barKm = [10, 20, 50, 100].find(k => k * kmPx <= 140) ?? 10;
+  // The LARGEST round distance that still fits the bar. A survey may span one plateau
+  // or five continents, so the ladder has to reach thousands of kilometres.
+  const barKm = [...SCALE_LADDER].reverse().find(k => k * kmPx <= 140) ?? SCALE_LADDER[0];
+  // A survey of separate regions did not search the rectangle that encloses them, so
+  // each region is outlined on its own; a single-region survey keeps its own bounds.
+  const searched = (survey?.regions ?? run.regions ?? []).map(r => r.bounds as typeof run.bounds).filter(Boolean);
+  const outlines = searched.length > 0 ? searched : [run.bounds];
   const byId = new Map(candidates.map(c => [c.id, c]));
 
   return (
@@ -38,8 +47,8 @@ export function SurveyMap({ run, survey, candidates, selectedId, onSelect, estab
         <svg width="100%" height="100%" viewBox={`0 0 ${size.w} ${size.h}`} role="img" aria-label={`Schematic map of survey ${run.label}: boundary, ${centres.length} sampling centres, ${n} candidate footprints and ${known.length} established catalog sites in view. No imagery.`}>
           <defs><pattern id="survey-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" style={{ stroke: "var(--color-line)" }} strokeWidth="1" /></pattern></defs>
           <rect width="100%" height="100%" fill="url(#survey-grid)" />
-          {/* surveyed boundary */}
-          <path d={boundsPath(frame, run.bounds)} fill="rgba(110,160,217,0.06)" stroke="#6ea0d9" strokeWidth={1.5} strokeDasharray="6 4" data-testid="survey-boundary" />
+          {/* surveyed boundary: one outline per region actually searched */}
+          {outlines.map((b, i) => <path key={i} d={boundsPath(frame, b)} fill="rgba(110,160,217,0.06)" stroke="#6ea0d9" strokeWidth={1.5} strokeDasharray="6 4" data-testid="survey-boundary" />)}
           {/* footprints */}
           {rings.map(r => { const c = byId.get(r.id); if (!c || !r.rings.length) return null; const pos = rankPosition(c.display_rank, n); const color = rankColor(pos, palette) ?? NOT_RANKED_COLOR; const sel = r.id === selectedId; return (
             <g key={r.id} role="button" tabIndex={0} aria-label={`Footprint of ${c.name}, rank ${c.display_rank ?? "—"}${sel ? ", selected" : ""}`} aria-pressed={sel} onClick={() => onSelect(r.id)} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(r.id); } }} className="cursor-pointer outline-none focus-visible:[&>path]:stroke-white" data-testid="candidate-footprint">

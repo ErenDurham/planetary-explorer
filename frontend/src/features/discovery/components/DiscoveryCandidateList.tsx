@@ -8,7 +8,6 @@
 // Every figure is the service's; nothing here is computed.
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/Badge";
-import { CandidatePanel } from "@/components/mission/CandidatePanel";
 import { candidateRowClass, rowKeyDown } from "@/components/mission/CandidateRow";
 import { formatNumber } from "@/lib/format";
 import { NOT_RANKED_COLOR, rankColor, rankPosition, type RankPalette } from "@/lib/rankColor";
@@ -22,20 +21,18 @@ import type { DiscoveryCandidate, DiscoveryCriterion, DiscoveryDimensionScore, D
 
 export interface WeightInputs { shares: Shares; defaults: Shares; criteria: DiscoveryCriterion[]; onChange: (id: string, v: number) => void; onReset: () => void; topK: number; onTopK: (n: number) => void; disabled: boolean }
 
-/** The per-dimension indices, shortest-label first, as the service reported them. */
+/** The per-dimension indices, one compact line each, as the service reported them. */
 export function DimensionStrip({ dimensions, color }: { dimensions: DiscoveryDimensionScore[]; color: string }) {
   if (dimensions.length === 0) return null;
   return (
-    <span className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1" aria-hidden>
+    <span className="mt-1.5 block space-y-0.5" aria-hidden>
       {dimensions.map((d) => (
-        <span key={d.group} className="flex min-w-[64px] flex-1 flex-col gap-0.5">
-          <span className="flex items-baseline justify-between gap-1 text-[9.5px] uppercase tracking-wide text-fg-faint">
-            <span className="truncate">{d.group}</span>
-            <span className="num">{formatNumber(d.similarity_index, { maxFractionDigits: 0 })}</span>
-          </span>
+        <span key={d.group} className="grid grid-cols-[4.2rem_1fr_1.6rem] items-center gap-1.5">
+          <span className="truncate text-[9.5px] uppercase tracking-wide text-fg-faint">{d.group}</span>
           <span className="block h-1 w-full overflow-hidden rounded-sm bg-line">
             <span className="block h-full" style={{ width: `${Math.max(0, Math.min(100, d.similarity_index))}%`, backgroundColor: color }} />
           </span>
+          <span className="num text-right text-[9.5px] text-fg-muted">{formatNumber(d.similarity_index, { maxFractionDigits: 0 })}</span>
         </span>
       ))}
     </span>
@@ -74,16 +71,22 @@ export function DiscoveryCandidateList({ candidates, evaluated, regionsSearched,
     : PROPOSED_LABEL;
   return (
     <div className="scroll-thin flex h-full flex-col overflow-y-auto">
-      <div className="min-h-0 flex-1">
-        <CandidatePanel
-          title="Ranked candidates"
-          subtitle={subtitle}
-          actions={pending ? <span role="status" className="text-[10.5px] text-copper-bright">Re-ranking…</span> : undefined}
-          controls={<div className="space-y-1 text-[10.5px] leading-snug text-fg-faint">
-            <p>{PROPOSED_LABEL} Shortlisted regions are kept apart on the map, so each row is a different place rather than a neighbouring cell.</p>
-            {candidates && n > 0 ? <p>Numbered outlines: candidate footprints. Dots: sampled centres. Dashed boundary: survey area. Grey markers: catalog sites.</p> : null}
-          </div>}
-        >
+      {/* The column scrolls as one (rows, then weights, then export), so this uses the
+          Browse Regions panel's header shape rather than CandidatePanel itself, whose
+          own full-height scroll area would collapse when nested in a scrolling column. */}
+      <section aria-label="Ranked candidates" className="px-4 py-3">
+        <header className="mb-3 flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-muted">Ranked candidates</h2>
+            <p className="mt-0.5 text-xs text-fg-faint">{subtitle}</p>
+          </div>
+          {pending ? <span role="status" className="shrink-0 text-[10.5px] text-copper-bright">Re-ranking…</span> : null}
+        </header>
+        <div className="space-y-1 text-[10.5px] leading-snug text-fg-faint">
+          <p>{PROPOSED_LABEL} Shortlisted regions are kept apart on the map, so each row is a different place rather than a neighbouring cell.</p>
+          {candidates && n > 0 ? <p>Numbered outlines: candidate footprints. Dots: sampled centres. Dashed boundary: survey area. Grey markers: catalog sites.</p> : null}
+        </div>
+        <div className="mt-2 border-t border-line pt-2">
           {error ? <div className="pt-1">{error}</div>
             : !candidates ? <div className="pt-1">{status}</div>
             : n === 0 ? <p className="mt-1 rounded-lg border border-dashed border-line px-3 py-2 text-xs text-fg-muted">No footprint in this survey passed screening, so there is nothing to rank. The survey coverage section in the panel lists why each sampled footprint was excluded.</p>
@@ -107,20 +110,17 @@ export function DiscoveryCandidateList({ candidates, evaluated, regionsSearched,
                             {index != null && <span className="block h-full" style={{ width: `${index}%`, backgroundColor: color }} />}
                           </span>
                           <DimensionStrip dimensions={dimensions} color={color} />
+                          <span className="mt-1.5 flex flex-wrap items-center gap-1"><Badge tone={nov.tone} title={nov.label}>{nov.label}</Badge><ResearchStatusBadge status={c.research_status} /></span>
                         </span>
-                        <span className="flex flex-col items-end gap-0.5">
-                          <span className="num text-xs" style={{ color }}>{index != null ? formatNumber(index, { maxFractionDigits: 1 }) : "—"}</span>
-                          <Badge tone={nov.tone} title={nov.label}>{nov.label}</Badge>
-                          <ResearchStatusBadge status={c.research_status} />
-                        </span>
+                        <span className="num self-start text-xs" style={{ color }}>{index != null ? formatNumber(index, { maxFractionDigits: 1 }) : "—"}</span>
                       </button>
                     </li>
                   );
                 })}
               </ol>
             )}
-        </CandidatePanel>
-      </div>
+        </div>
+      </section>
       {weights && (
         <div className="space-y-3 border-t border-line px-3 py-3">
           <WeightControls {...weights} />

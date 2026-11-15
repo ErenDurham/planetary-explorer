@@ -59,7 +59,10 @@ export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   setView: (view) => set({ view }),
   requestRank: () => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), ranked: true } } })); },
   selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ selectionRevision: id ? s.selectionRevision + 1 : s.selectionRevision, runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id, autoSelected: true } } })); },
-  autoSelectFirst: (id) => { const { runId } = get(); if (!runId) return; set((s) => { const r = s.runs[runId] ?? EMPTY_RUN; if (r.autoSelected || r.selectedCandidateId) return {}; return { selectionRevision: s.selectionRevision + 1, runs: { ...s.runs, [runId]: { ...r, selectedCandidateId: id, autoSelected: true } } }; }); },
+  // An automatic selection fills the evidence panel but must NOT move the camera: on a
+  // survey spanning continents, diving to one footprint hides the spread the map exists to show.
+  // Only an explicit selection bumps the revision that drives the globe's focus.
+  autoSelectFirst: (id) => { const { runId } = get(); if (!runId) return; set((s) => { const r = s.runs[runId] ?? EMPTY_RUN; if (r.autoSelected || r.selectedCandidateId) return {}; return { runs: { ...s.runs, [runId]: { ...r, selectedCandidateId: id, autoSelected: true } } }; }); },
 }));
 
 export function useRunState(): RunState {
