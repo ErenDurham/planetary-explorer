@@ -21,6 +21,7 @@ import { RightSidebar } from "@/components/layout/RightSidebar";
 import { AnalyzeView } from "@/components/layout/AnalyzeView";
 import { ResearchView } from "@/components/layout/ResearchView";
 import { CompareView } from "@/components/layout/CompareView";
+import { DiscoveryView } from "@/features/discovery";
 import { PlanetViewer, PLANET_CONFIGS, markerAppearance, analogMarkerAppearance, type MarkerDatum } from "@/components/globe";
 import { useSites } from "@/hooks/useSites";
 import { useEarthSites } from "@/hooks/useEarthSites";
@@ -228,6 +229,8 @@ export default function App() {
       ? missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
       : activeTab === "compare"
         ? <CompareView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} />
+        : activeTab === "discover"
+        ? <DiscoveryView />
         : <ResearchView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} mission={evaluation.mission} />;
 
   // Candidate pane for the visible body (Analyze always shows the Mars landing ranking).
@@ -316,7 +319,7 @@ export default function App() {
             <button type="button" disabled={!appliedObjective || draftDirty || !initialMissionId || (missionType === "landing" ? evaluation.isPending : assessment.isPending)} onClick={() => navigateExplore("mission", initialMissionId)} className="ml-auto rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">Head to explore mission →</button>
           </footer>}
         </div>
-        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" ? (
+        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" || activeTab === "discover" ? (
           <div className="h-full">{centre}</div>
         ) : (
           // Candidates scroll independently of mission settings and reasoning.
@@ -333,7 +336,7 @@ export default function App() {
           </div>
         )}
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${activeTab === "mission" && !missionDesigned ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || activeTab === "discover" ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );

@@ -29,7 +29,8 @@ export function AstroPanel({
   const launcher = useRef<HTMLButtonElement>(null);
   useBoundsReporter(launcher, onBoundsChange, !open);
   const context = {
-    active_tab: state.activeTab,
+    // the Discover tab is outside the assistant's contract (and the panel is hidden there); report the nearest tab
+    active_tab: state.activeTab === "discover" ? "explore" : state.activeTab,
     viewed_body: state.viewedBody,
     map_mode: state.mapMode,
     selected_mars_id:

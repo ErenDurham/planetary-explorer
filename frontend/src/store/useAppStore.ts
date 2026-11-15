@@ -15,7 +15,7 @@ import { setShare, toShares } from "@/lib/allocation";
 import { ANALOG_FEATURE_IDS, otherBody, toAnalogShares, type Body } from "@/lib/analogFeatures";
 import type { EvidenceCitation, HardConstraint, MissionKind } from "@/types";
 
-export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
+export type Tab = "mission" | "explore" | "analyze" | "compare" | "research" | "discover";
 export type { Body };
 
 /** What the user is doing: screening Mars landing candidates, or picking an

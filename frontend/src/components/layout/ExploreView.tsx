@@ -10,6 +10,7 @@ import { effectiveMapMode, useAppStore, type Body } from "@/store/useAppStore";
 import { ANALOG_FEATURES, BODY_NAME, otherBody, toAnalogShares } from "@/lib/analogFeatures";
 import { PLANET_CONFIGS } from "@/components/globe/PlanetConfig";
 import type { Site } from "@/types";
+import { wantsDiscovery } from "@/features/discovery/lib/objective";
 
 /** What the imagery pane needs of a location, on either body. */
 export type ImagerySubject = Pick<Site, "id" | "name" | "lat" | "lon_east">;
@@ -69,6 +70,8 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
   const selectedEarthId = useAppStore((s) => s.selectedEarthId);
   const effective = effectiveMapMode({ viewedBody, mapMode });
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const objectiveText = useAppStore((s) => (s.appliedObjective || s.missionObjective || "").trim());
+  const discoveryCue = viewedBody === "earth" && effective === "analog_match";
 
   const destination = otherBody(viewedBody);
   const destinationLabel = destination === missionBody ? "Mission suitability" : "Analog match";
@@ -90,6 +93,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
         <p className="text-fg" aria-live="polite" data-testid="match-context-line">{analog?.referenceName ? `${BODY_NAME[viewedBody]} matches to ${analog.referenceName}` : "Choose the mission site you want to find analogs for."}</p>
         <details className="relative"><summary className="cursor-pointer text-fg-muted underline underline-offset-4">Change reference</summary><label className="mt-2 block text-fg-muted">{BODY_NAME[otherBody(viewedBody)]} site<select value={analog?.referenceId ?? ""} onChange={e => e.target.value && analog?.onReferenceChange(e.target.value)} aria-label={`Reference location on ${BODY_NAME[otherBody(viewedBody)]}`} className="ml-2 max-w-full rounded border border-line-strong bg-bg px-2 py-1 text-xs text-fg"><option value="" disabled>Choose a site</option>{analog?.referenceOptions.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}</select></label></details>
       </div>
+      {discoveryCue && <p className="mt-2 flex flex-wrap items-center gap-x-2 text-fg-muted" data-testid="discovery-cue"><span>These are the <strong className="font-medium text-fg">established analogs</strong> (curated sites).</span><button type="button" onClick={() => setActiveTab("discover")} className="text-info underline underline-offset-4">Discover Earth regions beyond them →</button>{wantsDiscovery(objectiveText) && <span className="text-fg-faint">Your objective asks for new regions.</span>}</p>}
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2"><span className="text-fg-muted">Match % is a modelled similarity index, not a probability.</span><button type="button" onClick={() => setPrefsOpen(o => !o)} aria-expanded={prefsOpen} aria-controls="analog-preferences" className="text-fg-muted underline underline-offset-4">{prefsOpen ? "Hide" : "Adjust"} match preferences</button></div>
       {prefsOpen && <div id="analog-preferences" className="mt-3 max-w-md rounded border border-line bg-bg-elev"><AnalogPreferences compact unavailable={analog?.unavailable} rankChanges={analog?.rankChanges} previousShares={analog?.previousShares}/></div>}
     </div> : <div className="shrink-0 border-b border-line px-3 py-2 text-xs text-fg-muted" data-testid="landing-context">Mission suitability uses available regional terrain and sunlight factors. Research value and base-building requirements are not yet scored.</div>}

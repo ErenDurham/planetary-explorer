@@ -46,6 +46,20 @@ sites), and verified imagery for Earth sites (Landsat WELD orbital context via N
 photographs with recorded licences). Landing suitability stays Mars-only and is never merged with
 analog similarity. The Moon is deferred: its catalogue data is isolated and unused in navigation.
 
+## Discover Earth regions
+
+The **Discover** tab ranks an offline, preprocessed Earth terrain survey (`discovery-v1`: Copernicus GLO-90
+footprints on 4 km cells against MOLA at Jezero) and shows the surveyed boundary, the exact sampling
+coverage, screening counts, each candidate's real footprint, its slope and relief against Jezero, factor
+contributions, data sources, its relationship to the versioned known-analog catalog, missing evidence and
+proposed field validation. Every result is labelled *Proposed terrain analog candidate; field validation
+required*, kept apart from the established analogs and their five-feature scores, and nothing is scanned
+live. See [docs/DISCOVERY_UI.md](docs/DISCOVERY_UI.md) and [DISCOVERY_CONTRACT.md](DISCOVERY_CONTRACT.md).
+
+| Ranked survey | Candidate evidence |
+|---|---|
+| ![Discovery ranked survey](docs/screenshots/discovery-ranked.jpg) | ![Discovery candidate evidence](docs/screenshots/discovery-evidence.jpg) |
+
 ## Expedition Planner
 
 From a site's **Research** page, **Plan an Expedition** opens an interactive rover-expedition planner: choose an

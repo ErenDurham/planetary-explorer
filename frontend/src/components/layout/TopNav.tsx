@@ -7,13 +7,14 @@ const TABS: Array<{ id: Tab; label: string; hint: string }> = [
   { id: "analyze", label: "Analyze", hint: "Rankings and cross-site charts" },
   { id: "compare", label: "Compare", hint: "Compare the selected Earth and Mars locations" },
   { id: "research", label: "Research", hint: "Study ideas, supporting evidence and further reading" },
+  { id: "discover", label: "Discover", hint: "Discover Earth regions beyond the established analogs: rank an offline terrain survey against Jezero" },
 ];
 
 export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t: Tab) => void; right?: React.ReactNode }) {
   const viewedBody = useAppStore((s) => s.viewedBody);
   const mapMode = useAppStore((s) => s.mapMode);
   const analog = effectiveMapMode({ viewedBody, mapMode }) === "analog_match";
-  const subtitle = active === "compare" ? "Earth · Mars · analog pair" : active === "explore" && analog ? `${viewedBody === "earth" ? "Earth" : "Mars"} · analog matching · v1` : "Mission planning · Earth & Mars";
+  const subtitle = active === "discover" ? "Earth · proposed terrain analog candidates · discovery-v1" : active === "compare" ? "Earth · Mars · analog pair" : active === "explore" && analog ? `${viewedBody === "earth" ? "Earth" : "Mars"} · analog matching · v1` : "Mission planning · Earth & Mars";
   return (
     <header className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-bg-elev px-4 py-2 sm:h-12 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:py-0">
       <div className="flex min-w-0 items-center gap-3">
@@ -23,7 +24,7 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
         </span>
         <span className="hidden min-w-0 truncate text-[10.5px] uppercase tracking-[0.14em] text-fg-faint xl:inline">{subtitle}</span>
       </div>
-      <nav aria-label="Primary" className="flex items-center gap-1 justify-self-center">
+      <nav aria-label="Primary" className="flex flex-wrap items-center justify-center gap-1 justify-self-center">
         {TABS.map((t) => (
           <button
             key={t.id}
