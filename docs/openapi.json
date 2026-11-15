@@ -2519,9 +2519,16 @@
             "title": "Role"
           },
           "coordinates_approximate": {
-            "type": "boolean",
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Coordinates Approximate",
-            "default": false
+            "description": "True when the workbook marks the coordinates as approximate; null for locations outside the workbook"
           },
           "paired_location_id": {
             "anyOf": [

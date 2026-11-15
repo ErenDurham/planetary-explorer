@@ -27,7 +27,7 @@ export function RoleBadge({ role }: { role: SiteRole | null | undefined }) {
   return <span title={ROLE_HINT[role]} data-testid="site-role"><Badge tone="info">{role}</Badge></span>;
 }
 
-export function ApproximateNote({ approximate }: { approximate: boolean | undefined }) {
+export function ApproximateNote({ approximate }: { approximate: boolean | null | undefined }) {
   if (!approximate) return null;
   return <p className="mt-0.5 text-[10.5px] text-warn" data-testid="coords-approximate">Coordinates are approximate (as marked in the workbook).</p>;
 }

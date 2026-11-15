@@ -19,7 +19,7 @@ class ComparisonLocation(BaseModel):
     sources: dict[str, Provenance]
     source_ids: list[str] = Field(default_factory=list)
     role: SiteRole | None = None
-    coordinates_approximate: bool = False
+    coordinates_approximate: bool | None = Field(None, description="True when the workbook marks the coordinates as approximate; null for locations outside the workbook")
     paired_location_id: str | None = Field(None, description="The workbook's paired location on the other body")
     why_they_match: str | None = None
     reported_conditions: list[ReportedCondition] = Field(default_factory=list, description="Literature-reported condition texts (workbook); not measurements")

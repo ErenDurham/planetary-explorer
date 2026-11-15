@@ -877,9 +877,9 @@ export interface components {
             role?: ("Base candidate" | "Resource site" | "To evaluate" | "Instrument testing" | "Context only") | null;
             /**
              * Coordinates Approximate
-             * @default false
+             * @description True when the workbook marks the coordinates as approximate; null for locations outside the workbook
              */
-            coordinates_approximate: boolean;
+            coordinates_approximate?: boolean | null;
             /**
              * Paired Location Id
              * @description The workbook's paired location on the other body
