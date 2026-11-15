@@ -33,7 +33,7 @@ export function DiscoveryGlobe({ candidates, established, selectedId, onSelect, 
   const overlays = useMemo(() => discoveryOverlays({ bounds, survey, candidates, selectedId, palette }), [bounds, survey, candidates, selectedId, palette]);
   const markers: MarkerDatum[] = [
     ...candidates.map(c => ({ id: c.id, name: c.name, region: "Proposed candidate footprint centre", lat: c.lat, lonEast: c.lon_east, mode: "analog" as const, score: null, rank: c.display_rank ?? null, status: null, similarity: c.similarity_index ?? null, unrankableReason: null, appearance: analogMarkerAppearance(rankPosition(c.display_rank, n), palette) })),
-    ...established.map(s => ({ id: `established:${s.id}`, name: `${s.name} (established analog)`, region: s.region, lat: s.lat, lonEast: s.lonEast, mode: "browse" as const, score: null, rank: null, status: null, similarity: null, unrankableReason: "Established catalog site, not part of the discovery pool", appearance: analogMarkerAppearance(null, palette) })),
+    ...established.map(s => ({ id: `established:${s.id}`, name: `${s.name} (catalog context site, not a candidate)`, region: s.region, lat: s.lat, lonEast: s.lonEast, mode: "browse" as const, score: null, rank: null, status: null, similarity: null, unrankableReason: "Catalog context site from Browse Regions, not part of the discovery pool", appearance: analogMarkerAppearance(null, palette) })),
   ];
   return (
     <div className="h-full">
@@ -41,7 +41,7 @@ export function DiscoveryGlobe({ candidates, established, selectedId, onSelect, 
         onSelect={id => { if (!id.startsWith("established:")) onSelect(id); }} onDeselect={() => onSelect(null)}
         autoRotate={autoRotate} onAutoRotateChange={setAutoRotate} resetToken={resetToken} onRequestReset={() => setResetToken(t => t + 1)}
         statusLine={`${n} proposed candidate footprints and ${overlays.dots.length} evaluated centres from ${runLabel} · the dashed ring is the area searched`} mode="analog" palette={palette}
-        legendHeading="Proposed candidates ranked against Jezero Crater" rankedCount={n}
+        legendHeading={`${n} shortlist candidates ranked against Jezero Crater · grey markers are catalog context sites, not candidates`} rankedCount={n}
         overlays={<SurfaceOverlays radius={EARTH_CONFIG.radius} rings={overlays.rings} dots={overlays.dots} onPick={id => onSelect(id)} />}
         focusDistance={FOOTPRINT_FOCUS_DISTANCE} />
     </div>

@@ -20,7 +20,7 @@ import { useDiscoveryCandidate } from "../hooks/useDiscoveryCandidate";
 import { useDiscoveryStore, useRunState } from "../store/useDiscoveryStore";
 import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
 import { wantsDiscovery } from "../lib/objective";
-import { formatPoint } from "../lib/geo";
+import { extentKm, formatPoint } from "../lib/geo";
 import { DiscoveryStage } from "./DiscoveryStage";
 import { DiscoveryCandidateList } from "./DiscoveryCandidateList";
 import { DiscoveryPanel } from "./DiscoveryPanel";
@@ -67,6 +67,9 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
 
   const rank = useDiscoveryRank(store.runId, store.weights, store.topK, run.ranked && caps.kind === "ready");
   const candidates = rank.data?.candidates;
+  // The first result is selected once per run when its first ranking arrives, so the evidence panel is never blank on arrival;
+  // an explicit selection, a cleared one, or a re-ranking never trigger it again.
+  useEffect(() => { const first = candidates?.[0]; if (first && rank.data?.run_id === store.runId) store.autoSelectFirst(first.id); }, [candidates, rank.data?.run_id, store.runId]); // eslint-disable-line react-hooks/exhaustive-deps
   const selected = candidates?.find(c => c.id === run.selectedCandidateId) ?? null;
   const detail = useDiscoveryCandidate(store.runId, selected?.id ?? null);
   const activeRun = runs.find(r => r.run_id === store.runId) ?? null;
@@ -90,6 +93,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   if (cell) stats.push({ n: `${Math.round(cell / 1000)} km`, label: "terrain analysis resolution" });
 
   const ready = caps.kind === "ready" && !!activeRun && !!reference;
+  const activeRunKm = activeRun ? extentKm(activeRun.bounds) : null;
   const badge = caps.kind === "ready" ? <Badge tone="ok">Survey installed · {caps.capabilities.engine_version}</Badge> : caps.kind === "loading" ? <Badge tone="neutral">Connecting…</Badge> : <Badge tone="warn">{caps.kind === "unavailable" ? "No survey installed" : "Service error"}</Badge>;
 
   // the one error or not-ready state, rendered once in the stage body
@@ -118,7 +122,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
 
   const caption = !ready ? null : store.view === "map"
     ? <>The dashed box is the only area searched. Dots are the footprint centres that were evaluated; coloured squares are the candidates shown, each a {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprint around its centre. Crosses mark established analogs from the curated catalog when any fall in view.</>
-    : <>The dashed ring is the only area searched; the small dots are the {evaluated ?? ""} footprint centres evaluated; the coloured outlines are the candidates' {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprints, with a marker at each centre, coloured by rank. Click a footprint or its marker to select it; selecting flies the camera in to it.</>;
+    : <>Coloured outlines with numbered markers are the {presented ?? ""} shortlist candidates' {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprints, coloured by rank. Small dots are the {evaluated ?? ""} sampled centres the survey evaluated, and the dashed ring is the only area searched. Grey markers elsewhere are catalog context sites from Browse Regions, not candidates. Click a footprint or its marker to select it.</>;
 
   const facts = ready ? (
     <>
@@ -156,8 +160,10 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
       <div className="relative order-1 h-[72vh] min-h-[320px] lg:order-2 lg:h-full">
         <DiscoveryStage
           badge={badge}
-          title={`Find Earth regions with terrain similar to ${referenceName}`}
-          lede="Candidate locations identified through a regional terrain comparison. These are promising starting points for research, not confirmed planetary analogs."
+          title={`Find Earth terrain resembling ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
+          lede={activeRun && reference
+            ? `A bounded pilot, not a global search: ${evaluated != null ? `${evaluated} footprints sampled across ` : ""}${activeRun.label}${activeRunKm ? ` (about ${Math.round(activeRunKm.ew)} × ${Math.round(activeRunKm.ns)} km)` : ""}, compared with ${reference.name} on regional slope and relief${presented != null ? `, ${presented} spatially separated results shown` : ""}. Candidates for research, not confirmed analogs.`
+            : "Candidate Earth terrain from an installed survey pilot, compared with a Mars reference on regional slope and relief. Candidates for research, not confirmed analogs."}
           stats={stats.length > 0 ? <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1" aria-label="Survey at a glance" data-testid="survey-stats">{stats.map(s => <li key={s.label}><span className="num text-base text-fg">{s.n}</span><span className="ml-1 text-[10.5px] text-fg-muted">{s.label}</span></li>)}</ul> : null}
           facts={facts}
           view={store.view}

@@ -1,12 +1,13 @@
-// The one control that joins the two Explore experiences: Browse Regions (the
-// featured Mars and Earth regions, including the established analogs) and
-// Find Earth Analogs (the offline discovery survey). Shown at the top of both.
+// The one control that joins the two Explore experiences: Find Earth Analogs
+// (the installed discovery pilot, the default) and Browse Regions (the
+// featured Mars and Earth regions, including the established analogs, the
+// secondary mode). Shown at the top of both.
 import { Compass, Globe2 } from "lucide-react";
 import { useAppStore, type ExploreMode } from "@/store/useAppStore";
 
 const MODES: Array<{ id: ExploreMode; label: string; hint: string; Icon: typeof Globe2 }> = [
-  { id: "browse", label: "Browse Regions", hint: "Featured Mars and Earth regions, including established Earth analogs", Icon: Globe2 },
-  { id: "find_analogs", label: "Find Earth Analogs", hint: "Candidate Earth locations with terrain similar to a reference region", Icon: Compass },
+  { id: "find_analogs", label: "Find Earth Analogs", hint: "Candidate Earth terrain resembling Jezero Crater, from the installed survey pilot", Icon: Compass },
+  { id: "browse", label: "Browse Regions", hint: "Secondary: the established Earth analogs and featured Mars regions, with mission scoring", Icon: Globe2 },
 ];
 
 export function ExploreModeSwitch({ className = "" }: { className?: string }) {

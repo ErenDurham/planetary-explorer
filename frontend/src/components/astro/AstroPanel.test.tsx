@@ -44,7 +44,7 @@ describe("Astro", () => {
       viewedBody: "mars",
       selectedMarsId: "jezero_crater",
       selectedEarthId: null,
-      activeTab: "explore",
+      activeTab: "explore", exploreMode: "browse",
       missionType: "landing",
       selectionBody: "mars",
     });

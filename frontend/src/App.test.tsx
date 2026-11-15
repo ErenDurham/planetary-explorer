@@ -65,7 +65,7 @@ describe("App", () => {
   beforeEach(() => {
     evaluateCalls = [];
     interpretCalls = [];
-    useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore", missionDesigned: false, missionDraftDirty: false });
+    useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore", exploreMode: "browse", missionDesigned: false, missionDraftDirty: false });
     mockFetch();
   });
   afterEach(() => vi.restoreAllMocks());
@@ -99,7 +99,7 @@ describe("App", () => {
     await waitFor(() => expect(start).toBeEnabled());
     useAppStore.setState({viewedBody:"earth"});
     fireEvent.click(start);
-    expect(useAppStore.getState()).toMatchObject({activeTab:"explore",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
+    expect(useAppStore.getState()).toMatchObject({activeTab: "explore", exploreMode: "browse",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
     fireEvent.click(screen.getByRole("button", {name:"Mission Design"}));
     fireEvent.click(screen.getByRole("button", {name:/Edit Mission/}));
     fireEvent.change(screen.getByLabelText("Your mission objective"), {target:{value:"An unapplied objective"}});
