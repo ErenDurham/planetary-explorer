@@ -1,4 +1,4 @@
-import { RegionWorkspace } from "@/features/regions/RegionWorkspace";
+import { RegionAnalysis } from "@/features/regions/RegionAnalysis";
 import { useRegionTarget } from "@/features/regions/store";
 import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
 // App shell. The store separates the MISSION (task, destination, selections on
@@ -264,9 +264,15 @@ export default function App() {
   const centre = findAnalogs
     ? <DiscoveryView panelWidth={discoveryPanelWidth} onPanelWidthChange={setDiscoveryPanelWidth} />
     : activeTab === "explore"
-    ? <ExploreView key={exploreRevision} initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
+    ? <ExploreView initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
-      ? regionTarget ? <RegionWorkspace key={`${regionTarget.kind}:${regionTarget.runId}:${regionTarget.id}`} target={regionTarget} compare={false}/> : missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
+      ? regionTarget
+        ? regionTarget.kind==="catalog" && missionType==="landing" && evaluation.data?.results.some(r=>r.site_id===regionTarget.id)
+          ? <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={regionTarget.id} onSelect={id=>{openRegion({kind:"catalog",id});selectSite(id);}}/>
+          : regionTarget.kind==="catalog" && assessment.data?.results.some(r=>r.site_id===regionTarget.id)
+            ? <MissionAssessmentDetail data={assessment.data} result={assessment.data.results.find(r=>r.site_id===regionTarget.id)} location={earth.data?.locations.find(l=>l.id===regionTarget.id)} pending={assessment.isPending} showSensitivity/>
+            : <RegionAnalysis key={`${regionTarget.kind}:${regionTarget.runId}:${regionTarget.id}`} target={regionTarget}/>
+        : missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
       : activeTab === "compare"
         ? <CompareEntry sites={sites.data?.sites} selectedId={selectedMarsId} />
         : <ResearchView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} mission={evaluation.mission} />;

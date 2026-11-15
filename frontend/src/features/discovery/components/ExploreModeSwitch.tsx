@@ -6,7 +6,7 @@ import { Compass, Globe2 } from "lucide-react";
 import { useAppStore, type ExploreMode } from "@/store/useAppStore";
 
 const MODES: Array<{ id: ExploreMode; label: string; hint: string; Icon: typeof Globe2 }> = [
-  { id: "find_analogs", label: "Find Earth Analogs", hint: "Candidate Earth terrain resembling Jezero Crater, from the installed survey pilot", Icon: Compass },
+  { id: "find_analogs", label: "Find Unresearched Analogs", hint: "Candidate Earth regions for review in this app; unresearched does not mean unknown to science", Icon: Compass },
   { id: "browse", label: "Browse Regions", hint: "Secondary: the established Earth analogs and featured Mars regions, with mission scoring", Icon: Globe2 },
 ];
 

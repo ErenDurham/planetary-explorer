@@ -1,4 +1,3 @@
-import { RegionActions } from "@/features/regions/RegionActions";
 import { useEffect, useRef } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { MapPin } from "lucide-react";
@@ -12,7 +11,6 @@ import { FullScoringCalculation, SuitabilityPanel } from "@/components/mission/S
 import { useSiteProfile } from "@/hooks/useSites";
 import { formatLatLon, formatNumber, humanize } from "@/lib/format";
 import { AnalogMatchPanel, EarthLocationPanel } from "@/components/sites/LocationPanels";
-import { FindAnalogsEntry } from "@/features/discovery/components/FindAnalogsEntry";
 import type { RankPalette } from "@/lib/rankColor";
 import type { AnalogRankResponse, ComparisonLocation, EvaluateResponse, MissionProfile } from "@/types";
 
@@ -64,7 +62,6 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
         ) : earthLocation ? (
           <>
             {analogPanel}
-            <div className="px-4"><RegionActions target={{kind:"catalog",id:earthLocation.id}}/></div>
             <EarthLocationPanel location={earthLocation} />
           </>
         ) : earthPending ? (
@@ -78,7 +75,6 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
 
   return (
     <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-auto flex-col overflow-visible lg:h-full lg:overflow-y-auto bg-bg-elev" data-body="mars">
-      {selectedId && <div className="px-4"><RegionActions target={{kind:"catalog",id:selectedId}}/></div>}
       {!selectedId ? (
         <Section title="Site">
           <EmptyNote>Click a marker on the globe or a row in the ranked list.</EmptyNote>
@@ -117,7 +113,6 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
           <div>
             {analogPanel}
             {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />}
-            <FindAnalogsEntry siteId={q.data.site.id} siteName={q.data.site.name} />
             <Section title="Risks and limitations">
               <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
               <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>

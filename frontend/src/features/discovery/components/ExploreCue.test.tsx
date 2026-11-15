@@ -13,9 +13,9 @@ describe("Explore established-analogs cue", () => {
     useAppStore.setState({ viewedBody: "earth", mapMode: "analog_match", activeTab: "explore", exploreMode: "browse", appliedObjective: "Identify new candidate Earth regions beyond established analog sites" });
     render(<QueryClientProvider client={new QueryClient()}><ExploreView globe={<p>globe</p>} analog={{ referenceId: "jezero_crater", referenceName: "Jezero Crater", referenceOptions: [], onReferenceChange: () => {}, rankedCount: 7, unavailable: {}, rankChanges: null, previousShares: null }} /></QueryClientProvider>);
     const cue = screen.getByTestId("discovery-cue");
-    expect(cue).toHaveTextContent(/established analogs/);
-    expect(cue).toHaveTextContent(/Your objective asks for new regions/);
-    fireEvent.click(screen.getByRole("button", { name: /Find candidate Earth analogs beyond them/ }));
+    expect(cue).toHaveTextContent(/Established Earth analogs/);
+    expect(within(cue).queryByRole("button")).toBeNull();
+    fireEvent.click(screen.getByRole("radio", { name: "Find Unresearched Analogs" }));
     expect(useAppStore.getState().activeTab).toBe("explore");
     expect(useAppStore.getState().exploreMode).toBe("find_analogs");
   });
@@ -24,7 +24,7 @@ describe("Explore established-analogs cue", () => {
     render(<QueryClientProvider client={new QueryClient()}><ExploreView globe={<p>globe</p>} /></QueryClientProvider>);
     const group = screen.getByRole("radiogroup", { name: "Explore mode" });
     expect(within(group).getByRole("radio", { name: "Browse Regions" })).toHaveAttribute("aria-checked", "true");
-    fireEvent.click(within(group).getByRole("radio", { name: "Find Earth Analogs" }));
+    fireEvent.click(within(group).getByRole("radio", { name: "Find Unresearched Analogs" }));
     expect(useAppStore.getState().exploreMode).toBe("find_analogs");
   });
   it("is absent on the Mars landing view", () => {

@@ -144,7 +144,6 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
           {dossier.data ? (
             <p><span className="text-fg">{RESEARCH_STATUS_MEANING[dossier.data.record.status].label}</span>: {RESEARCH_STATUS_MEANING[dossier.data.record.status].meaning}{dossier.data.record.updated_at ? ` Notes saved ${dossier.data.record.updated_at.slice(0, 10)}.` : " No notes saved yet."} {dossier.data.research_questions.length} questions and {dossier.data.search_tasks.length} searches are prepared; background library {dossier.data.retrieval_status === "background_available" ? "available" : "unavailable"}.</p>
           ) : dossier.isPending && dossier.fetchStatus !== "idle" ? <p role="status">Loading research status…</p> : <p>Research status could not be loaded; open Research to see it.</p>}
-          <button type="button" disabled={!runId} className="mt-2 rounded-lg border border-line-strong px-3 py-1.5 font-semibold text-fg hover:border-info disabled:opacity-40" onClick={research}>Open in Research</button>
         </div>
       </Section>
 

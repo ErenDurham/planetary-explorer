@@ -1,3 +1,5 @@
+import { useFrame } from "@react-three/fiber";
+import { prefersReducedMotion } from "./webgl";
 // A thin atmospheric rim drawn as a slightly larger back-facing shell with a
 // Fresnel falloff, additively blended. It brightens only the limb, so the
 // surface, the markers and the discovery overlays underneath stay exactly as
@@ -41,7 +43,10 @@ export function Atmosphere({ radius, spec }: { radius: number; spec: AtmosphereS
   const thickness = spec.thickness ?? 0.035;
   // cosine of the angle between the shell normal and the view ray where the ray grazes the planet
   const limb = Math.sqrt(Math.max(1e-4, 1 - 1 / ((1 + thickness) * (1 + thickness))));
-  const uniforms = useMemo(() => ({ uColor: { value: new Color(spec.color) }, uIntensity: { value: spec.intensity }, uPower: { value: spec.power ?? 2.2 }, uLimb: { value: limb } }), [spec.color, spec.intensity, spec.power, limb]);
+  const uniforms = useMemo(() => ({ uColor: { value: new Color(spec.color) }, uIntensity: { value: spec.intensity }, uPower: { value: spec.power ?? 2.2 }, uLimb: { value: limb } }), []);
+  const reduce=prefersReducedMotion();
+  const targetColor=useMemo(()=>new Color(spec.color),[spec.color]);
+  useFrame((_,delta)=>{const k=reduce?1:1-Math.exp(-Math.min(delta,.1)*5);uniforms.uColor.value.lerp(targetColor,k);uniforms.uIntensity.value+=(spec.intensity-uniforms.uIntensity.value)*k;uniforms.uPower.value+=((spec.power ?? 2.2)-uniforms.uPower.value)*k;uniforms.uLimb.value+=(limb-uniforms.uLimb.value)*k;});
   return (
     <mesh scale={1 + thickness} renderOrder={-1}>
       <sphereGeometry args={[radius, 64, 48]} />

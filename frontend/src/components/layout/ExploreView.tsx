@@ -1,7 +1,7 @@
 import { imageryAssetUrl } from "@/components/imagery/assetUrl";
 // Explore keeps imagery controls above the workspace and a single destination
 // planet button inside it. Planet navigation preserves mission focus and selections.
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { api } from "@/services/api";
@@ -12,7 +12,6 @@ import { effectiveMapMode, useAppStore, type Body } from "@/store/useAppStore";
 import { ANALOG_FEATURES, BODY_NAME, otherBody, toAnalogShares } from "@/lib/analogFeatures";
 import { PLANET_CONFIGS } from "@/components/globe/PlanetConfig";
 import type { Site } from "@/types";
-import { wantsDiscovery } from "@/features/discovery/lib/objective";
 import { ExploreModeSwitch } from "@/features/discovery/components/ExploreModeSwitch";
 
 /** What the imagery pane needs of a location, on either body. */
@@ -63,17 +62,14 @@ export function matchContextLine(viewedBody: Body, referenceName: string | null,
 
 export function ExploreView({ globe, site, analog, initialMissionId }: ExploreViewProps) {
   const [view, setView] = useState<"globe" | "orbital" | "surface">("globe");
+  const revision=useAppStore(s=>s.exploreRevision);
+  useEffect(()=>setView("globe"),[revision]);
   const viewedBody = useAppStore((s) => s.viewedBody);
   const missionBody = useAppStore(s => s.selectionBody);
   const stage = useAppStore(s => s.exploreStage);
   const navigateExplore = useAppStore(s => s.navigateExplore);
   const mapMode = useAppStore(s => s.mapMode);
-  const selectedMarsId = useAppStore(s => s.selectedMarsId);
-  const setActiveTab = useAppStore((s) => s.setActiveTab);
-  const selectedEarthId = useAppStore((s) => s.selectedEarthId);
   const effective = effectiveMapMode({ viewedBody, mapMode });
-  const objectiveText = useAppStore((s) => (s.appliedObjective || s.missionObjective || "").trim());
-  const openFindAnalogs = useAppStore((s) => s.openFindAnalogs);
   const discoveryCue = viewedBody === "earth" && effective === "analog_match";
 
   const destination = otherBody(viewedBody);
@@ -88,7 +84,6 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <div role="group" aria-label="Site imagery">{(["globe","orbital","surface"] as const).map(id => <button key={id} type="button" aria-pressed={view === id} onClick={() => setView(id)} className={`rounded border px-2.5 py-1.5 text-xs ${view === id ? "border-copper text-copper-bright bg-copper/10" : "border-transparent text-fg-muted hover:text-fg"}`}>{id === "globe" ? "Globe" : id === "orbital" ? "Orbital view" : "Surface view"}</button>)}</div>
-        {stage === "analogs" && <button type="button" onClick={() => setActiveTab("compare")} disabled={!selectedEarthId || !selectedMarsId} className="ml-auto rounded border border-copper/50 bg-copper/10 px-3 py-1.5 text-xs font-semibold text-copper-bright disabled:opacity-40">Compare selected pair →</button>}
       </div>
     </nav>
     {effective === "analog_match" ? <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="analog-context">
@@ -96,7 +91,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
         <p className="text-fg" aria-live="polite" data-testid="match-context-line">{analog?.referenceName ? `${BODY_NAME[viewedBody]} matches to ${analog.referenceName}` : "Choose the mission site you want to find analogs for."}</p>
         <details className="relative"><summary className="cursor-pointer text-fg-muted underline underline-offset-4">Change reference</summary><label className="mt-2 block text-fg-muted">{BODY_NAME[otherBody(viewedBody)]} site<select value={analog?.referenceId ?? ""} onChange={e => e.target.value && analog?.onReferenceChange(e.target.value)} aria-label={`Reference location on ${BODY_NAME[otherBody(viewedBody)]}`} className="ml-2 max-w-full rounded border border-line-strong bg-bg px-2 py-1 text-xs text-fg"><option value="" disabled>Choose a site</option>{analog?.referenceOptions.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}</select></label></details>
       </div>
-      {discoveryCue && <p className="mt-2 flex flex-wrap items-center gap-x-2 text-fg-muted" data-testid="discovery-cue"><span>These are the <strong className="font-medium text-fg">established analogs</strong> (curated sites).</span><button type="button" onClick={openFindAnalogs} className="text-info underline underline-offset-4">Find candidate Earth analogs beyond them →</button>{wantsDiscovery(objectiveText) && <span className="text-fg-faint">Your objective asks for new regions.</span>}</p>}
+      {discoveryCue && <p className="mt-2 text-fg-muted" data-testid="discovery-cue">Established Earth analogs from the curated catalog.</p>}
     </div> : null}
 
     <div className="relative min-h-0 flex-1"><div className="absolute right-3 top-3 z-10 rounded-lg border border-line/60 bg-bg/95 p-1.5" role="group" aria-label="Switch planet">

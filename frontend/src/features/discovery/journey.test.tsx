@@ -52,12 +52,12 @@ describe("discovery journey", () => {
     setDiscoveryService(svc);
     mount();
     // Explore opens on Find Earth Analogs, no mission design needed; the primary navigation is Explore and Research
-    expect(screen.getByRole("radio", { name: "Find Earth Analogs" })).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByRole("radio", { name: "Find Unresearched Analogs" })).toHaveAttribute("aria-checked", "true");
     const nav = screen.getByRole("navigation", { name: "Primary" });
     expect(within(nav).getByRole("button", { name: "Explore" })).toHaveAttribute("aria-current", "page");
     expect(within(nav).getByRole("button", { name: "Research" })).toBeInTheDocument();
     expect(within(nav).getByRole("button", { name: "Mission Design" })).toBeInTheDocument();
-    expect(await screen.findByRole("heading", { name: "Find Earth terrain resembling Jezero." })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Find unresearched analogs for Jezero." })).toBeInTheDocument();
     const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
     // the first result is selected once and its evidence is in the panel
     const row1 = within(list).getByRole("button", { name: /Rank 1.*Footprint c_31_25_m2_75/ });

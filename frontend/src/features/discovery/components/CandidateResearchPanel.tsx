@@ -92,7 +92,7 @@ export function CandidateResearchPanel() {
     setBriefState(`Saved ${name}${dirty ? " (marked DRAFT: it contains unsaved edits)" : ""}. Downloading never changes the research status.`);
   };
 
-  if (!target) return <section className="rounded-xl border border-line-strong bg-bg-elev p-4"><h2 className="text-lg font-semibold text-fg">Earth candidate research</h2><p className="mt-2 text-sm text-fg-muted">Select a candidate under Explore → Find Earth Analogs, then choose “Research this candidate”. Its research status is separate from its terrain score.</p><button type="button" className={`${button} mt-3`} onClick={() => useAppStore.getState().openFindAnalogs()}>Choose a discovery candidate</button></section>;
+  if (!target) return <section className="rounded-xl border border-line-strong bg-bg-elev p-4"><h2 className="text-lg font-semibold text-fg">Earth candidate research</h2><p className="mt-2 text-sm text-fg-muted">Select a candidate under Explore → Find Unresearched Analogs, then choose “Research this candidate”. Its research status is separate from its terrain score.</p><button type="button" className={`${button} mt-3`} onClick={() => useAppStore.getState().openFindAnalogs()}>Choose a discovery candidate</button></section>;
   if (query.isPending) return <div role="status" className="space-y-3 p-4"><p className="text-sm text-fg-muted">Loading candidate research dossier…</p><div className="h-24 animate-pulse rounded-lg bg-bg-elev-2" /></div>;
   if (query.error || !data || !working) return <div className="p-4"><ErrorNote error={query.error} context="candidate/research" /><button type="button" className={`${button} mt-3`} onClick={() => void query.refetch()}>Retry research dossier</button></div>;
 

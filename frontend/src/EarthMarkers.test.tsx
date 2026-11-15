@@ -83,6 +83,7 @@ describe("Earth and Mars markers", () => {
     fireEvent.click(screen.getByRole("button", { name: "View Earth" }));
     await waitFor(() => expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-body", "earth"));
     const earthStub = screen.getByTestId("globe-stub");
+    expect(earthStub).toBe(stub); // Preserve the same globe/canvas across planet navigation.
     await waitFor(() => expect(earthStub).toHaveTextContent("haughton_crater/analog/-"), { timeout: 3000 });
     expect(earthStub).toHaveAttribute("data-mode", "analog");
     // the fixture catalogue carries a subset of the seven live Earth candidates; every one of them, and nothing else, is on the Earth globe

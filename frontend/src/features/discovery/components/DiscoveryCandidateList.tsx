@@ -44,6 +44,7 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
         </div>
         <p className="mt-1 text-[10.5px] leading-snug text-fg-faint">{PROPOSED_LABEL}</p>
         {candidates && n > 0 && <p className="mt-1 text-[10.5px] leading-snug text-fg-faint">Index: terrain similarity to the reference on slope and relief, 0–100. Not a probability.</p>}
+        {candidates && n > 0 && <p className="mt-2 text-[10.5px] leading-snug text-fg-faint">Numbered outlines: candidate footprints. Dots: sampled centres. Dashed boundary: survey area. Grey markers: catalog sites.</p>}
         {error ? <div className="mt-3">{error}</div>
           : !candidates ? <div className="mt-3">{status}</div>
           : n === 0 ? <p className="mt-3 rounded-lg border border-dashed border-line px-3 py-2 text-xs text-fg-muted">No footprint in this survey passed screening, so there is nothing to rank. The survey coverage section in the panel lists why each sampled footprint was excluded.</p>

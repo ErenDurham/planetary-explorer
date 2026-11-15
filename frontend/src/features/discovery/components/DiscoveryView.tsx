@@ -5,7 +5,6 @@
 // numeric is the service's. Discovery selection lives in its own store and
 // never touches the curated Earth selection.
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyNote } from "@/components/ui/Section";
 import { ErrorNote } from "@/components/ui/ErrorNote";
@@ -19,7 +18,6 @@ import { useDiscoveryRank } from "../hooks/useDiscoveryRank";
 import { useDiscoveryCandidate } from "../hooks/useDiscoveryCandidate";
 import { useDiscoveryStore, useRunState } from "../store/useDiscoveryStore";
 import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
-import { wantsDiscovery } from "../lib/objective";
 import { DiscoveryStage } from "./DiscoveryStage";
 import { DiscoveryCandidateList } from "./DiscoveryCandidateList";
 import { DiscoveryPanel } from "./DiscoveryPanel";
@@ -47,7 +45,6 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const focusToken = useDiscoveryStore(s => s.selectionRevision);
   const earth = useEarthSites();
   const palette = useAppStore(s => s.rankPalette);
-  const objective = useAppStore(s => (s.appliedObjective || s.missionObjective || "").trim());
   const setActiveTab = useAppStore(s => s.setActiveTab);
   const setExploreMode = useAppStore(s => s.setExploreMode);
   const setViewedBody = useAppStore(s => s.setViewedBody);
@@ -118,10 +115,6 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
     ? <div className="h-full p-3"><SurveyMap run={activeRun!} survey={survey ?? null} candidates={candidates ?? []} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} established={earth.sites} palette={palette} className="h-full" /></div>
     : <DiscoveryGlobe candidates={candidates ?? []} established={earth.sites} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} palette={palette} runLabel={activeRun!.label} focusToken={focusToken} bounds={activeRun!.bounds} survey={survey ?? null} />);
 
-  const caption = !ready ? null : store.view === "map"
-    ? <>The dashed box is the only area searched. Dots are the footprint centres that were evaluated; coloured squares are the candidates shown, each a {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprint around its centre. Crosses mark established analogs from the curated catalog when any fall in view.</>
-    : <>Coloured outlines with numbered markers are the {presented ?? ""} shortlist candidates' {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprints, coloured by rank. Small dots are the {evaluated ?? ""} sampled centres the survey evaluated, and the dashed ring is the only area searched. Grey markers elsewhere are catalog context sites from Browse Regions, not candidates. Click a footprint or its marker to select it.</>;
-
   const facts = ready ? (
     <>
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
@@ -130,9 +123,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
       </div>
       <div className="mt-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-fg-muted">
         <span>Reference: <span className="text-fg">{reference!.name}</span> · Mars · <span className="num">{reference!.lat.toFixed(2)}°N, {reference!.lon_east.toFixed(2)}°E</span></span>
-        <button type="button" onClick={() => openEstablished()} className="inline-flex items-center gap-0.5 text-info underline underline-offset-2">See the established analogs<ArrowUpRight className="h-3 w-3" aria-hidden /></button>
       </div>
-      {wantsDiscovery(objective) && <p className="mt-1 text-fg-faint">Your mission objective asks for new regions beyond the established analogs; this is where that search lives.</p>}
     </>
   ) : null;
 
@@ -158,7 +149,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
       <div className="relative order-1 lg:order-2 lg:h-full">
         <DiscoveryStage
           badge={badge}
-          title={`Find Earth terrain resembling ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
+          title={`Find unresearched analogs for ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
           lede={activeRun && reference
             ? `${evaluated != null ? `${evaluated} surveyed locations` : "Surveyed locations"} compared with ${reference.name} using regional slope and relief.${presented != null ? ` ${presented} candidate regions selected for review.` : ""}`
             : "Compare surveyed Earth terrain with a Mars reference using regional slope and relief."}
@@ -168,7 +159,6 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           onView={store.setView}
           viewEnabled={ready}
           mobile={null}
-          caption={caption}
         >
           {body}
         </DiscoveryStage>

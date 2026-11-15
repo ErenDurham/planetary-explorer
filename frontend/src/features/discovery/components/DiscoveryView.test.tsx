@@ -43,13 +43,14 @@ describe("DiscoveryView", () => {
     setDiscoveryService(svc);
     mount();
     expect(await screen.findByText("Survey installed · discovery-v1")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Find Earth terrain resembling Jezero." })).toBeInTheDocument();
-    expect(screen.getByText(/Your mission objective asks for new regions/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Find unresearched analogs for Jezero." })).toBeInTheDocument();
     expect(screen.getByRole("radiogroup", { name: "Explore mode" })).toBeInTheDocument();
     // the one installed survey is named, the area searched is stated, and ranking starts on its own
     expect(screen.getByTestId("survey-picker")).toHaveTextContent("Eastern Morocco pilot");
     expect(screen.getByText(/Earth was not searched globally/)).toBeInTheDocument();
     const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
+    expect(screen.getByText(/Numbered outlines: candidate footprints/)).toBeInTheDocument();
+
     expect(svc.calls).toHaveLength(1);
     // the scope line is bound to the run and the response: sampled count, area, reference, features, results shown
     expect(screen.getByText("16 surveyed locations compared with Jezero Crater using regional slope and relief. 3 candidate regions selected for review.")).toBeInTheDocument();
@@ -204,12 +205,14 @@ describe("DiscoveryView", () => {
     setDiscoveryService(connectedService({ capabilities: async () => ({ ...capabilities }) }));
     mount();
     await screen.findByText("Survey installed · discovery-v1");
-    fireEvent.click(screen.getByRole("button", { name: /See the established analogs/ }));
+    expect(screen.queryByRole("button",{name:/See the established analogs/})).toBeNull();
+    const before=useAppStore.getState();
+    fireEvent.click(screen.getByRole("radio", { name: "Browse Regions" }));
     const s = useAppStore.getState();
     expect(s.activeTab).toBe("explore");
     expect(s.exploreMode).toBe("browse");
-    expect(s.viewedBody).toBe("earth");
-    expect(s.mapMode).toBe("analog_match");
+    expect(s.viewedBody).toBe(before.viewedBody);
+    expect(s.mapMode).toBe(before.mapMode);
     expect(s.selectedEarthId).toBe("atacama_yungay");
   });
 

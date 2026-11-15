@@ -1,13 +1,13 @@
-# Find Earth Analogs: UI integration
+# Find Unresearched Analogs: UI integration
 
 **Explore** has two modes, joined by one segmented control at the top of the page:
 
 - **Browse Regions**: the featured Mars and Earth regions, including the established analogs
   (the existing globe, candidate list and detail panel).
-- **Find Earth Analogs**: the discovery-v1 interface (`frontend/src/features/discovery/`), built
+- **Find Unresearched Analogs**: the discovery-v1 interface (`frontend/src/features/discovery/`), built
   against the backend-owned contract in [`DISCOVERY_CONTRACT.md`](../DISCOVERY_CONTRACT.md).
 
-There is no separate Discover tab. Find Earth Analogs keeps its own run-scoped store, its own
+There is no separate Discover tab. Find Unresearched Analogs keeps its own run-scoped store, its own
 two-feature terrain index, and never writes to the curated selection. It is reached from the switch,
 from a Mars region's detail panel ("Find Earth analogs", enabled for the service's reference region),
 from the Earth analog bar in Browse Regions, and from the Research page's candidate panel.
@@ -24,7 +24,7 @@ while the backend reads it, and an unapplied edit is marked "Draft · not applie
 
 Once applied, `MissionNextStep` (`lib/missionRoute.ts`) names the one Explore action the reading
 supports and its limits in the same breath: a new-regions objective around Jezero leads to **Explore
-candidates** (Find Earth Analogs, "a bounded set of surveyed Earth footprints … not a global search");
+candidates** (Find Unresearched Analogs, "a bounded set of surveyed Earth footprints … not a global search");
 a new-regions objective around any other reference says plainly that discovery exists only for
 Jezero and routes to the established analogs; a landing objective routes to the Mars sites; a reading
 with no task asks the user to choose a supported workflow rather than guessing. Jezero's discovery
@@ -34,7 +34,7 @@ Mission Design and re-applying keeps research notes and the discovery selection;
 is disabled while a draft edit is unapplied, so Explore never opens on priorities that belong to an
 older objective. There is no first-run modal.
 
-Explore then opens on the routed mode. In **Find Earth Analogs** the stage heading is "Find Earth
+Explore then opens on the routed mode. In **Find Unresearched Analogs** the stage heading is "Find Earth
 terrain resembling Jezero." with a one-sentence scope line bound to the run and the response
 (footprints sampled, area and size, reference, the two features compared, results shown; "a bounded
 pilot, not a global search"), and a line tying it to the applied objective. Browse Regions is the
@@ -75,7 +75,7 @@ unsupported reference, the choose-a-task case, and a return to edit keeping rese
 
 ## Layout
 
-Find Earth Analogs uses the same three-column workspace as Browse Regions, drawn by
+Find Unresearched Analogs uses the same three-column workspace as Browse Regions, drawn by
 `DiscoveryView` (the plan is in [`DISCOVERY_EXPLORE_LAYOUT_PLAN.md`](DISCOVERY_EXPLORE_LAYOUT_PLAN.md)):
 
 | column | component | role |
@@ -102,7 +102,7 @@ whole surveyed area in view; `PlanetViewer`'s near plane is 0.02 so the surface 
 
 ## Workflow
 
-Explore → Find Earth Analogs → (ranking of the installed survey starts on its own) → select a
+Explore → Find Unresearched Analogs → (ranking of the installed survey starts on its own) → select a
 candidate from the list, the globe or the map → read its evidence in the right panel →
 **Research this candidate** / **Open in Research Prospects** (with the reference region kept as the
 selected Mars site). Weights and export are in the left column; the formula, screening funnel,
@@ -153,7 +153,7 @@ diversification rule.
 Navigation: `exploreMode` (`browse` | `find_analogs`) in the app store with `openFindAnalogs()`,
 `ExploreModeSwitch` rendered by both Explore experiences, routing in `App.tsx`, `FindAnalogsEntry`
 in the Mars detail panel, and the cue on the Earth analog bar. The Astro assistant stays available
-over Find Earth Analogs with the same insets as Browse Regions.
+over Find Unresearched Analogs with the same insets as Browse Regions.
 
 ## What is shown and what is not
 
@@ -193,3 +193,8 @@ Notes persist on the backend and are included in discovery exports; use durable 
 for hosted deployments. Geology, access and field validation remain separate evidence gaps.
 
 Browser verification used isolated data: Discover → ranked candidate → Research dossier → save in-progress notes → return to Discover with updated tag. Real candidate notebooks were not modified. Unsaved notes survive evidence queries; the Mars-context assistant is hidden in the candidate research workspace.
+
+The mode label refers to research status recorded in this app, not scientific
+novelty. The shared mode switch is the only cross-view navigation in the survey
+header; a short map key lives beside the candidate list instead of above the
+globe. Candidate research badges remain authoritative for each footprint.

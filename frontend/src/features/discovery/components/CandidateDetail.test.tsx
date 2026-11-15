@@ -38,6 +38,7 @@ describe("CandidateDetail", () => {
     expect(card).toHaveTextContent(/61\.4.*terrain index · not a probability/);
     expect(card).toHaveTextContent(/slope 50%, relief 50%/);
     expect(within(card).getByTestId("research-this-candidate")).toHaveTextContent("Research this candidate");
+    expect(within(card).queryByRole("button",{name:"Open in Research"})).toBeNull();
     // what matches: the closest factor, in regional-footprint terms
     const matches = within(card).getByRole("region", { name: "What matches" });
     expect(matches).toHaveTextContent(/Regional medians over the 60 × 60 km footprint, on 4 km cells; not rover-scale terrain/);

@@ -92,3 +92,24 @@ The former simplified Compare replacement/chooser is no longer a route.
 Regression tests cover the original atlas with a selected discovered footprint,
 switching between found/catalog regions, missing imagery, disabling curated API
 scoring for found IDs, and choosing an unsupported discovery reference.
+
+## Analyze restored and navigation consolidated
+
+The simplified RegionWorkspace page has been removed. Applicable catalog mission
+evaluations use the existing AnalyzeView or MissionAssessmentDetail. Found regions
+use the same analysis heading and card structure: decision summary, measured
+factor contributions, same-survey alternatives, live terrain-weight sensitivity,
+evidence gaps and sources. They are never presented as landing-suitability scores.
+
+Research status in artifact-backed views uses the saved candidate notebook status
+when available, rather than treating every immutable survey row as unresearched.
+
+Redundant navigation removed across the interface:
+- Discovery and Browse headers rely on the shared mode switch.
+- Candidate evidence has one Research action, rather than a second “Open in Research.”
+- Analyze has no self-link to another measurements page or redundant Explore link.
+- The Research cover no longer repeats links to sections and expedition controls
+  already present below it; the actual evidence and expedition actions remain.
+- The Explore toolbar no longer duplicates the candidate's Compare action.
+- Contextual next-stage actions, per-location globe actions, source citations,
+  exports and recovery actions remain available.
