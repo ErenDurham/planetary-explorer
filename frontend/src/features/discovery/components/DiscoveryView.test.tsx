@@ -53,7 +53,8 @@ describe("DiscoveryView", () => {
 
     expect(svc.calls).toHaveLength(1);
     // the scope line is bound to the run and the response: sampled count, area, reference, features, results shown
-    expect(screen.getByText("16 surveyed locations compared with Jezero Crater using regional slope and relief. 3 candidate regions selected for review.")).toBeInTheDocument();
+    // the scope line names the regions searched and the dimensions the survey actually scores
+    expect(screen.getByText("16 surveyed locations in 2 deliberately under-studied regions compared with Jezero Crater on terrain and water. 3 candidate regions selected for review.")).toBeInTheDocument();
     expect(svc.calls[0]).toMatchObject({ run_id: run.run_id, reference_id: "jezero_crater", top_k: 5, weights: { slope_regional_median_deg: 40, roughness_regional_m: 40, precipitation_mm_day: 20 } });
     // headline numbers bound to the response: evaluated, presented, footprint, resolution
     const stats = screen.getByTestId("survey-stats");
@@ -63,12 +64,13 @@ describe("DiscoveryView", () => {
     expect(stats).toHaveTextContent(/4 kmterrain analysis resolution/);
     expect(within(list).getAllByRole("listitem")).toHaveLength(3);
     // the left list: rank, where, index and the two status chips, nothing invented
-    const first = within(list).getByRole("article", { name: /Rank 1: Footprint c_31_25_m2_75, similarity index 77\.1/ });
+    const first = within(list).getByRole("button", { name: /Rank 1: Footprint c_31_25_m2_75, similarity index 77\.1/ });
     expect(first).toHaveTextContent(/31\.250°N, 2\.750°W/);
     expect(first).toHaveTextContent(/77\.1/);
     expect(first).toHaveTextContent(/Not near a catalog location/);
     expect(first.textContent).not.toMatch(/Outside catalog buffer/);
-    expect(screen.getByRole("heading", { name: /Candidates · 3/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Ranked candidates" })).toBeInTheDocument();
+    expect(screen.getByText(/3 of 16 surveyed footprints/)).toBeInTheDocument();
     // the first result is selected once on arrival, so the evidence panel is never blank; clearing it shows the survey overview
     const panel = screen.getByTestId("discovery-panel");
     expect(within(list).getByRole("button", { name: /Rank 1.*Footprint c_31_25_m2_75/ })).toHaveAttribute("aria-pressed", "true");
@@ -93,7 +95,7 @@ describe("DiscoveryView", () => {
     expect(funnel).toHaveTextContent("2011-2015 (TanDEM-X)");
     expect(funnel).toHaveTextContent(/Ranked pool 3 · returned 3/);
     // select a candidate from the list: the panel shows its evidence (label, index sentence, reasons, factor table, novelty wording, missing evidence, validation steps from the detail call)
-    const row2 = within(within(list).getByRole("article", { name: /Rank 2:/ })).getByRole("button");
+    const row2 = within(list).getByRole("button", { name: /Rank 2:/ });
     fireEvent.click(row2);
     expect(row2).toHaveAttribute("aria-pressed", "true");
     const card = await screen.findByRole("article", { name: /Candidate evidence: Footprint c_31_75_m2_25/ });
@@ -119,7 +121,7 @@ describe("DiscoveryView", () => {
     // the moved share is exact and the remaining features rebalance to what is left of 100
     expect(svc.calls[2].weights).toMatchObject({ roughness_regional_m: 80 });
     expect(Object.values(svc.calls[2].weights as Record<string, number>).reduce((a, b) => a + b, 0)).toBe(100);
-    await waitFor(() => expect(within(screen.getByRole("list", { name: "Ranked proposed candidates" })).getByRole("article", { name: /Rank 1: Footprint c_31_25_m2_25/ })).toBeInTheDocument());
+    await waitFor(() => expect(within(screen.getByRole("list", { name: "Ranked proposed candidates" })).getByRole("button", { name: /Rank 1: Footprint c_31_25_m2_25/ })).toBeInTheDocument());
     // the selected candidate's detail follows the new rank response
     expect(screen.getByRole("article", { name: /Candidate evidence/ })).toHaveTextContent("Rank 2");
     // export the server artifact
@@ -148,7 +150,7 @@ describe("DiscoveryView", () => {
     setDiscoveryService(svc);
     mount();
     expect(await screen.findByText(/No footprint in this survey passed screening/)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Candidates · 0/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Ranked candidates" })).toBeInTheDocument();
     setDiscoveryService(connectedService({ rank: async () => { throw new DiscoveryRequestRejected("validation_error", "weights must have a positive total"); } }));
     fireEvent.change(screen.getByRole("slider", { name: /Regional median slope weight share/ }), { target: { value: "60" } });
     expect(await screen.findByRole("alert")).toHaveTextContent(/weights must have a positive total/);
@@ -167,7 +169,7 @@ describe("DiscoveryView", () => {
     releaseFirst!();
     await new Promise(r => setTimeout(r, 20));
     expect(screen.queryByText("STALE RESULT")).toBeNull();
-    expect(screen.getByRole("article", { name: /Rank 1: Footprint c_31_25_m2_75/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Rank 1: Footprint c_31_25_m2_75/ })).toBeInTheDocument();
   });
 
   it("keeps discovery and curated pools independent on the globe view and lists catalog sites as established", async () => {
@@ -223,7 +225,7 @@ describe("DiscoveryView", () => {
     useAppStore.setState({ selectedMarsId: "gale_crater" });
     mount();
     const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
-    fireEvent.click(within(within(list).getByRole("article", { name: /Rank 1:/ })).getByRole("button"));
+    fireEvent.click(within(list).getByRole("button", { name: /Rank 1:/ }));
     fireEvent.click(await screen.findByRole("button", { name: "Research this candidate" }));
     const s = useAppStore.getState();
     expect(s.activeTab).toBe("research");

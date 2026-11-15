@@ -30,6 +30,18 @@ import { isDiscoveryNotFound, isDiscoveryRejected, isDiscoveryUnavailable, type 
 
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 
+/** The dimensions a survey scores, named from its own criteria.
+ * The short group name reads better in a sentence than the panel heading does. */
+export function basisPhrase(criteria: ReadonlyArray<{ group_label?: string; group?: string }>): string {
+  const labels: string[] = [];
+  for (const criterion of criteria) {
+    const label = (criterion.group || criterion.group_label || "").toLowerCase();
+    if (label && !labels.includes(label)) labels.push(label);
+  }
+  if (labels.length === 0) return "its measured features";
+  return labels.length === 1 ? labels[0] : `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+}
+
 export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   /** The shared site-panel width, so resizing here and in Browse Regions is one setting. Owned locally when absent. */
   panelWidth?: number;
@@ -82,9 +94,12 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const presented = rank.data?.returned_count ?? null;
   const fpW = num(survey?.footprint_specification?.width_m), fpH = num(survey?.footprint_specification?.height_m);
   const cell = num(survey?.grid_specification?.cell_m);
+  const regionsSearched = survey?.regions?.length ?? activeRun?.region_count ?? null;
   const stats: Array<{ n: number | string; label: string }> = [];
+  if (regionsSearched) stats.push({ n: regionsSearched, label: "regions searched" });
   if (evaluated != null) stats.push({ n: evaluated, label: "locations evaluated" });
   if (presented != null) stats.push({ n: presented, label: "spatially separated candidates presented" });
+  if (criteria.length) stats.push({ n: criteria.length, label: "measured features compared" });
   if (fpW && fpH) stats.push({ n: `${Math.round(fpW / 1000)} × ${Math.round(fpH / 1000)} km`, label: "comparison footprints" });
   if (cell) stats.push({ n: `${Math.round(cell / 1000)} km`, label: "terrain analysis resolution" });
 
@@ -135,6 +150,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
         <DiscoveryCandidateList
           candidates={candidates}
           evaluated={evaluated}
+          regionsSearched={regionsSearched}
+          referenceName={referenceName}
           selectedId={run.selectedCandidateId}
           onSelect={store.selectCandidate}
           palette={palette}
@@ -151,8 +168,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           badge={badge}
           title={`Find unresearched analogs for ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
           lede={activeRun && reference
-            ? `${evaluated != null ? `${evaluated} surveyed locations` : "Surveyed locations"} compared with ${reference.name} using regional slope and relief.${presented != null ? ` ${presented} candidate regions selected for review.` : ""}`
-            : "Compare surveyed Earth terrain with a Mars reference using regional slope and relief."}
+            ? `${evaluated != null ? `${evaluated} surveyed locations` : "Surveyed locations"}${regionsSearched ? ` in ${regionsSearched} deliberately under-studied regions` : ""} compared with ${reference.name} on ${basisPhrase(criteria)}.${presented != null ? ` ${presented} candidate regions selected for review.` : ""}`
+            : "Compare surveyed Earth terrain with a Mars reference on measured terrain, illumination and aridity."}
           stats={stats.length > 0 ? <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1" aria-label="Survey at a glance" data-testid="survey-stats">{stats.map(s => <li key={s.label}><span className="num text-base text-fg">{s.n}</span><span className="ml-1 text-[10.5px] text-fg-muted">{s.label}</span></li>)}</ul> : null}
           facts={facts}
           view={store.view}
