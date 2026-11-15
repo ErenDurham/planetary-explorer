@@ -8,8 +8,10 @@ import { atlasLocation } from "./atlasAdapter";
 export function useAtlasDiscovery(){
   const target=useRegionTarget(s=>s.target);
   const storedRun=useDiscoveryStore(s=>s.runId);
-  const capabilities=useQuery({queryKey:["region-discovery-capabilities"],queryFn:({signal})=>discoveryEngine.capabilities(signal),staleTime:Infinity,retry:false});
-  const runId=target?.runId ?? storedRun ?? capabilities.data?.runs[0]?.run_id;
+  // The Find Earth Analogs discovery page was removed, so no survey run is loaded and no found
+  // regions are offered in Compare or Analyze; only the established catalog remains.
+  const capabilities=useQuery({queryKey:["region-discovery-capabilities"],queryFn:({signal})=>discoveryEngine.capabilities(signal),staleTime:Infinity,retry:false,enabled:false});
+  const runId=target?.kind==="discovered" ? target.runId ?? storedRun ?? undefined : undefined;
   const artifact=useQuery({queryKey:["region-artifact",runId],queryFn:({signal})=>discoveryEngine.export(runId!,signal),enabled:!!runId,retry:false});
   const rows=(artifact.data?.audit_rows ?? []).filter(r=>r.profile && !r.screening_reasons.length);
   const regions=rows.map(row=>{

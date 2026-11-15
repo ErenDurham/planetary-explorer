@@ -167,10 +167,10 @@ describe("App", () => {
     expect(within(nav).getAllByRole("button").map((b: HTMLElement) => b.textContent)).toEqual(["Mission Design", "Explore", "Research", expect.stringContaining("Advanced")].map(x => typeof x === "string" ? expect.stringContaining(x) : x));
     expect(within(nav).getByRole("button", { name: "Mission Design" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
-    expect(screen.getByTestId("mission-lede")).toHaveTextContent(/installed discovery pilot/);
-    // Explore still opens on the discovery pilot, without any gate dialog
+    expect(screen.getByTestId("mission-lede")).toHaveTextContent(/established Earth analogs or Mars landing screening/);
+    // Explore opens on Find Earth Analogs (the single Explore mode)
     fireEvent.click(within(nav).getByRole("button", { name: "Explore" }));
-    expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "find_analogs" });
+    expect(useAppStore.getState()).toMatchObject({ exploreMode: "browse" });
     expect(screen.queryByRole("dialog")).toBeNull();
     fireEvent.click(within(nav).getByRole("button", { name: "Research" }));
     expect(useAppStore.getState().activeTab).toBe("research");

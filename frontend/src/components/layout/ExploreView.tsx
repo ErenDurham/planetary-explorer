@@ -13,7 +13,6 @@ import { effectiveMapMode, useAppStore, type Body } from "@/store/useAppStore";
 import { ANALOG_FEATURES, BODY_NAME, otherBody, toAnalogShares } from "@/lib/analogFeatures";
 import { PLANET_CONFIGS } from "@/components/globe/PlanetConfig";
 import type { Site } from "@/types";
-import { ExploreModeSwitch } from "@/features/discovery/components/ExploreModeSwitch";
 
 /** What the imagery pane needs of a location, on either body. */
 export type ImagerySubject = Pick<Site, "id" | "name" | "lat" | "lon_east">;
@@ -80,7 +79,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
   return <div data-pane="explore" className="flex h-full min-h-0 flex-col">
     <nav aria-label="Explore views" className="shrink-0 border-b border-line bg-bg-elev px-3 py-3">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-      <ExploreModeSwitch className="shrink-0" />
+      <h2 className="shrink-0 text-sm font-semibold text-copper-bright" data-testid="explore-title">Find Earth Analogs</h2>
       {stage !== "analogs" && <p className="min-w-[12rem] flex-1 text-xs leading-relaxed text-fg-muted" data-testid="explore-intro">{`Explore ${BODY_NAME[missionBody]} sites for your mission. Select a site to inspect it, then switch planets to find analogs on ${BODY_NAME[otherBody(missionBody)]}.`}</p>}
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2">

@@ -10,7 +10,7 @@ import { type Tab } from "@/store/useAppStore";
 
 const PRIMARY: Array<{ id: Tab; label: string; hint: string; step: number }> = [
   { id: "mission", label: "Mission Design", hint: "Describe the mission; the app reads it and proposes priorities", step: 1 },
-  { id: "explore", label: "Explore", hint: "Find Earth terrain resembling Jezero, or browse the established regions and Mars sites", step: 2 },
+  { id: "explore", label: "Explore", hint: "Find Earth analogs among the established regions, and explore the Mars sites", step: 2 },
   { id: "research", label: "Research", hint: "Notebook, checklist, brief and background evidence for a candidate", step: 3 },
 ];
 const ADVANCED: Array<{ id: Tab; label: string; hint: string }> = [

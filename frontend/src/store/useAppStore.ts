@@ -17,7 +17,8 @@ import type { AnalogCheck, EvidenceCitation, HardConstraint, MissionKind } from 
 
 export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
 /** The two ways to explore: browse the featured regions, or find candidate Earth analogs for a reference region. */
-export type ExploreMode = "browse" | "find_analogs";
+/** Explore has one mode, "Find Earth Analogs" (the established Earth analogs and the Mars sites). */
+export type ExploreMode = "browse";
 
 /** The default mission objective (one source: lib/defaultObjective.ts). The app
  * sets its starting priorities from it, and it is the example in the empty
@@ -356,10 +357,10 @@ export const useAppStore = create<AppState>((set, get) => ({
   // a fresh session opens on Mission Design: objective first, then Explore, then Research
   activeTab: "mission",
   setActiveTab: (tab) => set({ activeTab: tab }),
-  // Explore opens on the supported discovery pilot; Browse Regions (established analogs, mission scoring) is the secondary mode
-  exploreMode: "find_analogs",
+  // Explore has a single mode (Find Earth Analogs); the discovery pilot page was removed
+  exploreMode: "browse",
   setExploreMode: (exploreMode) => set({ exploreMode }),
-  openFindAnalogs: () => set({ activeTab: "explore", exploreMode: "find_analogs" }),
+  openFindAnalogs: () => set({ activeTab: "explore", exploreMode: "browse" }),
 
   selectedSiteId: null,
   selectSite: (id) => get().selectLocation("mars", id),
