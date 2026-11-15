@@ -19,6 +19,8 @@ vi.mock("@/components/globe/PlanetViewer", () => ({
 
 import App from "./App";
 
+
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 const sitesFixture = { planet: "mars", sites: fixture.evaluate.results.map((r) => ({ ...fixture.site.site, id: r.site_id, name: r.site_name })), profile_version: "v1" };
 const earthIds = (catalog as { locations: Array<{ id: string; body: string }> }).locations.filter((l) => l.body === "earth").map((l) => l.id);
@@ -48,7 +50,7 @@ function rankResponse(body: Record<string, unknown>) {
 beforeEach(() => {
   useAppStore.setState(useAppStore.getInitialState(), true);
   rankCalls = [];
-  useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars", mapMode: "landing_suitability", followObjective: true, activeTab: "explore", suggestedSelection: null });
+  useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars", mapMode: "landing_suitability", followObjective: true, activeTab: "explore", exploreMode: "browse", missionDesigned: true, suggestedSelection: null });
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const url = String(input);
     if (url.endsWith("/api/v1/health")) return json({ status: "ok", version: "0.1.0", profile_version: "v1", scoring_spec_version: "landing-v1.0", services: { data: "ok", retrieval: "unavailable", llm: "unconfigured" } });
@@ -81,6 +83,7 @@ describe("Earth and Mars markers", () => {
     fireEvent.click(screen.getByRole("button", { name: "View Earth" }));
     await waitFor(() => expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-body", "earth"));
     const earthStub = screen.getByTestId("globe-stub");
+    expect(earthStub).toBe(stub); // Preserve the same globe/canvas across planet navigation.
     await waitFor(() => expect(earthStub).toHaveTextContent("haughton_crater/analog/-"), { timeout: 3000 });
     expect(earthStub).toHaveAttribute("data-mode", "analog");
     // the fixture catalogue carries a subset of the seven live Earth candidates; every one of them, and nothing else, is on the Earth globe
@@ -94,19 +97,19 @@ describe("Earth and Mars markers", () => {
   });
   it("explicit Earth focus opens scored mission profiles, then ranks Mars analogs against the Earth selection", async () => {
     renderApp();
-    fireEvent.click(screen.getByRole("button",{name:"Mission Design"}));
+    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
     // the tab opens on the chat box alone; Mission focus appears once a mission is saved
     const box=screen.getByLabelText("Your mission objective");
     fireEvent.change(box,{target:{value:"Test a rover on Earth terrain"}});
-    await waitFor(()=>expect(screen.getByRole("button",{name:"Save"})).toBeEnabled());
+    await waitFor(()=>expect(screen.getByRole("button",{ name: /Apply objective|Apply changes/ })).toBeEnabled());
     fireEvent.keyDown(box,{key:"Enter"});
     fireEvent.click(await screen.findByRole("button",{name:"Earth"}));
     expect(screen.getByRole("heading",{name:"Mission priorities"})).toBeInTheDocument();
     expect(screen.getAllByRole("slider")).toHaveLength(4); // the same sliders as Mars
-    fireEvent.change(screen.getByLabelText("Gentler terrain share of priorities"),{target:{value:"40"}});
+    fireEvent.change(screen.getByLabelText("Low slopes share of priorities"),{target:{value:"40"}});
     expect(useAppStore.getState().earthWeights.terrain_safety).toBe(40);
     expect(useAppStore.getState().missionProfileWeights.rover_field_test).toEqual(roverSharesFrom(useAppStore.getState().earthWeights));
-    const start=screen.getByRole("button",{name:"Head to explore mission →"});
+    const start=screen.getByRole("button",{ name: "Established Earth analogs" });
     await waitFor(()=>expect(start).toBeEnabled());
     fireEvent.click(start);
     await waitFor(()=>expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-mode","mission"));

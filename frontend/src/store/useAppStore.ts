@@ -13,9 +13,16 @@ import type { ComparisonMode } from "@/lib/comparison";
 import { create } from "zustand";
 import { setShare, toShares } from "@/lib/allocation";
 import { ANALOG_FEATURE_IDS, otherBody, toAnalogShares, type Body } from "@/lib/analogFeatures";
-import type { EvidenceCitation, HardConstraint, MissionKind } from "@/types";
+import type { AnalogCheck, EvidenceCitation, HardConstraint, MissionKind } from "@/types";
 
-export type Tab = "mission" | "explore" | "analyze" | "compare" | "research" | "discover";
+export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
+/** The two ways to explore: browse the featured regions, or find candidate Earth analogs for a reference region. */
+export type ExploreMode = "browse" | "find_analogs";
+
+/** The default mission objective (one source: lib/defaultObjective.ts). The app
+ * sets its starting priorities from it, and it is the example in the empty
+ * Mission Design box (Tab fills it in). */
+export const DEFAULT_OBJECTIVE = DEFAULT_MISSION_OBJECTIVE;
 export type { Body };
 
 /** What the user is doing: screening Mars landing candidates, or picking an
@@ -82,8 +89,10 @@ export interface AppliedInterpretation {
   /** Research behind each hard constraint, by constraint_id. */
   constraintEvidence: Record<string, EvidenceCitation[]>;
   missionProfile: MissionKind;
-  /** The same reading for the Earth field-test site factors (slope, relief). */
+  /** The same reading for the Earth factors. */
   earth: { reasons: Record<string, string>; evidence: Record<string, EvidenceCitation[]> } | null;
+  /** The Earth <-> Mars cross-reference behind both sets of priorities. */
+  analog: AnalogCheck | null;
 }
 
 export interface ObjectiveMeta {
@@ -129,6 +138,9 @@ export interface AppState {
   resetEarthWeights: () => void;
   /** Apply the reading's Earth weights (normalised to shares) and remember them for Reset. */
   applyEarthSuggestion: (weights: Record<string, number>) => void;
+  /** Rank Earth sites by closeness to Mars data: the targets become the paired Mars site's values. */
+  /** Rank Earth sites by their analog similarity to this Mars site (null = the slope/relief targets). */
+  setEarthReference: (marsSiteId: string | null) => void;
   patchMissionRequirements: (patch: Partial<MissionRequirements>) => void;
   applyTaskObjective: (text: string, weights: Record<string, number>, requirements: Partial<MissionRequirements>) => void;
   missionFocusOverride: Body | null;
@@ -162,6 +174,11 @@ export interface AppState {
   selectionRevision: number;
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
+  /** Which Explore experience is shown. Browse is the default; Find Earth Analogs is the discovery survey. */
+  exploreMode: ExploreMode;
+  setExploreMode: (mode: ExploreMode) => void;
+  /** Jump to Explore in Find Earth Analogs mode (from a region's detail, the Research page or an objective). */
+  openFindAnalogs: () => void;
 
   selectedSiteId: string | null;
   selectSite: (id: string | null) => void;
@@ -272,6 +289,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     return next === s.earthWeights ? {} : { earthWeights: next, missionProfileWeights: { ...s.missionProfileWeights, rover_field_test: roverSharesFrom(next) } };
   }),
   resetEarthWeights: () => set(s => ({ earthWeights: { ...s.recommendedEarthWeights }, missionProfileWeights: { ...s.missionProfileWeights, rover_field_test: roverSharesFrom(s.recommendedEarthWeights) } })),
+  setEarthReference: (marsSiteId) => set(s => ({ missionRequirements: { ...s.missionRequirements, earth: { ...s.missionRequirements.earth, analog_reference_id: marsSiteId } } })),
   applyEarthSuggestion: (weights) => set(s => {
     const shares = toShares(weights, s.excludedCriteria);
     return { earthWeights: shares, recommendedEarthWeights: { ...shares }, missionProfileWeights: { ...s.missionProfileWeights, rover_field_test: roverSharesFrom(shares) } };
@@ -299,7 +317,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   navigateExplore: (stage, initialMissionId) => set(s => {
     const body = stage === "mission" ? s.selectionBody : otherBody(s.selectionBody);
     const id = selectedIdFor(s, s.selectionBody) ?? initialMissionId;
-    return { activeTab: "explore", exploreStage: stage, viewedBody: body, followObjective: stage === "mission",
+    return { activeTab: "explore", exploreMode: "browse" as ExploreMode, exploreStage: stage, viewedBody: body, followObjective: stage === "mission",
       mapMode: stage === "mission" ? missionViewMode(s.selectionBody,s.missionType) : "analog_match",
       ...(id ? s.selectionBody === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id } : {}),
       exploreRevision: s.exploreRevision + 1, selectionRevision: s.selectionRevision + 1, autoRotate: false };
@@ -335,8 +353,13 @@ export const useAppStore = create<AppState>((set, get) => ({
   setComparisonPair: (comparisonPair) => set({comparisonPair}),
   comparison: { mode: "all", earthId: "haughton_crater", moonId: "apollo_11", section: "all", details: false },
   setComparison: (patch) => set(s => ({ comparison: { ...s.comparison, ...patch } })),
-  activeTab: "explore",
+  // a fresh session opens on Mission Design: objective first, then Explore, then Research
+  activeTab: "mission",
   setActiveTab: (tab) => set({ activeTab: tab }),
+  // Explore opens on the supported discovery pilot; Browse Regions (established analogs, mission scoring) is the secondary mode
+  exploreMode: "find_analogs",
+  setExploreMode: (exploreMode) => set({ exploreMode }),
+  openFindAnalogs: () => set({ activeTab: "explore", exploreMode: "find_analogs" }),
 
   selectedSiteId: null,
   selectSite: (id) => get().selectLocation("mars", id),
@@ -450,7 +473,7 @@ function clamp(n: number): number {
  * look, where the mission flies, the reference (selecting it on its own body)
  * and the analog preferences. Nothing else in the store ever writes these. */
 /** The Earth site ranking scores regional slope and relief: their shares follow
- * the Earth "Gentler terrain" and "Smoother terrain" priorities. */
+ * the Earth "Low slopes" and "Less rugged ground" priorities. */
 export function roverSharesFrom(earth: Record<string, number>): Record<string, number> {
   const slope = earth.terrain_safety ?? 0, relief = earth.surface_roughness ?? 0;
   return slope + relief > 0 ? toShares({ slope, relief }) : { ...DEFAULT_PROFILE_WEIGHTS.rover_field_test };

@@ -44,10 +44,18 @@ def save_record(run_id,candidate_id,update: ResearchUpdate):
         updated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"))
     p=record_path(run_id,candidate_id)
     with LOCK:
-        p.parent.mkdir(parents=True,exist_ok=True)
         temp=p.with_suffix(f".{os.getpid()}.tmp")
-        temp.write_text(record.model_dump_json(indent=2)+"\n")
-        os.replace(temp,p)
+        try:
+            p.parent.mkdir(parents=True,exist_ok=True)
+            temp.write_text(record.model_dump_json(indent=2)+"\n")
+            os.replace(temp,p)
+        except OSError as exc:
+            raise engine.DiscoveryUnavailable("Research could not be saved. Keep your draft and retry or export a copy.") from exc
+        finally:
+            try:
+                temp.unlink(missing_ok=True)
+            except OSError:
+                pass  # Cleanup must not hide the original storage failure.
     return record
 
 
@@ -88,3 +96,45 @@ def dossier(run_id,candidate_id,question=""):
             "Library passages are background only unless an analyst establishes relevance to the candidate footprint.",
             "Saved findings and review status are analyst supplied, not automatically verified. Literature review never means field validation.",
             "Existing desktop land-cover samples do not constitute a candidate literature review."])
+
+
+def export_brief(run_id, candidate_id):
+    """Read-only, replayable export; does not retrieve literature or promote status."""
+    from app.models.discovery_research import ResearchBrief
+    candidate = engine.detail(run_id, candidate_id)
+    record = get_record(run_id, candidate_id)
+    from app.models.discovery import DiscoveryExport
+    run, manifest = engine.load_run(run_id)
+    discovery = DiscoveryExport(manifest=manifest, specification=run.specification,
+        survey=run.survey, reference_profile=run.reference_profile,
+        audit_rows=run.audit_rows, exclusions=run.survey.exclusion_counts,
+        provenance=run.provenance, validation=run.validation).model_dump(mode="json")
+    discovery["validation"].pop("candidate_research", None)
+    limitations = [
+        "Findings and citations are analyst supplied and have not been automatically verified.",
+        "Catalog absence is not proof of scientific novelty; literature review is not field validation.",
+        "This export contains survey specifications, not the current UI ranking or custom weights.",
+        "Only saved notebook content is included; unsaved browser drafts are excluded.",
+    ]
+    lines = ["# Candidate research brief", "",
+        f"Candidate: {candidate.name} ({candidate_id})",
+        f"Coordinates: {candidate.lat:.6f}, {candidate.lon_east:.6f} (east longitude)",
+        f"Survey: {run_id}", f"Research status: {record.status}",
+        f"Saved at: {record.updated_at or 'Never saved — draft'}", "",
+        "## Review summary", "", record.notes or "No analyst summary saved.", "",
+        "## Analyst findings and sources", ""]
+    for finding in record.findings:
+        lines.extend([f"### {finding.title}", f"Scope: {finding.scope}",
+            f"Source: {finding.url}", "", finding.finding, ""])
+    if not record.findings:
+        lines.extend(["No source findings saved.", ""])
+    lines.extend(["## Remaining checks", "", *candidate.proposed_field_validation, "",
+        "## Limitations", "", *limitations, *candidate.limitations, "",
+        "## Reproducible measured data and survey context", "",
+        "The JSON below preserves units, source provenance, coverage, exclusions and processing settings.",
+        "It does not represent a current custom ranking.", "", "```json",
+        json.dumps({"candidate": candidate.model_dump(mode="json"), "discovery": discovery}, indent=2, sort_keys=True),
+        "```", ""])
+    return ResearchBrief(run_id=run_id, candidate_id=candidate_id,
+        filename=f"{run_id}-{candidate_id}-research.md", markdown="\n".join(lines),
+        record=record, discovery=discovery, limitations=limitations)

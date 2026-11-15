@@ -16,6 +16,7 @@ describe("sourced research dossier", () => {
   it("loads the allow-listed image by entry id, retains credit, and handles a failed image explicitly", () => {
     const { wrap } = setup();
     render(wrap(<ResearchAtlasCover site={site} />));
+    expect(screen.queryByRole("navigation",{name:"Research dossier sections"})).toBeNull();
     const entry = imagery.entries.find(e => e.view === "surface")!;
     const image = screen.getByRole("img");
     expect(image.getAttribute("src")).toContain(`/imagery/${entry.entry_id}/asset`);

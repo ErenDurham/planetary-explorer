@@ -72,6 +72,11 @@ export function extentKm(b: DiscoveryBounds): { ns: number; ew: number } {
   return { ns: (b.north - b.south) * KM_PER_DEG_LAT_EARTH, ew: (b.east - b.west) * KM_PER_DEG_LAT_EARTH * Math.cos((midLat * Math.PI) / 180) };
 }
 
+/** A point as a reader expects it: 31.875°N, 2.125°W. */
+export function formatPoint(lat: number, lonEast: number, digits = 3): string {
+  return `${Math.abs(lat).toFixed(digits)}°${lat >= 0 ? "N" : "S"}, ${Math.abs(lonEast).toFixed(digits)}°${lonEast >= 0 ? "E" : "W"}`;
+}
+
 export function formatBounds(b: DiscoveryBounds): string {
   const f = (v: number, pos: string, neg: string) => `${Math.abs(v).toFixed(2)}°${v >= 0 ? pos : neg}`;
   return `${f(b.south, "N", "S")}–${f(b.north, "N", "S")}, ${f(b.west, "E", "W")}–${f(b.east, "E", "W")}`;

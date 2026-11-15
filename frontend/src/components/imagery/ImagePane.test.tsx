@@ -29,3 +29,22 @@ describe("ImagePane expand dialog", () => {
     expect(screen.getByRole("img", { name: /A panorama\. The ground at the site\./ })).toBeInTheDocument();
   });
 });
+
+describe("ImagePane image arrows", () => {
+  it("steps through several images with left/right arrows (no drop-down) and hides them for a single image", () => {
+    const two: PaneImagery = { ...imagery, data: { ...data, entries: [photo, { ...photo, entry_id: "pano2", title: "Second panorama" } as ImageryEntry] } };
+    const onEntryChange = vi.fn();
+    const pane = (entryId: string | null, im: PaneImagery) => <ImagePane roleLabel="Selected on Mars" location={{ body: "mars", id: "x", name: "Site X", lat: 1, lonEast: 2, halfWidthDeg: 0.5 }} imagery={im} view="surface" sharedView="surface" onOverrideView={() => {}} entryId={entryId} onEntryChange={onEntryChange} zoom={1} onZoomChange={() => {}} onFitHeight={() => {}} />;
+    const { rerender } = render(pane(null, two));
+    expect(screen.queryByRole("combobox")).toBeNull();
+    expect(screen.getByTestId("compare-image-title")).toHaveTextContent("A panorama1 of 2");
+    fireEvent.click(screen.getByRole("button", { name: "Next field photos image for Site X" }));
+    expect(onEntryChange).toHaveBeenLastCalledWith("pano2");
+    fireEvent.click(screen.getByRole("button", { name: "Previous field photos image for Site X" }));
+    expect(onEntryChange).toHaveBeenLastCalledWith("pano2");   // wraps from the first to the last
+    rerender(pane("pano2", two));
+    expect(screen.getByTestId("compare-image-title")).toHaveTextContent("Second panorama2 of 2");
+    rerender(pane(null, imagery));
+    expect(screen.queryByRole("button", { name: /Next field photos image/ })).toBeNull();
+  });
+});

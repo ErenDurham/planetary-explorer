@@ -22,8 +22,8 @@ February 2021 to study an ancient lake basin and the river delta that fed it. Th
 <p>The rover's regional setting includes the Nili Fossae troughs, where olivine and carbonate bearing units are exposed, and the
 crater floor shows basaltic lava flows. Scientists chose the site for its lacustrine and deltaic deposits, which are considered
 among the best places on Mars to look for preserved signs of past microbial life.</p>
-<p>Elsewhere, Gale Crater was explored by Curiosity, whose findings at Yellowknife Bay showed a habitable fluvio-lacustrine
-environment. The two craters are often compared in discussions of landing site selection and sample return planning.</p>
+<p>Elsewhere, Hebrus Valles was imaged by HiRISE, whose views of deep pits in the northern lowlands suggested possible cave
+entrances. The two sites are often compared in discussions of landing site selection and sample return planning.</p>
 <p>This paragraph pads the page past the minimum size so the extractor does not mistake it for a JavaScript shell. It repeats
 the mission context: Perseverance collects rock cores and regolith samples in sealed tubes for potential return to Earth by
 a later mission, and it carried the Ingenuity helicopter as a technology demonstration during its first year on Mars.</p>
@@ -48,7 +48,7 @@ def test_ingest_fixture_html_produces_chunks_with_metadata(monkeypatch):
         assert doc["text"][c["char_start"]:c["char_end"]] == c["text"]
         assert len(c["text"]) <= 1000 or "\n\n" not in c["text"]  # over 1000 only when one paragraph is itself that long
         assert "jezero_crater" in c["geographic_relevance"] and "Nili Fossae / Isidis basin rim" in c["geographic_relevance"]
-    assert any("gale_crater" in c["geographic_relevance"] for c in chunks), "alias detection should tag the Gale paragraph"
+    assert any("hebrus_valles" in c["geographic_relevance"] for c in chunks), "alias detection should tag the Hebrus paragraph"
     assert len(chunks) >= 2 and chunks[1]["char_start"] < chunks[0]["char_end"], "consecutive chunks overlap"
 
 

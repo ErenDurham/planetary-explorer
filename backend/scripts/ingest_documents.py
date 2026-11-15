@@ -106,28 +106,30 @@ class DocSpec:
     document_id: str
     url: str
     institution: str
-    kind: str = "html"                        # html | text | crossref
+    kind: str = "html"                        # html | text | crossref | ntrs (NTRS citation JSON)
     title: str | None = None                  # fallback title if the page has none
     geographic_relevance: list[str] = field(default_factory=list)
     expect: list[str] = field(default_factory=list)   # at least one must appear in a sentence
     topic: str = ""
+    # Owner restriction (data/workbook): sentences naming any of these terms are dropped
+    # before chunking, so the assistant never sees the excluded part of the source.
+    exclude_paragraphs: list[str] = field(default_factory=list)
 
 
-DOI_SOURCES = {
-    # Mars literature cited in data/mars/sites.json
-    "lit_jezero_mineralogy": ("10.1002/2014JE004782", ["jezero_crater"]),
-    "lit_gale_stratigraphy": ("10.1126/science.1242777", ["gale_crater"]),
-    "lit_oxia_clays": ("10.1089/ast.2019.2191", ["oxia_planum"]),
-    "lit_meridiani_hematite": ("10.1029/1999JE001093", ["meridiani_planum"]),
-    "lit_utopia_ice": ("10.1002/2016GL070138", ["utopia_planitia"]),
-    "lit_gusev_basalt": ("10.1126/science.3050842", ["gusev_crater"]),
-    "lit_golombek_mer_sites": ("10.1029/2003JE002074", ["gusev_crater", "meridiani_planum"]),
-    # Earth analog literature cited in data/earth/candidates.json
-    "lit_yungay": ("10.1126/science.1089143", ["atacama_yungay"]),
-    "lit_dry_valleys": ("10.1016/j.icarus.2007.06.018", ["mcmurdo_dry_valleys"]),
-    "lit_haughton": ("10.1111/j.1945-5100.2005.tb00147.x", ["haughton_crater"]),
-    "lit_holuhraun": ("10.1016/j.jvolgeores.2017.02.027", ["holuhraun_iceland"]),
-}
+def _doi_sources() -> dict[str, tuple[str, list[str]]]:
+    """Every DOI the site data cites, from data/site_literature.v1.json (the
+    single source of the site labels), with the sites that cite it, so the
+    research corpus and the site data always cite the same papers."""
+    lit = json.loads((Path(__file__).resolve().parents[1] / "data" / "site_literature.v1.json").read_text(encoding="utf-8"))
+    out: dict[str, tuple[str, list[str]]] = {}
+    for sid, src in lit["sources"].items():
+        if src["url"].startswith("https://doi.org/"):
+            sites = sorted({site_id for site_id, site in lit["sites"].items() if any(e["source_id"] == sid for e in site["evidence"])})
+            out[sid] = (src["url"].removeprefix("https://doi.org/"), sites)
+    return out
+
+
+DOI_SOURCES = _doi_sources()
 
 DOCUMENTS: list[DocSpec] = [
     # --- Mars sites: NASA mission pages (science.nasa.gov renders server-side) ---
@@ -135,10 +137,6 @@ DOCUMENTS: list[DocSpec] = [
             geographic_relevance=["jezero_crater"], expect=["Jezero"], topic="Mars 2020 Perseverance mission overview"),
     DocSpec("nasa_m2020_science", "https://science.nasa.gov/mission/mars-2020-perseverance/science/", "NASA Science / JPL",
             geographic_relevance=["jezero_crater"], expect=["Jezero"], topic="Mars 2020 science goals and Jezero landing site"),
-    DocSpec("nasa_msl_overview", "https://science.nasa.gov/mission/msl-curiosity/", "NASA Science / JPL",
-            geographic_relevance=["gale_crater"], expect=["Gale"], topic="Mars Science Laboratory Curiosity overview"),
-    DocSpec("nasa_msl_science", "https://science.nasa.gov/mission/msl-curiosity/science/", "NASA Science / JPL",
-            geographic_relevance=["gale_crater"], expect=["Gale", "Mount Sharp"], topic="Curiosity science at Gale Crater"),
     DocSpec("nasa_insight_overview", "https://science.nasa.gov/mission/insight/", "NASA Science / JPL",
             geographic_relevance=["elysium_planitia"], expect=["Elysium"], topic="InSight lander overview"),
     DocSpec("nasa_insight_science", "https://science.nasa.gov/mission/insight/science/", "NASA Science / JPL",
@@ -147,14 +145,6 @@ DOCUMENTS: list[DocSpec] = [
             geographic_relevance=["chryse_planitia", "utopia_planitia"], expect=["Chryse", "Utopia"], topic="Viking project"),
     DocSpec("nasa_viking_1", "https://science.nasa.gov/mission/viking-1/", "NASA Science",
             geographic_relevance=["chryse_planitia"], expect=["Chryse"], topic="Viking 1 lander"),
-    DocSpec("nasa_viking_2", "https://science.nasa.gov/mission/viking-2/", "NASA Science",
-            geographic_relevance=["utopia_planitia"], expect=["Utopia"], topic="Viking 2 lander"),
-    DocSpec("nasa_mer_overview", "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/", "NASA Science / JPL",
-            geographic_relevance=["gusev_crater", "meridiani_planum"], expect=["Gusev", "Meridiani"], topic="Mars Exploration Rovers"),
-    DocSpec("nasa_mer_spirit", "https://science.nasa.gov/mission/mer-spirit/", "NASA Science / JPL",
-            geographic_relevance=["gusev_crater"], expect=["Gusev"], topic="Spirit rover"),
-    DocSpec("nasa_mer_opportunity", "https://science.nasa.gov/mission/mer-opportunity/", "NASA Science / JPL",
-            geographic_relevance=["meridiani_planum"], expect=["Meridiani"], topic="Opportunity rover"),
     # --- ESA ExoMars landing site ---
     DocSpec("esa_oxia_planum", "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
             "ESA", geographic_relevance=["oxia_planum"], expect=["Oxia Planum"], topic="ExoMars landing site selection"),
@@ -187,12 +177,8 @@ DOCUMENTS: list[DocSpec] = [
     # --- Earth analog programmes and datasets ---
     DocSpec("nasa_analog_missions", "https://www.nasa.gov/analog-missions/", "NASA",
             geographic_relevance=[], expect=["analog"], topic="NASA analog missions overview"),
-    DocSpec("nasa_arads", "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/", "NASA Ames",
-            geographic_relevance=["atacama_yungay"], expect=["Atacama"], topic="ARADS Atacama rover drilling studies"),
     DocSpec("marsinstitute_hmp", "https://www.marsinstitute.no/hmp", "Mars Institute / SETI Institute / NASA",
             geographic_relevance=["haughton_crater"], expect=["Haughton"], topic="Haughton-Mars Project"),
-    DocSpec("marssociety_mdrs", "https://mdrs.marssociety.org/", "The Mars Society",
-            geographic_relevance=["mdrs_utah"], expect=["Mars Desert Research Station", "MDRS"], topic="Mars Desert Research Station"),
     DocSpec("aws_copernicus_dem_registry", "https://registry.opendata.aws/copernicus-dem/", "ESA Copernicus / AWS Registry of Open Data",
             expect=["Copernicus"], topic="Copernicus DEM dataset registry"),
     DocSpec("nasa_power_home", "https://power.larc.nasa.gov/", "NASA Langley Research Center (POWER)",
@@ -200,7 +186,91 @@ DOCUMENTS: list[DocSpec] = [
     DocSpec("nasa_power_methodology", "https://power.larc.nasa.gov/docs/methodology/", "NASA Langley Research Center (POWER)",
             expect=["POWER", "MERRA"], topic="NASA POWER methodology"),
 ]
+
+
+# --- Lesser-Known Mars Sites workbook (data/workbook/lesser_known_sites.v1.json) ---
+# Every source the owner approved for the workbook's 17 Mars sites and their
+# Earth analogs. Open-access pages (DOI landing pages that serve the paper or
+# abstract, USGS map pages, NASA/ESA pages) are fetched as HTML; every other
+# DOI becomes its Crossref record. Each is tagged with the Mars site(s) and the
+# paired Earth site(s) that cite it.
+WORKBOOK_FILE = DATA / "workbook" / "lesser_known_sites.v1.json"
+WORKBOOK_HTML = {  # source_id -> expect terms (open access: the page carries the text)
+    "marinova2022_university_valley": ["University Valley"], "mckay_marinova2025_ice_cemented_ground": ["ice-cemented"],
+    "yoldi2020_greenland_old_ice": ["Greenland"], "bishop2025_painted_desert": ["Painted Desert", "Mawrth"],
+    "lambert_reimold2023_impact_analogs": ["Sudbury"], "krzesinska2021_oxia_granby": ["Oxia"], "bultel2022_granby_vermiculite": ["Granby"],
+    "bultel2025_granby_alteration": ["Granby", "vermiculite"], "bultel2026_granby_modeling": ["Granby"],
+    "petersen2019_galena_creek": ["Galena Creek"], "meng2022_rock_glacier_radio": ["Galena Creek"], "aguilar2024_drone_gpr": ["Galena Creek"],
+    "zhu2025_qaidam_polygons": ["Qaidam"],
+    "chuang_crown2009_deuteronilus_map": ["Deuteronilus"], "hynek2017_meridiani": ["Meridiani"],
+}
+WORKBOOK_NTRS = {  # the NTRS PDF's citation record (JSON with NASA's abstract) is read instead of the PDF
+    "ntrs_haughton_gullies": "https://ntrs.nasa.gov/api/citations/20200001979",
+}
+WORKBOOK_EXCLUDE = {  # owner restrictions (see data/workbook "restriction")
+    "bultel2025_granby_alteration": ["rover", "Rosalind Franklin", "launch", "ExoMars", "mission", "Ma_MISS", "MicrOmega", "instrument"],
+    "aguilar2024_drone_gpr": ["Sourdough"], "aguilar2026_rock_glacier_continuum": ["Sourdough"],
+}
+
+
+# Copernicus Meeting Organizer pages (EGU / EPSC abstracts) wrap the abstract in
+# search-widget messages and an author block with e-mail addresses; neither is
+# evidence, so those sentences are dropped.
+COPERNICUS_CHROME = ["We are sorry", "Please try again", "Please refine", "Please revisit", "Vol.", "© Author", "returns results containing", "There are no results", "You have applied the search",
+                     "window.history", "@", "Creative Commons Attribution", "updated on", "How to cite", "Display abstract"]
+
+
+def apply_exclusions(text: str, terms: list[str]) -> str:
+    """Drop every sentence that names an excluded term (owner restriction), and any
+    paragraph left empty. Sentence level, so a paragraph that is mostly about the
+    permitted subject keeps its other sentences."""
+    out = []
+    for para in re.split(r"\n\s*\n", text):
+        sentences = re.split(r"(?<=[.!?])\s+", para)
+        kept = [x for x in sentences if not any(t.lower() in x.lower() for t in terms)]
+        if kept and "".join(kept).strip():
+            out.append(" ".join(kept).strip())
+    return "\n\n".join(out)
+
+
+def _workbook_documents() -> list[DocSpec]:
+    if not WORKBOOK_FILE.exists():
+        return []
+    wb = json.loads(WORKBOOK_FILE.read_text(encoding="utf-8"))
+    sites: dict[str, list[str]] = {}
+    for m in wb["mars_sites"]:
+        for sid in m["source_ids"]:
+            sites.setdefault(sid, []).append(m["id"])
+        for c in m["conditions"] + m["pair"]["mars"]:
+            for sid in c["source_ids"]:
+                sites.setdefault(sid, []).append(m["id"])
+    for e in wb["earth_sites"]:
+        for sid in e["source_ids"]:
+            sites.setdefault(sid, []).extend([e["id"], e["paired_mars_site_id"]])
+    docs = []
+    for sid, src in wb["sources"].items():
+        geo = list(dict.fromkeys(sites.get(sid, [])))
+        topic = src["title"] + (f" (restriction: {src['restriction']})" if src.get("restriction") else "")
+        excl = WORKBOOK_EXCLUDE.get(sid, []) + (COPERNICUS_CHROME if src.get("doi", "").startswith("10.5194/") and sid in WORKBOOK_HTML else [])
+        if src["kind"] == "doi" and sid not in WORKBOOK_HTML:
+            docs.append(DocSpec(f"crossref_{sid}", f"https://api.crossref.org/works/{src['doi']}", "Crossref metadata", kind="crossref",
+                                geographic_relevance=geo, topic=topic, exclude_paragraphs=excl))
+        elif sid in WORKBOOK_NTRS:
+            docs.append(DocSpec(f"wb_{sid}", WORKBOOK_NTRS[sid], src.get("institution") or "", kind="ntrs", title=src["title"],
+                                geographic_relevance=geo, topic=topic, exclude_paragraphs=excl))
+        else:
+            docs.append(DocSpec(f"wb_{sid}", src["url"], src.get("venue") or src.get("institution") or "", title=src["title"],
+                                geographic_relevance=geo, expect=WORKBOOK_HTML.get(sid, []), topic=topic, exclude_paragraphs=excl))
+    return docs
+
+
+_WORKBOOK_DOCS = _workbook_documents()
+_WORKBOOK_IDS = {d.document_id.split("_", 1)[1] if d.document_id.startswith("wb_") else d.document_id.removeprefix("crossref_") for d in _WORKBOOK_DOCS}
+_PRESENT = {d.document_id for d in DOCUMENTS}
+DOCUMENTS += [d for d in _WORKBOOK_DOCS if d.document_id not in _PRESENT and d.url not in {x.url for x in DOCUMENTS}]
 for _sid, (_doi, _geo) in DOI_SOURCES.items():
+    if _sid in _WORKBOOK_IDS:   # already ingested from the workbook list (same DOI)
+        continue
     DOCUMENTS.append(DocSpec(f"crossref_{_sid}", f"https://api.crossref.org/works/{_doi}", "Crossref metadata", kind="crossref",
                              geographic_relevance=list(_geo), expect=[], topic=f"Bibliographic record for DOI {_doi}"))
 
@@ -211,25 +281,14 @@ for _sid, (_doi, _geo) in DOI_SOURCES.items():
 def load_geo_aliases() -> tuple[dict[str, list[str]], dict[str, str]]:
     """Returns ({id: [alias, ...]}, {site_id: region}) from the committed site
     and candidate files, plus hand-written aliases for names the pages use."""
-    sites = json.loads((DATA / "mars" / "sites.json").read_text())
-    cands = json.loads((DATA / "earth" / "candidates.json").read_text())
-    extra = {
-        "jezero_crater": ["Jezero"],
-        "gale_crater": ["Gale Crater", "Gale crater", "Mount Sharp", "Aeolis Mons", "Bradbury Landing"],
-        "elysium_planitia": ["Elysium Planitia", "Elysium"],
-        "oxia_planum": ["Oxia Planum", "Oxia"],
-        "utopia_planitia": ["Utopia Planitia", "Utopia"],
-        "chryse_planitia": ["Chryse Planitia", "Chryse"],
-        "meridiani_planum": ["Meridiani Planum", "Meridiani", "Terra Meridiani"],
-        "gusev_crater": ["Gusev Crater", "Gusev crater", "Gusev", "Ma'adim Vallis"],
-        "atacama_yungay": ["Atacama", "Yungay"],
-        "mcmurdo_dry_valleys": ["Dry Valleys", "McMurdo", "University Valley"],
-        "haughton_crater": ["Haughton", "Devon Island"],
-        "death_valley": ["Death Valley"],
-        "holuhraun_iceland": ["Holuhraun", "Bardarbunga", "Bárðarbunga"],
-        "mdrs_utah": ["Mars Desert Research Station", "MDRS", "San Rafael Swell", "Hanksville"],
-        "mauna_kea_summit": ["Mauna Kea", "Maunakea"],
-    }
+    sites = json.loads((DATA / "mars" / "sites.json").read_text(encoding="utf-8"))
+    cands = json.loads((DATA / "earth" / "candidates.json").read_text(encoding="utf-8"))
+    from app.services.site_aliases import EARTH, MARS
+    # Alias matching below is case-sensitive for short names, so use the names as written in pages.
+    extra = {k: [a.title() if len(a) <= 5 else a for a in v] for k, v in {**MARS, **EARTH}.items()}
+    extra["jezero_crater"] = ["Jezero"]
+    extra["amazonis_arcadia_ap8"] = ["AP-8", "AP8", "Amazonis Planitia", "Arcadia Planitia"]
+    extra["planum_boreum"] = ["Planum Boreum", "north polar layered deposits", "NPLD", "north polar ice cap"]
     aliases: dict[str, list[str]] = {}
     regions: dict[str, str] = {}
     for s in sites["sites"]:
@@ -359,6 +418,30 @@ def crossref_to_document(body: bytes, spec: DocSpec) -> tuple[str, str, str | No
     return "\n\n".join(paras), title, date, institution
 
 
+def ntrs_to_document(body: bytes, spec: DocSpec) -> tuple[str, str, str | None, str]:
+    """NASA Technical Reports Server citation JSON (api/citations/<id>) -> (text, title, date, institution).
+    The record's abstract is NASA's own text; the attached PDF is not parsed."""
+    msg = json.loads(body.decode("utf-8"))
+    title = msg.get("title") or spec.title or "(untitled)"
+    authors = [a.get("meta", {}).get("author", {}).get("name") for a in msg.get("authorAffiliations", []) or []]
+    date = (msg.get("publications") or [{}])[0].get("publicationDate") or msg.get("distributionDate")
+    paras = [f"NASA Technical Reports Server record: {title}.",
+             "Authors: " + (", ".join(a for a in authors if a) or "not listed") + "."]
+    if msg.get("abstract"):
+        paras.append("Abstract (NTRS): " + re.sub(r"\s+", " ", html_lib.unescape(_JATS.sub(" ", msg["abstract"]))).strip())
+    return "\n\n".join(paras), title, (date or "")[:10] or None, spec.institution
+
+
+def pdf_to_text(body: bytes) -> str | None:
+    """PDF text via pypdf when it is installed (optional pipeline dependency); None otherwise."""
+    try:
+        import io
+        from pypdf import PdfReader
+    except ImportError:
+        return None
+    return "\n\n".join((p.extract_text() or "").strip() for p in PdfReader(io.BytesIO(body)).pages)
+
+
 # --------------------------------------------------------------------------
 # Chunking
 # --------------------------------------------------------------------------
@@ -431,8 +514,8 @@ def chunk_text(text: str, target: int = CHUNK_TARGET, maximum: int = CHUNK_MAX, 
 # --------------------------------------------------------------------------
 def accept(text: str, spec: DocSpec) -> str | None:
     """Returns a rejection reason, or None if the extracted text is usable."""
-    if spec.kind == "crossref":
-        return None if len(text) > 200 else "crossref record too short"
+    if spec.kind in ("crossref", "ntrs"):
+        return None if len(text) > 200 else f"{spec.kind} record too short"
     if len(text) < MIN_TEXT_CHARS:
         return f"extracted text too short ({len(text)} chars): likely a JavaScript-rendered shell"
     if spec.expect:
@@ -448,7 +531,7 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
     if offline:
         if not corpus_path.exists():
             return None, [], "offline and not in corpus/"
-        doc = json.loads(corpus_path.read_text())
+        doc = json.loads(corpus_path.read_text(encoding="utf-8"))
     else:
         try:
             body, ctype, final_url = fetch(spec.url)
@@ -463,6 +546,15 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
                 text, title, pub_date, institution = crossref_to_document(body, spec)
             except Exception as e:  # noqa: BLE001
                 return None, [], f"crossref parse error: {e}"
+        elif spec.kind == "ntrs":
+            try:
+                text, title, pub_date, institution = ntrs_to_document(body, spec)
+            except Exception as e:  # noqa: BLE001
+                return None, [], f"ntrs parse error: {e}"
+        elif "pdf" in ctype or body[:5] == b"%PDF-":
+            text = pdf_to_text(body)
+            if text is None:
+                return None, [], "PDF: no text extractor installed (pip install pypdf to ingest it)"
         elif spec.kind == "text" or ("html" not in ctype and "json" not in ctype):
             text = body.decode("utf-8", "replace").replace("\r\n", "\n")
             m = re.search(r"PRODUCT_CREATION_TIME\s*=\s*([0-9T:\-\.]+)", text)
@@ -475,6 +567,8 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
             title = spec.title or html_title(h)   # a human-written title in DOCUMENTS beats a generic <title>
             pub_date = html_published_date(h)
             text = html_to_paragraphs(h)
+        if spec.exclude_paragraphs:
+            text = apply_exclusions(text, spec.exclude_paragraphs)
         reason = accept(text, spec)
         if reason:
             return None, [], reason
@@ -489,17 +583,21 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
             "content_type": ctype,
             "kind": spec.kind,
             "topic": spec.topic,
+            "excluded_paragraph_terms": list(spec.exclude_paragraphs),
             "default_geographic_relevance": list(spec.geographic_relevance),
             "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
             "char_count": len(text),
             "text": text,
         }
+    # A Crossref record is cited by its DOI link (what a reader can open), not the API URL it was read from.
+    if doc.get("kind") == "crossref" and doc["url"].startswith("https://api.crossref.org/works/"):
+        doc["url"] = "https://doi.org/" + doc["url"].removeprefix("https://api.crossref.org/works/")
     # Chunk the PROSE only: paragraphs that are navigation labels, captions,
     # credits or fact-sheet metadata are dropped first (shared filter), so a
     # chunk is never a run of page chrome. Offsets below index the filtered
     # text; the raw page text stays in corpus/<id>.json as the record.
     raw = doc.get("raw_text", doc["text"])
-    prose = drop_debris_paragraphs(raw) if doc.get("kind") != "crossref" else raw
+    prose = drop_debris_paragraphs(raw) if doc.get("kind") not in ("crossref", "ntrs") else raw
     doc["raw_text"] = raw                      # the page as extracted, kept as the record
     doc["text"] = prose                        # what is chunked and cited; offsets index this
     doc["char_count"] = len(prose)

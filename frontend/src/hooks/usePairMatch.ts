@@ -17,18 +17,18 @@ export function analogWeightList(analogWeights: Record<string, number> | null): 
   return analogWeights ? Object.entries(analogWeights).map(([feature_id, weight]) => ({ feature_id, weight })) : null;
 }
 
-export function usePairMatch(args: { referenceBody: Body; referenceId: string | null; candidateId: string | null; marsId: string | null; earthId: string | null }) {
+export function usePairMatch(args: { enabled?: boolean; referenceBody: Body; referenceId: string | null; candidateId: string | null; marsId: string | null; earthId: string | null }) {
   const analogWeights = useAppStore(s => s.analogWeights);
   const weights = analogWeightList(analogWeights);
   const weightsKey = weights ? weights.map(w => `${w.feature_id}=${w.weight}`).sort().join("&") : "default";
   const rank = useQuery({
     queryKey: ["analog-rank", args.referenceBody, args.referenceId, weightsKey],
     queryFn: () => api.rankAnalogs({ reference_body: args.referenceBody, reference_id: args.referenceId as string, weights }),
-    enabled: args.referenceId != null,
+    enabled: args.enabled !== false && args.referenceId != null,
     staleTime: Infinity,
   });
   // /analogs/match is Mars-keyed; top_k 7 covers every Earth candidate.
-  const match = useAnalogs(args.marsId, 7);
+  const match = useAnalogs(args.enabled === false ? null : args.marsId, 7);
   const candidate: RankedCandidate | undefined = findPairCandidate(rank.data, args.candidateId);
   const pairMatch: AnalogMatch | undefined = match.data?.matches.find(m => m.earth_candidate.id === args.earthId);
   return { rank, match, candidate, pairMatch, weightsKey, customised: analogWeights != null };

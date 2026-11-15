@@ -5,10 +5,11 @@
  "url": "https://science.nasa.gov/mission/mars-2020-perseverance/science/",
  "final_url": "https://science.nasa.gov/mission/mars-2020-perseverance/science/",
  "publication_date": "2024-04-16",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "text/html; charset=UTF-8",
  "kind": "html",
  "topic": "Mars 2020 science goals and Jezero landing site",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "jezero_crater"
  ],

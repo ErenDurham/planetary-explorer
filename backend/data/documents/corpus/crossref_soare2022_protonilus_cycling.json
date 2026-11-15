@@ -1,0 +1,21 @@
+{
+ "document_id": "crossref_soare2022_protonilus_cycling",
+ "title": "A billion or more years of possible periglacial/glacial cycling in Protonilus Mensae, Mars",
+ "institution": "Icarus / Elsevier BV",
+ "url": "https://doi.org/10.1016/j.icarus.2022.115115",
+ "final_url": "https://api.crossref.org/works/10.1016/j.icarus.2022.115115",
+ "publication_date": "2022-10",
+ "retrieved_at": "2026-11-15",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "A billion or more years of possible periglacial/glacial cycling in Protonilus Mensae, Mars",
+ "excluded_paragraph_terms": [],
+ "default_geographic_relevance": [
+  "protonilus_mensae"
+ ],
+ "sha256": "40aa1126cbba0b6ba24e8c6a1ce47876f71b01201701de4d3882a6e0d32a3c71",
+ "char_count": 679,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): A billion or more years of possible periglacial/glacial cycling in Protonilus Mensae, Mars.\n\nAuthors: R.J. Soare, J.-P. Williams, A.J. Hepburn, F.E.G. Butcher.\n\nPublished in Icarus, volume 385, pages 115115 (2022), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.icarus.2022.115115.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_text": "Bibliographic record (Crossref metadata, not the paper's full text): A billion or more years of possible periglacial/glacial cycling in Protonilus Mensae, Mars.\n\nAuthors: R.J. Soare, J.-P. Williams, A.J. Hepburn, F.E.G. Butcher.\n\nPublished in Icarus, volume 385, pages 115115 (2022), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.icarus.2022.115115.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_char_count": 679
+}

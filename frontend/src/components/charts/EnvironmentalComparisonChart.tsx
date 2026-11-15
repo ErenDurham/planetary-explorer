@@ -3,7 +3,7 @@
 // the chart as "No data" rather than plotted as zero.
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { AXIS, GRID, INFO, TOOLTIP_STYLE } from "./theme";
+import { AXIS, COPPER_BRIGHT, GRID, INFO, TOOLTIP_STYLE } from "./theme";
 import { formatUnit } from "@/lib/format";
 import type { EnvironmentalMeasurement, SiteWithProfile } from "@/types";
 
@@ -65,7 +65,7 @@ export function EnvironmentalComparisonChart({ profiles, featureId, onFeatureCha
             <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "#ffffff08" }} formatter={(v, _n, item) => [`${Number(v).toLocaleString()} ${unit} · ${(item.payload as (typeof rows)[number]).quality}`, metric.label]} />
             <Bar dataKey="value" radius={[0, 2, 2, 0]} isAnimationActive={false}>
               {present.map((r) => (
-                <Cell key={r.id} fill={INFO} stroke={r.id === selectedId ? "#f0a03c" : undefined} strokeWidth={r.id === selectedId ? 1.5 : 0} />
+                <Cell key={r.id} fill={INFO} stroke={r.id === selectedId ? COPPER_BRIGHT : undefined} strokeWidth={r.id === selectedId ? 1.5 : 0} />
               ))}
             </Bar>
           </BarChart>

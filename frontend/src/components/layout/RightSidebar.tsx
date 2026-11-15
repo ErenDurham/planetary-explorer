@@ -7,10 +7,11 @@ import { ErrorNote } from "@/components/ui/ErrorNote";
 import { Badge } from "@/components/ui/Badge";
 import { EnvironmentalProfilePanel } from "@/components/sites/EnvironmentalProfilePanel";
 import { SourcesList } from "@/components/sites/SourcesList";
-import { SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
+import { FullScoringCalculation, SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
 import { useSiteProfile } from "@/hooks/useSites";
 import { formatLatLon, formatNumber, humanize } from "@/lib/format";
 import { AnalogMatchPanel, EarthLocationPanel } from "@/components/sites/LocationPanels";
+import { ApproximateNote, EarthAnalogNotesPanel, ReportedConditionsPanel, RoleBadge } from "@/components/sites/WorkbookPanels";
 import type { RankPalette } from "@/lib/rankColor";
 import type { AnalogRankResponse, ComparisonLocation, EvaluateResponse, MissionProfile } from "@/types";
 
@@ -45,7 +46,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     if (window.matchMedia?.("(max-width: 1023px)")?.matches) panel.current.scrollIntoView?.({ behavior: reduced ? "auto" : "smooth", block: "start" });
     if (!reduced) {
-      panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px #f0a03c", backgroundColor: "#313131" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });
+      panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px var(--color-copper-bright)", backgroundColor: "var(--color-bg-elev-2)" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });
     }
   }, [selectedId, revision]);
   const result = evaluation?.results.find((r) => r.site_id === selectedId);
@@ -97,8 +98,11 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
             <p className="num mt-0.5 text-[10.5px] text-fg-faint">
               footprint {q.data.site.footprint.shape}, ~{formatNumber(q.data.site.footprint.approx_width_km ?? 0, { maxFractionDigits: 1 })} km · {q.data.site.footprint.crs}
             </p>
+            <ApproximateNote approximate={q.data.site.coordinates_approximate} />
+            {q.data.site.role && <div className="mt-1.5"><RoleBadge role={q.data.site.role} /></div>}
             {q.data.site.heritage && <p className="mt-1.5 text-[11px] text-copper-bright">{q.data.site.heritage}</p>}
             <p className="mt-1.5 text-xs leading-relaxed text-fg-muted">{q.data.site.description}</p>
+            {q.data.site.notes && <p className="mt-1.5 text-xs text-fg-muted" data-testid="site-notes"><span className="text-fg-faint">Workbook note:</span> {q.data.site.notes}</p>}
             {(q.data.site.tags ?? []).length > 0 && (
               <ul className="mt-2 flex flex-wrap gap-1" aria-label="Site tags">
                 {(q.data.site.tags ?? []).map((t) => (
@@ -113,7 +117,15 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
           <div>
             {analogPanel}
             {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />}
-            <Section title="Research potential" subtitle="Turn this site's characteristics into questions to investigate.">
+            <ReportedConditionsPanel conditions={q.data.site.reported_conditions} sources={q.data.site.condition_sources} />
+            <EarthAnalogNotesPanel analogs={q.data.site.earth_analogs} />
+            <Section title="Risks and limitations">
+              <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
+              <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>
+            </Section>
+            {/* reference material last: the full calculation, research ideas, every measurement and source */}
+            {!analog && <FullScoringCalculation result={result} />}
+            <Section title="Research potential">
               <button type="button" onClick={() => openResearch("research")} className="w-full rounded-lg border border-info/50 bg-info/10 p-3 text-left text-sm font-semibold text-info">Explore study ideas and supporting evidence →</button>
             </Section>
             <details className="m-4 rounded-lg border border-line">
@@ -121,10 +133,6 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
               <EnvironmentalProfilePanel profile={q.data.profile} />
               <SourcesList sources={q.data.profile.sources} />
             </details>
-            <Section title="Risks and limitations" subtitle="Scope and evidence gaps to review before relying on this ranking">
-              <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
-              <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>
-            </Section>
           </div>
         </>
       ) : null}

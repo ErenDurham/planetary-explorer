@@ -10,6 +10,10 @@ from pathlib import Path
 from app.models.mission_assessment import MissionAssessmentRequest, MissionAssessmentResponse, MissionAssessmentResult, MissionFactor
 from app.services.data_loader import get_store
 from app.services.scoring_engine import piecewise_linear
+from app.models import AnalogWeight
+from app.models.analog_rank import AnalogRankRequest
+from app.services.analog_engine import load_spec as load_analog_spec
+from app.services.analog_rank_engine import rank_pool
 
 @lru_cache
 def load_profiles():
@@ -25,6 +29,10 @@ def _available(measurement, criterion):
 
 def evaluate(req: MissionAssessmentRequest, pool=None):
     spec = load_profiles()
+    if req.requirements.analog_reference_id and pool is None:
+        if req.body != "earth" or req.mission_type != "rover_field_test":
+            raise ValueError("analog_reference_id applies only to the Earth rover field test ranking")
+        return _evaluate_against_mars(req, spec)
     profile = spec[req.mission_type]
     if pool is None:
         store = get_store()
@@ -96,3 +104,62 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
     return MissionAssessmentResponse(body=req.body,mission_type=req.mission_type,spec_version=spec['version'],
         profile_label=profile['label'],method=profile['method'],assumptions=profile['assumptions'],warnings=missing_targets+excluded,
         requirements=requirements,results=results,client_request_id=req.client_request_id)
+
+
+def analog_weights(rover_weights: dict[str, float]) -> dict[str, float]:
+    """Analog feature weights for the Earth ranking: the analog spec defaults,
+    with the spec's slope + relief share split by the Earth slope/relief sliders."""
+    w = {fs["feature_id"]: float(fs["default_weight"]) for fs in load_analog_spec()["features"]}
+    terrain = w["slope_regional_median_deg"] + w["roughness_regional_m"]
+    slope, relief = float(rover_weights.get("slope", 0)), float(rover_weights.get("relief", 0))
+    if slope + relief > 0:
+        w["slope_regional_median_deg"] = terrain * slope / (slope + relief)
+        w["roughness_regional_m"] = terrain * relief / (slope + relief)
+    return w
+
+
+def _evaluate_against_mars(req: MissionAssessmentRequest, spec) -> MissionAssessmentResponse:
+    """Earth sites ranked by their analog similarity to one Mars site: the same
+    pool-wide calculation as POST /analogs/rank (analog_rank_engine), reported
+    in the mission-assessment shape so the Explore list, map and detail work
+    unchanged. Each factor's points are the share of (100 - score) it cost,
+    so the factors add up exactly to the score."""
+    store = get_store()
+    mars_id = req.requirements.analog_reference_id
+    mars_site = store.site(mars_id)
+    if mars_site is None or store.profile(mars_id) is None:
+        raise ValueError(f"Unknown Mars site: {mars_id}")
+    profile = spec["rover_field_test"]
+    block = profile["analog_reference"]
+    analog_spec = load_analog_spec()
+    weights = {k: v for k, v in profile_weights(req).items()}
+    w = analog_weights(weights)
+    ranked = rank_pool(AnalogRankRequest(reference_body="mars", reference_id=mars_id, candidate_body="earth",
+                                         weights=[AnalogWeight(feature_id=f, weight=v) for f, v in w.items()]), store)
+    sources = {c.id: store.earth_profile(c.id) for c in store.earth_candidates()}
+    fmt = {"mars_name": mars_site.name, "analog_version": analog_spec["version"]}
+    results = []
+    for cand in ranked.candidates:
+        prof = sources.get(cand.location.id)
+        fds = [f for f in cand.feature_distances if f.feature_id in ranked.basis_features]
+        D = sum(f.contribution for f in fds if f.contribution is not None) if fds else None
+        score = None if D is None else 100.0 / (1.0 + D)
+        factors = []
+        for f in fds:
+            lost = 0.0 if not D else (100.0 - score) * (f.contribution or 0.0) / D
+            m = prof.get(f.feature_id) if prof else None
+            factors.append(MissionFactor(criterion_id=f.feature_id, label=f.label, feature_id=f.feature_id, value=f.earth_value, unit=f.unit,
+                q=None if f.distance is None else 1.0 / (1.0 + f.distance), normalized_weight=f.normalized_weight, contribution=-lost,
+                source=prof.sources.get(m.source_id) if prof and m and m.source_id else None, method="analog_feature_distance",
+                note=f"{f.note}. Cost {lost:.1f} of the 100 points.", quality=m.quality_flag if m else None))
+        results.append(MissionAssessmentResult(site_id=cand.location.id, site_name=cand.location.name, body="earth", score=score, rank=cand.rank,
+            status="scored" if score is not None else "insufficient_data", coverage_fraction=cand.coverage_fraction, factors=factors,
+            evidence_gaps=[f"{e.label}: {e.reason}" for e in ranked.excluded_features if e.reason != "weight is 0 for this ranking"]))
+    return MissionAssessmentResponse(body="earth", mission_type=req.mission_type, spec_version=f"{spec['version']} + {analog_spec['version']}",
+        profile_label=block["label"].format(**fmt), method=block["method"].format(**fmt), assumptions=block["assumptions"],
+        warnings=list(ranked.warnings), requirements=req.requirements.model_dump(), results=results, client_request_id=req.client_request_id)
+
+
+def profile_weights(req: MissionAssessmentRequest) -> dict[str, float]:
+    criteria = load_profiles()[req.mission_type]["criteria"]
+    return {c["id"]: req.weights.get(c["id"], c["weight"]) for c in criteria}

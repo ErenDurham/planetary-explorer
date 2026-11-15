@@ -58,3 +58,15 @@ class ResearchDossier(Record):
     background_evidence: list[EvidenceChunk]
     retrieval_status: Literal["background_available", "unavailable"]
     limitations: list[str]
+
+
+class ResearchBrief(Record):
+    schema_version: Literal["research-brief-v1"] = "research-brief-v1"
+    run_id: str
+    candidate_id: str
+    filename: str
+    markdown: str
+    record: ResearchRecord
+    # Complete immutable survey context plus saved analyst notebook. No UI rank implied.
+    discovery: dict
+    limitations: list[str]

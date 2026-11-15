@@ -15,7 +15,7 @@
       "unit": "deg",
       "function": {"type": "piecewise_linear", "direction": "lower_is_better", "full": 2.0, "zero": 10.0},
       "default_weight": 35,
-      "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+      "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee and the 10 deg cut-off are screening assumptions at the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines: slopes <15 deg at 84 m and 2 m length scales for InSight (Golombek et al., 2017) and <30 deg at 2-5 m baselines for MSL (Golombek et al., 2012), which MEGDR 16 ppd slopes (~3.7 km baseline) cannot resolve."
     },
     {
       "criterion_id": "elevation_suitability",
@@ -24,7 +24,7 @@
       "unit": "m",
       "function": {"type": "piecewise_linear", "direction": "lower_is_better", "full": -3000.0, "zero": 2000.0},
       "default_weight": 25,
-      "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+      "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Recent engineering limits: elevation <-1 km for MSL (Golombek et al., 2012) and <=-2.5 km for InSight (Golombek et al., 2017); for Perseverance, with new EDL capabilities, elevation and latitude limits no longer decided site viability (Grant et al., 2018). The -3000 m / +2000 m knees are a screening assumption spanning that range; +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). A real mission's limit depends on its EDL system."
     },
     {
       "criterion_id": "surface_roughness",

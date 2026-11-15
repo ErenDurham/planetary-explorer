@@ -437,24 +437,23 @@ Response:
           "approx_width_km": 50.8,
           "description": "0.5 deg square centred on the site"
         },
-        "description": "Hyperarid core of the Atacama, with soils so low in organics and microbial life that they were proposed as the closest terrestrial match to Viking-era Mars s...",
+        "description": "Hyperarid core of the Atacama near Yungay: playa sediments over alluvial fan deposits, and polygonal ground cemented by sulfates, nitrates and chlorides. Used b...",
         "tags": [
           "alluvial_fan",
-          "desert_plain",
-          "... (7 more)"
+          "chlorides",
+          "... (4 more)"
         ],
         "known_analog_use": [
-          "NASA ARADS rover and drilling campaigns",
-          "Viking-era soil analog studies"
+          "NASA ARADS rover and drilling campaigns"
         ],
         "sources": [
-          "nasa_arads",
-          "lit_yungay"
+          "horstmann2024_yungay",
+          "sager2020_yungay"
         ]
       },
-      "similarity": 63.03,
-      "distance": 0.5866,
-      "rank": 1,
+      "similarity": 64.18,
+      "distance": 0.558,
+      "rank": 2,
       "feature_distances": [
         {
           "feature_id": "slope_regional_median_deg",
@@ -488,21 +487,20 @@ Response:
         }
       ],
       "shared_characteristics": [
+        "Composition shared: sulfates",
         "Regional slope: Mars 1.08 deg vs Earth 1.17 deg (difference 0.09 deg, within half the 1.50 deg comparison scale)",
         "Aridity: Mars 0.00 mm/day vs Earth 0.02 mm/day (difference 0.02 mm/day, within half the 1.00 mm/day comparison scale)"
       ],
       "important_differences": [
-        "Terrain morphology: no shared tags (Mars: impact crater, delta, paleolake basin, crater floor; Earth: desert plain, smooth plains, alluvial fan, hyperarid)",
-        "Composition: no shared tags (Mars: carbonates, clays, olivine, basalt; Earth: nitrates, sulfates, perchlorates, halite, regolith)"
+        "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: alluvial fan, playa, polygonal terrain)"
       ],
       "noncomparable_variables": [
-        "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
-        "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
+        "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+        "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
         "... (3 more)"
       ],
       "research_applications": [
-        "NASA ARADS rover and drilling campaigns",
-        "Viking-era soil analog studies"
+        "NASA ARADS rover and drilling campaigns"
       ],
       "limitations": [
         "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
@@ -512,15 +510,15 @@ Response:
       "citations": [
         "copernicus_glo90",
         "derived_toa_insolation",
-        "... (6 more)"
+        "... (7 more)"
       ],
       "completeness_fraction": 1.0
     }
   ],
   "analog_spec_version": "analog-v1.0",
   "planetary_differences": [
-    "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
-    "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
+    "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+    "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
     "... (3 more)"
   ],
   "warnings": []

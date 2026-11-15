@@ -151,8 +151,8 @@ def test_user_targets_are_not_scientific_observations():
 
 def test_site_changes_and_body_mismatch():
     installed()
-    a=plan(request());ctx,g=load_terrain("mars","gale_crater")
-    b=plan(request(site_id='gale_crater',start=ctx.start,waypoints=[g.point((2,2))]))
+    a=plan(request());ctx,g=load_terrain("mars","hebrus_valles")
+    b=plan(request(site_id='hebrus_valles',start=ctx.start,waypoints=[g.point((2,2))]))
     assert a.plan_id!=b.plan_id
     assert a.terrain.routing_bounds!=b.terrain.routing_bounds
     assert client.get('/api/v1/expedition/terrain?body=moon&site_id=jezero_crater').status_code==422
@@ -167,7 +167,7 @@ def test_same_cell_does_not_claim_resolved_route():
 def test_capabilities_and_terrain_api():
     response=client.get('/api/v1/expedition/capabilities')
     assert response.status_code==200
-    assert len([x for x in response.json()['regions'] if x['body']=='mars'])==8
+    assert len([x for x in response.json()['regions'] if x['body']=='mars'])==17   # the workbook's Mars sites
     assert response.json()['objectives']==['terrain_survey','geological_sampling','research_traverse']
     response=client.get('/api/v1/expedition/terrain?body=moon&site_id=apollo_11')
     assert response.status_code==200 and response.json()['research_targets']==[]
@@ -208,7 +208,11 @@ def test_objectives_preserve_explicit_routing_and_science_limits(objective):
     assert a.interpretation.generated_by=='rule_based'
     assert a.metrics.total_distance_m==pytest.approx(plan(request()).metrics.total_distance_m)
 
-@pytest.mark.parametrize('site',['jezero_crater','gale_crater','elysium_planitia','oxia_planum','utopia_planitia','chryse_planitia','meridiani_planum','gusev_crater'])
+MARS_SITES=['amazonis_arcadia_ap8','planum_boreum','planum_australe','mawrth_vallis','noctis_labyrinthus','hebrus_valles','huygens_crater','columbus_crater','oxia_planum',
+            'deuteronilus_mensae','protonilus_mensae','chryse_planitia','meridiani_planum','jezero_crater','utopia_planitia','elysium_planitia','xanthe_terra_tyras']
+
+# Noctis Labyrinthus (median regional slope ~10 deg) has no grid path within the default rover slope limit: tested below
+@pytest.mark.parametrize('site',[s for s in MARS_SITES if s!='noctis_labyrinthus'])
 def test_each_featured_mars_region_has_a_real_route(site):
     installed()
     ctx,g=load_terrain('mars',site)
@@ -217,3 +221,11 @@ def test_each_featured_mars_region_has_a_real_route(site):
     assert result.status=='ok' and result.metrics.total_distance_m>0
     assert result.route[0].polyline[0]==g.point((2,2))
     assert result.route[-1].polyline[-1]==g.point((13,13))
+
+
+def test_a_too_steep_region_is_reported_infeasible_not_routed():
+    installed()
+    ctx,g=load_terrain('mars','noctis_labyrinthus')
+    result=plan(request(site_id='noctis_labyrinthus',start=g.point((2,2)),waypoints=[g.point((13,13))]))
+    assert result.status=='infeasible'
+    assert any('No grid path meets slope' in w.message for w in result.warnings)

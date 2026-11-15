@@ -193,6 +193,7 @@ export function applicationFromInterpretation(
     evidence,
     constraintEvidence: r.constraint_evidence ?? {},
     missionProfile: r.mission_profile ?? "other",
+    analog: r.analog_check ?? null,
     earth: (r.earth_suggestions ?? []).length
       ? { reasons: Object.fromEntries((r.earth_suggestions ?? []).map((e) => [e.factor_id, e.reason])), evidence: Object.fromEntries((r.earth_suggestions ?? []).map((e) => [e.factor_id, e.evidence ?? []])) }
       : null,

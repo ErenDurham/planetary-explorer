@@ -299,7 +299,7 @@ def test_ineligible_site_still_carries_its_score_and_factors():
 def test_default_ranking_on_committed_profiles_is_a_stable_permutation():
     sites, profiles = _real()
     ids = sorted(s.id for s in sites)
-    assert len(ids) == 8
+    assert len(ids) == 17
     runs = []
     for _ in range(2):
         res, warnings = scoring_engine.evaluate(sites, profiles, scoring_engine.default_mission())
@@ -312,20 +312,22 @@ def test_default_ranking_on_committed_profiles_is_a_stable_permutation():
     assert [r[1] for r in ok] == list(range(1, len(ok) + 1))
     scores = [r[2] for r in ok]
     assert scores == sorted(scores, reverse=True) and all(0 <= s <= 100 for s in scores)
-    assert len(ok) == 8, "all eight committed sites pass both default hard constraints"
+    # the two polar caps fail the default latitude band, and Noctis (6.4 km high) the elevation ceiling
+    assert len(ok) == 14 and {r[0] for r in runs[0] if r[1] is None} == {"planum_boreum", "planum_australe", "noctis_labyrinthus"}
 
 
 def test_default_ranking_is_scientifically_sensible():
-    """Smooth plains should score high; Gale, whose 1 deg footprint spans Mount
-    Sharp (detrended relief > 1 km), should score lowest."""
+    """Smooth northern plains should score high; Columbus (rugged southern highlands)
+    lowest among eligible sites; Noctis, whose footprint spans the trough maze
+    (detrended relief > 1 km), scores zero on roughness."""
     sites, profiles = _real()
     res, _ = scoring_engine.evaluate(sites, profiles, scoring_engine.default_mission())
-    ranked = [r.site_id for r in ranking_engine.rank(res)]
-    assert ranked[-1] == "gale_crater"
-    assert set(ranked[:4]) >= {"chryse_planitia", "elysium_planitia", "oxia_planum"}
-    gale = next(r for r in res if r.site_id == "gale_crater")
-    rough = next(f for f in gale.factor_scores if f.criterion_id == "surface_roughness")
-    assert rough.suitability == 0.0 and any("roughness" in x.lower() for x in gale.risks)
+    ranked = [r.site_id for r in ranking_engine.rank(res) if r.rank is not None]
+    assert ranked[-1] == "columbus_crater"
+    assert set(ranked[:5]) >= {"chryse_planitia", "elysium_planitia", "hebrus_valles", "utopia_planitia"}
+    noctis = next(r for r in res if r.site_id == "noctis_labyrinthus")
+    rough = next(f for f in noctis.factor_scores if f.criterion_id == "surface_roughness")
+    assert rough.suitability == 0.0 and any("roughness" in x.lower() for x in noctis.risks)
 
 
 def test_rank_breaks_ties_by_site_id_and_ranks_only_ok_rows():

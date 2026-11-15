@@ -45,3 +45,10 @@ def research_dossier(run_id: str, candidate_id: str, question: str = Query("", m
 @router.post("/runs/{run_id}/candidates/{candidate_id}/research", response_model=ResearchRecord)
 def save_research(run_id: str, candidate_id: str, request: ResearchUpdate):
     return invoke(discovery_research.save_record, run_id, candidate_id, request)
+
+
+from app.models.discovery_research import ResearchBrief
+
+@router.get("/runs/{run_id}/candidates/{candidate_id}/research/export", response_model=ResearchBrief)
+def export_research(run_id: str, candidate_id: str):
+    return invoke(discovery_research.export_brief, run_id, candidate_id)

@@ -25,12 +25,16 @@ export interface PlanetConfig {
   placeholderColor: string;
   /** One sentence for the selected-site card about what the texture shows. */
   textureNote: string;
+  /** Limb glow: colour and strength of the Fresnel rim. Earth scatters blue; Mars has a faint dusty haze. */
+  atmosphere: { color: string; intensity: number; thickness: number; power: number };
+  /** Key light tint and the overall exposure that suits this body's albedo. */
+  lighting: { key: string; keyIntensity: number; sky: string; ground: string; hemisphere: number; exposure: number };
 }
 
 export const MARS_CONFIG: PlanetConfig = {
   id: "mars",
   displayName: "Mars",
-  textureUrl: "/textures/mars_viking_4k.jpg",
+  textureUrl: `${import.meta.env.BASE_URL}textures/mars_viking_4k.jpg`,
   radius: 1,
   bodyRadiusKm: 3389.5,
   markerConvention: "east_-180_180_three_default_uv",
@@ -38,12 +42,14 @@ export const MARS_CONFIG: PlanetConfig = {
   textureCreditUrl: "https://trek.nasa.gov/mars/",
   placeholderColor: "#3a2a24",
   textureNote: "Regional orbital mosaic. Surface photographs and local terrain detail are not loaded in this view.",
+  atmosphere: { color: "#d9a37a", intensity: 0.55, thickness: 0.05, power: 2.6 },
+  lighting: { key: "#ffe4c4", keyIntensity: 2.6, sky: "#7a6a60", ground: "#20140e", hemisphere: 0.9, exposure: 1.0 },
 };
 
 export const EARTH_CONFIG: PlanetConfig = {
   id: "earth",
   displayName: "Earth",
-  textureUrl: "/textures/earth_bluemarble_4k.jpg",
+  textureUrl: `${import.meta.env.BASE_URL}textures/earth_bluemarble_4k.jpg`,
   radius: 1,
   bodyRadiusKm: 6371.0,
   markerConvention: "east_-180_180_three_default_uv",
@@ -51,6 +57,8 @@ export const EARTH_CONFIG: PlanetConfig = {
   textureCreditUrl: "https://earthobservatory.nasa.gov/features/BlueMarble",
   placeholderColor: "#1d3550",
   textureNote: "Blue Marble composite (cloud-free, annual). Field photographs and local terrain detail are not loaded in this view.",
+  atmosphere: { color: "#5ea4ff", intensity: 0.6, thickness: 0.09, power: 2.6 },
+  lighting: { key: "#fff4e6", keyIntensity: 2.4, sky: "#9fc3ff", ground: "#0b1626", hemisphere: 1.1, exposure: 1.08 },
 };
 
 export const PLANET_CONFIGS: Record<PlanetId, PlanetConfig> = { earth: EARTH_CONFIG, mars: MARS_CONFIG };

@@ -62,8 +62,8 @@
     }
   ],
   "noncomparable_disclosures": [
-    "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
-    "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
+    "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+    "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
     "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
     "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
     "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."

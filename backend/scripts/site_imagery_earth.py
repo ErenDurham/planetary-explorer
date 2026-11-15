@@ -125,6 +125,9 @@ def main() -> int:
                     print(f"{c['id']} {name}: no imagery available", flush=True)
                     continue
             img, meta = res
+            if ImageStat.Stat(img.convert("L")).stddev[0] < 1.0:   # every tile missing or blank: not imagery
+                print(f"{c['id']} {name}: source returned no image content; skipped", flush=True)
+                continue
             fn = f"{c['id']}_gibs_{name}.jpg"
             img.save(ASSETS / fn, quality=86)
             meta.update({"file": fn, "width_px": img.width, "height_px": img.height, "bytes": (ASSETS / fn).stat().st_size, "verified_on": date.today().isoformat(), "source_used": src_used})

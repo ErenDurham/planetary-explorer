@@ -1,3 +1,4 @@
+import { browserRequest, IS_BROWSER_PYTHON } from "./browserPython";
 import type { AstroRequest, AstroResponse, AnalogRankRequest, AnalogRankResponse, ComparisonCatalog, SiteImagery, SensitivityRequest, SensitivityResponse } from "@/types";
 import type { MissionAssessmentRequest, MissionAssessmentResponse } from "@/types";
 // Typed fetch wrapper for the Planetary Explorer backend.
@@ -71,12 +72,12 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${API_PREFIX}${path}`;
   let res: Response;
   try {
-    res = await fetch(url, {
+    res = await (IS_BROWSER_PYTHON ? browserRequest(path, init) : fetch(url, {
       ...init,
       headers: { Accept: "application/json", ...(init?.body ? { "Content-Type": "application/json" } : {}), ...(init?.headers ?? {}) },
-    });
+    }));
   } catch (e) {
-    throw new ApiError("unavailable", `Backend unreachable at ${API_BASE_URL}`, null, e instanceof Error ? e.message : e);
+    throw new ApiError("unavailable", IS_BROWSER_PYTHON ? "The local calculation engine could not complete this request" : `Backend unreachable at ${API_BASE_URL}`, null, e instanceof Error ? e.message : e);
   }
 
   if (!res.ok) {

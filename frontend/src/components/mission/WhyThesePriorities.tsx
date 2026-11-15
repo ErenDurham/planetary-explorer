@@ -12,7 +12,7 @@ import { Floating } from "@/components/ui/Floating";
 import type { ObjectiveSource } from "@/store/useAppStore";
 import type { PriorityFactor } from "@/components/mission/priorityFactors";
 import { formatNumber } from "@/lib/format";
-import type { EvidenceCitation, HardConstraint } from "@/types";
+import type { AnalogCheck, AnalogFactorCheck, EvidenceCitation, HardConstraint } from "@/types";
 
 export interface WhyProps {
   factors: PriorityFactor[];
@@ -26,6 +26,9 @@ export interface WhyProps {
   /** Mars only: the hard constraints and the research behind each. */
   constraints?: HardConstraint[];
   constraintEvidence?: Record<string, EvidenceCitation[]>;
+  /** The Earth <-> Mars cross-reference behind the priorities. */
+  analog?: AnalogCheck | null;
+  planet?: "mars" | "earth";
 }
 const OPERATOR: Record<string, string> = { "<=": "≤", ">=": "≥", "<": "<", ">": ">", "abs<=": "|x| ≤" };
 
@@ -90,7 +93,7 @@ export function WhyThesePriorities(props: WhyProps) {
   );
 }
 
-function WhyContent({ factors, shares, suggested, reasons, evidence, source, unsupported = [], constraints, constraintEvidence = {}, titleId, onClose }: WhyProps & { titleId: string; onClose: () => void }) {
+function WhyContent({ factors, shares, suggested, reasons, evidence, source, unsupported = [], constraints, constraintEvidence = {}, analog, planet = "mars", titleId, onClose }: WhyProps & { titleId: string; onClose: () => void }) {
   const byLlm = source === "llm";
 
   return (
@@ -113,6 +116,8 @@ function WhyContent({ factors, shares, suggested, reasons, evidence, source, uns
         </p>
       )}
 
+      {analog && <AnalogChain analog={analog} planet={planet} />}
+
       <ul className="divide-y divide-line" aria-label="Per-factor reasons">
         {factors.map((f) => {
           const now = Math.round(shares[f.id] ?? 0);
@@ -121,7 +126,8 @@ function WhyContent({ factors, shares, suggested, reasons, evidence, source, uns
             <FactorRow key={f.id} factor={f}
               right={<><span className="num text-base text-fg">{now}%</span>{was !== undefined && was !== now && <span className="ml-2 text-sm text-fg-faint">suggested {was}%</span>}</>}
               reason={byLlm ? reasons?.[f.id] : undefined}
-              evidence={evidence?.[f.id] ?? []} />
+              evidence={evidence?.[f.id] ?? []}
+              comparison={analog?.factors.find((c) => c.criterion_id === f.id)} />
           );
         })}
       </ul>
@@ -155,7 +161,7 @@ function WhyContent({ factors, shares, suggested, reasons, evidence, source, uns
   );
 }
 
-function FactorRow({ factor, right, reason, evidence }: { factor: PriorityFactor; right: React.ReactNode; reason?: string; evidence: EvidenceCitation[] }) {
+function FactorRow({ factor, right, reason, evidence, comparison }: { factor: PriorityFactor; right: React.ReactNode; reason?: string; evidence: EvidenceCitation[]; comparison?: AnalogFactorCheck }) {
   return (
     <li className="px-5 py-3.5" data-testid={`why-${factor.id}`}>
       <h3 className="flex items-baseline gap-2 text-base font-semibold text-fg">
@@ -164,6 +170,7 @@ function FactorRow({ factor, right, reason, evidence }: { factor: PriorityFactor
         <span className="ml-auto shrink-0 font-normal">{right}</span>
       </h3>
       {reason && <p className="mt-1 pl-[18px] text-sm text-fg-muted">{reason}</p>}
+      {comparison && <Comparison c={comparison} />}
       <div className="pl-[18px]">
         {evidence.length > 0 ? <Findings items={evidence} /> : <p className="mt-1 text-sm italic text-fg-faint">No finding in the evidence registry supports this weight.</p>}
       </div>
@@ -181,5 +188,47 @@ function Findings({ items }: { items: EvidenceCitation[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+const UNIT: Record<string, string> = { deg: "°", m: " m", "W/m2": " W/m²" };
+const show = (v: number | null | undefined, unit: string) => (typeof v === "number" ? `${formatNumber(v)}${UNIT[unit] ?? ` ${unit}`}` : "no data");
+
+/** The chain the priorities rest on: a proven Earth site, its research, and the Mars site it is compared with. */
+function AnalogChain({ analog, planet }: { analog: AnalogCheck; planet: "mars" | "earth" }) {
+  return (
+    <section className="mx-5 mt-4 rounded-lg border border-line-strong bg-bg/40 px-4 py-3 text-sm" aria-label="Analog check" data-testid="why-analog">
+      <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-muted">Analog check</h3>
+      <p className="mt-1 text-fg-muted">
+        {planet === "mars"
+          ? "A Mars site is good when its data compares with an Earth site that research shows suits this mission."
+          : "An Earth site is good when its data compares with the Mars data."}
+      </p>
+      <p className="mt-2 text-fg"><span className="text-fg-muted">Proven Earth site:</span> <span className="font-medium">{analog.earth_site_name}</span></p>
+      {(analog.research ?? []).length > 0
+        ? <Findings items={analog.research ?? []} />
+        : <p className="mt-1 text-sm italic text-fg-faint">No research from the last 15 years on this site in the evidence registry.</p>}
+      <p className="mt-2 text-fg"><span className="text-fg-muted">Compared with Mars site:</span> <span className="font-medium">{analog.mars_site_name}</span></p>
+      <p className="mt-1 text-fg-muted" data-testid="why-shared">
+        Shared landforms: <span className="text-fg">{tagList(analog.shared_landforms)}</span> · Shared minerals: <span className="text-fg">{tagList(analog.shared_minerals)}</span>
+      </p>
+      {planet === "earth" && <p className="mt-1 text-fg-muted">Earth sites are ranked by how closely their slope, relief, landforms, minerals and dryness match {analog.mars_site_name}.</p>}
+    </section>
+  );
+}
+
+function tagList(tags: string[] | undefined): string {
+  return tags && tags.length ? tags.map((t) => t.replace(/_/g, " ")).join(", ") : "none";
+}
+
+/** One factor's Earth vs Mars values from the site profiles, and whether they compare. */
+function Comparison({ c }: { c: AnalogFactorCheck }) {
+  const tone = c.comparable === true ? "text-ok" : c.comparable === false ? "text-warn" : "text-fg-faint";
+  const verdict = c.comparable === true ? "comparable" : c.comparable === false ? "not comparable" : "not compared";
+  return (
+    <p className="mt-1.5 pl-[18px] text-sm" data-testid={`why-compare-${c.criterion_id}`} title={c.note}>
+      <span className="num text-fg">Earth {show(c.earth_value, c.unit)} · Mars {show(c.mars_value, c.unit)}</span>{" "}
+      <span className={tone}>— {verdict}</span>
+    </p>
   );
 }

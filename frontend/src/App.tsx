@@ -1,3 +1,5 @@
+import { RegionAnalysis } from "@/features/regions/RegionAnalysis";
+import { useRegionTarget } from "@/features/regions/store";
 import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
 // App shell. The store separates the MISSION (task, destination, selections on
 // each body) from the VIEW (which globe is shown, which map mode colours it).
@@ -17,11 +19,12 @@ import { StatusBanner } from "@/components/layout/StatusBanner";
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
 import type { OverlayBounds } from "@/lib/overlay";
 import { AstroPanel } from "@/components/astro/AstroPanel";
-import { SitePanelShell } from "@/components/layout/SitePanelShell";
+import { COLLAPSED_SITE_WIDTH, SitePanelShell } from "@/components/layout/SitePanelShell";
 import { RightSidebar } from "@/components/layout/RightSidebar";
 import { AnalyzeView } from "@/components/layout/AnalyzeView";
 import { ResearchView } from "@/components/layout/ResearchView";
-import { CompareView } from "@/components/layout/CompareView";
+import { CompareEntry } from "@/features/regions/CompareEntry";
+import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
 import { DiscoveryView } from "@/features/discovery";
 import { PlanetViewer, PLANET_CONFIGS, markerAppearance, analogMarkerAppearance, type MarkerDatum } from "@/components/globe";
 import { useSites } from "@/hooks/useSites";
@@ -32,6 +35,7 @@ import { useAnalogRank } from "@/hooks/useAnalogRank";
 import { effectiveMapMode, referenceIdFor, selectedIdFor, useAppStore } from "@/store/useAppStore";
 import { BODY_NAME, otherBody, toAnalogShares } from "@/lib/analogFeatures";
 import { sharesEqual } from "@/lib/allocation";
+import { passesRole, roleCounts, roleKey, type RoleFilter } from "@/lib/roles";
 import { RankedList, AnalogRankedList } from "@/components/mission/RankedList";
 import type { RankChange } from "@/components/mission/AnalogPreferences";
 import { ErrorNote } from "@/components/ui/ErrorNote";
@@ -39,8 +43,14 @@ import { EmptyNote } from "@/components/ui/Section";
 import type { AnalogRankResponse } from "@/types";
 
 export default function App() {
+  const regionTarget = useRegionTarget(s => s.target);
+  const openRegion = useRegionTarget(s => s.open);
   const candidateResearchTarget = useCandidateResearchTarget(s => s.target);
-  const [sitePanelWidth,setSitePanelWidth]=useState(380);
+  // Explore's site pane starts collapsed; selecting a site opens it (see the effect below)
+  const [sitePanelWidth,setSitePanelWidth]=useState(COLLAPSED_SITE_WIDTH);
+  const openPanelWidth=useRef(380);
+  // Find Earth Analogs keeps its own pane, open by default as before
+  const [discoveryPanelWidth,setDiscoveryPanelWidth]=useState(380);
   const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
   const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
   const updateAstroBounds=useCallback((bounds:OverlayBounds)=>setAstroBounds(previous=>previous && previous.left===bounds.left && previous.right===bounds.right && previous.top===bounds.top && previous.bottom===bounds.bottom ? previous : bounds),[]);
@@ -48,12 +58,15 @@ export default function App() {
   const assessment = useMissionAssessment();
   const navigateExplore = useAppStore(s => s.navigateExplore);
   const missionBody = useAppStore(s => s.selectionBody);
-  const appliedObjective = useAppStore(s => s.appliedObjective);
   const missionDesigned = useAppStore((s) => s.missionDesigned);
-  const draftDirty = useAppStore(s => s.missionDraftDirty);
   const exploreRevision = useAppStore(s => s.exploreRevision);
   const activeTab = useAppStore((s) => s.activeTab);
+  const regionActive = regionTarget != null && (activeTab === "analyze" || activeTab === "compare");
   const setActiveTab = useAppStore((s) => s.setActiveTab);
+  const exploreMode = useAppStore((s) => s.exploreMode);
+  // "Find Earth Analogs" is the second Explore experience: the same three-column
+  // workspace, drawn by DiscoveryView itself, with its own run-scoped state
+  const findAnalogs = activeTab === "explore" && exploreMode === "find_analogs";
   const focusToken = useAppStore((s) => s.selectionRevision);
   const viewedBody = useAppStore((s) => s.viewedBody);
   const mapMode = useAppStore((s) => s.mapMode);
@@ -83,9 +96,18 @@ export default function App() {
   const missionSelectedId = missionBody === "earth" ? selectedEarthId : selectedMarsId;
   const missionLocation = earth.data?.locations.find(l => l.body === missionBody && l.id === missionSelectedId);
   const selectedId = selectedIdFor({ selectedEarthId, selectedMarsId }, viewedBody);
+  // The site pane follows the selection: open (at its last open width) while a
+  // site is selected, collapsed while nothing is. The user can still toggle it.
+  useEffect(() => { if (sitePanelWidth !== COLLAPSED_SITE_WIDTH) openPanelWidth.current = sitePanelWidth; }, [sitePanelWidth]);
+  useEffect(() => { setSitePanelWidth(selectedId ? openPanelWidth.current : COLLAPSED_SITE_WIDTH); }, [selectedId]);
   const referenceId = referenceIdFor({ viewedBody, selectedEarthId, selectedMarsId });
   const refBody = otherBody(viewedBody);
-  const config = PLANET_CONFIGS[viewedBody];
+  // Until the startup reading of the default objective (an Earth task) has been
+  // applied, the first screen shows the rotating Earth, without markers, rather
+  // than the store's initial Mars state.
+  const seeded = useAppStore((s) => Object.keys(s.defaultWeights).length > 0);
+  const welcome = !missionDesigned && !seeded;
+  const config = PLANET_CONFIGS[welcome ? "earth" : viewedBody];
 
   const rank = useAnalogRank(viewedBody, referenceId, analogWeights, analog && activeTab === "explore");
   // placeholderData keeps the previous response while a new one loads; only
@@ -96,6 +118,11 @@ export default function App() {
   const earthNames = useMemo(() => new Map(earth.sites.map((s) => [s.id, s.name])), [earth.sites]);
   const referenceName = referenceId ? (refBody === "earth" ? earthNames.get(referenceId) : marsNames.get(referenceId)) ?? rankData?.reference.name ?? referenceId : null;
   const referenceOptions = useMemo(() => (refBody === "earth" ? earth.sites.map((s) => ({ id: s.id, name: s.name })) : (sites.data?.sites ?? []).map((s) => ({ id: s.id, name: s.name }))), [refBody, earth.sites, sites.data]);
+
+  // Workbook site roles (a display filter on markers and lists; ranks and colours come from the full pool)
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const roleOf = useMemo(() => new Map((earth.data?.locations ?? []).filter((l) => l.role).map((l) => [roleKey(l.body, l.id), l.role!])), [earth.data]);
+  const shownOnBody = useCallback((body: string) => (id: string) => passesRole(roleFilter, roleOf.get(roleKey(body, id))), [roleFilter, roleOf]);
 
   const markers: MarkerDatum[] = useMemo(() => {
     if (taskMissionView) {
@@ -127,6 +154,12 @@ export default function App() {
       return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lon_east, mode: "landing" as const, score: r?.score ?? null, rank: r?.rank ?? null, status: r?.status ?? null, similarity: null, unrankableReason: null, appearance: r?.status === "ok" ? analogMarkerAppearance(missionRankPosition(r.rank,evaluation.data?.results.map(r=>r.rank)??[]),rankPalette) : markerAppearance(r?.status, r?.score) };
     });
   }, [viewedBody, analog, sites.data, evaluation.data, earth.sites, rankData, rankPalette, referenceId, earthMission, taskMissionView, assessment.data, earth.data]);
+
+  const visibleMarkers = useMemo(() => markers.filter((m) => shownOnBody(viewedBody)(m.id)), [markers, shownOnBody, viewedBody]);
+  const roleLegend = useMemo(() => {
+    const counts = roleCounts(markers.map((m) => roleOf.get(roleKey(viewedBody, m.id))));
+    return Object.values(counts).some((n) => n > 0) ? { counts, selected: roleFilter, onChange: setRoleFilter } : undefined;
+  }, [markers, roleOf, viewedBody, roleFilter]);
 
   // A deliberate trip to analogs opens the top match only if that body has no
   // selection. Consume the request once so clearing a site stays cleared.
@@ -196,7 +229,8 @@ export default function App() {
         overlayBounds={activeTab === "explore" ? astroBounds : null}
         onOverlayMaxHeightChange={setExploreOverlayMaxHeight}
         config={config}
-        markers={markers}
+        markers={welcome ? [] : visibleMarkers}
+        roles={welcome ? undefined : roleLegend}
         selectedId={selectedId}
         focusToken={focusToken}
         onSelect={onSelectVisible}
@@ -206,7 +240,7 @@ export default function App() {
         resetToken={cameraResetToken}
         onRequestReset={requestCameraReset}
         statusLine={statusLine}
-        mode={taskMissionView ? assessment.data?.results.some(r=>r.score!=null)?"mission":"browse" : earthMission ? "browse" : analog ? "analog" : "landing"}
+        mode={welcome ? "browse" : taskMissionView ? assessment.data?.results.some(r=>r.score!=null)?"mission":"browse" : earthMission ? "browse" : analog ? "analog" : "landing"}
         palette={rankPalette}
         onPaletteChange={setRankPalette}
         legendHeading={legendHeading}
@@ -240,14 +274,20 @@ export default function App() {
     : (rankData?.candidate_body === "earth" ? rankData.candidates.find(c => c.rank === 1)?.location.id : undefined) ?? earth.sites[0]?.id;
 
   useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
-  const centre = activeTab === "explore"
-    ? <ExploreView key={exploreRevision} initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
+  const centre = findAnalogs
+    ? <DiscoveryView panelWidth={discoveryPanelWidth} onPanelWidthChange={setDiscoveryPanelWidth} />
+    : activeTab === "explore"
+    ? <ExploreView initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
-      ? missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
+      ? regionTarget
+        ? regionTarget.kind==="catalog" && missionType==="landing" && evaluation.data?.results.some(r=>r.site_id===regionTarget.id)
+          ? <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={regionTarget.id} onSelect={id=>{openRegion({kind:"catalog",id});selectSite(id);}}/>
+          : regionTarget.kind==="catalog" && assessment.data?.results.some(r=>r.site_id===regionTarget.id)
+            ? <MissionAssessmentDetail data={assessment.data} result={assessment.data.results.find(r=>r.site_id===regionTarget.id)} location={earth.data?.locations.find(l=>l.id===regionTarget.id)} pending={assessment.isPending} showSensitivity/>
+            : <RegionAnalysis key={`${regionTarget.kind}:${regionTarget.runId}:${regionTarget.id}`} target={regionTarget}/>
+        : missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
       : activeTab === "compare"
-        ? <CompareView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} />
-        : activeTab === "discover"
-        ? <DiscoveryView />
+        ? <CompareEntry sites={sites.data?.sites} selectedId={selectedMarsId} />
         : <ResearchView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} mission={evaluation.mission} />;
 
   // Candidate pane for the visible body (Analyze always shows the Mars landing ranking).
@@ -291,11 +331,12 @@ export default function App() {
       emptyReference={referenceSelector}
       filter={listFilter}
       onFilterChange={setListFilter}
+      shown={shownOnBody(viewedBody)}
     />
   ) : (
     <>
       {evaluation.error && <div className="p-3"><ErrorNote error={evaluation.error} context="scoring/evaluate" /></div>}
-      <RankedList results={evaluation.data?.results} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} />
+      <RankedList results={evaluation.data?.results} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} shown={shownOnBody("mars")} />
     </>
   );
 
@@ -310,9 +351,18 @@ export default function App() {
       <div className="absolute left-4 top-0 z-50 flex gap-2">
         <a className="sr-only rounded bg-bg-elev p-3 text-sm focus:not-sr-only" href="#workspace">Skip to workspace</a>
       </div>
-      <TopNav active={activeTab} onChange={setActiveTab} />
+      <TopNav active={activeTab} onChange={tab=>{
+        if((tab==="compare" || tab==="analyze") && activeTab==="explore"){
+          const discovery=useDiscoveryStore.getState();
+          const id=discovery.runId ? discovery.runs[discovery.runId]?.selectedCandidateId : null;
+          if(exploreMode==="find_analogs" && discovery.runId && id)openRegion({kind:"discovered",id,runId:discovery.runId});
+          else if(exploreMode==="browse" && selectedId)openRegion({kind:"catalog",id:selectedId});
+          else useRegionTarget.getState().choose();
+        }
+        setActiveTab(tab);
+      }} />
       <StatusBanner />
-      {(activeTab === "explore" || activeTab === "analyze") && (
+      {((activeTab === "explore" && !findAnalogs) || (activeTab === "analyze" && !regionActive)) && (
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">
           <label htmlFor="mobile-candidate" className="text-sm text-fg-muted">{exploreAnalog ? `${BODY_NAME[viewedBody]} candidate` : "Candidate"}</label>
           <select id="mobile-candidate" value={mobileSelected ?? ""} onChange={e => (taskCandidates ? selectLocation(missionBody,e.target.value || null) : exploreAnalog ? selectLocation(viewedBody,e.target.value || null) : selectSite(e.target.value || null))} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="">No location selected</option>{mobileOptions.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}</select>
@@ -329,14 +379,10 @@ export default function App() {
             drawer did, so a draft objective and the excluded-factor sync survive
             switching tabs. */}
         <div className={`${activeTab === "mission" ? "flex" : "hidden"} h-full flex-col bg-bg-elev`}>
-          <div className="scroll-thin min-h-0 flex-1 overflow-y-auto"><LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} /></div>
-{/* shown once a mission is saved: the tab opens on the chat box alone */}
-          {missionDesigned && <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line bg-bg-elev px-5 py-4">
-            <p className="max-w-2xl text-sm text-fg-muted">{draftDirty ? "Review and apply your edited objective before exploring." : `Next: explore ${BODY_NAME[missionBody]} sites for your applied mission objective.`}</p>
-            <button type="button" disabled={!appliedObjective || draftDirty || !initialMissionId || (missionType === "landing" ? evaluation.isPending : assessment.isPending)} onClick={() => navigateExplore("mission", initialMissionId)} className="ml-auto rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">Head to explore mission →</button>
-          </footer>}
+          {/* the next step (Explore candidates / established analogs / Mars sites) lives inside the pane, under the applied objective */}
+          <div className="scroll-thin min-h-0 flex-1 overflow-y-auto"><LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} onExploreMission={() => navigateExplore("mission", initialMissionId)} exploreReady={!!initialMissionId && !(missionType === "landing" ? evaluation.isPending : assessment.isPending)} /></div>
         </div>
-        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" || activeTab === "discover" ? (
+        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" || (activeTab === "analyze" && regionTarget != null) || findAnalogs ? (
           <div className="h-full">{centre}</div>
         ) : (
           // Candidates scroll independently of mission settings and reasoning.
@@ -353,7 +399,7 @@ export default function App() {
           </div>
         )}
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || activeTab === "discover" || (activeTab === "research" && candidateResearchTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) || ((activeTab === "analyze" || activeTab === "compare") && regionTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );

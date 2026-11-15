@@ -168,7 +168,7 @@ def test_ollama_timeout_falls_back_and_keep_alive_is_sent_as_ollama_expects(olla
 
 def test_interpret_schema_asks_only_for_what_the_tab_shows():
     req = oe._schema()["required"]
-    assert set(req) == {"mission_profile", "weights", "reasons", "evidence", "unsupported_needs", "confidence", "earth_weights", "earth_reasons", "focus_body", "site_guess"}
+    assert set(req) == {"mission_profile", "weights", "reasons", "evidence", "unsupported_needs", "confidence", "earth_weights", "earth_reasons", "focus_body", "site_guess", "analog_pair"}
 
 
 def test_one_reading_gives_earth_priorities_on_the_same_factors(monkeypatch):
@@ -241,5 +241,5 @@ def test_without_a_usable_guess_the_common_case_is_assumed(monkeypatch):
 
 def test_the_model_sees_the_site_list_and_may_only_answer_with_its_ids():
     schema = oe._schema()
-    assert "gale_crater" in schema["properties"]["site_guess"]["enum"] and "none" in schema["properties"]["site_guess"]["enum"]
+    assert "noctis_labyrinthus" in schema["properties"]["site_guess"]["enum"] and "none" in schema["properties"]["site_guess"]["enum"]
     assert "Gale" in oe.system_prompt() and "Never ask the user to clarify" in oe.system_prompt()

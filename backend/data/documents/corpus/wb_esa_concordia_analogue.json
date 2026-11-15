@@ -1,0 +1,22 @@
+{
+ "document_id": "wb_esa_concordia_analogue",
+ "title": "An Antarctic analogue for space exploration (Concordia)",
+ "institution": "ESA",
+ "url": "https://explorationscience.esa.int/?p=473",
+ "final_url": "https://explorationscience.esa.int/platforms/concordia/",
+ "publication_date": "2023-04-21",
+ "retrieved_at": "2026-11-15",
+ "content_type": "text/html; charset=UTF-8",
+ "kind": "html",
+ "topic": "An Antarctic analogue for space exploration (Concordia)",
+ "excluded_paragraph_terms": [],
+ "default_geographic_relevance": [
+  "south_pole_station",
+  "planum_australe"
+ ],
+ "sha256": "90610f0e81bdc1900756c10b983fdcbbb0ad191c99f31a03a0e5e6b6ea05612d",
+ "char_count": 1354,
+ "text": "An Antarctic Analogue for Space Exploration\n\nESA has supported biomedical research at Concordia Station for nearly two decades, enabling studies on psychological and physiological stressors, coping mechanisms, and potential countermeasures for long-duration missions.\n\nWhy Concordia?\n\nConcordia Station, operated by IPEV and PNRA, is a permanent international research facility located at Dome C on the Eastern Antarctic Plateau. Its extreme isolation and harsh environment make it one of the most effective analogues for space exploration on Earth—even more remote than the International Space Station.\n\nNo access between mid-February and mid-November (Antarctic winter)\n\nAltitude: 3,200 m (≈ 4,000 m at the equator)\n\nAir pressure: 645 hPa → chronic hypobaric hypoxia\n\nMean temperature: −51°C (down to −80°C in winter)\n\nThese factors create extreme physiological and psychological challenges, similar to those faced during space missions, making Concordia an ideal platform for research on human adaptation and resilience.\n\nPsychological and cognitive performance under isolation and confinement\n\nPhysiological adaptation to hypoxia and extreme cold\n\nDevelopment of coping strategies and countermeasures for long-duration missions\n\nReview paper: “‘White Mars’ – Nearly Two Decades of Biomedical Research at the Antarctic Concordia Station” (Open Access)",
+ "raw_text": "An Antarctic Analogue for Space Exploration\n\nESA has supported biomedical research at Concordia Station for nearly two decades, enabling studies on psychological and physiological stressors, coping mechanisms, and potential countermeasures for long-duration missions.\n\nWhy Concordia?\n\nConcordia Station, operated by IPEV and PNRA, is a permanent international research facility located at Dome C on the Eastern Antarctic Plateau. Its extreme isolation and harsh environment make it one of the most effective analogues for space exploration on Earth—even more remote than the International Space Station.\n\nDistance & Isolation :\n\n950 km from the nearest coast\n\n1,670 km from the South Pole\n\n560 km from the nearest station\n\nNo access between mid-February and mid-November (Antarctic winter)\n\nEnvironmental Conditions :\n\nAltitude: 3,200 m (≈ 4,000 m at the equator)\n\nAir pressure: 645 hPa → chronic hypobaric hypoxia\n\nMean temperature: −51°C (down to −80°C in winter)\n\nThese factors create extreme physiological and psychological challenges, similar to those faced during space missions, making Concordia an ideal platform for research on human adaptation and resilience.\n\nResearch Focus\n\nPsychological and cognitive performance under isolation and confinement\n\nPhysiological adaptation to hypoxia and extreme cold\n\nDevelopment of coping strategies and countermeasures for long-duration missions\n\nLearn More\n\nConcordia Station – https://institut-polaire.fr/en/antarctica/concordia-station/\n\nReview paper: “‘White Mars’ – Nearly Two Decades of Biomedical Research at the Antarctic Concordia Station” (Open Access)\n\nESA – Concordia",
+ "raw_char_count": 1627
+}

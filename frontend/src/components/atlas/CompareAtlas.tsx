@@ -26,7 +26,8 @@ export function AtlasPairSelectors({ columns, swapped, onSwap, onSelect, onShowO
       <label htmlFor={`compare-${c.body}`} className="sr-only">{BODY_NAME[c.body]} location</label>
       <select id={`compare-${c.body}`} value={c.location?.id ?? ""} onChange={e => onSelect(c.body, e.target.value)}>
         {!c.location && <option value="" disabled>Choose a {BODY_NAME[c.body]} location</option>}
-        {c.locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+        <optgroup label="Established catalog regions">{c.locations.filter(l=>!l.id.startsWith("discovered:")).map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</optgroup>
+        {c.locations.some(l=>l.id.startsWith("discovered:")) && <optgroup label="Found survey regions">{c.locations.filter(l=>l.id.startsWith("discovered:")).map(l=><option key={l.id} value={l.id}>{l.name}</option>)}</optgroup>}
       </select>
       {c.location && <div className={styles.locationMeta}><span className="num">{formatLatLon(c.location.lat, c.location.lon_east)}</span><button type="button" onClick={() => onShowOnGlobe(c.body, c.location!.id)}>Show on globe <ArrowUpRight size={14} aria-hidden /></button></div>}
       {c.location && <details className={styles.locationAbout}><summary>About this location</summary><p>{c.location.description}</p><p className={styles.muted}>{c.location.coverage}</p></details>}

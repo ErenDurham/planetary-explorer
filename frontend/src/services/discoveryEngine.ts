@@ -10,6 +10,7 @@ export type DiscoveryCandidateDetail = Schemas["DiscoveryCandidateDetail"];
 export type DiscoveryExport = Schemas["DiscoveryExport"];
 export type CandidateResearchDossier = Schemas["ResearchDossier"];
 export type CandidateResearchUpdate = Schemas["ResearchUpdate"];
+export type CandidateResearchBrief = Schemas["ResearchBrief"];
 export type CandidateResearchRecord = Schemas["ResearchRecord"];
 
 async function invoke<T>(path: string, init: RequestInit): Promise<T> {
@@ -23,6 +24,8 @@ async function invoke<T>(path: string, init: RequestInit): Promise<T> {
   }
 }
 export const discoveryEngine = {
+  exportResearch: (runId: string, candidateId: string, signal?: AbortSignal) => invoke<CandidateResearchBrief>(
+    `/discovery/runs/${encodeURIComponent(runId)}/candidates/${encodeURIComponent(candidateId)}/research/export`, { signal }),
   research: (runId: string, candidateId: string, question = "", signal?: AbortSignal) => invoke<CandidateResearchDossier>(
     `/discovery/runs/${encodeURIComponent(runId)}/candidates/${encodeURIComponent(candidateId)}/research?question=${encodeURIComponent(question)}`, { signal }),
   saveResearch: (runId: string, candidateId: string, payload: CandidateResearchUpdate, signal?: AbortSignal) => invoke<CandidateResearchRecord>(

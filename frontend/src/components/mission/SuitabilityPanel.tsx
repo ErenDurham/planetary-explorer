@@ -3,12 +3,12 @@
 import { Section, BulletList, EmptyNote } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import { Spinner } from "@/components/ui/Spinner";
-import { formatNumber, formatPercent, formatValueWithUnit } from "@/lib/format";
+import { formatNumber, formatValueWithUnit } from "@/lib/format";
 import { rankColor, rankPosition } from "@/lib/rankColor";
 import { FactorBreakdownChart } from "@/components/charts/FactorBreakdownChart";
 import type { SuitabilityResult } from "@/types";
 
-export function SuitabilityPanel({ result, scoringSpecVersion, isPending, totalRanked }: { result: SuitabilityResult | undefined; scoringSpecVersion?: string; isPending?: boolean; totalRanked?: number }) {
+export function SuitabilityPanel({ result, isPending, totalRanked }: { result: SuitabilityResult | undefined; scoringSpecVersion?: string; isPending?: boolean; totalRanked?: number }) {
   if (!result) {
     return (
       <Section title="Mission suitability" subtitle="Relative index under the current mission priorities">
@@ -21,7 +21,6 @@ export function SuitabilityPanel({ result, scoringSpecVersion, isPending, totalR
     <>
       <Section
         title="Mission suitability"
-        subtitle={<span>Relative suitability index, not a probability · spec {scoringSpecVersion ?? "—"}</span>}
         actions={isPending ? <Spinner label="Updating" /> : undefined}
       >
         <div className="flex items-end justify-between gap-3">
@@ -68,52 +67,53 @@ export function SuitabilityPanel({ result, scoringSpecVersion, isPending, totalR
           </div>
         )}
 
-        <div className="mt-3 text-[11px] text-fg-muted">
-          Criteria scored <span className="num text-fg">{result.completeness.criteria_supported}/{result.completeness.criteria_requested}</span> ({formatPercent(result.completeness.fraction)})
-          {result.completeness.excluded_criteria && result.completeness.excluded_criteria.length > 0 && (
-            <span> · excluded: {result.completeness.excluded_criteria.join(", ")}</span>
-          )}
-        </div>
       </Section>
 
-      <Section title="Why this score?" subtitle="How each scored priority contributes to the total">
+      <Section title="Why this score?">
         <FactorBreakdownChart factors={result.factor_scores} />
       </Section>
-      <details className="m-4 rounded-lg border border-line-strong"><summary className="cursor-pointer p-3 text-sm text-fg">Full scoring calculation</summary>
-      <Section title="Factor breakdown" subtitle="Weighted contributions sum to the index">
-        <div className="mt-2 overflow-x-auto">
-          <table className="w-full text-left text-[11px]">
-            <thead className="text-[10px] uppercase tracking-wide text-fg-faint">
-              <tr>
-                <th className="py-1 pr-2 font-medium">Criterion</th>
-                <th className="py-1 pr-2 font-medium">Value</th>
-                <th className="num py-1 pr-2 text-right font-medium">Suit.</th>
-                <th className="num py-1 pr-2 text-right font-medium">Weight</th>
-                <th className="num py-1 text-right font-medium">Contrib.</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-line/70">
-              {result.factor_scores.map((f) => (
-                <tr key={f.criterion_id} className={f.is_missing || f.excluded_reason ? "text-fg-faint" : "text-fg"}>
-                  <td className="py-1 pr-2">
-                    {f.label}
-                    {f.excluded_reason && <div className="text-[10px] text-fg-faint">excluded: {f.excluded_reason}</div>}
-                  </td>
-                  <td className="num py-1 pr-2">{f.is_missing || f.feature_value == null ? <span className="italic">No data</span> : formatValueWithUnit(f.feature_value, f.unit)}</td>
-                  <td className="num py-1 pr-2 text-right">{f.suitability != null ? f.suitability.toFixed(2) : "—"}</td>
-                  <td className="num py-1 pr-2 text-right">{f.normalized_weight != null ? f.normalized_weight.toFixed(2) : "—"}</td>
-                  <td className="num py-1 text-right">{f.weighted_contribution != null ? f.weighted_contribution.toFixed(1) : "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Section>
-
-      </details>
       <Section title="Favorable">
         <BulletList items={result.favorable} tone="ok" empty="Nothing scored favourably under these priorities." />
       </Section>
     </>
+  );
+}
+
+/** The full per-criterion table behind the score; shown at the bottom of the site pane. */
+export function FullScoringCalculation({ result }: { result: SuitabilityResult | undefined }) {
+  if (!result) return null;
+  return (
+        <details className="m-4 rounded-lg border border-line-strong"><summary className="cursor-pointer p-3 text-sm text-fg">Full scoring calculation</summary>
+        <Section title="Factor breakdown" subtitle="Weighted contributions sum to the index">
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full text-left text-[11px]">
+              <thead className="text-[10px] uppercase tracking-wide text-fg-faint">
+                <tr>
+                  <th className="py-1 pr-2 font-medium">Criterion</th>
+                  <th className="py-1 pr-2 font-medium">Value</th>
+                  <th className="num py-1 pr-2 text-right font-medium">Suit.</th>
+                  <th className="num py-1 pr-2 text-right font-medium">Weight</th>
+                  <th className="num py-1 text-right font-medium">Contrib.</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line/70">
+                {result.factor_scores.map((f) => (
+                  <tr key={f.criterion_id} className={f.is_missing || f.excluded_reason ? "text-fg-faint" : "text-fg"}>
+                    <td className="py-1 pr-2">
+                      {f.label}
+                      {f.excluded_reason && <div className="text-[10px] text-fg-faint">excluded: {f.excluded_reason}</div>}
+                    </td>
+                    <td className="num py-1 pr-2">{f.is_missing || f.feature_value == null ? <span className="italic">No data</span> : formatValueWithUnit(f.feature_value, f.unit)}</td>
+                    <td className="num py-1 pr-2 text-right">{f.suitability != null ? f.suitability.toFixed(2) : "—"}</td>
+                    <td className="num py-1 pr-2 text-right">{f.normalized_weight != null ? f.normalized_weight.toFixed(2) : "—"}</td>
+                    <td className="num py-1 text-right">{f.weighted_contribution != null ? f.weighted_contribution.toFixed(1) : "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Section>
+
+        </details>
   );
 }

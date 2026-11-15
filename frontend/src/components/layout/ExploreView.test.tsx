@@ -9,14 +9,21 @@ const image={entry_id:"orbital_one",view:"orbital",title:"Verified orbital image
 const mount=()=>render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><ExploreView globe={<p>Globe preview</p>} site={site}/></QueryClientProvider>);
 afterEach(()=>vi.restoreAllMocks());
 describe("Explore imagery",()=>{
-  it("shows the selected site's source-backed asset and preserves the image choice across Globe",async()=>{
+  it("steps through the images with the arrows and preserves the image choice across Globe",async()=>{
     vi.spyOn(globalThis,"fetch").mockResolvedValue(new Response(JSON.stringify({site_id:site.id,entries:[image,{...image,entry_id:"orbital_two",title:"Second verified scene"}],notes:[]})));
     mount();fireEvent.click(screen.getByRole("button",{name:"Orbital view"}));
-    const select=await screen.findByLabelText("Orbital image");fireEvent.change(select,{target:{value:"orbital_two"}});
+    expect(await screen.findByTestId("site-image-title")).toHaveTextContent("Verified orbital image1 of 2");
+    expect(screen.queryByRole("combobox")).toBeNull();   // no drop-down: arrows only
+    fireEvent.click(screen.getByRole("button",{name:"Next orbital image"}));
     expect(screen.getByRole("img")).toHaveAttribute("src",expect.stringContaining("/imagery/orbital_two/asset"));
+    expect(screen.getByTestId("site-image-title")).toHaveTextContent("Second verified scene2 of 2");
     fireEvent.click(screen.getByRole("button",{name:/^Globe$/}));
     expect(screen.getByText("Globe preview")).toBeVisible();fireEvent.click(screen.getByRole("button",{name:"Orbital view"}));
-    expect(screen.getByLabelText("Orbital image")).toHaveValue("orbital_two");
+    expect(screen.getByTestId("site-image-title")).toHaveTextContent("Second verified scene");
+    fireEvent.click(screen.getByRole("button",{name:"Next orbital image"}));   // wraps around to the first
+    expect(screen.getByTestId("site-image-title")).toHaveTextContent("Verified orbital image1 of 2");
+    fireEvent.click(screen.getByRole("button",{name:"Previous orbital image"}));
+    expect(screen.getByTestId("site-image-title")).toHaveTextContent("Second verified scene2 of 2");
     expect(screen.getByRole("link",{name:/Open original source/})).toHaveAttribute("href","https://science.nasa.gov/");
   });
   it("does not substitute orbital imagery for a missing surface view",async()=>{

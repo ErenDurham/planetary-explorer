@@ -22,14 +22,13 @@ const STATUS: Record<SuitabilityStatus, { label: string; tone: BadgeTone }> = {
 
 export { rowKeyDown } from "./CandidateRow";
 
-export function RankedList({ results, selectedId, onSelect, isPending, warnings }: { results: SuitabilityResult[] | undefined; selectedId: string | null; onSelect: (id: string) => void; isPending?: boolean; warnings?: string[] }) {
+export function RankedList({ results, selectedId, onSelect, isPending, warnings, shown }: { results: SuitabilityResult[] | undefined; selectedId: string | null; onSelect: (id: string) => void; isPending?: boolean; warnings?: string[]; /** Role display filter: rows not in it are hidden; ranks and colours still come from every site. */ shown?: (id: string) => boolean }) {
   return (
     <CandidatePanel
       title="Ranked candidates"
       subtitle="Mars · relative suitability index 0–100 under the current priorities. Not a probability."
       actions={isPending ? <Spinner label="Scoring" /> : undefined}
       controls={<>
-      <p className="mb-3 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
       {warnings && warnings.some(w => !w.includes("thermal_conditions")) && (
         <ul className="mb-2 space-y-1" aria-label="Scoring warnings">
           {warnings.filter(w => !w.includes("thermal_conditions")).map((w, i) => (
@@ -44,7 +43,7 @@ export function RankedList({ results, selectedId, onSelect, isPending, warnings 
         <EmptyNote>{isPending ? "Scoring sites…" : "No evaluation yet."}</EmptyNote>
       ) : (
         <ol className="space-y-1" aria-label="Ranked sites">
-          {results.map((r) => {
+          {results.filter((r) => !shown || shown(r.site_id)).map((r) => {
             const color = r.status === "ok" ? rankColor(missionRankPosition(r.rank,results.map(r=>r.rank))) ?? NOT_RANKED_COLOR : markerAppearance(r.status,r.score).color;
             const selected = r.site_id === selectedId;
             const st = STATUS[r.status];
@@ -80,11 +79,13 @@ export interface AnalogRankedListProps {
   /** Text filter; filtering never recolours the remaining rows (positions come from the full pool). */
   filter?: string;
   onFilterChange?: (f: string) => void;
+  /** Role display filter (workbook roles); never recolours or re-ranks. */
+  shown?: (id: string) => boolean;
 }
 
-export function AnalogRankedList({ candidates, bodyName, referenceName, selectedId, onSelect, isPending, error, palette, suggestedId, emptyReference, filter = "", onFilterChange }: AnalogRankedListProps) {
+export function AnalogRankedList({ candidates, bodyName, referenceName, selectedId, onSelect, isPending, error, palette, suggestedId, emptyReference, filter = "", onFilterChange, shown }: AnalogRankedListProps) {
   const q = filter.trim().toLowerCase();
-  const visible = (candidates ?? []).filter((c) => !q || c.location.name.toLowerCase().includes(q) || c.location.id.includes(q));
+  const visible = (candidates ?? []).filter((c) => (!shown || shown(c.location.id)) && (!q || c.location.name.toLowerCase().includes(q) || c.location.id.includes(q)));
   const ranked = (candidates ?? []).filter((c) => c.rank != null).length;
   return (
     <CandidatePanel
@@ -92,7 +93,6 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
       subtitle={referenceName ? <>{bodyName} · Analog match against <span className="text-fg">{referenceName}</span> · match % is a similarity index, not a probability.</> : `Pick a reference on the other body to rank ${bodyName} candidates.`}
       actions={isPending ? <Spinner label="Ranking" /> : undefined}
       controls={<>
-      <p className="mb-3 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
       {onFilterChange && candidates && candidates.length > 0 && (
         <label className="mb-2 block text-xs text-fg-muted">
           <span className="sr-only">Filter candidates by name</span>
@@ -124,7 +124,7 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
               </li>
             );
           })}
-          {visible.length === 0 && <li><EmptyNote>No candidate matches “{filter}”.</EmptyNote></li>}
+          {visible.length === 0 && <li><EmptyNote>{q ? <>No candidate matches “{filter}”.</> : "No candidate has the selected site role."}</EmptyNote></li>}
         </ol>
       )}
     </CandidatePanel>

@@ -6,7 +6,7 @@ export function SourcesList({ sources, title = "Sources" }: { sources: Record<st
   const list = Object.values(sources);
   if (list.length === 0) return null;
   return (
-    <Section title={title} subtitle={`${list.length} datasets and references behind this profile`}>
+    <Section title={title}>
       <ol className="space-y-1.5 text-[11px] leading-snug">
         {list.map((s) => (
           <li key={s.source_id} className="text-fg-muted">

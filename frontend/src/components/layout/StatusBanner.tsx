@@ -1,9 +1,13 @@
+import { useSyncExternalStore } from "react";
+import { browserRuntimeStatus, IS_BROWSER_PYTHON } from "@/services/browserPython";
 import { WifiOff, ServerCrash } from "lucide-react";
 import { useHealth } from "@/hooks/useSites";
 import { API_BASE_URL, isApiError } from "@/services/api";
 
 export function StatusBanner() {
   const h = useHealth();
+  const local = useSyncExternalStore(browserRuntimeStatus.subscribe, browserRuntimeStatus.get);
+  if (IS_BROWSER_PYTHON) return <div role={local.phase === "error" ? "alert" : "status"} className="border-b border-line bg-bg-elev px-4 py-2 text-xs text-fg-muted">{local.message}</div>;
   if (h.isPending) return null;
   if (h.error) {
     const unreachable = isApiError(h.error) && h.error.isUnavailable;

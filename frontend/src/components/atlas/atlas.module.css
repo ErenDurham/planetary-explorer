@@ -1,45 +1,32 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap");
-
-/* Opt-in palette, inherited only by this surface. Shared app tokens stay intact. */
-.surface {
-  --color-bg: #181818;
-  --color-bg-elev: #1f1f1f;
-  --color-bg-elev-2: #272727;
-  --color-line: #313131;
-  --color-line-strong: #51514b;
-  --color-fg: #ecebe6;
-  --color-fg-muted: #b8b8af;
-  --color-fg-faint: #a09f96;
-  background: var(--color-bg); color: var(--color-fg);
-  font-family: "Manrope", var(--font-sans), sans-serif;
-}
-.content { max-width: 1800px; padding: 24px 32px 64px; margin: 0 auto; }
+/* The atlas look is now the app theme (src/theme.css); this surface only adds its layout. */
+.surface { background: var(--color-bg); color: var(--color-fg); }
+.content { max-width: var(--ui-content-wide); padding: 24px 32px 64px; margin: 0 auto; }
 .eyebrow { margin: 0; font-size: 12px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-fg-muted); }
 .hero { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; padding: 8px 0 24px; margin-bottom: 16px; }
 .heroText { position: relative; max-width: 680px; }
-.hero h1 { margin: 16px 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.06em; text-wrap: balance; }
+.hero h1 { margin: 16px 0; font-size: var(--ui-type-display); line-height: var(--ui-leading-display); font-weight: 500; letter-spacing: -.06em; text-wrap: balance; }
 .lead { margin: 0; color: var(--color-fg-muted); font-size: 18px; line-height: 28px; text-wrap: pretty; }
-.contours { position: absolute; width: 600px; height: 300px; right: 8%; top: -16px; z-index: -1; pointer-events: none; color: #a9a592; opacity: .13; }
+.contours { position: absolute; width: 600px; height: 300px; right: 8%; top: -16px; z-index: -1; pointer-events: none; color: var(--color-contour); opacity: .13; }
 .contours path { fill: none; stroke: currentColor; stroke-width: .7; }
 .focusNote { position: relative; width: 240px; flex-shrink: 0; padding: 16px 0; background: var(--color-bg); }
 .focusNote > span { color: var(--color-fg-muted); font-size: 12px; line-height: 16px; }
 .focusNote strong { display: block; margin: 8px 0; font-size: 24px; line-height: 32px; font-weight: 500; }
 .focusNote p { margin: 0; color: var(--color-fg-muted); font-size: 14px; line-height: 20px; text-wrap: pretty; }
 .pairSelectors { display: grid; grid-template-columns: minmax(0,1fr) 48px minmax(0,1fr); align-items: start; gap: 16px; }
-.location { min-width: 0; padding: 16px; background: #1f1f1f; border: 1px solid #313131; border-radius: 8px; }
+.location { min-width: 0; padding: 16px; background: var(--color-bg-elev); border: 1px solid var(--color-line); border-radius: var(--ui-radius-panel); }
 .secondLocation { grid-column: 3; }
 .locationRole { display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; color: var(--color-fg-muted); }
-.planetDot { width: 8px; height: 8px; border-radius: 50%; background: #9caeaf; }
-.planetDot[data-body="mars"] { background: #c49b7c; }
-.location select { display: block; width: 100%; min-width: 0; border: 0; border-radius: 4px; color: var(--color-fg); background: #1f1f1f; font: inherit; font-weight: 500; font-size: 24px; line-height: 32px; padding: 8px 24px 8px 0; margin: 8px 0; text-overflow: ellipsis; }
+.planetDot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-atlas-earth); }
+.planetDot[data-body="mars"] { background: var(--color-atlas-mars); }
+.location select { display: block; width: 100%; min-width: 0; border: 0; border-radius: var(--ui-radius-control); color: var(--color-fg); background: var(--color-bg-elev); font: inherit; font-weight: 500; font-size: 24px; line-height: 32px; padding: 8px 24px 8px 0; margin: 8px 0; text-overflow: ellipsis; }
 .locationMeta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; line-height: 16px; color: var(--color-fg-muted); }
 .locationMeta button { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; padding: 4px 0; }
 .locationAbout { margin-top: 8px; font-size: 14px; line-height: 20px; color: var(--color-fg-muted); }
 .locationAbout summary { cursor: pointer; }
 .locationAbout p { margin: 12px 0 0; max-width: 680px; text-wrap: pretty; }
 .muted { color: var(--color-fg-faint); }
-.swap { grid-column: 2; grid-row: 1; margin-top: 64px; padding: 12px; display: flex; justify-content: center; border: 1px solid #51514b; border-radius: 50%; color: var(--color-fg-muted); cursor: pointer; }
-.swap:hover, .locationMeta button:hover { color: var(--color-fg); background: #272727; }
+.swap { grid-column: 2; grid-row: 1; margin-top: 64px; padding: 12px; display: flex; justify-content: center; border: 1px solid var(--color-line-strong); border-radius: 50%; color: var(--color-fg-muted); cursor: pointer; }
+.swap:hover, .locationMeta button:hover { color: var(--color-fg); background: var(--color-bg-elev-2); }
 .chapter { margin-top: 24px; }
 .chapterHeader { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
 .chapterHeader h2 { margin: 8px 0 0; font-size: 24px; line-height: 32px; font-weight: 500; letter-spacing: -.03em; }
@@ -47,7 +34,7 @@
 .reference { margin-top: 16px; padding: 16px 0; font-size: 14px; line-height: 20px; }
 .imagery { display: grid; gap: 16px; }
 /* Explicitly scoped to Compare: shared ImagePane/ExpandDialog remain unmodified. */
-.imagery [data-testid^="pane-"] { background: #1f1f1f; border: 1px solid #313131 !important; border-radius: 8px; overflow: hidden; }
+.imagery [data-testid^="pane-"] { background: var(--color-bg-elev); border: 1px solid var(--color-line) !important; border-radius: var(--ui-radius-panel); overflow: hidden; }
 .imagery [data-testid^="pane-"] > header { position: static; padding: 16px; }
 .imagery [data-testid^="pane-"] > header h3 { font-size: 18px; line-height: 28px; }
 .imagery [data-testid^="pane-"] > div:not(:has([role="dialog"])) { padding: 16px; gap: 12px; }
@@ -56,29 +43,29 @@
 .imageryToolbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: center; }
 .evidence { margin-top: 16px; }
 /* Local readability treatment; status and rank colors retain their semantic roles. */
-.evidence > section { padding: 24px; border-radius: 8px; }
+.evidence > section { padding: 24px; border-radius: var(--ui-radius-panel); }
 .evidence > section h2 { font-size: 14px; line-height: 20px; }
 .evidence > section h3 { font-size: 12px; line-height: 16px; }
 .evidence > section p { font-size: 14px; line-height: 20px; }
-.researchCover { display: grid; grid-template-columns: 1fr 1fr; margin: 32px auto; max-width: 1280px; border: 1px solid #313131; border-radius: 8px; overflow: hidden; background: #1f1f1f; }
+.researchCover { display: grid; grid-template-columns: 1fr 1fr; margin: 32px auto; max-width: var(--ui-content-reading); border: 1px solid var(--color-line); border-radius: var(--ui-radius-panel); overflow: hidden; background: var(--color-bg-elev); }
 .dossierText { padding: 32px; display: flex; flex-direction: column; justify-content: center; }
-.dossierText h2 { margin: 24px 0 16px; max-width: 680px; font-size: 36px; line-height: 40px; font-weight: 500; letter-spacing: -.04em; text-wrap: balance; }
+.dossierText h2 { margin: 24px 0 16px; max-width: 680px; font-size: var(--ui-type-title); line-height: var(--ui-leading-title); font-weight: 500; letter-spacing: -.04em; text-wrap: balance; }
 .coordinates { font-family: var(--font-mono); color: var(--color-fg-muted); font-size: 12px; line-height: 16px; }
 .dossierDescription { margin: 24px 0; font-size: 16px; line-height: 24px; color: var(--color-fg-muted); text-wrap: pretty; }
 .dossierFooter { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; font-size: 12px; line-height: 16px; color: var(--color-fg-faint); }
-.coverImage { min-width: 0; margin: 0; display: flex; flex-direction: column; background: #181818; }
+.coverImage { min-width: 0; margin: 0; display: flex; flex-direction: column; background: var(--color-bg); }
 .coverImage > img { display: block; width: 100%; height: 360px; object-fit: cover; }
 .coverImage figcaption { padding: 12px 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 16px; color: var(--color-fg-muted); }
 .coverImage figcaption a { text-decoration: underline; text-underline-offset: 4px; }
 .coverFallback { position: relative; isolation: isolate; min-height: 360px; display: flex; align-items: center; justify-content: center; }
 .coverFallback .contours { top: 0; right: 0; }
 .coverFallback p { font-size: 14px; line-height: 20px; color: var(--color-fg-muted); }
-.surface button, .surface a, .surface select, .surface summary { transition: color 160ms cubic-bezier(.32,.72,0,1), background-color 160ms cubic-bezier(.32,.72,0,1); }
+.surface button, .surface a, .surface select, .surface summary { transition: color var(--ui-motion-duration) var(--ui-motion-easing), background-color var(--ui-motion-duration) var(--ui-motion-easing); }
 @media (min-width: 1600px) { .imagery [data-testid^="pane-"] [role="group"][aria-label^="Orbital view"], .imagery [data-testid^="pane-"] [role="group"][aria-label^="Field photos"] { height: 520px; } }
 @media (max-width: 767px) {
   .content { padding: 24px 16px 40px; }
   .hero { flex-direction: column; align-items: flex-start; padding: 8px 0 24px; gap: 24px; }
-  .hero h1 { font-size: 36px; line-height: 40px; margin: 16px 0; }
+  .hero h1 { font-size: var(--ui-type-title); line-height: var(--ui-leading-title); margin: 16px 0; }
   .focusNote { width: 100%; padding: 0; }
   .focusNote strong { display: inline; font-size: 16px; line-height: 24px; margin-left: 12px; }
   .focusNote p { margin-top: 8px; }
@@ -101,7 +88,7 @@
 .researchNotes > section > header h2 { font-size: 14px; line-height: 20px; }
 .researchNotes h3 { font-size: 20px; line-height: 28px; font-weight: 500; letter-spacing: -.02em; }
 .researchNotes h4 { font-size: 16px; line-height: 24px; }
-.researchNotes [data-testid="study-card"] { padding: 24px; border-color: #313131; background: #1f1f1f; }
+.researchNotes [data-testid="study-card"] { padding: 24px; border-color: var(--color-line); background: var(--color-bg-elev); }
 .researchNotes [data-testid="study-card"] dl { font-size: 14px; line-height: 20px; }
 .researchNotes [data-testid="study-card"] dl > div { grid-template-columns: minmax(120px, .22fr) minmax(0,1fr); gap: 16px; padding: 8px 0; }
 .researchNotes [data-testid="study-card"] dt { font-size: 12px; line-height: 16px; }

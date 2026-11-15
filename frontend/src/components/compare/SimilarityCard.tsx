@@ -5,13 +5,14 @@ import { Badge } from "@/components/ui/Badge";
 import { Spinner } from "@/components/ui/Spinner";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { BulletList, EmptyNote } from "@/components/ui/Section";
-import { rankColor, RANK_LEGEND_SENTENCE } from "@/lib/rankColor";
+import { rankColor, RANK_LEGEND_SENTENCE, NOT_RANKED_COLOR } from "@/lib/rankColor";
 import { analogFeatureLabel, BODY_NAME, type Body } from "@/lib/analogFeatures";
 import { topTwo } from "@/lib/comparison";
 import { formatNumber, formatPercent } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 import type { AnalogRankResponse, RankedCandidate } from "@/types";
 import type { UseQueryResult } from "@tanstack/react-query";
+import { InfoTip } from "@/components/ui/InfoTip";
 
 export function SimilarityCard({ rank, candidate, candidateBody, candidateName, referenceName }: { rank: UseQueryResult<AnalogRankResponse>; candidate: RankedCandidate | undefined; candidateBody: Body; candidateName: string; referenceName: string }) {
   const palette = useAppStore(s => s.rankPalette);
@@ -28,7 +29,7 @@ export function SimilarityCard({ rank, candidate, candidateBody, candidateName, 
         {rank.error && <div className="max-w-sm"><ErrorNote error={rank.error} context="analogs/rank" /><button type="button" className="mt-2 text-xs text-copper-bright underline" onClick={() => void rank.refetch()}>Retry ranking</button></div>}
         {data && candidate && (
           <div className="flex items-center gap-3" data-testid="pair-similarity">
-            <span aria-hidden className="h-10 w-10 shrink-0 rounded" style={swatch ? { background: swatch } : { border: `2px dashed #8a919c` }} data-testid="rank-swatch" />
+            <span aria-hidden className="h-10 w-10 shrink-0 rounded" style={swatch ? { background: swatch } : { border: `2px dashed ${NOT_RANKED_COLOR}` }} data-testid="rank-swatch" />
             <div>
               <div className="num text-3xl font-medium leading-none text-fg">{candidate.similarity != null ? formatNumber(candidate.similarity, { maxFractionDigits: 1 }) : "—"}<span className="ml-1.5 text-sm text-fg-muted">/ 100</span></div>
               <div className="mt-1 text-xs text-fg-muted">{candidate.rank != null ? <>Rank <span className="num text-fg">{candidate.rank}</span> of {data.ranked_count} ranked {BODY_NAME[candidateBody]} candidates (pool {data.pool_size})</> : <span className="text-warn">Not ranked{candidate.unrankable_reason ? `: ${candidate.unrankable_reason}` : ""}</span>}</div>
@@ -53,7 +54,7 @@ export function SimilarityCard({ rank, candidate, candidateBody, candidateName, 
         </div>
       )}
       {data && candidate && (candidate.shared_characteristics?.length ?? 0) + (candidate.important_differences?.length ?? 0) === 0 && <EmptyNote>No characteristic statements were returned for this pair.</EmptyNote>}
-      <p className="mt-3 text-[11px] text-fg-faint">{RANK_LEGEND_SENTENCE} {data?.tie_rule}</p>
+      <p className="mt-3 flex items-center gap-1 text-[11px] text-fg-faint">{RANK_LEGEND_SENTENCE}{data?.tie_rule && <InfoTip variant="help" label="How ties are ranked">{data.tie_rule}</InfoTip>}</p>
     </section>
   );
 }

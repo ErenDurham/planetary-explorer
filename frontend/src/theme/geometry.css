@@ -1,0 +1,23 @@
+/* Theme geometry and editorial type. Layout-specific breakpoints remain in
+   their feature styles; changing the visual identity does not change app state. */
+:root {
+  --ui-radius-panel: var(--radius-panel);
+  --ui-radius-control: 4px;
+  --ui-radius-input: 12px;
+  --ui-space-pane: 24px;
+  --ui-space-section: 24px;
+  --ui-content-wide: 1800px;
+  --ui-content-reading: 1280px;
+  --ui-type-display: 48px;
+  --ui-leading-display: 1;
+  --ui-type-title: 36px;
+  --ui-leading-title: 40px;
+  --ui-type-heading: 24px;
+  --ui-leading-heading: 32px;
+  --ui-type-label: 12px;
+  --ui-leading-label: 16px;
+  --ui-type-body: 14px;
+  --ui-leading-body: 20px;
+  --ui-motion-duration: 160ms;
+  --ui-motion-easing: cubic-bezier(.32,.72,0,1);
+}

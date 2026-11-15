@@ -16,7 +16,6 @@ export function ResearchAtlasCover({ site }: { site: Site }) {
   return <section className={styles.researchCover} aria-label="Research site dossier">
     <div className={styles.dossierText}><span className={styles.eyebrow}>Research dossier / Mars</span><h2>{site.name}</h2>
       <p className={styles.coordinates}>{formatLatLon(site.lat, site.lon_east)}</p><p className={styles.dossierDescription}>{site.description}</p>
-      <nav className={styles.dossierFooter} aria-label="Research dossier sections"><a href="#research-dossier-evidence">Study questions &amp; evidence ↘</a><a href="#research-expedition-entry">Plan an expedition ↘</a></nav>
     </div>
     <figure className={styles.coverImage}>
       {showImage ? <img key={`${site.id}:${entry.entry_id}`} src={imageryAssetUrl(entry.entry_id)} alt={`${site.name}: ${entry.title}`} onError={() => setFailedEntry(entry.entry_id)} /> : <div className={styles.coverFallback}><ContourArtwork /><p role="status">{imagery.status === "loading" ? "Loading site imagery…" : "Site imagery unavailable"}</p></div>}

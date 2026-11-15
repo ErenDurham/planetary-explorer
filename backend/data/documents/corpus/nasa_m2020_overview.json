@@ -5,10 +5,11 @@
  "url": "https://science.nasa.gov/mission/mars-2020-perseverance/",
  "final_url": "https://science.nasa.gov/mission/mars-2020-perseverance/",
  "publication_date": "2017-12-05",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "text/html; charset=UTF-8",
  "kind": "html",
  "topic": "Mars 2020 Perseverance mission overview",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "jezero_crater"
  ],

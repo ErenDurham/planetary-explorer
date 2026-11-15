@@ -14,6 +14,7 @@ outputs are committed and the app never fetches at request time
 
 Contents
 
+0. [Site set: the Lesser-Known Mars Sites workbook](#0-site-set-the-lesser-known-mars-sites-workbook-2026-11-15)
 1. [Mars topography: MOLA MEGDR 16 ppd](#1-mars-topography-mola-megdr-16-ppd)
 2. [Earth topography: Copernicus DEM GLO-90](#2-earth-topography-copernicus-dem-glo-90)
 3. [Earth climate: NASA POWER climatology](#3-earth-climate-nasa-power-climatology)
@@ -26,6 +27,63 @@ Contents
 10. [Scientific document corpus](#10-scientific-document-corpus)
 11. [Demonstration fixtures](#11-demonstration-fixtures)
 12. [Licence and attribution summary](#12-licence-and-attribution-summary)
+
+---
+
+## 0. Site set: the Lesser-Known Mars Sites workbook (2026-11-15)
+
+Since 2026-11-15 the app's sites come from the research workbook
+*Lesser-Known Mars Sites - Conditions Comparison* (17 candidate Mars base
+sites, each paired with one Earth location). `scripts/import_workbook.py`
+turns it into **`backend/data/workbook/lesser_known_sites.v1.json`**, and
+`scripts/apply_workbook.py` sets the site list, coordinates, roles,
+approximate-coordinate flags and the Mars <-> Earth pairing in
+`data/mars/sites.json` and `data/earth/candidates.json`. Profiles are then
+rebuilt with the usual scripts (sections 1-3).
+
+* **Removed** with the change: Gale Crater, Gusev Crater (Mars); Atacama
+  Yungay, Death Valley, MDRS Utah, Mauna Kea (Earth), with their corpus
+  documents, literature labels, evidence-registry entries and curated imagery.
+  **Moved**: Utopia Planitia to the Zhurong area (25.07 N, 109.93 E) and
+  Meridiani Planum to the workbook's point (-3.17 N, -4.52 E), so their
+  Viking 2 / Opportunity material was dropped. Jezero, Elysium, Oxia, Chryse,
+  McMurdo (University Valley), Haughton and Holuhraun keep their published
+  coordinates (within ~20 km of the workbook's).
+* **Source rule** (set by the project owner): only research articles with a
+  DOI or official NASA / CSA / ESA / JAXA pages, plus sources the owner
+  approved by name (HiRISE ESP_094549_1655 and ESP_048036_2025). The 71
+  approved sources, and every workbook citation that was **not** used with the
+  reason, are in the workbook file (`sources`, `excluded_citations`). Owner
+  restrictions (Bultel et al. 2025: Granby/Mars content only; Aguilar et al.:
+  Galena Creek only; HiRISE ESP_048036_2025: Hebrus only) are enforced
+  sentence by sentence when the corpus is built.
+* **Condition texts** (terrain, mineralogy, elevation, thermal, solar/power,
+  wind, water/ice) are literature-reported descriptions compiled by the
+  workbook author. They are stored as text, never parsed into numbers, never
+  scored, and shown apart from the measured profiles. "—" in the workbook is
+  `null` ("Not found in sources"); a value whose only source is excluded is
+  `null` with status `excluded_source`. `scripts/verify_workbook_conditions.py`
+  checks each remaining text against the corpus text of its sources:
+  `verified` (a quoted sentence states it), `cited_not_verified` (the open
+  text, often an abstract, does not state it) or `citation_only` (paywalled,
+  no public abstract). Solar+wind kWh figures are attributed to Darya, Bansal
+  & Jarndal (2024, IEEE EPECS), which has no public abstract.
+* **Roles** (`Base candidate`, `Resource site`, `To evaluate`, `Instrument
+  testing`, `Context only`) organise the site lists and the globe legend as a
+  display filter; they never change a score or a rank.
+* **Literature labels** for the new sites follow section 7 (verbatim quotes,
+  15-year window, NASA / ESA / DOI hosts). Sites whose approved sources name
+  no vocabulary term carry a `location` row only; Xanthe Terra (only source
+  2009) and Amundsen-Scott South Pole Station (only approved source is about
+  Concordia) carry none and say why (`evidence_gap`).
+* **Geographic South Pole footprint**: a lat/lon square collapses at -90, so
+  `build_earth_profiles.read_dem_polar()` reads the 0.25 deg cap from all 360
+  tiles of the S90 Copernicus row, reprojects it to an azimuthal equidistant
+  plane, bins it at 90 m and computes the statistics on the square inscribed
+  in the cap (median 2,831 m; the workbook's excluded COMNAP figure is 2,835 m).
+
+Sections 6, 7, 13 and 14 below still list some entries for sites that were
+removed; the data files are authoritative.
 
 ---
 
@@ -153,18 +211,10 @@ Mars (`backend/data/mars/sites.json`):
 | `nasa_msl_landing` | Mars Science Laboratory (Curiosity) - Gale Crater landing site | NASA Science / JPL | https://science.nasa.gov/mission/msl-curiosity/ | `gale_crater` coordinates |
 | `nasa_insight` | InSight Mars Lander mission page (Elysium Planitia) | NASA Science / JPL | https://science.nasa.gov/mission/insight/ | `elysium_planitia` coordinates and composition tags |
 | `esa_oxia_planum` | ExoMars Rosalind Franklin rover landing site: Oxia Planum | ESA | https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission | `oxia_planum` coordinates |
-| `nasa_viking` | Viking 1 and 2 missions | NASA Science | https://science.nasa.gov/mission/viking/ | `utopia_planitia` and `chryse_planitia` coordinates; `chryse_planitia` composition tags |
-| `nasa_mer` | Mars Exploration Rovers (Spirit and Opportunity) | NASA Science / JPL | https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/ | `meridiani_planum` and `gusev_crater` coordinates |
-| `usgs_planetary_nomenclature` | Gazetteer of Planetary Nomenclature - Mars | USGS Astrogeology / IAU | https://planetarynames.wr.usgs.gov/Page/MARS/target | Declared in `sites.json` but **not referenced by any site**, so it does not appear in any profile |
+| `nasa_viking` | Viking 1 and 2 missions | NASA Science | https://science.nasa.gov/mission/viking/ | `utopia_planitia` and `chryse_planitia` coordinates; `utopia_planitia` rocky-surface label (section 7) |
+| `nasa_mer` | Mars Exploration Rovers (Spirit and Opportunity) | NASA Science / JPL | https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/ | `meridiani_planum` and `gusev_crater` coordinates; plains, crater and lake labels (section 7) |
 
-Earth (`backend/data/earth/candidates.json`):
-
-| `source_id` | Title | Institution | URL | Used by |
-|---|---|---|---|---|
-| `nasa_analogs_overview` | NASA Analog Missions | NASA | https://www.nasa.gov/analog-missions/ | `mcmurdo_dry_valleys`, `death_valley`, `holuhraun_iceland`, `mauna_kea_summit` (tags, analog use) |
-| `nasa_hmp` | Haughton-Mars Project (Devon Island) | NASA Ames / Mars Institute | https://www.marsinstitute.no/hmp | `haughton_crater` |
-| `nasa_arads` | Atacama Rover Astrobiology Drilling Studies (ARADS) | NASA Ames | https://www.nasa.gov/ames/arads | `atacama_yungay` |
-| `mdrs` | Mars Desert Research Station | The Mars Society | https://mdrs.marssociety.org/ | `mdrs_utah` |
+Earth (`backend/data/earth/candidates.json`): the site files cite no program web pages any more; every landform and mineral label comes from the literature in section 7. Program names (ARADS, HMP, MDRS) appear only as text in `known_analog_use`.
 
 Coordinates convention: Mars positions are rover/lander touchdown points or
 the published centre of a selected landing ellipse (`sites.json`,
@@ -173,33 +223,81 @@ the team; the Mauna Kea footprint is deliberately summit-centred and its
 description says the statistics describe the whole upper mountain, not only
 the test sites.
 
-## 7. Peer-reviewed literature
+## 7. Literature behind the site labels
 
-All **11 DOIs were validated against Crossref on 2026-11-14** (title, first
-author and year match the records in the data files). They supply the
-mineralogy and terrain tags and the water/ice evidence strings; no number in a
-profile is taken from them.
+**Single source of truth: `backend/data/site_literature.v1.json`** (verified 2026-11-15).
+Every landform (`terrain_morphology`) and mineral (`mineralogy_tags`) label, every
+site description and every Mars water/ice note comes from it;
+`scripts/apply_site_literature.py` writes them into the site files and both
+profile files (and both build scripts call it). Rules, enforced by
+`tests/test_site_literature.py`:
 
-Mars (`sites.json`):
+- every source is NASA, USGS or peer-reviewed, linked through doi.org,
+  ntrs.nasa.gov or nasa.gov, and published in the last 15 years (2011 or later in
+  2026), the same window as the evidence registry; a live NASA mission page is
+  dated by its retrieval date instead;
+- every label carries a verbatim quote from its source (checked against the
+  source text when written) that names the label, from a study at the site or
+  its footprint region;
+- labels use a controlled vocabulary so synonyms are not double counted
+  (gypsum, jarosite -> `sulfates`; hematite -> `iron_oxides`; smectite,
+  nontronite -> `clays`);
+- a label with no such source is removed, not kept on an older or generic
+  source. Utopia Planitia (Viking 2) has no recent source on its composition,
+  so its mineral labels are marked missing; under the analog engine's
+  common-basis rule, minerals are then left out when Mars sites are ranked
+  against an Earth site (disclosed in the response);
+- a source shared with the evidence registry has the same id, link, year and
+  citation in both files.
 
-| `source_id` | Reference | DOI | Used by |
+Replaced in 2026-11 because they were older than 15 years or generic:
+Navarro-Gonzalez et al. (2003), Marchant & Head (2007), Osinski et al. (2005),
+Christensen et al. (2000), McSween et al. (2004), Golombek et al. (2003) and the
+NASA Analog Missions overview page. The DOIs were checked against Crossref and
+OpenAlex; the research corpus (`scripts/ingest_documents.py`) ingests a
+record for exactly the DOIs in this file.
+
+Mars:
+
+| `source_id` | Reference | Link | Labels it supports |
 |---|---|---|---|
-| `lit_jezero_mineralogy` | Goudge et al. (2015), Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, *J. Geophys. Res. Planets* 120 | https://doi.org/10.1002/2014JE004782 | `jezero_crater` composition |
-| `lit_gale_stratigraphy` | Grotzinger et al. (2014), A habitable fluvio-lacustrine environment at Yellowknife Bay, Gale Crater, Mars, *Science* 343 | https://doi.org/10.1126/science.1242777 | `gale_crater` composition |
-| `lit_oxia_clays` | Quantin-Nataf et al. (2021), Oxia Planum: The landing site for the ExoMars Rosalind Franklin rover mission, *Astrobiology* 21 | https://doi.org/10.1089/ast.2019.2191 | `oxia_planum` composition |
-| `lit_meridiani_hematite` | Christensen et al. (2000), Detection of crystalline hematite mineralization on Mars by the Thermal Emission Spectrometer, *J. Geophys. Res.* 105 | https://doi.org/10.1029/1999JE001093 | `meridiani_planum` composition |
-| `lit_utopia_ice` | Stuurman et al. (2016), SHARAD detection and characterization of subsurface water ice deposits in Utopia Planitia, Mars, *Geophys. Res. Lett.* 43 | https://doi.org/10.1002/2016GL070138 | `utopia_planitia` composition and ice evidence |
-| `lit_gusev_basalt` | McSween et al. (2004), Basaltic rocks analyzed by the Spirit rover in Gusev Crater, *Science* 305 | https://doi.org/10.1126/science.3050842 | `gusev_crater` composition |
-| `lit_golombek_mer_sites` | Golombek et al. (2003), Selection of the Mars Exploration Rover landing sites, *J. Geophys. Res.* 108(E12), 8072 | https://doi.org/10.1029/2003JE002074 | Declared in `sites.json`; cited in the scoring spec's `terrain_safety` and `elevation_suitability` rationales (the 2 deg slope knee and the -1.3 km MER elevation limit). Not attached to any site, so absent from the profiles |
+| `lit_jezero_mineralogy` | Goudge et al., 2015, Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, *Journal of Geophysical Research: Planets* | https://doi.org/10.1002/2014JE004782 | `jezero_crater`: paleolake_basin, carbonates, olivine, clays |
+| `farley2022_jezero` | Farley et al., 2022, Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars, *Science* | https://doi.org/10.1126/science.abo2196 | `jezero_crater`: impact_crater, crater_floor, delta, sulfates, perchlorates |
+| `lit_gale_stratigraphy` | Grotzinger et al., 2014, A Habitable Fluvio-Lacustrine Environment at Yellowknife Bay, Gale Crater, Mars, *Science* | https://doi.org/10.1126/science.1242777 | `gale_crater`: paleolake_basin |
+| `rampe2020_gale` | Rampe et al., 2020, Mineralogy of Vera Rubin Ridge From the Mars Science Laboratory CheMin Instrument, *Journal of Geophysical Research: Planets* | https://doi.org/10.1029/2019JE006306 | `gale_crater`: impact_crater, iron_oxides, sulfates, clays, silica |
+| `golombek2020_insight` | Golombek et al., 2020, Geology of the InSight landing site on Mars, *Nature Communications* | https://doi.org/10.1038/s41467-020-14679-1 | `elysium_planitia`: smooth_plains, lava_plain, basalt, regolith |
+| `lit_oxia_clays` | Quantin-Nataf et al., 2021, Oxia Planum: The Landing Site for the ExoMars "Rosalind Franklin" Rover Mission: Geological Context and Prelanding Interpretation, *Astrobiology* | https://doi.org/10.1089/ast.2019.2191 | `oxia_planum`: smooth_plains, delta, clays |
+| `cooke2011_utopia` | Cooke et al., 2011, Basement controls on the scale of giant polygons in Utopia Planitia, Mars, *Journal of Geophysical Research: Planets* | https://doi.org/10.1029/2011JE003812 | `utopia_planitia`: polygonal_terrain |
+| `nasa_viking` | NASA Viking mission page, Viking 1 and 2 missions, *NASA Science (live mission page)* | https://science.nasa.gov/mission/viking/ | `utopia_planitia`: rocky_surface |
+| `rodriguez2022_chryse` | Rodriguez et al., 2022, Evidence of an oceanic impact and megatsunami sedimentation in Chryse Planitia, Mars, *Scientific Reports* | https://doi.org/10.1038/s41598-022-18082-2 | `chryse_planitia`: outflow_channel_deposits, rocky_surface, northern_lowlands, regolith |
+| `hynek2017_meridiani` | Hynek & Di Achille, 2017, Geologic map of Meridiani Planum, Mars, *U.S. Geological Survey Scientific Investigations Map 3356* | https://doi.org/10.3133/sim3356 | `meridiani_planum`: layered_deposits, iron_oxides |
+| `mccollom2018_meridiani` | McCollom et al., 2018, Phosphorous Immobility During Formation of the Layered Sulfate Deposits of the Burns Formation at Meridiani Planum, *Journal of Geophysical Research: Planets* | https://doi.org/10.1029/2017JE005493 | `meridiani_planum`: sulfates, basalt |
+| `nasa_mer` | NASA Mars Exploration Rovers mission page, Mars Exploration Rovers (Spirit and Opportunity), *NASA Science (live mission page)* | https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/ | `meridiani_planum`: smooth_plains; `gusev_crater`: impact_crater, paleolake_basin |
+| `ruff2014_gusev` | Ruff et al., 2014, Evidence for a Noachian-aged ephemeral lake in Gusev crater, Mars, *Geology* | https://doi.org/10.1130/G35508.1 | `gusev_crater`: carbonates |
+| `ruff2019_gusev` | Ruff et al., 2019, The Case for Ancient Hot Springs in Gusev Crater, Mars, *Astrobiology* | https://doi.org/10.1089/ast.2019.2044 | `gusev_crater`: hills, silica |
+| `bost2012_gusev` | Bost et al., 2012, Synthesis of a spinifex-textured basalt as an analog to Gusev crater basalts, Mars, *Meteoritics & Planetary Science* | https://doi.org/10.1111/j.1945-5100.2012.01355.x | `gusev_crater`: basalt |
 
-Earth (`candidates.json`):
+Earth:
 
-| `source_id` | Reference | DOI | Used by |
+| `source_id` | Reference | Link | Labels it supports |
 |---|---|---|---|
-| `lit_yungay` | Navarro-Gonzalez et al. (2003), Mars-like soils in the Atacama Desert, Chile, and the dry limit of microbial life, *Science* 302 | https://doi.org/10.1126/science.1089143 | `atacama_yungay` |
-| `lit_dry_valleys` | Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, *Icarus* 192 | https://doi.org/10.1016/j.icarus.2007.06.018 | `mcmurdo_dry_valleys` |
-| `lit_haughton` | Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, *Meteoritics & Planetary Science* 40 | https://doi.org/10.1111/j.1945-5100.2005.tb00147.x | `haughton_crater` |
-| `lit_holuhraun` | Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, *J. Volcanol. Geotherm. Res.* 340 | https://doi.org/10.1016/j.jvolgeores.2017.02.027 | `holuhraun_iceland` |
+| `sager2020_yungay` | Sager et al., 2020, New type of sand wedge polygons in the salt cemented soils of the hyper-arid Atacama Desert, *Geomorphology* | https://doi.org/10.1016/j.geomorph.2020.107481 | `atacama_yungay`: polygonal_terrain, sulfates, nitrates, chlorides |
+| `horstmann2024_yungay` | Horstmann et al., 2024, Persistent microbial communities in hyperarid subsurface habitats of the Atacama Desert: Insights from intracellular DNA analysis, *PNAS Nexus* | https://doi.org/10.1093/pnasnexus/pgae123 | `atacama_yungay`: alluvial_fan, playa |
+| `heldmann2015_dryvalleys` | Heldmann et al., 2015, Mars: Periglacial Morphology and Implications for Future Landing Sites, *NASA Technical Reports Server 20150023012* | https://ntrs.nasa.gov/citations/20150023012 | `mcmurdo_dry_valleys`: polar_desert, periglacial |
+| `goordial2016_university_valley` | Goordial et al., 2016, Nearing the cold-arid limits of microbial life in permafrost of an upper dry valley, Antarctica, *The ISME Journal* | https://doi.org/10.1038/ismej.2015.239 | `mcmurdo_dry_valleys`: water_ice |
+| `trowbridge2024_haughton` | Trowbridge et al., 2024, Modeling of the Impact-Generated Hydrothermal System at the Haughton Impact Structure, *Journal of Geophysical Research: Planets* | https://doi.org/10.1029/2023JE008267 | `haughton_crater`: impact_crater |
+| `izawa2011_haughton` | Izawa et al., 2011, Weathering of Post-Impact Hydrothermal Deposits from the Haughton Impact Structure: Implications for Microbial Colonization and Biosignature Preservation, *Astrobiology* | https://doi.org/10.1089/ast.2011.0612 | `haughton_crater`: impact_breccia, carbonates |
+| `parnell2012_haughton` | Parnell et al., 2012, Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars, *International Journal of Astrobiology* | https://doi.org/10.1017/S1473550411000395 | `haughton_crater`: sulfates, iron_oxides |
+| `elmaarry2015_playas` | El-Maarry et al., 2015, Field investigation of dried lakes in western United States as an analogue to desiccation fractures on Mars, *Journal of Geophysical Research: Planets* | https://doi.org/10.1002/2015JE004895 | `death_valley`: playa, chlorides, sulfates, clays |
+| `lasser2020_badwater` | Lasser et al., 2020, Surface and subsurface characterisation of salt pans expressing polygonal patterns, *Earth System Science Data* | https://doi.org/10.5194/essd-12-2881-2020 | `death_valley`: polygonal_terrain |
+| `das2026_deathvalley` | Das et al., 2026, Estimating past fluid pH and evaporative conditions in Gale crater using terrestrial analog samples from Death Valley, CA, *Meteoritics & Planetary Science* | https://doi.org/10.1111/maps.70237 | `death_valley`: borates |
+| `lit_holuhraun` | Pedersen et al., 2017, Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, *Journal of Volcanology and Geothermal Research* | https://doi.org/10.1016/j.jvolgeores.2017.02.027 | `holuhraun_iceland`: lava_plain, fissure_vent, outwash_plain, basalt |
+| `voigt2025_holuhraun` | Voigt et al., 2025, The 2014-2015 Holuhraun Lava Flow-field in Iceland as a Planetary Analog for Young Volcanic Terrains in Elysium Planitia, Mars, *The Planetary Science Journal* | https://doi.org/10.3847/PSJ/adb5f1 | `holuhraun_iceland`: polygonal_terrain |
+| `hartley2018_holuhraun` | Hartley et al., 2018, Melt inclusion constraints on petrogenesis of the 2014-2015 Holuhraun eruption, Iceland, *Contributions to Mineralogy and Petrology* | https://doi.org/10.1007/s00410-017-1435-0 | `holuhraun_iceland`: volcanic_glass |
+| `stoker2011_mdrs` | Stoker et al., 2011, Properties of Subsurface Soil Cores from Four Geologic Provinces Surrounding Mars Desert Research Station, Utah: Characterizing Analog Martian Soil in a Human Exploration Scenario, *42nd Lunar and Planetary Science Conference (NASA Technical Reports Server 20110014304)* | https://ntrs.nasa.gov/citations/20110014304 | `mdrs_utah`: sandstone, sulfates, carbonates, clays |
+| `clarke2011_hanksville` | Clarke & Stoker, 2011, Concretions in Exhumed Channels Near Hanksville Utah: Implications for Mars, *NASA Technical Reports Server 20110023235* | https://ntrs.nasa.gov/citations/20110023235 | `mdrs_utah`: inverted_channels, carbonates |
+| `adams2014_maunakea` | Adams, 2014, Pu'u Poli'ahu, Mauna Kea: A Possible Analog for the Hematite Bearing Layer Located in Gale Crater, Mars, *NASA Technical Reports Server 20140010577* | https://ntrs.nasa.gov/citations/20140010577 | `mauna_kea_summit`: cinder_cone, tephra, iron_oxides |
+| `graham2013_maunakea` | Graham & Graff, 2013, Rover-Based Instrumentation and Scientific Investigations During the 2012 Analog Field Test on Mauna Kea Volcano, Hawaii, *NASA Technical Reports Server 20130009908* | https://ntrs.nasa.gov/citations/20130009908 | `mauna_kea_summit`: volcanic_slope |
 
 ## 8. Not used in V1, and why
 

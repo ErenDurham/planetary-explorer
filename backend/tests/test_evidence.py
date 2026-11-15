@@ -8,12 +8,12 @@ from urllib.parse import urlparse
 import pytest
 
 from app.models import InterpretRequest
-from app.services import evidence, llm_client
+from app.services import analog_check, evidence, llm_client
 from app.services import objective_engine as oe
 from app.services.scoring_engine import default_mission, load_spec
 
 EXCL = ["thermal_conditions"]
-TRUSTED_HOSTS = {"doi.org", "ntrs.nasa.gov", "nssdc.gsfc.nasa.gov"}
+TRUSTED_HOSTS = {"doi.org", "ntrs.nasa.gov", "nssdc.gsfc.nasa.gov", "www.nasa.gov"}
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 
 
@@ -53,7 +53,8 @@ def test_registry_references_are_consistent_and_cover_every_factor_and_constrain
     for e in reg["evidence"]:
         assert e["source_id"] in sources
         assert set(e["criteria"]) <= criteria and set(e["constraints"]) <= constraints
-        assert e["criteria"] or e["constraints"]
+        assert e["criteria"] or e["constraints"] or e["sites"]
+        assert set(e["sites"]) <= set(analog_check.earth_ids())
         assert set(e["missions"]) <= {"lander", "rover", "human", "any"} and e["missions"]
     for cid in criteria:
         assert evidence.for_criterion(cid, "other"), f"no research for {cid}"

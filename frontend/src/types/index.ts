@@ -45,6 +45,8 @@ export type InterpretRequest = S["InterpretRequest"];
 export type InterpretResponse = S["InterpretResponse"];
 export type WeightSuggestion = S["WeightSuggestion"];
 export type EvidenceCitation = S["EvidenceCitation"];
+export type AnalogCheck = S["AnalogCheck"];
+export type AnalogFactorCheck = S["AnalogFactorCheck"];
 /** Mission type read from the objective text (selects which research applies). */
 export type MissionKind = NonNullable<S["InterpretResponse"]["mission_profile"]>;
 export type GuidanceRequest = S["GuidanceRequest"];
@@ -99,6 +101,11 @@ export type SensitivityPoint = S["SensitivityPoint"];
 
 export type ComparisonCatalog = S["ComparisonCatalog"];
 export type ComparisonLocation = S["ComparisonLocation"];
+export type ReportedCondition = S["ReportedCondition"];
+export type EarthAnalogNote = S["EarthAnalogNote"];
+export type WorkbookSource = S["WorkbookSource"];
+/** A site role from the Lesser-Known Mars Sites workbook (never scored). */
+export type SiteRole = NonNullable<S["Site"]["role"]>;
 export type BodyReference = S["BodyReference"];
 
 // Earth-Mars release: body-aware analog ranking and the task reading.
