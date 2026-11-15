@@ -35,8 +35,13 @@ describe("CandidateDetail", () => {
     expect(card).toHaveTextContent(/Rank 2 of 3/);
     expect(card).toHaveTextContent(/31\.750°N, 2\.250°W/);
     expect(card).toHaveTextContent(/centre of a 60 × 60 km footprint/);
-    expect(card).toHaveTextContent(/61\.4.*terrain index · not a probability/);
-    expect(card).toHaveTextContent(/slope 50%, relief 50%/);
+    expect(card).toHaveTextContent(/61\.4.*similarity index · not a probability/);
+    expect(card).toHaveTextContent(/80% terrain and 20% water/);
+    // the analogy is broken out per dimension, so a partial match cannot read as a whole one
+    const byDimension = within(card).getByRole("region", { name: "How close, dimension by dimension" });
+    expect(byDimension).toHaveTextContent(/Terrain and landform73 \/ 100 · 80% of the weighting/);
+    expect(byDimension).toHaveTextContent(/Water and aridity92 \/ 100 · 20% of the weighting/);
+    expect(byDimension).toHaveTextContent(/An analog does not have to match on everything/);
     expect(within(card).getByTestId("research-this-candidate")).toHaveTextContent("Research this candidate");
     expect(within(card).queryByRole("button",{name:"Open in Research"})).toBeNull();
     // what matches: the closest factor, in regional-footprint terms

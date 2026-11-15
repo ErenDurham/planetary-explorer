@@ -31,6 +31,18 @@ import { isDiscoveryNotFound, isDiscoveryRejected, isDiscoveryUnavailable, type 
 
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 
+/** The dimensions a survey scores, named from its own criteria.
+ * The short group name reads better in a sentence than the panel heading does. */
+export function basisPhrase(criteria: ReadonlyArray<{ group_label?: string; group?: string }>): string {
+  const labels: string[] = [];
+  for (const criterion of criteria) {
+    const label = (criterion.group || criterion.group_label || "").toLowerCase();
+    if (label && !labels.includes(label)) labels.push(label);
+  }
+  if (labels.length === 0) return "its measured features";
+  return labels.length === 1 ? labels[0] : `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+}
+
 export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   /** The shared site-panel width, so resizing here and in Browse Regions is one setting. Owned locally when absent. */
   panelWidth?: number;
@@ -55,9 +67,11 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const runs = caps.kind === "ready" ? caps.capabilities.runs : [];
   const reference: DiscoveryReference | undefined = capabilities?.reference;
   const referenceName = reference?.name ?? "Jezero Crater";
-  const criteria = caps.kind === "ready" ? caps.capabilities.criteria : [];
+  const activeRun = runs.find(r => r.run_id === store.runId) ?? null;
+  const criteria = activeRun?.criteria ?? (caps.kind === "ready" ? caps.capabilities.criteria : []);
+  const defaults = activeRun?.default_weights ?? capabilities?.default_weights;
 
-  useEffect(() => { if (capabilities) store.seedDefaults(capabilities.default_weights); }, [capabilities?.default_weights]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (defaults) store.seedDefaults(defaults); }, [defaults]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (runs.length && (!store.runId || !runs.some(r => r.run_id === store.runId))) store.setRun(runs[0].run_id); }, [runs]); // eslint-disable-line react-hooks/exhaustive-deps
   // Ranking a fixed, preprocessed pool is cheap and deterministic, so it runs as soon as a survey is chosen.
   useEffect(() => { if (caps.kind === "ready" && store.runId && !run.ranked) store.requestRank(); }, [caps.kind, store.runId, run.ranked]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -69,7 +83,6 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   useEffect(() => { const first = candidates?.[0]; if (first && rank.data?.run_id === store.runId) store.autoSelectFirst(first.id); }, [candidates, rank.data?.run_id, store.runId]); // eslint-disable-line react-hooks/exhaustive-deps
   const selected = candidates?.find(c => c.id === run.selectedCandidateId) ?? null;
   const detail = useDiscoveryCandidate(store.runId, selected?.id ?? null);
-  const activeRun = runs.find(r => r.run_id === store.runId) ?? null;
   const sources = useMemo(() => candidates?.flatMap(c => c.sources) ?? [], [candidates]);
   const refImagery = useImageryFor("mars", reference?.id ?? null);
   const refImage = refImagery.data?.entries.find(e => isGeoreferenced(e) && /regional/i.test(e.title)) ?? refImagery.data?.entries.find(e => e.view === "orbital") ?? null;
@@ -83,9 +96,12 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const presented = rank.data?.returned_count ?? null;
   const fpW = num(survey?.footprint_specification?.width_m), fpH = num(survey?.footprint_specification?.height_m);
   const cell = num(survey?.grid_specification?.cell_m);
+  const regionsSearched = survey?.regions?.length ?? activeRun?.region_count ?? null;
   const stats: Array<{ n: number | string; label: string }> = [];
+  if (regionsSearched) stats.push({ n: regionsSearched, label: "regions searched" });
   if (evaluated != null) stats.push({ n: evaluated, label: "locations evaluated" });
   if (presented != null) stats.push({ n: presented, label: "spatially separated candidates presented" });
+  if (criteria.length) stats.push({ n: criteria.length, label: "measured features compared" });
   if (fpW && fpH) stats.push({ n: `${Math.round(fpW / 1000)} × ${Math.round(fpH / 1000)} km`, label: "comparison footprints" });
   if (cell) stats.push({ n: `${Math.round(cell / 1000)} km`, label: "terrain analysis resolution" });
 
@@ -136,6 +152,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
         <DiscoveryCandidateList
           candidates={candidates}
           evaluated={evaluated}
+          regionsSearched={regionsSearched}
+          referenceName={referenceName}
           selectedId={run.selectedCandidateId}
           onSelect={store.selectCandidate}
           palette={palette}
@@ -152,8 +170,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           badge={badge}
           title={`Find unresearched analogs for ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
           lede={activeRun && reference
-            ? `${evaluated != null ? `${evaluated} surveyed locations` : "Surveyed locations"} compared with ${reference.name} using regional slope and relief.${presented != null ? ` ${presented} candidate regions selected for review.` : ""}`
-            : "Compare surveyed Earth terrain with a Mars reference using regional slope and relief."}
+            ? `${evaluated != null ? `${evaluated} surveyed locations` : "Surveyed locations"}${regionsSearched ? ` in ${regionsSearched} deliberately under-studied regions` : ""} compared with ${reference.name} on ${basisPhrase(criteria)}.${presented != null ? ` ${presented} candidate regions selected for review.` : ""}`
+            : "Compare surveyed Earth terrain with a Mars reference on measured terrain, illumination and aridity."}
           stats={stats.length > 0 ? <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1" aria-label="Survey at a glance" data-testid="survey-stats">{stats.map(s => <li key={s.label}><span className="num text-base text-fg">{s.n}</span><span className="ml-1 text-[10.5px] text-fg-muted">{s.label}</span></li>)}</ul> : null}
           facts={facts}
           view={store.view}
@@ -177,7 +195,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
               <CandidateDetail candidate={selected} detail={detail.data} detailPending={detail.isPending && detail.fetchStatus !== "idle"} detailError={detail.error} onRetry={() => void detail.refetch()} criteria={criteria} reference={rank.data.reference} established={earth.sites} onCompareKnown={id => openEstablished(id)} onResearch={openResearch} effectiveWeights={rank.data.effective_weights} returnedCount={rank.data.returned_count} survey={survey ?? null} />
               </>
             )}
-            {store.runId && run.shortlist.length > 0 && <details className="m-3"><summary className="cursor-pointer text-sm text-copper-bright">Your shortlist · {run.shortlist.length}/3</summary><div className="mt-3"><CandidateCompare saved={run.shortlist} ranking={rank.data} pending={rank.isRefreshing} runId={store.runId} onRemove={store.toggleShortlist} onResearch={openResearch} /></div></details>}
+            {store.runId && run.shortlist.length > 0 && <details className="m-3"><summary className="cursor-pointer text-sm text-copper-bright">Your shortlist · {run.shortlist.length}/3</summary><div className="mt-3"><CandidateCompare criteria={criteria} saved={run.shortlist} ranking={rank.data} pending={rank.isRefreshing} runId={store.runId} onRemove={store.toggleShortlist} onResearch={openResearch} /></div></details>}
           </DiscoveryPanel>
         </SitePanelShell>
       </div>

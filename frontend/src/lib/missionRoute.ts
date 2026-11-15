@@ -1,7 +1,7 @@
 // Where an applied mission sends the user next, said honestly. The discovery
 // pilot is the only "new region" capability and it is bounded: a fixed set of
 // surveyed Earth footprints compared with Jezero Crater on regional median
-// slope and detrended relief. Everything else routes to a workflow that does
+// the features each survey declares. Everything else routes to a workflow that does
 // exist (the established analogs ranked against the reference, or Mars
 // landing screening), and an objective whose task could not be read is not
 // guessed at: the user is asked to choose a supported task. Nothing here
@@ -31,7 +31,7 @@ export interface MissionRouteInput {
 }
 
 export const DISCOVERY_REFERENCE_ID = "jezero_crater";
-const PILOT = "The discovery pilot compares a bounded set of surveyed Earth footprints with Jezero Crater on regional median slope and detrended relief. It is not a global search, and a terrain match is not geological equivalence, novelty or suitability.";
+const PILOT = "The discovery survey compares a fixed set of surveyed Earth footprints with Jezero Crater on the features it declares, across terrain, illumination and aridity. It is not a global search, and a measured match is not geological equivalence, novelty or suitability.";
 
 export function routeForMission(input: MissionRouteInput): MissionRoute {
   const { objective, task, reference, focusBody, discoveryReady } = input;

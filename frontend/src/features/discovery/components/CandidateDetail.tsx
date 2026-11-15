@@ -20,7 +20,7 @@ import { ErrorNote } from "@/components/ui/ErrorNote";
 import { formatValueWithUnit } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 import { discoveryEngine } from "@/services/discoveryEngine";
-import { SEPARATE_SCORES_NOTE, formatKm, missingFactors, noveltyRelation, reviewStatusLabel, similarityExplanation, similarityReasons } from "../lib/copy";
+import { SEPARATE_SCORES_NOTE, basisNote, dimensionVerdict, formatKm, incomparableNote, missingFactors, noveltyRelation, reviewStatusLabel, similarityExplanation, similarityReasons } from "../lib/copy";
 import { formatPoint } from "../lib/geo";
 import { KeyValues } from "./SurveyFunnel";
 import { ResearchStatusBadge, RESEARCH_STATUS_MEANING } from "./ResearchStatusBadge";
@@ -31,7 +31,11 @@ import type { EarthSite } from "@/hooks/useEarthSites";
 
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const str = (v: unknown): string | null => (typeof v === "string" && v ? v : null);
-const FEATURE_WORD: Record<string, string> = { slope_regional_median_deg: "regional median slope", roughness_regional_m: "detrended regional relief" };
+const FEATURE_WORD: Record<string, string> = {
+  slope_regional_median_deg: "regional median slope", roughness_regional_m: "detrended regional relief",
+  slope_regional_p90_deg: "steep-tail slope (p90)", elevation_range_m: "elevation range (p90 minus p10)",
+  latitude_abs_deg: "distance from the equator", precipitation_mm_day: "mean precipitation",
+};
 
 export function CandidateDetail({ candidate, detail, detailPending, detailError, onRetry, criteria, reference, established, onCompareKnown, onResearch, effectiveWeights, returnedCount, survey }: {
   candidate: DiscoveryCandidate; detail: DiscoveryCandidateDetail | undefined; detailPending: boolean; detailError: unknown; onRetry: () => void; criteria: DiscoveryCriterion[]; reference: DiscoveryReference; established: EarthSite[];
@@ -83,6 +87,11 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
     enabled: !!runId, staleTime: 5 * 60_000, retry: false,
   });
   const fmt = (d: DiscoveryFeatureDistance, v: number) => formatValueWithUnit(v, d.unit);
+  // The service's own per-dimension breakdown, and the dimensions it refused to score.
+  const dimensions = candidate.dimension_scores ?? [];
+  const verdict = dimensionVerdict(dimensions);
+  const context = candidate.context?.measurements ?? [];
+  const incomparable = incomparableNote(context, reference.name);
 
   return (
     <article aria-label={`Candidate evidence: ${candidate.name}`} className="text-sm">
@@ -91,20 +100,40 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="eyebrow">Rank {candidate.display_rank ?? "—"}{returnedCount ? ` of ${returnedCount}` : ""}</p>
-            <h2 className="num mt-1 text-xl font-semibold tracking-tight text-fg">{formatPoint(candidate.lat, candidate.lon_east)}</h2>
-            <p className="text-xs text-fg-muted">{candidate.name}{footprintKm ? ` · centre of a ${footprintKm} × ${footprintKm} km footprint` : ""}</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight text-fg">{candidate.name}</h2>
+            <p className="num text-xs text-fg-muted">{formatPoint(candidate.lat, candidate.lon_east)}{footprintKm ? ` · centre of a ${footprintKm} × ${footprintKm} km footprint` : ""}</p>
           </div>
-          <div className="text-right" title="Two-feature terrain similarity index (slope and relief), 0 to 100. Not a probability."><p className="num text-3xl text-copper-bright">{candidate.similarity_index != null ? candidate.similarity_index.toFixed(1) : "—"}<span className="ml-1 text-sm text-fg-muted">/ 100</span></p><p className="text-[10.5px] text-fg-faint">terrain index · not a probability</p></div>
+          <div className="text-right" title={basisNote(criteria)}><p className="num text-3xl text-copper-bright">{candidate.similarity_index != null ? candidate.similarity_index.toFixed(1) : "—"}<span className="ml-1 text-sm text-fg-muted">/ 100</span></p><p className="text-[10.5px] text-fg-faint">similarity index · not a probability</p></div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
           <Badge tone={nov.tone}>{nov.label}</Badge>
           <ResearchStatusBadge status={candidate.research_status} />
           <Badge tone="neutral" title={reviewStatusLabel(candidate.novelty.review_status)}>{candidate.novelty.review_status === "desktop_reviewed" ? "Desktop reviewed" : "Not desktop reviewed"}</Badge>
         </div>
-        {effectiveWeights && <p className="mt-3 text-xs leading-relaxed text-fg-muted">{similarityExplanation(candidate, reference.name, effectiveWeights)}</p>}
+        {effectiveWeights && <p className="mt-3 text-xs leading-relaxed text-fg-muted">{similarityExplanation(candidate, reference.name, effectiveWeights, criteria)}</p>}
         <RegionActions target={runId ? {kind:"discovered",id:candidate.id,runId} : null}/>
         <button type="button" disabled={!runId} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-info bg-info/15 px-3 py-2.5 text-sm font-semibold text-info hover:bg-info/25 disabled:opacity-40" onClick={research} data-testid="research-this-candidate"><Microscope className="h-4 w-4" aria-hidden />Research this candidate</button>
       </div>
+
+      {dimensions.length > 0 && (
+        <Section title="How close, dimension by dimension" subtitle="Each dimension scored on its own, from the same weighting">
+          <ul className="space-y-2" aria-label="Similarity by dimension">
+            {dimensions.map(d => (
+              <li key={d.group}>
+                <div className="flex items-baseline justify-between gap-2 text-xs">
+                  <span className="text-fg">{d.label}</span>
+                  <span className="num text-fg-muted"><span className="text-copper-bright">{d.similarity_index.toFixed(0)}</span> / 100 · {Math.round(d.weight_share * 100)}% of the weighting</span>
+                </div>
+                <div className="mt-1 h-1.5 w-full overflow-hidden rounded-sm bg-line" role="img" aria-label={`${d.label}: ${d.similarity_index.toFixed(0)} of 100`}>
+                  <div className="h-full bg-copper" style={{ width: `${Math.max(0, Math.min(100, d.similarity_index))}%` }} />
+                </div>
+                <p className="mt-0.5 text-[10.5px] text-fg-faint">{d.feature_ids.map(id => FEATURE_WORD[id] ?? id.replace(/_/g, " ")).join(", ")}</p>
+              </li>
+            ))}
+          </ul>
+          {verdict && <p className="mt-3 text-xs leading-relaxed text-fg">{verdict}</p>}
+        </Section>
+      )}
 
       <Section title="What matches" subtitle={footprintKm && cellKm ? `Regional medians over the ${footprintKm} × ${footprintKm} km footprint, on ${cellKm} km cells; not rover-scale terrain` : "Regional footprint medians; not rover-scale terrain"}>
         {closest ? (
@@ -127,6 +156,21 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
           </>
         ) : dists.length === 1 ? <p className="text-xs text-fg">Only one factor was compared, so there is no second difference to report.</p> : <p className="text-xs text-fg-muted">No factor breakdown was returned.</p>}
         <p className="mt-2 text-xs text-fg"><span className="text-warn">Not compared:</span> {notCompared.join(", ")}. {reference.name} is on Mars: atmosphere, gravity, radiation, weather and biology differ, and no transfer has been validated.</p>
+        {context.length > 0 && (
+          <>
+            <h3 className="eyebrow mt-3">Measured, but deliberately not scored</h3>
+            {incomparable && <p className="mt-1 text-xs leading-relaxed text-fg-muted">{incomparable}</p>}
+            <dl className="mt-2 space-y-2.5">
+              {context.map(m => (
+                <div key={m.feature_id} className="text-xs">
+                  <dt className="text-fg-faint">{m.label}</dt>
+                  <dd className="num mt-0.5 text-fg">{formatValueWithUnit(m.earth_value, m.unit)} here · {m.mars_value != null ? `${formatValueWithUnit(m.mars_value, m.unit)} at ${reference.name}` : `not measured at ${reference.name}`}</dd>
+                  <dd className="mt-0.5 text-[10.5px] leading-snug text-fg-faint">{m.note}</dd>
+                </div>
+              ))}
+            </dl>
+          </>
+        )}
       </Section>
 
       <Section title="What we still need to investigate" subtitle="Evidence gaps and the next steps, from the service's own record">

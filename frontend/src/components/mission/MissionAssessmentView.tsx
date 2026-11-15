@@ -4,13 +4,13 @@ import { CandidateRow } from "./CandidateRow";
 import { EmptyNote } from "@/components/ui/Section";
 import { Spinner } from "@/components/ui/Spinner";
 import type { BadgeTone } from "@/components/ui/Badge";
-import { missionRankPosition, rankColor } from "@/lib/rankColor";
+import { missionRankPosition, rankColor, type RankPalette } from "@/lib/rankColor";
 import { formatLatLon, formatNumber, formatValueWithUnit, humanize } from "@/lib/format";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { useAppStore } from "@/store/useAppStore";
 import type { ComparisonLocation, MissionAssessmentResponse, MissionAssessmentResult } from "@/types";
 
-export function MissionAssessmentList({data,pending,error,selectedId,onSelect}:{data?:MissionAssessmentResponse;pending:boolean;error:unknown;selectedId:string|null;onSelect:(id:string)=>void}){
+export function MissionAssessmentList({data,pending,error,selectedId,onSelect,palette="roygbiv"}:{palette?:RankPalette;data?:MissionAssessmentResponse;pending:boolean;error:unknown;selectedId:string|null;onSelect:(id:string)=>void}){
  const open=useAppStore(s=>s.setActiveTab);
  const statuses: Record<MissionAssessmentResult["status"], {label:string;tone:BadgeTone}> = {
   scored: {label:"scored",tone:"ok"},
@@ -29,7 +29,7 @@ export function MissionAssessmentList({data,pending,error,selectedId,onSelect}:{
    <ol className="space-y-1" aria-label="Ranked sites">{data.results.map(r=>{
     const status=statuses[r.status];
     return <li key={r.site_id}><CandidateRow name={r.site_name} rank={r.rank} score={r.score}
-     color={rankColor(missionRankPosition(r.rank,data.results.map(r=>r.rank)))??undefined}
+     color={rankColor(missionRankPosition(r.rank,data.results.map(r=>r.rank)),palette)??undefined}
      selected={r.site_id===selectedId} status={status.label} tone={status.tone}
      detail={`${Math.round(r.coverage_fraction*100)}% active-weight data availability`}
      onSelect={()=>onSelect(r.site_id)}/></li>;
@@ -37,10 +37,10 @@ export function MissionAssessmentList({data,pending,error,selectedId,onSelect}:{
  </CandidatePanel>;
 }
 
-export function MissionAssessmentDetail({data,result,location,pending,showSensitivity=false}:{data?:MissionAssessmentResponse;result?:MissionAssessmentResult;location?:ComparisonLocation;pending:boolean;showSensitivity?:boolean}){
+export function MissionAssessmentDetail({data,result,location,pending,showSensitivity=false,palette="roygbiv"}:{palette?:RankPalette;data?:MissionAssessmentResponse;result?:MissionAssessmentResult;location?:ComparisonLocation;pending:boolean;showSensitivity?:boolean}){
  const open=useAppStore(s=>s.setActiveTab);
  return <section className="scroll-thin h-full overflow-y-auto bg-bg-elev p-5" aria-label="Mission fit analysis"><h1 className="text-xl font-semibold text-fg">{location?.name??result?.site_name??"Select a mission site"}</h1>{location&&<p className="mt-2 text-xs text-fg-muted">{humanize(location.body)} · {formatLatLon(location.lat,location.lon_east)}</p>}<p className="mt-3 text-sm text-fg-muted">{data?.profile_label??"Mission assessment"}</p>{pending&&<p className="mt-3 text-xs">Updating mission assessment…</p>}{result&&<>
-  <div className="my-5 border-y border-line py-4"><span className="num text-3xl font-semibold" style={{color:rankColor(missionRankPosition(result.rank,data?.results.map(r=>r.rank)??[]))??undefined}}>{result.score==null?"Not scored":result.score.toFixed(1)}{result.score!=null&&<span className="ml-1 text-sm text-fg-muted">/ 100</span>}</span><p className="mt-2 text-xs text-fg-muted">{result.rank!=null?`Rank ${result.rank} of ${data?.results.length} · `:""}{Math.round(result.coverage_fraction*100)}% active-weight data availability. A task-fit index, not a probability.</p></div>
+  <div className="my-5 border-y border-line py-4"><span className="num text-3xl font-semibold" style={{color:rankColor(missionRankPosition(result.rank,data?.results.map(r=>r.rank)??[]),palette)??undefined}}>{result.score==null?"Not scored":result.score.toFixed(1)}{result.score!=null&&<span className="ml-1 text-sm text-fg-muted">/ 100</span>}</span><p className="mt-2 text-xs text-fg-muted">{result.rank!=null?`Rank ${result.rank} of ${data?.results.length} · `:""}{Math.round(result.coverage_fraction*100)}% active-weight data availability. A task-fit index, not a probability.</p></div>
   {result.evidence_gaps.length>0&&<div className="mb-4 rounded border border-warn/40 p-3"><h2 className="text-sm font-semibold text-warn">Requirements & evidence gaps</h2><ul className="mt-2 list-disc space-y-2 pl-4 text-xs text-fg-muted">{result.evidence_gaps.map(g=><li key={g}>{g}</li>)}</ul><button type="button" onClick={()=>open("mission")} className="mt-3 text-xs text-copper-bright underline">Edit mission requirements</button></div>}
   <h2 className="text-xs font-semibold uppercase tracking-widest text-fg-muted">Why this score</h2><div className="mt-3 space-y-3">{result.factors.map(f=><article key={f.criterion_id} className="rounded border border-line p-3"><div className="flex justify-between gap-3 text-sm"><h3 className="font-semibold">{f.label}</h3><span className="num text-copper-bright">{f.contribution==null?"Excluded":`${formatNumber(f.contribution,{maxFractionDigits:2})} pts`}</span></div><p className="mt-2 text-xs text-fg-muted">{Array.isArray(f.value)?f.value.map(humanize).join(", "):typeof f.value==="number"?formatValueWithUnit(f.value,f.unit):"No compatible measurement"}</p><p className="mt-2 text-xs leading-relaxed text-fg-muted">{f.note}</p>{f.q!=null&&<><div className="mt-3 h-2 overflow-hidden rounded bg-line"><div className="h-full bg-data-contribution" style={{width:`${f.q*100}%`}}/></div><p className="mt-2 text-xs text-fg-muted">Factor fit {(f.q*100).toFixed(1)}% · Influence {((f.normalized_weight??0)*100).toFixed(0)}% · {humanize(f.quality??"")}</p></>}{f.source&&/^https?:/.test(f.source.url)&&<a className="mt-3 inline-block text-xs text-info underline" href={f.source.url} target="_blank" rel="noreferrer">{f.source.title} ↗</a>}</article>)}</div>
   {showSensitivity&&data&&result.score!=null&&<MissionSensitivity data={data} siteId={result.site_id}/>}

@@ -20,7 +20,7 @@ it("offers distinct established-region and fixed-survey entry points", () => {
   expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "browse", selectedEarthId: "earth-choice" });
   fireEvent.click(screen.getByRole("button", { name: "Explore the Jezero pilot" }));
   expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "find_analogs", selectedEarthId: "earth-choice" });
-  expect(screen.getByText(/Fixed survey · terrain only · no global search/)).toBeInTheDocument();
+  expect(screen.getByText(/Installed surveys · measured features · not an exhaustive Earth search/)).toBeInTheDocument();
 });
 it("shows applied work and reopens the same research notebook without changing drafts", () => {
   useAppStore.setState({ missionDesigned: true, appliedObjective: "Study rover mobility in a Jezero analog." });

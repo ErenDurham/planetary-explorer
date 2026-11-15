@@ -29,3 +29,9 @@ describe("Discovery research shortlist", () => {
     expect(onRemove).toHaveBeenCalledWith(candidates[1]);
   });
 });
+it("includes new survey dimensions in a preserved shortlist", () => {
+ const extra = { ...candidates[0].feature_distances![0], feature_id: "precipitation_mm_day", earth_value: .2, mars_value: 0, unit: "mm/day" };
+ const saved = { ...candidates[0], feature_distances: [...candidates[0].feature_distances!,extra] };
+ render(<CandidateCompare saved={[saved]} runId={run.run_id} onRemove={()=>{}} onResearch={()=>{}}/>);
+ expect(screen.getByRole("table")).toHaveTextContent("0.2 mm/day");
+});

@@ -39,6 +39,7 @@ interface Props {
 export function RightSidebar({ body = "mars", selectedId, evaluation, evaluationPending, earthLocation, earthPending, analog }: Props) {
   const q = useSiteProfile(body === "mars" ? selectedId : null);
   const openResearch = useAppStore(s => s.setActiveTab);
+  const rankPalette = useAppStore(s => s.rankPalette);
   const panel = useRef<HTMLElement>(null);
   const revision = useAppStore(s => s.selectionRevision);
   useEffect(() => {
@@ -117,7 +118,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
 
           <div>
             {analogPanel}
-            {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />}
+            {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} palette={rankPalette} />}
             <ReportedConditionsPanel conditions={q.data.site.reported_conditions} sources={q.data.site.condition_sources} />
             <EarthAnalogNotesPanel analogs={q.data.site.earth_analogs} />
             <Section title="Risks and limitations">

@@ -10,6 +10,8 @@ def invoke(fn, *args):
         return fn(*args)
     except KeyError as exc:
         raise HTTPException(404, detail={"code":"not_found", "message":f"Unknown discovery ID: {exc.args[0]}"}) from exc
+    except engine.DiscoveryRejected as exc:
+        raise HTTPException(422, detail={"code":"invalid_request", "message":str(exc)}) from exc
     except engine.DiscoveryUnavailable as exc:
         raise HTTPException(503, detail={"code":"data_unavailable", "message":str(exc)}) from exc
 

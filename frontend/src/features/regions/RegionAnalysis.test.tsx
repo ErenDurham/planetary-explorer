@@ -30,7 +30,10 @@ it("uses the original analysis structure for a found region and reranks through 
  await waitFor(()=>expect(service.calls).toHaveLength(1));
  fireEvent.change(screen.getByRole("slider",{name:/Detrended regional relief weight share/}),{target:{value:"80"}});
  await waitFor(()=>expect(service.calls).toHaveLength(2));
- expect(service.calls[1].weights).toMatchObject({roughness_regional_m:80,slope_regional_median_deg:20});
+ // one share moves to 80 and the rest rebalance to the remaining 20, whatever the basis holds
+ const sent=service.calls[1].weights as Record<string,number>;
+ expect(sent.roughness_regional_m).toBe(80);
+ expect(Object.entries(sent).filter(([id])=>id!=="roughness_regional_m").reduce((total,[,v])=>total+v,0)).toBe(20);
  expect(screen.queryByText("A shared measurement workspace for discovered and catalog regions.")).toBeNull();
  expect(screen.getAllByRole("button",{name:"Research this candidate"})).toHaveLength(1);
 });

@@ -38,3 +38,10 @@ it("retains a separate three-region shortlist for each survey", () => {
   store.toggleShortlist(candidates[0]);
   expect(useDiscoveryStore.getState().runs.first.shortlist.map(c => c.id)).toEqual(candidates.slice(1).map(c => c.id));
 });
+it("does not carry weights from a different feature basis into a new survey", () => {
+ const store = useDiscoveryStore.getState();
+ store.seedDefaults({ slope_regional_median_deg: 50, roughness_regional_m: 50 });
+ store.setWeight("slope_regional_median_deg",70);
+ store.seedDefaults({ slope_regional_median_deg: 50, precipitation_mm_day: 50 });
+ expect(useDiscoveryStore.getState().weights).toEqual({ slope_regional_median_deg: 50, precipitation_mm_day: 50 });
+});

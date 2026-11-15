@@ -45,9 +45,9 @@ export function HomeView() {
           <div className={styles.pilot}>
             <p className={styles.eyebrow}>Try a focused investigation</p>
             <h2>Where on Earth is the terrain like Jezero?</h2>
-            <p>Compare surveyed Earth footprints with Jezero Crater using regional slope and relief. Inspect a candidate, then investigate what the terrain match can’t tell you.</p>
+            <p>Compare surveyed Earth regions with Jezero Crater using each survey’s measured features. Inspect what matches, what differs, and what remains unmeasured.</p>
             <button type="button" className={styles.textAction} onClick={() => navigate(openFindAnalogs)}>Explore the Jezero pilot<ArrowRight size={16} aria-hidden /></button>
-            <span className={styles.pilotLimit}>Fixed survey · terrain only · no global search</span>
+            <span className={styles.pilotLimit}>Installed surveys · measured features · not an exhaustive Earth search</span>
           </div>
         </div>
       </section>
