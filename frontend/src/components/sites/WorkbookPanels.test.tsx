@@ -1,9 +1,7 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { render, screen, within } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { EarthAnalogNotesPanel, ReportedConditionsPanel, RoleBadge } from "./WorkbookPanels";
 import { PairConditionsTable, pairNote } from "@/components/compare/PairConditionsTable";
-import { GlobeLegend } from "@/components/globe/GlobeLegend";
-import { MARS_CONFIG } from "@/components/globe/PlanetConfig";
 import { passesRole, roleCounts } from "@/lib/roles";
 import type { ComparisonLocation, ReportedCondition, WorkbookSource } from "@/types";
 
@@ -37,16 +35,6 @@ describe("workbook site information", () => {
     expect(passesRole("all", null)).toBe(true);
     expect(passesRole("Base candidate", "Context only")).toBe(false);
     expect(roleCounts(["Base candidate", "Base candidate", null, "Context only"])).toMatchObject({ "Base candidate": 2, "Context only": 1, "Resource site": 0 });
-  });
-
-  it("offers only the roles present on the globe and reports the choice", () => {
-    const onChange = vi.fn();
-    const counts = { "Base candidate": 11, "Resource site": 1, "To evaluate": 2, "Instrument testing": 3, "Context only": 0 };
-    render(<GlobeLegend config={MARS_CONFIG} mode="browse" roles={{ counts, selected: "all", onChange }} />);
-    const group = screen.getByRole("group", { name: "Show sites by role" });
-    expect(within(group).queryByText(/Context only/)).toBeNull();
-    fireEvent.click(within(group).getByRole("button", { name: "Resource site · 1" }));
-    expect(onChange).toHaveBeenCalledWith("Resource site");
   });
 
   it("puts the paired conditions side by side and says when a pair is not the workbook's", () => {

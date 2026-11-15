@@ -4,34 +4,6 @@ import { InfoTip } from "@/components/ui/InfoTip";
 import { NOT_RANKED_COLOR, RANK_LEGEND_SENTENCE, rankGradient, type RankPalette } from "@/lib/rankColor";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerMode } from "./MarkerData";
-import { ROLE_HINT, SITE_ROLES, type RoleFilter } from "@/lib/roles";
-import type { SiteRole } from "@/types";
-
-/** Role filter shown in the legend: which roles are on this globe, and which one is shown. */
-export interface RoleLegend {
-  counts: Record<SiteRole, number>;
-  selected: RoleFilter;
-  onChange: (r: RoleFilter) => void;
-}
-
-function RoleChips({ roles }: { roles: RoleLegend }) {
-  const present = SITE_ROLES.filter((r) => roles.counts[r] > 0);
-  if (present.length === 0) return null;
-  const chip = (value: RoleFilter, label: string, title?: string) => (
-    <button key={value} type="button" aria-pressed={roles.selected === value} title={title} onClick={() => roles.onChange(value)}
-      className={`rounded border px-1.5 py-0.5 text-[10px] ${roles.selected === value ? "border-copper text-copper-bright bg-copper/10" : "border-line text-fg-muted hover:text-fg"}`}>{label}</button>
-  );
-  return (
-    <div className="mt-2 border-t border-line pt-2" role="group" aria-label="Show sites by role" data-testid="role-filter">
-      <p className="mb-1 font-semibold uppercase tracking-wide text-fg-muted">Site role</p>
-      <div className="flex flex-wrap gap-1">
-        {chip("all", "All")}
-        {present.map((r) => chip(r, `${r} · ${roles.counts[r]}`, ROLE_HINT[r]))}
-      </div>
-    </div>
-  );
-}
-
 export interface GlobeLegendProps {
   config: PlanetConfig;
   /** Landing legend (Mars suitability index) or analog match-rank legend. */
@@ -42,11 +14,9 @@ export interface GlobeLegendProps {
   heading?: string;
   /** Analog mode: how many candidates carry a rank (the scale's extent). */
   rankedCount?: number | null;
-  /** Workbook site roles: a display filter for the markers and lists (never changes a rank). */
-  roles?: RoleLegend;
 }
 
-export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onPaletteChange, heading, rankedCount, roles }: GlobeLegendProps) {
+export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onPaletteChange, heading, rankedCount }: GlobeLegendProps) {
   const [expanded, setExpanded] = useState(false);
   const detailsId = useId();
   const title = mode === "analog" ? "Analog match rank" : "Mission suitability rank";
@@ -55,7 +25,7 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
       {config.displayName} texture: {config.textureCreditUrl ? <a href={config.textureCreditUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-fg">{config.textureCredit}</a> : config.textureCredit}
     </div>
   );
-  if (mode === "browse") return <div className="pointer-events-auto w-[260px] max-w-full rounded border border-line bg-bg-elev/90 px-3 py-2 text-xs text-fg-muted" data-testid="mission-sites-legend"><p className="font-semibold text-fg">{config.displayName} mission sites</p><p className="mt-1">Markers show available locations, without suitability scores. Select a site to inspect its measurements.</p>{roles && <RoleChips roles={roles} />}{credit}</div>;
+  if (mode === "browse") return <div className="pointer-events-auto w-[260px] max-w-full rounded border border-line bg-bg-elev/90 px-3 py-2 text-xs text-fg-muted" data-testid="mission-sites-legend"><p className="font-semibold text-fg">{config.displayName} mission sites</p><p className="mt-1">Markers show available locations, without suitability scores. Select a site to inspect its measurements.</p>{credit}</div>;
   {
     return (
       <div className="pointer-events-auto w-[260px] max-w-full rounded border border-line bg-bg-elev/90 px-3 py-2 text-[10.5px] leading-relaxed text-fg-muted backdrop-blur-sm" data-testid={mode === "analog" ? "analog-legend" : mode === "mission" ? "mission-legend" : "landing-legend"}>
@@ -86,7 +56,6 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
         )}
         {credit}
         </div>
-        {roles && <RoleChips roles={roles} />}
       </div>
     );
   }
