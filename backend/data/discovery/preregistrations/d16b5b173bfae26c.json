@@ -1,0 +1,240 @@
+{
+  "registered_at": "2026-11-15T21:20:36+00:00",
+  "specification": {
+    "assumptions": [
+      "Physical grids, coverage cutoffs, distance scales, catalog buffer and diversification are unvalidated screening choices, not NASA operating requirements.",
+      "Regional terrain, latitude and aridity similarity do not establish geological analogy, accessibility or safe field conditions.",
+      "Each region's stated hypothesis is published literature or physical geography, not a measurement made by this survey.",
+      "A one-degree region is a sampling frame, not a claim that the whole region behaves alike."
+    ],
+    "bounds": {
+      "east": 118.0,
+      "north": 45.0,
+      "south": -26.0,
+      "west": -69.0
+    },
+    "catalog_buffer_km": 100,
+    "cell_m": 4000,
+    "default_weights": {
+      "elevation_range_m": 10,
+      "latitude_abs_deg": 10,
+      "precipitation_mm_day": 20,
+      "roughness_regional_m": 20,
+      "slope_regional_median_deg": 25,
+      "slope_regional_p90_deg": 15
+    },
+    "footprint_m": 60000,
+    "label": "Global under-studied terrain survey",
+    "min_cell_valid_fraction": 0.95,
+    "min_gradient_valid_fraction": 0.8,
+    "min_terrain_valid_fraction": 0.95,
+    "minimum_center_distance_km": 150,
+    "reference_id": "jezero_crater",
+    "regions": [
+      {
+        "bounds": {
+          "east": 3.0,
+          "north": 29.0,
+          "south": 28.0,
+          "west": 2.0
+        },
+        "hypothesis": "Hyperarid stony desert pavement (reg and hamada) over limestone. A varnished, rock-strewn pavement is among the closest common Earth covers to the plains Mars landers actually sit on.",
+        "id": "tademait",
+        "locale": "Algeria",
+        "name": "Tademait Plateau"
+      },
+      {
+        "bounds": {
+          "east": 59.0,
+          "north": 31.0,
+          "south": 30.0,
+          "west": 58.0
+        },
+        "hypothesis": "Wind-cut yardang ridges in silt and clay, and some of the hottest measured land surface on Earth. Yardang fields are a directly comparable Martian landform.",
+        "id": "dasht_e_lut",
+        "locale": "Iran",
+        "name": "Dasht-e Lut yardang field"
+      },
+      {
+        "bounds": {
+          "east": 57.0,
+          "north": 44.0,
+          "south": 43.0,
+          "west": 56.0
+        },
+        "hypothesis": "Chalk and marl escarpments retreating over a desiccated basin: layered sedimentary exposure and scarp retreat of the kind mapped along Martian plateau margins.",
+        "id": "ustyurt",
+        "locale": "Kazakhstan and Uzbekistan",
+        "name": "Ustyurt Plateau escarpments"
+      },
+      {
+        "bounds": {
+          "east": 59.0,
+          "north": 45.0,
+          "south": 44.0,
+          "west": 58.0
+        },
+        "hypothesis": "A salt and silt plain exposed within living memory as the Aral Sea withdrew. A rare chance to watch an evaporite surface and its dust emission evolve from a known start date.",
+        "id": "aralkum",
+        "locale": "Uzbekistan",
+        "name": "Aralkum exposed sea floor"
+      },
+      {
+        "bounds": {
+          "east": 22.0,
+          "north": 18.0,
+          "south": 17.0,
+          "west": 21.0
+        },
+        "hypothesis": "Sandstone plateau dissected by dry valleys: relict fluvial landforms preserved in a now-hyperarid setting, the same sequence inferred for Noachian-to-present Mars.",
+        "id": "ennedi",
+        "locale": "Chad",
+        "name": "Ennedi plateau foreland"
+      },
+      {
+        "bounds": {
+          "east": 26.0,
+          "north": 24.0,
+          "south": 23.0,
+          "west": 25.0
+        },
+        "hypothesis": "Hyperarid sandstone plateau beside the Libyan Desert Glass field: impact-associated melt and a surface with almost no vegetation or soil moisture.",
+        "id": "gilf_kebir",
+        "locale": "Egypt",
+        "name": "Gilf Kebir plateau"
+      },
+      {
+        "bounds": {
+          "east": 95.0,
+          "north": 38.0,
+          "south": 37.0,
+          "west": 94.0
+        },
+        "hypothesis": "High, cold, hyperarid saline playa. Sulfate and chloride evaporites forming at a water activity close to the limit for life, at an elevation where the air is already thin.",
+        "id": "qaidam",
+        "locale": "China",
+        "name": "Qaidam Basin playa"
+      },
+      {
+        "bounds": {
+          "east": 103.0,
+          "north": 40.0,
+          "south": 39.0,
+          "west": 102.0
+        },
+        "hypothesis": "Some of the tallest dunes on Earth with lakes between them: aeolian bedforms at a vertical scale comparable to Martian dune fields.",
+        "id": "badain_jaran",
+        "locale": "China",
+        "name": "Badain Jaran megadunes"
+      },
+      {
+        "bounds": {
+          "east": 98.0,
+          "north": 44.0,
+          "south": 43.0,
+          "west": 97.0
+        },
+        "hypothesis": "A cold desert where freeze-thaw and wind deflation act together, rather than heat and wind. Mars is a cold desert, and most hot-desert analogs omit the freezing half.",
+        "id": "trans_altai_gobi",
+        "locale": "Mongolia",
+        "name": "Trans-Altai Gobi gravel desert"
+      },
+      {
+        "bounds": {
+          "east": 41.0,
+          "north": 14.0,
+          "south": 13.0,
+          "west": 40.0
+        },
+        "hypothesis": "Hydrothermal brines, salt plain and active volcanism: polyextreme habitability and the question of what a biosignature looks like in an evaporite.",
+        "id": "danakil",
+        "locale": "Ethiopia",
+        "name": "Danakil and Afar margin"
+      },
+      {
+        "bounds": {
+          "east": 71.0,
+          "north": 24.0,
+          "south": 23.0,
+          "west": 70.0
+        },
+        "hypothesis": "A seasonally flooded salt flat on a basaltic margin: brine cycling over volcanic rock, the pairing inferred for several Martian basins.",
+        "id": "kachchh",
+        "locale": "India",
+        "name": "Great Rann of Kachchh salt flat"
+      },
+      {
+        "bounds": {
+          "east": 40.0,
+          "north": 26.0,
+          "south": 25.0,
+          "west": 39.0
+        },
+        "hypothesis": "A young basaltic field of flows, scoria cones and lava tubes in a hyperarid setting. Lava tubes are the leading candidate shelter for crews on both the Moon and Mars.",
+        "id": "harrat_khaybar",
+        "locale": "Saudi Arabia",
+        "name": "Harrat Khaybar volcanic field"
+      },
+      {
+        "bounds": {
+          "east": 15.0,
+          "north": -21.0,
+          "south": -22.0,
+          "west": 14.0
+        },
+        "hypothesis": "Gypsum and calcrete crusts on a fog-fed hyperarid plain: sulfate crust formation with almost no rainfall, and endolithic life inside the crust.",
+        "id": "namib_interior",
+        "locale": "Namibia",
+        "name": "Namib interior gypsum plains"
+      },
+      {
+        "bounds": {
+          "east": -67.0,
+          "north": -25.0,
+          "south": -26.0,
+          "west": -68.0
+        },
+        "hypothesis": "High-altitude saline basins under the strongest surface UV measured on Earth, on the Argentine side rather than the heavily studied Chilean Atacama.",
+        "id": "puna_antofalla",
+        "locale": "Argentina",
+        "name": "Puna de Atacama, Antofalla sector"
+      },
+      {
+        "bounds": {
+          "east": -68.0,
+          "north": -19.0,
+          "south": -20.0,
+          "west": -69.0
+        },
+        "hypothesis": "An altiplano salt flat beside its far better known neighbour Uyuni: a flat, bright evaporite surface at altitude, useful for both chemistry and landing-surface analogy.",
+        "id": "coipasa",
+        "locale": "Bolivia",
+        "name": "Salar de Coipasa"
+      },
+      {
+        "bounds": {
+          "east": 118.0,
+          "north": -22.0,
+          "south": -23.0,
+          "west": 117.0
+        },
+        "hypothesis": "Archean banded iron formation and some of the oldest accepted biosignatures on Earth, in iron-rich rock of the kind Mars rovers sample.",
+        "id": "pilbara_hamersley",
+        "locale": "Australia",
+        "name": "Hamersley and Pilbara interior"
+      }
+    ],
+    "samples_per_axis": 3,
+    "scales": {
+      "elevation_range_m": 400.0,
+      "latitude_abs_deg": 15.0,
+      "precipitation_mm_day": 1.0,
+      "roughness_regional_m": 100.0,
+      "slope_regional_median_deg": 1.5,
+      "slope_regional_p90_deg": 3.0
+    },
+    "selection_rationale": "Sixteen one-degree regions on five continents, each fixed with its hypothesis before any terrain was processed or any score inspected. The brief asks for analogs beyond the few places already studied to exhaustion, so Antarctica, the Atacama proper, Iceland and Hawaii are deliberately absent; the Argentine Puna and the Namib interior stand in for their better-known neighbours. Regions were chosen for the Mars process or surface each is known to express -- desert pavement, yardangs, evaporite playa, megadunes, lava fields, relict drainage -- not for an expected score, and no region was added, moved or dropped after its numbers were seen.",
+    "spec_version": "discovery-v2.0"
+  },
+  "specification_sha256": "d16b5b173bfae26c2631a4daf6303b389841b7d6d24206d0fdbe9332ca424989"
+}
