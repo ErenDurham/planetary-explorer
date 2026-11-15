@@ -16,7 +16,9 @@ export function PlanetSphere({ config, meshRef }: { config: PlanetConfig; meshRe
   return (
     <mesh ref={meshRef}>
       <sphereGeometry args={[config.radius, 96, 64]} />
-      <meshStandardMaterial map={texture} roughness={0.95} metalness={0} />
+      <meshStandardMaterial map={texture} roughness={0.95} metalness={0}
+        emissive={config.id === "earth" ? "#193b60" : "#000000"}
+        emissiveIntensity={config.id === "earth" ? 0.45 : 0} />
     </mesh>
   );
 }

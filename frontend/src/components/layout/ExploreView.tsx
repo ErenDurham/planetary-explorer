@@ -1,13 +1,5 @@
-// Explore: the globe for the VIEWED body (Earth or Mars) with Codex's
-// Globe / Orbital / Surface switch, a labelled Earth/Mars segmented control,
-// a "Follow objective" affordance once the user has overridden the objective's
-// body, the two labelled map modes (landing suitability on Mars; analog match
-// on either body) and, in analog mode, the match context line with its
-// changeable reference and the compact analog-preference control.
-//
-// The body switch and map mode write to the store; nothing here re-applies
-// the objective. Imagery is per selected location on the visible body, and the
-// imagery endpoint answers for Earth candidate ids as well as Mars sites.
+// Explore keeps imagery controls above the workspace and a single destination
+// planet button inside it. Planet navigation preserves mission focus and selections.
 import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, API_BASE_URL } from "@/services/api";
@@ -45,8 +37,6 @@ export interface ExploreViewProps {
   analog?: ExploreAnalogContext;
 }
 
-const BODIES: Body[] = ["earth", "mars"];
-
 /** Short deterministic phrase naming the emphasised features, from the shares. */
 export function emphasisPhrase(shares: Record<string, number> | null | undefined): string {
   const s = toAnalogShares(shares);
@@ -80,25 +70,19 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
   const effective = effectiveMapMode({ viewedBody, mapMode });
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  const missionSiteId = missionBody === "mars" ? selectedMarsId : selectedEarthId;
+  const destination = otherBody(viewedBody);
+  const destinationLabel = destination === missionBody ? "Mission suitability" : "Analog match";
   const switchBody = (b: Body) => { setView("globe"); navigateExplore(b === missionBody ? "mission" : "analogs", initialMissionId); };
-  const chooseStage = (next: "mission" | "analogs") => { setView("globe"); navigateExplore(next, initialMissionId); };
 
   return <div className="flex h-full min-h-0 flex-col">
     <nav aria-label="Explore views" className="shrink-0 border-b border-line bg-bg-elev px-3 py-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div role="group" aria-label="Explore mission or analogs" className="inline-flex rounded-lg border border-line p-1">
-          <button type="button" aria-pressed={stage === "mission"} onClick={() => chooseStage("mission")} className={`rounded-md px-3 py-2 text-sm ${stage === "mission" ? "bg-copper/15 text-copper-bright" : "text-fg-muted hover:text-fg"}`}>Mission suitability <span className="ml-1 text-xs">· {BODY_NAME[missionBody]}</span></button>
-          <button type="button" aria-pressed={stage === "analogs"} disabled={!missionSiteId && !initialMissionId} onClick={() => chooseStage("analogs")} className={`rounded-md px-3 py-2 text-sm disabled:opacity-40 ${stage === "analogs" ? "bg-copper/15 text-copper-bright" : "text-fg-muted hover:text-fg"}`}>Analog match <span className="ml-1 text-xs">· {BODY_NAME[otherBody(missionBody)]}</span></button>
-        </div>
-        <button type="button" onClick={() => setActiveTab("mission")} className="text-xs text-fg-muted underline underline-offset-4">Edit mission</button>
-      </div>
       <p className="mt-2 text-xs leading-relaxed text-fg-muted">{stage === "analogs"
         ? `Explore ${BODY_NAME[viewedBody]} analogs for your selected ${BODY_NAME[missionBody]} site. Select a match, then compare the pair.`
-        : `Explore ${BODY_NAME[missionBody]} sites for your mission. Select a site to inspect it, then open Analog match to find similar places on ${BODY_NAME[otherBody(missionBody)]}.`}</p>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+        : `Explore ${BODY_NAME[missionBody]} sites for your mission. Select a site to inspect it, then switch planets to find analogs on ${BODY_NAME[otherBody(missionBody)]}.`}</p>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         <div role="group" aria-label="Site imagery">{(["globe","orbital","surface"] as const).map(id => <button key={id} type="button" aria-pressed={view === id} onClick={() => setView(id)} className={`rounded border px-2.5 py-1.5 text-xs ${view === id ? "border-copper text-copper-bright bg-copper/10" : "border-transparent text-fg-muted hover:text-fg"}`}>{id === "globe" ? "Globe" : id === "orbital" ? "Orbital view" : "Surface view"}</button>)}</div>
-        {stage === "analogs" && <button type="button" onClick={() => setActiveTab("compare")} disabled={!selectedEarthId || !selectedMarsId} className="ml-auto rounded border border-copper/50 bg-copper/10 px-3 py-1.5 text-xs font-semibold text-copper-bright disabled:opacity-40">Compare selected pair →</button>}
+        <button type="button" onClick={() => setActiveTab("mission")} className="ml-auto text-xs text-fg-muted underline underline-offset-4">Edit mission</button>
+        {stage === "analogs" && <button type="button" onClick={() => setActiveTab("compare")} disabled={!selectedEarthId || !selectedMarsId} className="rounded border border-copper/50 bg-copper/10 px-3 py-1.5 text-xs font-semibold text-copper-bright disabled:opacity-40">Compare selected pair →</button>}
       </div>
     </nav>
     {effective === "mission_browse" ? <div className="shrink-0 border-b border-line px-3 py-2 text-xs text-fg-muted" data-testid="earth-mission-context">Mission fit ranks sites against your selected task, targets and priorities. Analog match compares the selected site with locations on the other planet.</div> : effective === "analog_match" ? <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="analog-context">
@@ -110,7 +94,13 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
       {prefsOpen && <div id="analog-preferences" className="mt-3 max-w-md rounded border border-line bg-bg-elev"><AnalogPreferences compact unavailable={analog?.unavailable} rankChanges={analog?.rankChanges} previousShares={analog?.previousShares}/></div>}
     </div> : <div className="shrink-0 border-b border-line px-3 py-2 text-xs text-fg-muted" data-testid="landing-context">Mission suitability uses available regional terrain and sunlight factors. Research value and base-building requirements are not yet scored.</div>}
 
-    <div className="relative min-h-0 flex-1"><div className="absolute right-3 top-3 z-10 flex gap-2 rounded-lg bg-bg/90 p-2" role="group" aria-label="Switch planet">{BODIES.map(b => <button key={b} type="button" aria-label={`View ${BODY_NAME[b]}`} aria-pressed={viewedBody === b} onClick={() => switchBody(b)} className={`flex flex-col items-center gap-1 rounded-lg px-2 py-1 text-xs ${viewedBody === b ? "text-copper-bright" : "text-fg-muted hover:text-fg"}`}><span aria-hidden className={`h-10 w-10 rounded-full border-2 shadow-inner sm:h-12 sm:w-12 ${viewedBody === b ? "border-copper" : "border-line-strong"}`} style={{backgroundImage: `radial-gradient(circle at 30% 25%, transparent 20%, rgba(0,0,0,.8) 95%), url(${PLANET_CONFIGS[b].textureUrl})`, backgroundSize: "cover"}}/>{BODY_NAME[b]}</button>)}</div><div hidden={view !== "globe"} className="h-full">{view === "globe" && globe}</div><div hidden={view === "globe"} className="h-full">{site ? <SiteImages key={site.id} site={site} view={view === "surface" ? "surface" : "orbital"} enabled={view !== "globe"} /> : <div className="p-4"><EmptyNote>Select a candidate to see its imagery.</EmptyNote></div>}</div></div>
+    <div className="relative min-h-0 flex-1"><div className="absolute right-3 top-3 z-10 rounded-lg border border-line/60 bg-bg/95 p-1.5" role="group" aria-label="Switch planet">
+      <button type="button" aria-label={`View ${BODY_NAME[destination]}`} aria-describedby="planet-destination" title={`Switch to ${BODY_NAME[destination]} · ${destinationLabel}`} onClick={() => switchBody(destination)} className="flex min-w-[104px] flex-col items-center rounded-md px-2 py-1.5 text-xs text-fg-muted transition-colors hover:bg-bg-elev-2 hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright">
+        <span aria-hidden className="h-10 w-10 rounded-full border border-line-strong shadow-inner sm:h-12 sm:w-12" style={{backgroundImage: `radial-gradient(circle at 30% 25%, transparent 35%, rgba(0,0,0,.5) 95%), url(${PLANET_CONFIGS[destination].textureUrl})`, backgroundSize: "cover"}}/>
+        <span className="mt-1 font-medium text-fg">{BODY_NAME[destination]} <span aria-hidden className="text-fg-muted">↗</span></span>
+        <span id="planet-destination" className="mt-0.5 text-[10px] text-fg-muted">{destinationLabel}</span>
+      </button>
+    </div><div hidden={view !== "globe"} className="h-full">{view === "globe" && globe}</div><div hidden={view === "globe"} className="h-full">{site ? <SiteImages key={site.id} site={site} view={view === "surface" ? "surface" : "orbital"} enabled={view !== "globe"} /> : <div className="p-4"><EmptyNote>Select a candidate to see its imagery.</EmptyNote></div>}</div></div>
   </div>;
 }
 

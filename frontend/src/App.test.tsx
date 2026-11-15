@@ -76,7 +76,8 @@ describe("App", () => {
     fireEvent.click(screen.getByRole("button", { name: "Explore" }));
     expect(screen.getByTestId("globe-stub")).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: /Chryse Planitia.*rank 1/ })).toBeInTheDocument();
-    expect(screen.getByText(/Temperature data is unavailable\. Thermal conditions/)).toBeInTheDocument();
+    expect(screen.queryByText(/Temperature data is unavailable\. Thermal conditions/)).toBeNull();
+    expect(screen.getByRole("region", { name: "Scrollable candidates" })).toBeInTheDocument();
     expect(screen.getByTestId("globe-stub")).toHaveTextContent(`${fixture_sites.sites.length} markers`);
   });
 

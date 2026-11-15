@@ -17,9 +17,10 @@ describe("RankedList", () => {
     expect(items[0]).toHaveTextContent("ok");
     expect(items[items.length - 1]).toHaveTextContent("Gale Crater");
   });
-  it("shows the backend warnings", () => {
+  it("omits the temperature notice from the candidate panel", () => {
     render(<RankedList results={evaluation.results} selectedId={null} onSelect={() => {}} warnings={evaluation.warnings} />);
-    expect(screen.getByText(/Temperature data is unavailable/)).toBeInTheDocument();
+    expect(screen.queryByText(/Temperature data is unavailable/)).toBeNull();
+    expect(screen.getByRole("region", { name: "Scrollable candidates" })).toBeInTheDocument();
   });
   it("selects a site on click and marks the selected row", () => {
     const onSelect = vi.fn();

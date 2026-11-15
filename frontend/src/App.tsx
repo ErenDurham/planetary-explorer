@@ -13,7 +13,6 @@ import { ExploreView, type ExploreAnalogContext } from "@/components/layout/Expl
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TopNav } from "@/components/layout/TopNav";
 import { StatusBanner } from "@/components/layout/StatusBanner";
-import { HealthChip } from "@/components/layout/HealthChip";
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
 import type { OverlayBounds } from "@/lib/overlay";
 import { AstroPanel } from "@/components/astro/AstroPanel";
@@ -290,7 +289,7 @@ export default function App() {
       <div className="absolute left-4 top-0 z-50 flex gap-2">
         <a className="sr-only rounded bg-bg-elev p-3 text-sm focus:not-sr-only" href="#workspace">Skip to workspace</a>
       </div>
-      <TopNav active={activeTab} onChange={setActiveTab} right={<HealthChip />} />
+      <TopNav active={activeTab} onChange={setActiveTab} />
       <StatusBanner />
       {(activeTab === "explore" || activeTab === "analyze") && (
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">
@@ -320,7 +319,7 @@ export default function App() {
         ) : (
           // Candidates scroll independently of mission settings and reasoning.
           <div className={`grid h-full grid-cols-1 overflow-y-auto lg:overflow-hidden ${activeTab === "analyze" ? "lg:grid-cols-[280px_minmax(0,1fr)]" : "lg:grid-cols-[250px_minmax(0,1fr)_var(--site-panel-width)]"}`}>
-            <aside id="ranked-candidates" tabIndex={-1} aria-label="Candidate ranking" className="scroll-thin order-2 hidden min-h-0 overflow-y-auto border-r border-line bg-bg-elev lg:order-1 lg:block">
+            <aside id="ranked-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 hidden h-full min-h-0 overflow-hidden border-r border-line bg-bg-elev lg:order-1 lg:block">
               {candidatePane}
             </aside>
             <div className={`relative order-1 min-h-[320px] lg:order-2 lg:h-full ${activeTab === "analyze" ? "h-[75vh]" : "h-[72vh]"}`}>

@@ -85,7 +85,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         onPointerMissed={(event) => { if (event.type === "click") { deselect.current?.(); containerRef.current?.focus({preventScroll:true}); } }}
       >
         <color attach="background" args={["#06090d"]} />
-        <ambientLight intensity={1.1} />
+        <ambientLight intensity={config.id === "earth" ? 2.2 : 1.1} />
         <directionalLight position={[5, 2, 4]} intensity={2.2} color="#fff2e0" />
         <directionalLight position={[-6, -1, -3]} intensity={0.25} color="#8aa0c8" />
         <Stars radius={60} depth={30} count={2500} factor={2.5} saturation={0} fade speed={0.2} />

@@ -1,5 +1,9 @@
+import { CandidatePanel } from "./CandidatePanel";
 import { MissionSensitivity } from "./MissionSensitivity";
-import { rowKeyDown } from "./RankedList";
+import { CandidateRow } from "./CandidateRow";
+import { EmptyNote } from "@/components/ui/Section";
+import { Spinner } from "@/components/ui/Spinner";
+import type { BadgeTone } from "@/components/ui/Badge";
 import { missionRankPosition, rankColor } from "@/lib/rankColor";
 import { formatLatLon, formatNumber, formatValueWithUnit, humanize } from "@/lib/format";
 import { ErrorNote } from "@/components/ui/ErrorNote";
@@ -8,7 +12,30 @@ import type { ComparisonLocation, MissionAssessmentResponse, MissionAssessmentRe
 
 export function MissionAssessmentList({data,pending,error,selectedId,onSelect}:{data?:MissionAssessmentResponse;pending:boolean;error:unknown;selectedId:string|null;onSelect:(id:string)=>void}){
  const open=useAppStore(s=>s.setActiveTab);
- return <section aria-label="Mission ranking" className="p-4"><h2 className="text-xs font-semibold uppercase tracking-widest text-fg-muted">Mission candidates</h2><p className="mt-2 text-xs leading-relaxed text-fg-muted">{data?.profile_label??"Task-specific mission fit"} · {data?.body??""}</p>{pending&&<p className="mt-3 text-xs">Updating scores…</p>}{!!error&&<ErrorNote error={error}/>}{data?.results.every(r=>r.score===null)&&<button type="button" onClick={()=>open("mission")} className="mt-3 text-xs text-copper-bright underline">Review mission requirements</button>}<ol className="mt-3 space-y-2">{data?.results.map(r=><li key={r.site_id}><button type="button" aria-pressed={r.site_id===selectedId} onClick={()=>onSelect(r.site_id)} onKeyDown={rowKeyDown} className={`w-full rounded border p-3 text-left ${r.site_id===selectedId?"border-copper bg-copper/10":"border-line hover:border-line-strong"}`}><span className="flex items-start justify-between gap-2"><span className="text-sm text-fg">{r.rank!=null?`${r.rank}. `:""}{r.site_name}</span><span className="num text-sm" style={{color:rankColor(missionRankPosition(r.rank,data?.results.map(r=>r.rank)??[]))??undefined}}>{r.score==null?"—":r.score.toFixed(1)}</span></span><span className="mt-2 block text-xs text-fg-muted">{r.score==null?humanize(r.status):`${Math.round(r.coverage_fraction*100)}% active-weight data availability`}</span></button></li>)}</ol></section>;
+ const statuses: Record<MissionAssessmentResult["status"], {label:string;tone:BadgeTone}> = {
+  scored: {label:"scored",tone:"ok"},
+  needs_requirements: {label:"needs targets",tone:"warn"},
+  insufficient_data: {label:"no data",tone:"warn"},
+  not_supported: {label:"not scored",tone:"neutral"},
+ };
+ return <CandidatePanel title="Ranked candidates"
+  subtitle={`${data ? humanize(data.body) + " · " : ""}${data?.profile_label ?? "Task-specific mission fit"} · task-fit index 0–100, not a probability.`}
+  actions={pending ? <Spinner label="Scoring" /> : undefined} controls={<>
+  <p className="mb-3 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
+  {!!error && <ErrorNote error={error}/>}
+  {data?.warnings.length ? <ul className="mb-2 space-y-1" aria-label="Scoring warnings">{data.warnings.map((w,i)=><li key={i} className="rounded border border-warn/40 bg-warn/10 px-2 py-1 text-[11px] leading-snug text-warn">{w}</li>)}</ul> : null}
+  {data?.results.length && data.results.every(r=>r.score===null) ? <button type="button" onClick={()=>open("mission")} className="mb-3 text-xs text-copper-bright underline">Review mission requirements</button> : null}
+  </>}>
+  {!data ? <EmptyNote>{pending ? "Scoring sites…" : "No evaluation yet."}</EmptyNote> :
+   <ol className="space-y-1" aria-label="Ranked sites">{data.results.map(r=>{
+    const status=statuses[r.status];
+    return <li key={r.site_id}><CandidateRow name={r.site_name} rank={r.rank} score={r.score}
+     color={rankColor(missionRankPosition(r.rank,data.results.map(r=>r.rank)))??undefined}
+     selected={r.site_id===selectedId} status={status.label} tone={status.tone}
+     detail={`${Math.round(r.coverage_fraction*100)}% active-weight data availability`}
+     onSelect={()=>onSelect(r.site_id)}/></li>;
+   })}</ol>}
+ </CandidatePanel>;
 }
 
 export function MissionAssessmentDetail({data,result,location,pending,showSensitivity=false}:{data?:MissionAssessmentResponse;result?:MissionAssessmentResult;location?:ComparisonLocation;pending:boolean;showSensitivity?:boolean}){

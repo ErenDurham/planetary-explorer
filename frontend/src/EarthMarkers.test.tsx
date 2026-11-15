@@ -104,12 +104,12 @@ describe("Earth and Mars markers", () => {
     await waitFor(()=>expect(start).toBeEnabled());
     fireEvent.click(start);
     await waitFor(()=>expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-mode","mission"));
-    expect(screen.getByRole("heading",{name:"Mission candidates"})).toBeInTheDocument();
+    expect(screen.getByRole("heading",{name:"Ranked candidates"})).toBeInTheDocument();
     expect(screen.queryByRole("heading",{name:"Mission suitability"})).toBeNull();
     expect(rankCalls).toHaveLength(0);
     const selectedEarth=useAppStore.getState().selectedEarthId;
     expect(selectedEarth).toBeTruthy();
-    fireEvent.click(screen.getByRole("button",{name:/^Analog match/}));
+    fireEvent.click(screen.getByRole("button",{name:"View Mars"}));
     await waitFor(()=>expect(rankCalls.length).toBeGreaterThan(0));
     expect(rankCalls[0]).toMatchObject({reference_body:"earth",reference_id:selectedEarth,candidate_body:"mars"});
     expect(useAppStore.getState().selectionBody).toBe("earth");
