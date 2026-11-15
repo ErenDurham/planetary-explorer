@@ -5,10 +5,11 @@
  "url": "https://www.marsinstitute.no/hmp",
  "final_url": "https://www.marsinstitute.no/hmp",
  "publication_date": null,
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "text/html; charset=UTF-8",
  "kind": "html",
  "topic": "Haughton-Mars Project",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "haughton_crater"
  ],

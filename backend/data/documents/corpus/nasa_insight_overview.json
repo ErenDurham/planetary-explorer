@@ -5,10 +5,11 @@
  "url": "https://science.nasa.gov/mission/insight/",
  "final_url": "https://science.nasa.gov/mission/insight/",
  "publication_date": "2017-12-04",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "text/html; charset=UTF-8",
  "kind": "html",
  "topic": "InSight lander overview",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "elysium_planitia"
  ],

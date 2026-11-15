@@ -2,13 +2,14 @@
  "document_id": "crossref_golombek2020_insight",
  "title": "Geology of the InSight landing site on Mars",
  "institution": "Nature Communications / Springer Science and Business Media LLC",
- "url": "https://api.crossref.org/works/10.1038/s41467-020-14679-1",
+ "url": "https://doi.org/10.1038/s41467-020-14679-1",
  "final_url": "https://api.crossref.org/works/10.1038/s41467-020-14679-1",
  "publication_date": "2020-02-24",
  "retrieved_at": "2026-11-15",
  "content_type": "application/json",
  "kind": "crossref",
- "topic": "Bibliographic record for DOI 10.1038/s41467-020-14679-1",
+ "topic": "Geology of the InSight landing site on Mars",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "elysium_planitia"
  ],

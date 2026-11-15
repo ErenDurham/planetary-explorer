@@ -4,12 +4,16 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from .common import (
+    EarthAnalogNote,
     GeographicFootprint,
     MeasurementCategory,
     MeasurementType,
     Planet,
     Provenance,
     QualityFlag,
+    ReportedCondition,
+    SiteRole,
+    WorkbookSource,
 )
 
 
@@ -25,6 +29,14 @@ class Site(BaseModel):
     heritage: str | None = Field(None, description="Mission that landed or selected this site, if any")
     tags: list[str] = Field(default_factory=list, description="Terrain / geology keywords used by the analog engine")
     coordinate_sources: list[str] = Field(default_factory=list, description="source_ids for the coordinates")
+    # Lesser-Known Mars Sites workbook (data/workbook/lesser_known_sites.v1.json)
+    role: SiteRole | None = Field(None, description="How the workbook author classes the site; organises the site lists, never scored")
+    notes: str | None = Field(None, description="The workbook author's note on the site")
+    coordinates_approximate: bool = Field(False, description="The workbook marks these coordinates as approximate")
+    paired_earth_site_id: str | None = Field(None, description="The Earth location the workbook pairs with this site")
+    reported_conditions: list[ReportedCondition] = Field(default_factory=list, description="Literature-reported condition texts; separate from measured profiles")
+    earth_analogs: list[EarthAnalogNote] = Field(default_factory=list, description="Further Earth analogs the workbook lists for this site")
+    condition_sources: dict[str, WorkbookSource] = Field(default_factory=dict, description="Every source cited by reported_conditions")
 
 
 class EnvironmentalMeasurement(BaseModel):

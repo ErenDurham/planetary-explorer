@@ -10,7 +10,8 @@ from app.services import evidence
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 LIT = json.loads((DATA / "site_literature.v1.json").read_text())
-TRUSTED_HOSTS = {"doi.org", "ntrs.nasa.gov", "www.nasa.gov", "science.nasa.gov"}
+# NASA and ESA pages and DOI records (owner source rule, 2026-11-15)
+TRUSTED_HOSTS = {"doi.org", "ntrs.nasa.gov", "www.nasa.gov", "science.nasa.gov", "earthobservatory.nasa.gov", "www.esa.int"}
 
 # A label's quote must say it in some form (the quote itself was checked
 # verbatim against the source when the file was written).
@@ -38,18 +39,19 @@ def _site_files():
 
 def test_sources_are_trusted_and_recent():
     for sid, s in LIT["sources"].items():
-        assert s["kind"] in ("nasa", "peer_reviewed", "usgs"), sid
+        assert s["kind"] in ("nasa", "esa", "peer_reviewed", "conference_abstract", "usgs"), sid
         u = urlparse(s["url"])
         assert u.scheme == "https" and u.hostname in TRUSTED_HOSTS, s["url"]
-        if s["year"] is None:   # a live NASA mission page: dated by retrieval
-            assert u.hostname.endswith("nasa.gov") and s.get("retrieved_at"), sid
+        if s["year"] is None:   # a live NASA / ESA page: dated by retrieval
+            assert (u.hostname.endswith("nasa.gov") or u.hostname == "www.esa.int") and s.get("retrieved_at"), sid
         else:
             assert s["year"] >= evidence.cutoff_year(), f"{sid} ({s['year']}) is older than {evidence.MAX_SOURCE_AGE_YEARS} years"
 
 
 def test_every_label_is_in_the_vocabulary_and_said_by_its_quote():
     for site_id, site in LIT["sites"].items():
-        assert site["evidence"], site_id
+        # a site with no usable source says why instead of carrying a label
+        assert site["evidence"] or site.get("evidence_gap"), site_id
         for e in site["evidence"]:
             assert e["source_id"] in LIT["sources"], (site_id, e["source_id"])
             assert e["feature"] in LIT["vocabulary"], (site_id, e["feature"])

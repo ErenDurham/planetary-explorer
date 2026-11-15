@@ -2,13 +2,14 @@
  "document_id": "crossref_rodriguez2022_chryse",
  "title": "Evidence of an oceanic impact and megatsunami sedimentation in Chryse Planitia, Mars",
  "institution": "Scientific Reports / Springer Science and Business Media LLC",
- "url": "https://api.crossref.org/works/10.1038/s41598-022-18082-2",
+ "url": "https://doi.org/10.1038/s41598-022-18082-2",
  "final_url": "https://api.crossref.org/works/10.1038/s41598-022-18082-2",
  "publication_date": "2022-12-01",
  "retrieved_at": "2026-11-15",
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1038/s41598-022-18082-2",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "chryse_planitia"
  ],

@@ -241,5 +241,5 @@ def test_without_a_usable_guess_the_common_case_is_assumed(monkeypatch):
 
 def test_the_model_sees_the_site_list_and_may_only_answer_with_its_ids():
     schema = oe._schema()
-    assert "gale_crater" in schema["properties"]["site_guess"]["enum"] and "none" in schema["properties"]["site_guess"]["enum"]
+    assert "noctis_labyrinthus" in schema["properties"]["site_guess"]["enum"] and "none" in schema["properties"]["site_guess"]["enum"]
     assert "Gale" in oe.system_prompt() and "Never ask the user to clarify" in oe.system_prompt()

@@ -1,0 +1,28 @@
+{
+ "document_id": "crossref_darya2024_mars_pv_wind",
+ "title": "Seasonal Performance Evaluation of a Hybrid PV-Wind-Battery Power System for a Mars Base",
+ "institution": "2024 7th International Conference on Electric Power and Energy Conversion Systems (EPECS) / IEEE",
+ "url": "https://doi.org/10.1109/EPECS62845.2024.10805508",
+ "final_url": "https://api.crossref.org/works/10.1109/EPECS62845.2024.10805508",
+ "publication_date": "2024-11-12",
+ "retrieved_at": "2026-11-15",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "Seasonal performance evaluation of a hybrid PV-wind-battery power system for a Mars base",
+ "excluded_paragraph_terms": [],
+ "default_geographic_relevance": [
+  "mawrth_vallis",
+  "noctis_labyrinthus",
+  "hebrus_valles",
+  "huygens_crater",
+  "columbus_crater",
+  "chryse_planitia",
+  "meridiani_planum",
+  "elysium_planitia"
+ ],
+ "sha256": "24fb8d6c37401ca11f579ecc64d69bcbc7bf1ec8d1c87c6ce1353d261f577f2c",
+ "char_count": 749,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): Seasonal Performance Evaluation of a Hybrid PV-Wind-Battery Power System for a Mars Base.\n\nAuthors: Abdollah Masoud Darya, Ramesh C. Bansal, Omaima Anwar Jarndal.\n\nPublished in 2024 7th International Conference on Electric Power and Energy Conversion Systems (EPECS), pages 38-44 (2024), publisher IEEE. DOI: https://doi.org/10.1109/epecs62845.2024.10805508.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_text": "Bibliographic record (Crossref metadata, not the paper's full text): Seasonal Performance Evaluation of a Hybrid PV-Wind-Battery Power System for a Mars Base.\n\nAuthors: Abdollah Masoud Darya, Ramesh C. Bansal, Omaima Anwar Jarndal.\n\nPublished in 2024 7th International Conference on Electric Power and Energy Conversion Systems (EPECS), pages 38-44 (2024), publisher IEEE. DOI: https://doi.org/10.1109/epecs62845.2024.10805508.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_char_count": 749
+}

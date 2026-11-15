@@ -322,6 +322,160 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/expedition/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Capabilities */
+        get: operations["get_capabilities_api_v1_expedition_capabilities_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/expedition/terrain": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Terrain */
+        get: operations["get_terrain_api_v1_expedition_terrain_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/expedition/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post Plan */
+        post: operations["post_plan_api_v1_expedition_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/discovery/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Capabilities */
+        get: operations["capabilities_api_v1_discovery_capabilities_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/discovery/rank": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rank */
+        post: operations["rank_api_v1_discovery_rank_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detail */
+        get: operations["detail_api_v1_discovery_runs__run_id__candidates__candidate_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/discovery/runs/{run_id}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export */
+        get: operations["export_api_v1_discovery_runs__run_id__export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}/research": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Research Dossier */
+        get: operations["research_dossier_api_v1_discovery_runs__run_id__candidates__candidate_id__research_get"];
+        put?: never;
+        /** Save Research */
+        post: operations["save_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}/research/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Research */
+        get: operations["export_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -652,6 +806,17 @@ export interface components {
             fact_source: components["schemas"]["Provenance"];
             atmosphere_source: components["schemas"]["Provenance"];
         };
+        /** Bounds */
+        Bounds: {
+            /** West */
+            west: number;
+            /** East */
+            east: number;
+            /** South */
+            south: number;
+            /** North */
+            north: number;
+        };
         /** Citation */
         Citation: {
             /**
@@ -708,6 +873,29 @@ export interface components {
             };
             /** Source Ids */
             source_ids?: string[];
+            /** Role */
+            role?: ("Base candidate" | "Resource site" | "To evaluate" | "Instrument testing" | "Context only") | null;
+            /**
+             * Coordinates Approximate
+             * @description True when the workbook marks the coordinates as approximate; null for locations outside the workbook
+             */
+            coordinates_approximate?: boolean | null;
+            /**
+             * Paired Location Id
+             * @description The workbook's paired location on the other body
+             */
+            paired_location_id?: string | null;
+            /** Why They Match */
+            why_they_match?: string | null;
+            /**
+             * Reported Conditions
+             * @description Literature-reported condition texts (workbook); not measurements
+             */
+            reported_conditions?: components["schemas"]["ReportedCondition"][];
+            /** Condition Sources */
+            condition_sources?: {
+                [key: string]: components["schemas"]["WorkbookSource"];
+            };
         };
         /** Completeness */
         Completeness: {
@@ -809,6 +997,432 @@ export interface components {
             /** Description */
             description: string;
         };
+        /** DiscoveryAuditRow */
+        DiscoveryAuditRow: {
+            candidate: components["schemas"]["DiscoveryCandidate"];
+            profile: components["schemas"]["DiscoveryProfile"] | null;
+            /** Screening Reasons */
+            screening_reasons: string[];
+        };
+        /** DiscoveryBounds */
+        DiscoveryBounds: {
+            /** West */
+            west: number;
+            /** South */
+            south: number;
+            /** East */
+            east: number;
+            /** North */
+            north: number;
+        };
+        /** DiscoveryCandidate */
+        DiscoveryCandidate: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
+            /** Footprint Geojson */
+            footprint_geojson: {
+                [key: string]: unknown;
+            };
+            /**
+             * Research Status
+             * @default unresearched
+             * @enum {string}
+             */
+            research_status: "unresearched" | "in_progress" | "literature_reviewed";
+            /** Raw Rank */
+            raw_rank?: number | null;
+            /** Display Rank */
+            display_rank?: number | null;
+            /** Distance */
+            distance?: number | null;
+            /** Similarity Index */
+            similarity_index?: number | null;
+            /** Feature Distances */
+            feature_distances?: components["schemas"]["DiscoveryFeatureDistance"][];
+            /** Terrain Valid Fraction */
+            terrain_valid_fraction: number;
+            novelty: components["schemas"]["DiscoveryNovelty"];
+            context?: components["schemas"]["DiscoveryContext"];
+            /** Sources */
+            sources: components["schemas"]["DiscoverySource"][];
+            /** Limitations */
+            limitations: string[];
+        };
+        /** DiscoveryCandidateDetail */
+        DiscoveryCandidateDetail: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
+            /** Footprint Geojson */
+            footprint_geojson: {
+                [key: string]: unknown;
+            };
+            /**
+             * Research Status
+             * @default unresearched
+             * @enum {string}
+             */
+            research_status: "unresearched" | "in_progress" | "literature_reviewed";
+            /** Raw Rank */
+            raw_rank?: number | null;
+            /** Display Rank */
+            display_rank?: number | null;
+            /** Distance */
+            distance?: number | null;
+            /** Similarity Index */
+            similarity_index?: number | null;
+            /** Feature Distances */
+            feature_distances?: components["schemas"]["DiscoveryFeatureDistance"][];
+            /** Terrain Valid Fraction */
+            terrain_valid_fraction: number;
+            novelty: components["schemas"]["DiscoveryNovelty"];
+            context?: components["schemas"]["DiscoveryContext"];
+            /** Sources */
+            sources: components["schemas"]["DiscoverySource"][];
+            /** Limitations */
+            limitations: string[];
+            profile: components["schemas"]["DiscoveryProfile"] | null;
+            /** Screening Reasons */
+            screening_reasons: string[];
+            /** Source Manifest */
+            source_manifest: components["schemas"]["DiscoverySource"][];
+            /** Proposed Field Validation */
+            proposed_field_validation: string[];
+        };
+        /** DiscoveryCapabilities */
+        DiscoveryCapabilities: {
+            /**
+             * Engine Version
+             * @default discovery-v1
+             * @constant
+             */
+            engine_version: "discovery-v1";
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "ready" | "unavailable";
+            reference?: components["schemas"]["DiscoveryReference"];
+            /** Runs */
+            runs: components["schemas"]["DiscoveryRunSummary"][];
+            /** Criteria */
+            criteria: components["schemas"]["DiscoveryCriterion"][];
+            /** Default Weights */
+            default_weights: {
+                [key: string]: number;
+            };
+            /** Limitations */
+            limitations: string[];
+        };
+        /** DiscoveryContext */
+        DiscoveryContext: {
+            /** Climate */
+            climate?: {
+                [key: string]: unknown;
+            } | null;
+            /** Land Cover */
+            land_cover?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Geology Status
+             * @default not_assessed
+             * @constant
+             */
+            geology_status: "not_assessed";
+        };
+        /** DiscoveryCriterion */
+        DiscoveryCriterion: {
+            /** Feature Id */
+            feature_id: string;
+            /** Label */
+            label: string;
+            /** Unit */
+            unit: string;
+            /** Scale */
+            scale: number;
+        };
+        /** DiscoveryExport */
+        DiscoveryExport: {
+            /** Manifest */
+            manifest: {
+                [key: string]: unknown;
+            };
+            /** Specification */
+            specification: {
+                [key: string]: unknown;
+            };
+            survey: components["schemas"]["DiscoverySurvey"];
+            reference_profile: components["schemas"]["DiscoveryProfile"];
+            /** Audit Rows */
+            audit_rows: components["schemas"]["DiscoveryAuditRow"][];
+            /** Exclusions */
+            exclusions: {
+                [key: string]: number;
+            };
+            /** Provenance */
+            provenance: components["schemas"]["DiscoverySource"][];
+            /** Validation */
+            validation: {
+                [key: string]: unknown;
+            };
+        };
+        /** DiscoveryFeatureDistance */
+        DiscoveryFeatureDistance: {
+            /** Feature Id */
+            feature_id: string;
+            /** Earth Value */
+            earth_value: number;
+            /** Mars Value */
+            mars_value: number;
+            /** Unit */
+            unit: string;
+            /** Scale */
+            scale: number;
+            /** Normalized Weight */
+            normalized_weight: number;
+            /** Distance */
+            distance: number;
+            /** Contribution */
+            contribution: number;
+        };
+        /** DiscoveryNovelty */
+        DiscoveryNovelty: {
+            /** Catalog Version */
+            catalog_version: string;
+            /** Nearest Known Site Id */
+            nearest_known_site_id: string;
+            /** Nearest Known Site Distance Km */
+            nearest_known_site_distance_km: number;
+            /** Buffer Rule */
+            buffer_rule: string;
+            /** Outside Catalog Buffer */
+            outside_catalog_buffer: boolean;
+            /**
+             * Review Status
+             * @default not_reviewed
+             * @enum {string}
+             */
+            review_status: "not_reviewed" | "desktop_reviewed";
+        };
+        /** DiscoveryProfile */
+        DiscoveryProfile: {
+            /** Measurements */
+            measurements: {
+                [key: string]: components["schemas"]["TerrainMeasurement"];
+            };
+            /** Grid */
+            grid: {
+                [key: string]: unknown;
+            };
+            /** Terrain Valid Fraction */
+            terrain_valid_fraction: number;
+            /** Gradient Valid Fraction */
+            gradient_valid_fraction: number;
+        };
+        /** DiscoveryRankRequest */
+        DiscoveryRankRequest: {
+            /** Run Id */
+            run_id: string;
+            /**
+             * Reference Id
+             * @default jezero_crater
+             * @constant
+             */
+            reference_id: "jezero_crater";
+            weights?: components["schemas"]["DiscoveryWeights"];
+            /**
+             * Top K
+             * @default 5
+             */
+            top_k: number;
+            /** Client Request Id */
+            client_request_id?: string | null;
+        };
+        /** DiscoveryRankResponse */
+        DiscoveryRankResponse: {
+            /**
+             * Engine Version
+             * @default discovery-v1
+             * @constant
+             */
+            engine_version: "discovery-v1";
+            /** Run Id */
+            run_id: string;
+            reference: components["schemas"]["DiscoveryReference"];
+            survey: components["schemas"]["DiscoverySurvey"];
+            /** Basis Features */
+            basis_features: string[];
+            /** Effective Weights */
+            effective_weights: {
+                [key: string]: number;
+            };
+            /** Eligible Pool Count */
+            eligible_pool_count: number;
+            /** Returned Count */
+            returned_count: number;
+            /** Candidates */
+            candidates: components["schemas"]["DiscoveryCandidate"][];
+            /** Client Request Id */
+            client_request_id?: string | null;
+            /** Limitations */
+            limitations: string[];
+        };
+        /** DiscoveryReference */
+        DiscoveryReference: {
+            /**
+             * Body
+             * @default mars
+             * @constant
+             */
+            body: "mars";
+            /**
+             * Id
+             * @default jezero_crater
+             * @constant
+             */
+            id: "jezero_crater";
+            /**
+             * Name
+             * @default Jezero Crater
+             */
+            name: string;
+            /**
+             * Lat
+             * @default 18.4447
+             */
+            lat: number;
+            /**
+             * Lon East
+             * @default 77.4508
+             */
+            lon_east: number;
+        };
+        /** DiscoveryRunSummary */
+        DiscoveryRunSummary: {
+            /** Run Id */
+            run_id: string;
+            /** Label */
+            label: string;
+            /** Created At */
+            created_at: string;
+            bounds: components["schemas"]["DiscoveryBounds"];
+            /** Total Sampled */
+            total_sampled: number;
+            /** Eligible Count */
+            eligible_count: number;
+        };
+        /** DiscoverySource */
+        DiscoverySource: {
+            /** Source Id */
+            source_id: string;
+            /** Title */
+            title: string;
+            /** Institution */
+            institution: string;
+            /** Url */
+            url: string;
+            /** License */
+            license: string;
+            /** Retrieved At */
+            retrieved_at: string;
+            /** Observation Period */
+            observation_period: string;
+            /** Sha256 */
+            sha256?: string | null;
+            /** Etag */
+            etag?: string | null;
+        };
+        /** DiscoverySurvey */
+        DiscoverySurvey: {
+            bounds: components["schemas"]["DiscoveryBounds"];
+            /** Generated Count */
+            generated_count: number;
+            /** Terrain Valid Count */
+            terrain_valid_count: number;
+            /** Eligible Count */
+            eligible_count: number;
+            /** Exclusion Counts */
+            exclusion_counts: {
+                [key: string]: number;
+            };
+            /** Sampling Centres */
+            sampling_centres: {
+                [key: string]: unknown;
+            }[];
+            /** Grid Specification */
+            grid_specification: {
+                [key: string]: unknown;
+            };
+            /** Footprint Specification */
+            footprint_specification: {
+                [key: string]: unknown;
+            };
+            /** Dataset Versions */
+            dataset_versions: {
+                [key: string]: string;
+            };
+            /** Spec Version */
+            spec_version: string;
+            /** Diversification */
+            diversification: {
+                [key: string]: unknown;
+            };
+        };
+        /** DiscoveryWeights */
+        DiscoveryWeights: {
+            /**
+             * Slope Regional Median Deg
+             * @default 50
+             */
+            slope_regional_median_deg: number;
+            /**
+             * Roughness Regional M
+             * @default 50
+             */
+            roughness_regional_m: number;
+        };
+        /**
+         * EarthAnalogNote
+         * @description An additional Earth analog the workbook lists for a Mars site (not a ranked candidate).
+         */
+        EarthAnalogNote: {
+            /** Label */
+            label: string;
+            /** Analog */
+            analog: string;
+            /** Where */
+            where?: string | null;
+            /** Matches */
+            matches?: string | null;
+            /** Does Not Match */
+            does_not_match?: string | null;
+            /** Lat */
+            lat?: number | null;
+            /** Lon East */
+            lon_east?: number | null;
+            /**
+             * Coordinates Approximate
+             * @default true
+             */
+            coordinates_approximate: boolean;
+            /**
+             * Workbook Source Text
+             * @description The workbook's citation as written; may name sources outside the approved list
+             */
+            workbook_source_text?: string | null;
+        };
         /** EarthCandidate */
         EarthCandidate: {
             /** Id */
@@ -835,6 +1449,36 @@ export interface components {
             known_analog_use?: string[];
             /** Sources */
             sources?: string[];
+            /**
+             * Role
+             * @description Role of the Mars site this location is paired with
+             */
+            role?: ("Base candidate" | "Resource site" | "To evaluate" | "Instrument testing" | "Context only") | null;
+            /**
+             * Coordinates Approximate
+             * @description The workbook marks these coordinates as approximate
+             * @default false
+             */
+            coordinates_approximate: boolean;
+            /**
+             * Paired Mars Site Id
+             * @description The Mars site the workbook pairs with this location
+             */
+            paired_mars_site_id?: string | null;
+            /**
+             * Why They Match
+             * @description The workbook author's reason for the pairing
+             */
+            why_they_match?: string | null;
+            /**
+             * Reported Conditions
+             * @description Literature-reported condition texts; separate from measured profiles
+             */
+            reported_conditions?: components["schemas"]["ReportedCondition"][];
+            /** Condition Sources */
+            condition_sources?: {
+                [key: string]: components["schemas"]["WorkbookSource"];
+            };
         };
         /**
          * EarthWeightSuggestion
@@ -1135,6 +1779,18 @@ export interface components {
             /** Rationale */
             rationale: string;
         };
+        /** Feasibility */
+        Feasibility: {
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "feasible" | "marginal" | "infeasible" | "undetermined";
+            /** Summary */
+            summary: string;
+            /** Reasons */
+            reasons: string[];
+        };
         /** FeatureDistance */
         FeatureDistance: {
             /** Feature Id */
@@ -1169,6 +1825,13 @@ export interface components {
             method: string;
             /** Note */
             note?: string | null;
+        };
+        /** GeoPoint */
+        GeoPoint: {
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
         };
         /**
          * GeographicFootprint
@@ -1563,6 +2226,19 @@ export interface components {
             /** Generated At */
             generated_at: string;
         };
+        /** Interpretation */
+        Interpretation: {
+            /** Text */
+            text: string;
+            /**
+             * Generated By
+             * @default rule_based
+             * @constant
+             */
+            generated_by: "rule_based";
+            /** Model */
+            model?: string | null;
+        };
         /** LocationRef */
         LocationRef: {
             /**
@@ -1762,6 +2438,129 @@ export interface components {
              */
             analog_reference_id?: string | null;
         };
+        /** PlanMetrics */
+        PlanMetrics: {
+            /** Total Distance M */
+            total_distance_m?: number | null;
+            /** Energy Wh */
+            energy_wh?: number | null;
+            /** Elevation Gain M */
+            elevation_gain_m?: number | null;
+            /** Elevation Loss M */
+            elevation_loss_m?: number | null;
+            /** Slope Mean Deg */
+            slope_mean_deg?: number | null;
+            /** Slope Max Deg */
+            slope_max_deg?: number | null;
+            /** Slope P95 Deg */
+            slope_p95_deg?: number | null;
+            /** Traverse Time Hours */
+            traverse_time_hours?: number | null;
+            /** Driving Sols */
+            driving_sols?: number | null;
+            /** Targets Reached */
+            targets_reached?: string[];
+            /** Targets Unreached */
+            targets_unreached?: string[];
+        };
+        /** PlanRequest */
+        PlanRequest: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "mars" | "moon" | "earth";
+            /** Site Id */
+            site_id: string;
+            /**
+             * Objective
+             * @enum {string}
+             */
+            objective: "terrain_survey" | "geological_sampling" | "research_traverse";
+            start: components["schemas"]["GeoPoint"];
+            /** Waypoints */
+            waypoints?: components["schemas"]["GeoPoint"][];
+            /** Target Ids */
+            target_ids?: string[];
+            /** User Targets */
+            user_targets?: components["schemas"]["UserTarget"][];
+            rover?: components["schemas"]["RoverParameters"];
+            /**
+             * Optimization
+             * @default balanced
+             * @enum {string}
+             */
+            optimization: "shortest_distance" | "lowest_energy" | "lowest_risk" | "balanced";
+            /**
+             * Client Request Id
+             * @default
+             */
+            client_request_id: string;
+        };
+        /** PlanResponse */
+        PlanResponse: {
+            /** Plan Id */
+            plan_id: string;
+            /** Client Request Id */
+            client_request_id: string;
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "mars" | "moon" | "earth";
+            /** Site Id */
+            site_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "partial" | "infeasible";
+            /**
+             * Data Status
+             * @enum {string}
+             */
+            data_status: "limited" | "unavailable";
+            /**
+             * Objective
+             * @enum {string}
+             */
+            objective: "terrain_survey" | "geological_sampling" | "research_traverse";
+            /** Route */
+            route: components["schemas"]["RouteSegment"][];
+            metrics: components["schemas"]["PlanMetrics"];
+            feasibility: components["schemas"]["Feasibility"];
+            /** Warnings */
+            warnings: components["schemas"]["PlanWarning"][];
+            interpretation?: components["schemas"]["Interpretation"] | null;
+            /** Assumptions */
+            assumptions: string[];
+            /** Limitations */
+            limitations: string[];
+            /** Datasets */
+            datasets: components["schemas"]["TerrainDataset"][];
+            terrain: components["schemas"]["TerrainContext"];
+            constraints: components["schemas"]["RoverParameters"];
+            /** Stops */
+            stops: components["schemas"]["SnappedStop"][];
+            /** Visited Targets */
+            visited_targets: components["schemas"]["VisitedTarget"][];
+            /** Engine Version */
+            engine_version: string;
+            /** Computed At */
+            computed_at: string;
+        };
+        /** PlanWarning */
+        PlanWarning: {
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "info" | "warning" | "critical";
+            /** Message */
+            message: string;
+            /** Segment Id */
+            segment_id?: string | null;
+        };
         /**
          * Provenance
          * @description Where a number came from. Every measurement carries a source_id that
@@ -1854,6 +2653,109 @@ export interface components {
              */
             sources?: string[];
         };
+        /** Region */
+        Region: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "mars" | "moon" | "earth";
+            /** Site Id */
+            site_id: string;
+            /** Name */
+            name: string;
+            /** Terrain Available */
+            terrain_available: boolean;
+            /** Note */
+            note: string;
+        };
+        /**
+         * ReportedCondition
+         * @description A literature-reported condition text compiled by the workbook author.
+         *     Descriptive text only: never parsed into numbers and never scored. `text`
+         *     is null when the workbook found nothing (`not_found_in_sources`) or when its
+         *     only source is not on the approved list (`excluded_source`).
+         */
+        ReportedCondition: {
+            /**
+             * Feature
+             * @enum {string}
+             */
+            feature: "terrain" | "mineralogy" | "elevation" | "thermal" | "solar" | "wind" | "water_ice";
+            /** Label */
+            label: string;
+            /** Text */
+            text?: string | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "verified" | "cited_not_verified" | "citation_only" | "not_found_in_sources" | "excluded_source";
+            /** Source Ids */
+            source_ids?: string[];
+            /**
+             * Evidence Source Id
+             * @description Source whose sentence states the text (status verified)
+             */
+            evidence_source_id?: string | null;
+            /** Evidence Quote */
+            evidence_quote?: string | null;
+            /**
+             * Provenance
+             * @default literature-reported (workbook author)
+             */
+            provenance: string;
+        };
+        /** ResearchBrief */
+        ResearchBrief: {
+            /**
+             * Schema Version
+             * @default research-brief-v1
+             * @constant
+             */
+            schema_version: "research-brief-v1";
+            /** Run Id */
+            run_id: string;
+            /** Candidate Id */
+            candidate_id: string;
+            /** Filename */
+            filename: string;
+            /** Markdown */
+            markdown: string;
+            record: components["schemas"]["ResearchRecord"];
+            /** Discovery */
+            discovery: {
+                [key: string]: unknown;
+            };
+            /** Limitations */
+            limitations: string[];
+        };
+        /** ResearchDossier */
+        ResearchDossier: {
+            /** Run Id */
+            run_id: string;
+            /** Candidate Id */
+            candidate_id: string;
+            candidate: components["schemas"]["DiscoveryCandidateDetail"];
+            record: components["schemas"]["ResearchRecord"];
+            /** Research Questions */
+            research_questions: string[];
+            /** Search Tasks */
+            search_tasks: components["schemas"]["ResearchSearchTask"][];
+            /** Research Brief */
+            research_brief: string;
+            /** Background Evidence */
+            background_evidence: components["schemas"]["EvidenceChunk"][];
+            /**
+             * Retrieval Status
+             * @enum {string}
+             */
+            retrieval_status: "background_available" | "unavailable";
+            /** Limitations */
+            limitations: string[];
+        };
         /** ResearchExplanation */
         ResearchExplanation: {
             /** Site Id */
@@ -1894,6 +2796,171 @@ export interface components {
             cached: boolean;
             /** Generated At */
             generated_at: string;
+        };
+        /** ResearchFinding */
+        ResearchFinding: {
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Finding */
+            finding: string;
+            /**
+             * Scope
+             * @enum {string}
+             */
+            scope: "candidate_specific" | "regional_background" | "contradictory";
+        };
+        /** ResearchRecord */
+        ResearchRecord: {
+            /**
+             * Status
+             * @default unresearched
+             * @enum {string}
+             */
+            status: "unresearched" | "in_progress" | "literature_reviewed";
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+            /** Findings */
+            findings?: components["schemas"]["ResearchFinding"][];
+            /** Run Id */
+            run_id: string;
+            /** Candidate Id */
+            candidate_id: string;
+            /** Updated At */
+            updated_at?: string | null;
+        };
+        /** ResearchSearchTask */
+        ResearchSearchTask: {
+            /** Label */
+            label: string;
+            /** Query */
+            query: string;
+            /** Url */
+            url: string;
+        };
+        /** ResearchTarget */
+        ResearchTarget: {
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
+            /** Target Id */
+            target_id: string;
+            /** Name */
+            name: string;
+            /** Kind */
+            kind: string;
+            /** Description */
+            description?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Priority */
+            priority?: number | null;
+        };
+        /** ResearchUpdate */
+        ResearchUpdate: {
+            /**
+             * Status
+             * @default unresearched
+             * @enum {string}
+             */
+            status: "unresearched" | "in_progress" | "literature_reviewed";
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+            /** Findings */
+            findings?: components["schemas"]["ResearchFinding"][];
+        };
+        /** RouteSegment */
+        RouteSegment: {
+            /** Segment Id */
+            segment_id: string;
+            from: components["schemas"]["GeoPoint"];
+            to: components["schemas"]["GeoPoint"];
+            /** Polyline */
+            polyline: components["schemas"]["GeoPoint"][];
+            /** Distance M */
+            distance_m: number;
+            /**
+             * Risk
+             * @enum {string}
+             */
+            risk: "low" | "moderate" | "high" | "unknown";
+            /** Max Slope Deg */
+            max_slope_deg: number;
+            /** Note */
+            note?: string | null;
+            /** Elevations M */
+            elevations_m: number[];
+            /** Edge Slopes Deg */
+            edge_slopes_deg: number[];
+            /** Energy Wh */
+            energy_wh: number;
+            /** Elevation Gain M */
+            elevation_gain_m: number;
+            /** Elevation Loss M */
+            elevation_loss_m: number;
+        };
+        /** RoverParameters */
+        RoverParameters: {
+            /** Profile Id */
+            profile_id?: string | null;
+            /**
+             * Max Slope Deg
+             * @default 15
+             */
+            max_slope_deg: number;
+            /**
+             * Nominal Speed M S
+             * @default 0.05
+             */
+            nominal_speed_m_s: number;
+            /**
+             * Battery Capacity Wh
+             * @default 10000
+             */
+            battery_capacity_wh: number;
+            /**
+             * Drive Hours Per Sol
+             * @default 4
+             */
+            drive_hours_per_sol: number;
+            /**
+             * Mass Kg
+             * @default 100
+             */
+            mass_kg: number;
+            /**
+             * Rolling Resistance
+             * @default 0.08
+             */
+            rolling_resistance: number;
+            /**
+             * Drive Efficiency
+             * @default 0.3
+             */
+            drive_efficiency: number;
+            /**
+             * Hotel Power W
+             * @default 50
+             */
+            hotel_power_w: number;
+        };
+        /** RoverProfile */
+        RoverProfile: {
+            /** Profile Id */
+            profile_id: string;
+            /** Label */
+            label: string;
+            /** Description */
+            description: string;
+            parameters: components["schemas"]["RoverParameters"];
         };
         /** ScenarioSiteOutcome */
         ScenarioSiteOutcome: {
@@ -2104,6 +3171,23 @@ export interface components {
              */
             note: string;
         };
+        /** ServiceCapabilities */
+        ServiceCapabilities: {
+            /** Engine Version */
+            engine_version: string;
+            /** Bodies */
+            bodies: ("mars" | "moon" | "earth")[];
+            /** Objectives */
+            objectives: ("terrain_survey" | "geological_sampling" | "research_traverse")[];
+            /** Optimization Preferences */
+            optimization_preferences: ("shortest_distance" | "lowest_energy" | "lowest_risk" | "balanced")[];
+            /** Rover Profiles */
+            rover_profiles: components["schemas"]["RoverProfile"][];
+            /** Regions */
+            regions: components["schemas"]["Region"][];
+            /** Notes */
+            notes: string[];
+        };
         /** ServiceStatus */
         ServiceStatus: {
             /**
@@ -2163,6 +3247,44 @@ export interface components {
              * @description source_ids for the coordinates
              */
             coordinate_sources?: string[];
+            /**
+             * Role
+             * @description How the workbook author classes the site; organises the site lists, never scored
+             */
+            role?: ("Base candidate" | "Resource site" | "To evaluate" | "Instrument testing" | "Context only") | null;
+            /**
+             * Notes
+             * @description The workbook author's note on the site
+             */
+            notes?: string | null;
+            /**
+             * Coordinates Approximate
+             * @description The workbook marks these coordinates as approximate
+             * @default false
+             */
+            coordinates_approximate: boolean;
+            /**
+             * Paired Earth Site Id
+             * @description The Earth location the workbook pairs with this site
+             */
+            paired_earth_site_id?: string | null;
+            /**
+             * Reported Conditions
+             * @description Literature-reported condition texts; separate from measured profiles
+             */
+            reported_conditions?: components["schemas"]["ReportedCondition"][];
+            /**
+             * Earth Analogs
+             * @description Further Earth analogs the workbook lists for this site
+             */
+            earth_analogs?: components["schemas"]["EarthAnalogNote"][];
+            /**
+             * Condition Sources
+             * @description Every source cited by reported_conditions
+             */
+            condition_sources?: {
+                [key: string]: components["schemas"]["WorkbookSource"];
+            };
         };
         /**
          * SiteCandidate
@@ -2227,6 +3349,20 @@ export interface components {
         SiteWithProfile: {
             site: components["schemas"]["Site"];
             profile: components["schemas"]["EnvironmentalProfile"];
+        };
+        /** SnappedStop */
+        SnappedStop: {
+            /** Stop Id */
+            stop_id: string;
+            requested: components["schemas"]["GeoPoint"];
+            snapped?: components["schemas"]["GeoPoint"] | null;
+            /** Offset M */
+            offset_m?: number | null;
+            /**
+             * Visited
+             * @default false
+             */
+            visited: boolean;
         };
         /**
          * SourceDigest
@@ -2374,6 +3510,92 @@ export interface components {
             /** Rationale */
             rationale?: string[];
         };
+        /** TerrainContext */
+        TerrainContext: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "mars" | "moon" | "earth";
+            /** Site Id */
+            site_id: string;
+            start: components["schemas"]["GeoPoint"];
+            dem: components["schemas"]["TerrainCoverage"];
+            /** Research Targets */
+            research_targets?: components["schemas"]["ResearchTarget"][];
+            routing_bounds?: components["schemas"]["Bounds"] | null;
+            /** Notes */
+            notes?: string[];
+            /** Start Source Ids */
+            start_source_ids?: string[];
+        };
+        /** TerrainCoverage */
+        TerrainCoverage: {
+            /** Available */
+            available: boolean;
+            dataset?: components["schemas"]["TerrainDataset"] | null;
+            /** Note */
+            note?: string | null;
+            /** Rows */
+            rows?: number | null;
+            /** Columns */
+            columns?: number | null;
+            /** Valid Fraction */
+            valid_fraction?: number | null;
+            /** Resolution Lat Deg */
+            resolution_lat_deg?: number | null;
+            /** Resolution Lon Deg */
+            resolution_lon_deg?: number | null;
+            /** Cell Width M */
+            cell_width_m?: number | null;
+            /** Cell Height M */
+            cell_height_m?: number | null;
+            /**
+             * Longitude Convention
+             * @default east_-180_180
+             */
+            longitude_convention: string;
+            /**
+             * Crs
+             * @default planetocentric body-fixed
+             */
+            crs: string;
+        };
+        /** TerrainDataset */
+        TerrainDataset: {
+            /** Name */
+            name: string;
+            /** Source */
+            source: string;
+            /** Url */
+            url?: string | null;
+            /** License */
+            license?: string | null;
+            /** Resolution M */
+            resolution_m?: number | null;
+            /** Note */
+            note?: string | null;
+            /** Sha256 */
+            sha256?: string | null;
+            /** Vertical Datum */
+            vertical_datum?: string | null;
+        };
+        /** TerrainMeasurement */
+        TerrainMeasurement: {
+            /** Value */
+            value: number;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "deg" | "m";
+            /**
+             * Measurement Type
+             * @default derived
+             * @constant
+             */
+            measurement_type: "derived";
+        };
         /** Turn */
         Turn: {
             /**
@@ -2383,6 +3605,17 @@ export interface components {
             role: "user" | "assistant";
             /** Content */
             content: string;
+        };
+        /** UserTarget */
+        UserTarget: {
+            /** Lat */
+            lat: number;
+            /** Lon East */
+            lon_east: number;
+            /** Target Id */
+            target_id: string;
+            /** Name */
+            name: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -2396,6 +3629,20 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** VisitedTarget */
+        VisitedTarget: {
+            /** Target Id */
+            target_id: string;
+            /** Name */
+            name: string;
+            /**
+             * Coordinate Status
+             * @enum {string}
+             */
+            coordinate_status: "user_defined" | "verified";
+            /** Visited */
+            visited: boolean;
         };
         /** WeightSuggestion */
         WeightSuggestion: {
@@ -2419,6 +3666,32 @@ export interface components {
              * @description Research findings cited for this weight (0-3); empty = none in the registry applies
              */
             evidence?: components["schemas"]["EvidenceCitation"][];
+        };
+        /**
+         * WorkbookSource
+         * @description A source the owner approved for the workbook's condition texts.
+         */
+        WorkbookSource: {
+            /** Source Id */
+            source_id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "doi" | "agency" | "approved_exception";
+            /** Cite */
+            cite: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Year */
+            year?: number | null;
+            /**
+             * Restriction
+             * @description Owner condition on how the source may be used
+             */
+            restriction?: string | null;
         };
     };
     responses: never;
@@ -2456,7 +3729,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2514,7 +3787,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2572,7 +3845,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2628,7 +3901,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2688,7 +3961,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2748,7 +4021,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2808,7 +4081,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2868,7 +4141,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2928,7 +4201,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2988,7 +4261,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3048,7 +4321,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3224,7 +4497,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Content */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3322,6 +4595,309 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ComparisonCatalog"];
+                };
+            };
+        };
+    };
+    get_capabilities_api_v1_expedition_capabilities_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceCapabilities"];
+                };
+            };
+        };
+    };
+    get_terrain_api_v1_expedition_terrain_get: {
+        parameters: {
+            query: {
+                body: "mars" | "moon" | "earth";
+                site_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TerrainContext"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_plan_api_v1_expedition_plan_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    capabilities_api_v1_discovery_capabilities_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryCapabilities"];
+                };
+            };
+        };
+    };
+    rank_api_v1_discovery_rank_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DiscoveryRankRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryRankResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    detail_api_v1_discovery_runs__run_id__candidates__candidate_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryCandidateDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_api_v1_discovery_runs__run_id__export_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryExport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    research_dossier_api_v1_discovery_runs__run_id__candidates__candidate_id__research_get: {
+        parameters: {
+            query?: {
+                question?: string;
+            };
+            header?: never;
+            path: {
+                run_id: string;
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchDossier"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResearchUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_export_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchBrief"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

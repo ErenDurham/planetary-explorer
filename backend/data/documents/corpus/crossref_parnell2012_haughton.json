@@ -2,13 +2,14 @@
  "document_id": "crossref_parnell2012_haughton",
  "title": "Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars",
  "institution": "International Journal of Astrobiology / Cambridge University Press (CUP)",
- "url": "https://api.crossref.org/works/10.1017/S1473550411000395",
+ "url": "https://doi.org/10.1017/S1473550411000395",
  "final_url": "https://api.crossref.org/works/10.1017/S1473550411000395",
  "publication_date": "2012-04",
  "retrieved_at": "2026-11-15",
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1017/S1473550411000395",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "haughton_crater"
  ],

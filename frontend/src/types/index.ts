@@ -101,6 +101,11 @@ export type SensitivityPoint = S["SensitivityPoint"];
 
 export type ComparisonCatalog = S["ComparisonCatalog"];
 export type ComparisonLocation = S["ComparisonLocation"];
+export type ReportedCondition = S["ReportedCondition"];
+export type EarthAnalogNote = S["EarthAnalogNote"];
+export type WorkbookSource = S["WorkbookSource"];
+/** A site role from the Lesser-Known Mars Sites workbook (never scored). */
+export type SiteRole = NonNullable<S["Site"]["role"]>;
 export type BodyReference = S["BodyReference"];
 
 // Earth-Mars release: body-aware analog ranking and the task reading.

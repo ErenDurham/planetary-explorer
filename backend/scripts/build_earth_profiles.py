@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import math
 import sys
+from collections import defaultdict
 import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -84,6 +85,57 @@ def read_dem(lat: float, lon: float, half: float) -> tuple[np.ndarray, float, fl
     return grid, float(px_x), float(px_y)
 
 
+POLAR_BIN_M = 90.0
+
+
+def read_dem_polar(lat: float, half: float) -> tuple[np.ndarray, float, str]:
+    """Footprint centred on a geographic pole, where a lat/lon square collapses.
+
+    Reads the 0.25 deg cap from every 1-degree tile of the polar tile row (360
+    windowed COG reads), reprojects each pixel centre to an azimuthal
+    equidistant plane centred on the pole (r = angular distance x metres per
+    degree), and bins the elevations into a regular POLAR_BIN_M grid. The
+    returned grid is the square inscribed in the cap, so every cell holds DEM
+    pixels and no gap is filled. Returns (grid, cell size m, description)."""
+    sign = -1 if lat < 0 else 1
+    deg_m = 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
+    radius_m = half * deg_m
+    side = radius_m * math.sqrt(2)                       # inscribed square
+    n = int(side // POLAR_BIN_M)
+    lat_row = f"{'S' if sign < 0 else 'N'}{90 if sign < 0 else 89:02d}"
+    sums, counts = np.zeros(n * n), np.zeros(n * n)
+
+    def tile(lo: int):
+        lon_tag = f"{'E' if lo >= 0 else 'W'}{abs(lo):03d}"
+        with rasterio.open(COP.format(lat=lat_row, lon=lon_tag)) as ds:
+            south, north = (-90.0, -90.0 + half) if sign < 0 else (90.0 - half, 90.0)
+            w = from_bounds(lo, max(south, ds.bounds.bottom), lo + 1, min(north, ds.bounds.top), ds.transform)
+            arr = ds.read(1, window=w).astype(float)
+            if ds.nodata is not None:
+                arr[arr == ds.nodata] = np.nan
+            return arr, ds.window_transform(w)
+
+    # 360 sequential HTTPS range reads (~0.7 s each); skipping GDAL's directory
+    # listing on open is what keeps each one fast
+    with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif"):
+        tiles = [tile(lo) for lo in range(-180, 180)]
+    for arr, t in tiles:
+        rows, cols = np.indices(arr.shape)
+        plon = t.c + (cols + 0.5) * t.a
+        plat = t.f + (rows + 0.5) * t.e
+        r = (90.0 - sign * plat) * deg_m
+        x, y = r * np.cos(np.radians(plon)), r * np.sin(np.radians(plon))
+        ix = np.floor((x + side / 2) / POLAR_BIN_M).astype(int)
+        iy = np.floor((side / 2 - y) / POLAR_BIN_M).astype(int)
+        ok = (ix >= 0) & (ix < n) & (iy >= 0) & (iy < n) & np.isfinite(arr)
+        np.add.at(sums, iy[ok] * n + ix[ok], arr[ok])
+        np.add.at(counts, iy[ok] * n + ix[ok], 1)
+    grid = np.where(counts > 0, sums / np.maximum(counts, 1), np.nan).reshape(n, n)
+    desc = (f"Polar cap: the {2 * half:.1f} deg square collapses at the pole, so the DEM cap of radius {half} deg was reprojected to an "
+            f"azimuthal equidistant plane and binned at {POLAR_BIN_M:.0f} m; statistics use the {side / 1000:.1f} km square inscribed in the cap")
+    return grid, POLAR_BIN_M, desc
+
+
 def power_climate(lat: float, lon: float) -> dict:
     with urllib.request.urlopen(POWER.format(lat=lat, lon=lon), timeout=60) as r:
         d = json.load(r)
@@ -103,26 +155,49 @@ def measurement(fid, label, category, value, unit, source_id, mtype, res, fp, un
 
 def build(c: dict, sources: dict, now: str) -> dict:
     lat, lon = c["lat"], c["lon_east"]
+    # a candidate with no literature source yet cites the workbook for its coordinates
+    lit_first = c["sources"][0] if c["sources"] else "workbook_lesser_known_sites"
+    lit_last = c["sources"][-1] if c["sources"] else "workbook_lesser_known_sites"
     fp = {"shape": "square", "center_lat": lat, "center_lon_east": lon, "half_width_deg": HALF_WIDTH_DEG, "radius_km": None,
           "crs": "EPSG:4326", "longitude_convention": "east_-180_180",
           "approx_width_km": round(footprint_width_km(HALF_WIDTH_DEG, lat, EARTH_RADIUS_KM), 1),
           "description": f"{2*HALF_WIDTH_DEG:.1f} deg square centred on the site"}
-    grid, px_x_deg, px_y_deg = read_dem(lat, lon, HALF_WIDTH_DEG)
-    nan_frac = float(np.isnan(grid).mean())
-    if nan_frac > 0:
-        grid = np.where(np.isnan(grid), np.nanmedian(grid), grid)
-    deg_m = 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
-    pix_m_lat = px_y_deg * deg_m
-    pix_m_lon = px_x_deg * deg_m * math.cos(math.radians(lat))
-    fine = terrain_stats(grid, pix_m_lon, pix_m_lat)
-    # Separate block factors per axis so the harmonised cell is ~3.7 km in BOTH directions
-    # (~40 x 90 m cells N-S at any latitude; fewer E-W where the tile's longitude spacing is coarser).
-    fy = max(1, round(MARS_CELL_KM * 1000 / pix_m_lat))
-    fx = max(1, round(MARS_CELL_KM * 1000 / pix_m_lon))
-    coarse_grid = block_average_xy(grid, fy, fx)
-    coarse = terrain_stats(coarse_grid, pix_m_lon * fx, pix_m_lat * fy)
+    if fp["approx_width_km"] <= 0:   # at a geographic pole the lat/lon square collapses to a cap
+        fp["approx_width_km"] = round(2 * HALF_WIDTH_DEG * 2 * math.pi * EARTH_RADIUS_KM / 360, 1)
+        fp["description"] = (f"At the geographic pole the {2*HALF_WIDTH_DEG:.1f} deg square is a polar cap of radius {HALF_WIDTH_DEG} deg; "
+                             "width given is its pole-to-edge-to-pole diameter")
+    # A footprint the DEM or POWER cannot serve (e.g. beyond the last tile row at the
+    # geographic South Pole) gets those measurements MISSING with the reason, never estimated.
+    dem_error = power_error = None
+    try:
+        if abs(lat) + HALF_WIDTH_DEG > 90:
+            grid, cell_m, fp["description"] = read_dem_polar(lat, HALF_WIDTH_DEG)
+            pix_m_lat = pix_m_lon = cell_m
+        else:
+            grid, px_x_deg, px_y_deg = read_dem(lat, lon, HALF_WIDTH_DEG)
+            deg_m = 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
+            pix_m_lat = px_y_deg * deg_m
+            pix_m_lon = px_x_deg * deg_m * math.cos(math.radians(lat))
+        nan_frac = float(np.isnan(grid).mean())
+        if nan_frac > 0:
+            grid = np.where(np.isnan(grid), np.nanmedian(grid), grid)
+        fine = terrain_stats(grid, pix_m_lon, pix_m_lat)
+        # Separate block factors per axis so the harmonised cell is ~3.7 km in BOTH directions
+        # (~40 x 90 m cells N-S at any latitude; fewer E-W where the tile's longitude spacing is coarser).
+        fy = max(1, round(MARS_CELL_KM * 1000 / pix_m_lat))
+        fx = max(1, round(MARS_CELL_KM * 1000 / pix_m_lon))
+        coarse_grid = block_average_xy(grid, fy, fx)
+        coarse = terrain_stats(coarse_grid, pix_m_lon * fx, pix_m_lat * fy)
+    except Exception as e:  # noqa: BLE001 - logged on the measurements, never guessed around
+        dem_error = f"{type(e).__name__}: {e}"
+        fine = coarse = defaultdict(float, cells=0)
+        nan_frac, pix_m_lat, pix_m_lon, fy, fx = float("nan"), float("nan"), float("nan"), 1, 1
     factor = f"{fy}x{fx}"
-    clim = power_climate(lat, lon)
+    try:
+        clim = power_climate(lat, lon)
+    except Exception as e:  # noqa: BLE001
+        power_error = f"{type(e).__name__}: {e}"
+        clim = defaultdict(float, title=None, api=None)
     res_c = f"~{pix_m_lat*fy/1000:.1f} km (N-S) x {pix_m_lon*fx/1000:.1f} km (E-W) cells (DEM block-averaged {factor}); {coarse['cells']} cells"
     res_f = f"{pix_m_lat:.0f} m (N-S) x {pix_m_lon:.0f} m (E-W) pixels; {fine['cells']} pixels"
     harmon = "Harmonised to the MOLA 16 ppd cell size so it is comparable with Mars regional statistics."
@@ -135,17 +210,22 @@ def build(c: dict, sources: dict, now: str) -> dict:
         measurement("slope_regional_p90_deg", "Regional slope (90th pct, harmonised)", "ground", round(coarse["slope_regional_p90_deg"], 3), "deg", "copernicus_glo90", "derived", res_c, fp, None, "regional_scale_only", harmon),
         measurement("roughness_regional_m", "Detrended relief (harmonised ~3.7 km)", "ground", round(coarse["roughness_regional_m"], 1), "m", "copernicus_glo90", "derived", res_c, fp, None, "regional_scale_only", harmon),
         measurement("slope_fine_median_deg", "Fine-scale slope (median, 90 m)", "ground", round(fine["slope_regional_median_deg"], 3), "deg", "copernicus_glo90", "derived", res_f, fp, None, "good", "Information only: Mars has no counterpart at this baseline in v1."),
-        measurement("latitude_abs_deg", "Absolute latitude", "light", round(abs(lat), 4), "deg", c["sources"][0], "measured", "point", fp, None, "good"),
+        measurement("latitude_abs_deg", "Absolute latitude", "light", round(abs(lat), 4), "deg", lit_first, "measured", "point", fp, None, "good"),
         measurement("insolation_toa_annual_mean_wm2", "Annual-mean insolation (top of atmosphere)", "light", round(toa_annual_mean_insolation_wm2(lat, "earth"), 1), "W/m2", "derived_toa_insolation", "derived", "latitude only", fp, "Model", "good"),
         measurement("surface_sw_annual_mean_wm2", "Surface shortwave irradiance (annual mean)", "light", round(clim["sw_kwh"] * 1000 / 24, 1), "W/m2", "nasa_power", "estimated", "1 deg grid", fp, "Satellite-derived reanalysis product; converted from kWh/m2/day", "good"),
         measurement("surface_temperature_mean_c", "Mean air temperature at 2 m (annual)", "atmosphere_thermal", round(clim["t2m_ann"], 2), "degC", "nasa_power", "estimated", "0.5 x 0.625 deg grid", fp, "MERRA-2 reanalysis; coarse grid may not resolve valley/summit microclimates", "good", "Air temperature at 2 m, not ground temperature."),
         measurement("temperature_monthly_min_c", "Coldest monthly mean minimum", "atmosphere_thermal", round(clim["t2m_min"], 2), "degC", "nasa_power", "estimated", "0.5 x 0.625 deg grid", fp, None, "good"),
         measurement("temperature_monthly_max_c", "Warmest monthly mean maximum", "atmosphere_thermal", round(clim["t2m_max"], 2), "degC", "nasa_power", "estimated", "0.5 x 0.625 deg grid", fp, None, "good"),
         measurement("precipitation_mm_day", "Mean precipitation", "atmosphere_thermal", round(clim["precip"], 3), "mm/day", "nasa_power", "estimated", "0.5 x 0.625 deg grid", fp, "Bias-corrected MERRA-2 precipitation; underestimates orographic extremes", "good"),
-        measurement("terrain_morphology", "Terrain morphology", "ground", c["tags_terrain"], None, c["sources"][0], "literature", None, fp, None, "qualitative"),
-        measurement("mineralogy_tags", "Mineral / compositional evidence", "composition", c["tags_mineralogy"], None, c["sources"][-1], "literature", None, fp, "Qualitative tags from the cited source", "qualitative"),
+        measurement("terrain_morphology", "Terrain morphology", "ground", c["tags_terrain"], None, lit_first, "literature", None, fp, None, "qualitative"),
+        measurement("mineralogy_tags", "Mineral / compositional evidence", "composition", c["tags_mineralogy"], None, lit_last, "literature", None, fp, "Qualitative tags from the cited source", "qualitative"),
     ]
-    used = {"copernicus_glo90", "nasa_power", "derived_toa_insolation", *c["sources"]}
+    for m in ms:
+        err = {"copernicus_glo90": dem_error, "nasa_power": power_error}.get(m["source_id"])
+        if err:
+            m.update(value=None, is_missing=True, quality_flag="missing",
+                     notes=f"{'Copernicus GLO-90' if m['source_id'] == 'copernicus_glo90' else 'NASA POWER'} could not serve this footprint ({err[:160]}); not estimated.")
+    used = {"copernicus_glo90", "nasa_power", "derived_toa_insolation", lit_first, *c["sources"]}
     missing = [m["feature_id"] for m in ms if m["is_missing"]]
     return {
         "site_id": c["id"], "planet": "earth", "profile_version": PROFILE_VERSION, "generated_at": now,
@@ -156,7 +236,7 @@ def build(c: dict, sources: dict, now: str) -> dict:
 
 
 def main() -> int:
-    cfg = json.loads((DATA / "earth" / "candidates.json").read_text())
+    cfg = json.loads((DATA / "earth" / "candidates.json").read_text(encoding="utf-8"))
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     sources = {**cfg["sources"], "derived_toa_insolation": DERIVED_SOURCE}
     sources["copernicus_glo90"]["retrieved_at"] = date.today().isoformat()
@@ -165,7 +245,7 @@ def main() -> int:
     for c in cfg["candidates"]:
         print("processing", c["id"], flush=True)
         p = build(c, sources, now)
-        g = {m["feature_id"]: m["value"] for m in p["measurements"]}
+        g = {m["feature_id"]: str(m["value"]) for m in p["measurements"]}
         print(f"  elev {g['elevation_median_m']:>7} m  slope~3.7km {g['slope_regional_median_deg']:>6} deg  rough {g['roughness_regional_m']:>6} m  fine slope {g['slope_fine_median_deg']:>6} deg  T {g['surface_temperature_mean_c']:>6} C  precip {g['precipitation_mm_day']} mm/d")
         profiles.append(p)
     out = DATA / "earth" / f"candidate_profiles.{PROFILE_VERSION}.json"

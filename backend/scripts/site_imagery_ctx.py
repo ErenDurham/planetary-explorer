@@ -27,7 +27,7 @@ import urllib.request
 from datetime import date
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageStat
 
 BACKEND = Path(__file__).resolve().parents[1]
 ASSETS = BACKEND / "data" / "imagery" / "assets"
@@ -108,6 +108,9 @@ def main() -> int:
     for s in sites:
         for name, (z, n) in LEVELS.items():
             img, meta = stitch(s["lat"], s["lon_east"], z, n)
+            if ImageStat.Stat(img.convert("L")).stddev[0] < 1.0:   # every tile missing or blank: not imagery
+                print(f"{s['id']} {name}: source returned no image content; skipped", flush=True)
+                continue
             fn = f"{s['id']}_ctx_{name}.jpg"
             img.save(ASSETS / fn, quality=86)
             meta.update({"file": fn, "width_px": img.width, "height_px": img.height, "bytes": (ASSETS / fn).stat().st_size, "verified_on": date.today().isoformat()})

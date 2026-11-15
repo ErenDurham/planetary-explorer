@@ -2,13 +2,14 @@
  "document_id": "crossref_hartley2018_holuhraun",
  "title": "Melt inclusion constraints on petrogenesis of the 2014–2015 Holuhraun eruption, Iceland",
  "institution": "Contributions to Mineralogy and Petrology / Springer Science and Business Media LLC",
- "url": "https://api.crossref.org/works/10.1007/s00410-017-1435-0",
+ "url": "https://doi.org/10.1007/s00410-017-1435-0",
  "final_url": "https://api.crossref.org/works/10.1007/s00410-017-1435-0",
  "publication_date": "2018-02",
  "retrieved_at": "2026-11-15",
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1007/s00410-017-1435-0",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "holuhraun_iceland"
  ],

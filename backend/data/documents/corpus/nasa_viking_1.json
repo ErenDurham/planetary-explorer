@@ -5,10 +5,11 @@
  "url": "https://science.nasa.gov/mission/viking-1/",
  "final_url": "https://science.nasa.gov/mission/viking-1/",
  "publication_date": "2017-12-06",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "text/html; charset=UTF-8",
  "kind": "html",
  "topic": "Viking 1 lander",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "chryse_planitia"
  ],
