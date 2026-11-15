@@ -114,11 +114,11 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
 
   const body = state ?? (store.view === "map"
     ? <div className="h-full p-3"><SurveyMap run={activeRun!} survey={survey ?? null} candidates={candidates ?? []} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} established={earth.sites} palette={palette} className="h-full" /></div>
-    : <DiscoveryGlobe candidates={candidates ?? []} established={earth.sites} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} palette={palette} runLabel={activeRun!.label} focusToken={focusToken} />);
+    : <DiscoveryGlobe candidates={candidates ?? []} established={earth.sites} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} palette={palette} runLabel={activeRun!.label} focusToken={focusToken} bounds={activeRun!.bounds} survey={survey ?? null} />);
 
   const caption = !ready ? null : store.view === "map"
     ? <>The dashed box is the only area searched. Dots are the footprint centres that were evaluated; coloured squares are the candidates shown, each a {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprint around its centre. Crosses mark established analogs from the curated catalog when any fall in view.</>
-    : <>Markers are the centres of the candidate footprints, coloured by rank. The searched area, every evaluated centre and each footprint outline are on the Survey map.</>;
+    : <>The dashed ring is the only area searched; the small dots are the {evaluated ?? ""} footprint centres evaluated; the coloured outlines are the candidates' {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprints, with a marker at each centre, coloured by rank. Click a footprint or its marker to select it; selecting flies the camera in to it.</>;
 
   const facts = ready ? (
     <>

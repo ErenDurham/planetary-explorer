@@ -8,8 +8,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
 
 vi.mock("@/components/globe/PlanetViewer", () => ({
-  PlanetViewer: (props: { markers: Array<{ id: string; name: string }>; statusLine?: string; onSelect: (id: string) => void; selectedId: string | null }) => (
-    <div data-testid="globe-stub">globe: {props.markers.length} markers · {props.statusLine} · selected {props.selectedId ?? "none"}
+  PlanetViewer: (props: { markers: Array<{ id: string; name: string }>; statusLine?: string; onSelect: (id: string) => void; selectedId: string | null; overlays?: unknown; focusDistance?: number }) => (
+    <div data-testid="globe-stub">globe: {props.markers.length} markers · {props.statusLine} · selected {props.selectedId ?? "none"} · overlays {props.overlays ? "drawn" : "none"} · focus {props.focusDistance ?? "default"}
       {props.markers.map(m => <button key={m.id} type="button" onClick={() => props.onSelect(m.id)}>{m.name}</button>)}
     </div>
   ),
@@ -165,7 +165,10 @@ describe("DiscoveryView", () => {
     fireEvent.click(screen.getByRole("button", { name: "Globe" }));
     const globe = await screen.findByTestId("globe-stub");
     expect(globe).toHaveTextContent("globe: 5 markers");
-    expect(globe).toHaveTextContent(/3 proposed candidate centres/);
+    expect(globe).toHaveTextContent(/3 proposed candidate footprints and 16 evaluated centres/);
+    // the footprints, bounds and centres are drawn on the sphere and selection flies in close
+    expect(globe).toHaveTextContent(/overlays drawn/);
+    expect(globe).toHaveTextContent(/focus 1\.1/);
     const before = useDiscoveryStore.getState().selectionRevision;
     fireEvent.click(within(globe).getByRole("button", { name: "Footprint c_31_25_m2_75" }));
     expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBe("c_31_25_m2_75");

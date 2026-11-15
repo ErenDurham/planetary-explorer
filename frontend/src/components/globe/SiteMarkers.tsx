@@ -72,7 +72,8 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
 
   useFrame(({ clock, camera }) => {
     // Keep markers small enough to inspect the surface when the camera zooms in.
-    if (groupRef.current) groupRef.current.scale.setScalar(Math.max(0.18, Math.min(1, camera.position.distanceTo(pos) / 2.1)));
+    // (down to a twentieth when the camera is close enough to frame a single footprint)
+    if (groupRef.current) groupRef.current.scale.setScalar(Math.max(0.05, Math.min(1, camera.position.distanceTo(pos) / 2.1)));
     if (!ringRef.current) return;
     if (selected) {
       const t = (clock.elapsedTime % 1.6) / 1.6;
