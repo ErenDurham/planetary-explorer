@@ -102,7 +102,12 @@ describe("DiscoveryView", () => {
     expect(within(panel).getByRole("article", { name: /Candidate evidence/ })).toBe(card);
     expect(card).not.toHaveTextContent("Proposed terrain analog candidate");   // removed as fluff
     expect(card).toHaveTextContent("61.4");
-    expect(card).toHaveTextContent(/Terrain similarity: 61\.4\/100\. This reflects how closely the region's measured slope and relief match Jezero Crater under the selected weighting \(slope 40%, relief 40%\)\. It is not a probability/);
+    // the headline sentence names the weighting by dimension, from the response's own weights
+    expect(card).toHaveTextContent(/Similarity: 61\.4\/100\. This is how closely the region's measured features match Jezero Crater under a weighting of 80% terrain and 20% water\. It is not a probability/);
+    // a partial analog is reported as partial, never rounded up into a single verdict
+    expect(card).toHaveTextContent(/Closest on water and aridity \(92\/100\); furthest on terrain and landform \(73\/100\)/);
+    // a dimension measured on Earth with no Mars counterpart is shown as a difference, not a match
+    expect(card).toHaveTextContent(/not measured at Jezero Crater/);
     expect(card).toHaveTextContent(/Regional (slope|relief) is close: .* at Jezero Crater/);
     expect(card).toHaveTextContent(/Not compared: climate, land cover, geology and materials/);
     expect(card).toHaveTextContent(/The catalog is incomplete/);
