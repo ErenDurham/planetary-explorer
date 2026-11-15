@@ -160,12 +160,12 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
           <>
             <h3 className="eyebrow mt-3">Measured, but deliberately not scored</h3>
             {incomparable && <p className="mt-1 text-xs leading-relaxed text-fg-muted">{incomparable}</p>}
-            <dl className="mt-2 space-y-1.5">
+            <dl className="mt-2 space-y-2.5">
               {context.map(m => (
-                <div key={m.feature_id} className="grid grid-cols-[1fr_auto] items-baseline gap-x-3 text-xs">
-                  <dt className="text-fg-faint" title={m.note}>{m.label}</dt>
-                  <dd className="num text-fg">{formatValueWithUnit(m.earth_value, m.unit)} here · {m.mars_value != null ? `${formatValueWithUnit(m.mars_value, m.unit)} at ${reference.name}` : `not measured at ${reference.name}`}</dd>
-                  <p className="col-span-2 text-[10.5px] leading-snug text-fg-faint">{m.note}</p>
+                <div key={m.feature_id} className="text-xs">
+                  <dt className="text-fg-faint">{m.label}</dt>
+                  <dd className="num mt-0.5 text-fg">{formatValueWithUnit(m.earth_value, m.unit)} here · {m.mars_value != null ? `${formatValueWithUnit(m.mars_value, m.unit)} at ${reference.name}` : `not measured at ${reference.name}`}</dd>
+                  <dd className="mt-0.5 text-[10.5px] leading-snug text-fg-faint">{m.note}</dd>
                 </div>
               ))}
             </dl>
