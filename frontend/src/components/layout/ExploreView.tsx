@@ -1,3 +1,4 @@
+import { RegionActions } from "@/features/regions/RegionActions";
 import { imageryAssetUrl } from "@/components/imagery/assetUrl";
 // Explore keeps imagery controls above the workspace and a single destination
 // planet button inside it. Planet navigation preserves mission focus and selections.
@@ -84,6 +85,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <div role="group" aria-label="Site imagery">{(["globe","orbital","surface"] as const).map(id => <button key={id} type="button" aria-pressed={view === id} onClick={() => setView(id)} className={`rounded border px-2.5 py-1.5 text-xs ${view === id ? "border-copper text-copper-bright bg-copper/10" : "border-transparent text-fg-muted hover:text-fg"}`}>{id === "globe" ? "Globe" : id === "orbital" ? "Orbital view" : "Surface view"}</button>)}</div>
+        <RegionActions compact target={site ? {kind:"catalog",id:site.id} : null} />
       </div>
     </nav>
     {effective === "analog_match" ? <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="analog-context">
