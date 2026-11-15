@@ -52,7 +52,7 @@ describe("DiscoveryView", () => {
     const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
     expect(svc.calls).toHaveLength(1);
     // the scope line is bound to the run and the response: sampled count, area, reference, features, results shown
-    expect(screen.getByText(/A bounded pilot, not a global search: 16 footprints sampled across Eastern Morocco pilot \(about 95 × 111 km\), compared with Jezero Crater on regional slope and relief, 3 spatially separated results shown\. Candidates for research, not confirmed analogs\./)).toBeInTheDocument();
+    expect(screen.getByText("16 surveyed locations compared with Jezero Crater using regional slope and relief. 3 candidate regions selected for review.")).toBeInTheDocument();
     expect(svc.calls[0]).toMatchObject({ run_id: run.run_id, reference_id: "jezero_crater", top_k: 5, weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 } });
     // headline numbers bound to the response: evaluated, presented, footprint, resolution
     const stats = screen.getByTestId("survey-stats");

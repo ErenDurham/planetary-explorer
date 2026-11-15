@@ -20,7 +20,6 @@ import { useDiscoveryCandidate } from "../hooks/useDiscoveryCandidate";
 import { useDiscoveryStore, useRunState } from "../store/useDiscoveryStore";
 import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
 import { wantsDiscovery } from "../lib/objective";
-import { extentKm } from "../lib/geo";
 import { DiscoveryStage } from "./DiscoveryStage";
 import { DiscoveryCandidateList } from "./DiscoveryCandidateList";
 import { DiscoveryPanel } from "./DiscoveryPanel";
@@ -93,7 +92,6 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   if (cell) stats.push({ n: `${Math.round(cell / 1000)} km`, label: "terrain analysis resolution" });
 
   const ready = caps.kind === "ready" && !!activeRun && !!reference;
-  const activeRunKm = activeRun ? extentKm(activeRun.bounds) : null;
   const badge = caps.kind === "ready" ? <Badge tone="ok">Survey installed · {caps.capabilities.engine_version}</Badge> : caps.kind === "loading" ? <Badge tone="neutral">Connecting…</Badge> : <Badge tone="warn">{caps.kind === "unavailable" ? "No survey installed" : "Service error"}</Badge>;
 
   // the one error or not-ready state, rendered once in the stage body
@@ -162,8 +160,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           badge={badge}
           title={`Find Earth terrain resembling ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
           lede={activeRun && reference
-            ? `A bounded pilot, not a global search: ${evaluated != null ? `${evaluated} footprints sampled across ` : ""}${activeRun.label}${activeRunKm ? ` (about ${Math.round(activeRunKm.ew)} × ${Math.round(activeRunKm.ns)} km)` : ""}, compared with ${reference.name} on regional slope and relief${presented != null ? `, ${presented} spatially separated results shown` : ""}. Candidates for research, not confirmed analogs.`
-            : "Candidate Earth terrain from an installed survey pilot, compared with a Mars reference on regional slope and relief. Candidates for research, not confirmed analogs."}
+            ? `${evaluated != null ? `${evaluated} surveyed locations` : "Surveyed locations"} compared with ${reference.name} using regional slope and relief.${presented != null ? ` ${presented} candidate regions selected for review.` : ""}`
+            : "Compare surveyed Earth terrain with a Mars reference using regional slope and relief."}
           stats={stats.length > 0 ? <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1" aria-label="Survey at a glance" data-testid="survey-stats">{stats.map(s => <li key={s.label}><span className="num text-base text-fg">{s.n}</span><span className="ml-1 text-[10.5px] text-fg-muted">{s.label}</span></li>)}</ul> : null}
           facts={facts}
           view={store.view}

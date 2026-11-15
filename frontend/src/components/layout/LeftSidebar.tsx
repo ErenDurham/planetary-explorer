@@ -108,8 +108,8 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
           <MissionNextStep onExploreMission={onExploreMission ?? (() => {})} exploreReady={exploreReady} pending={pending} />
           <details className="mission-advanced" data-testid="mission-advanced">
             <summary>
-              <span className="font-medium text-fg">Scoring priorities and mission focus</span>
-              <span className="ml-2 text-fg-muted">{top.length ? `· ${top.map(t => `${t.label} ${Math.round(t.share)}%`).join(", ")} · adjust if you want` : "· adjust if you want"}</span>
+              <span className="font-medium text-fg">Adjust mission focus and scoring priorities</span>
+              <span className="ml-2 text-fg-muted">{top.length ? `· ${top.map(t => `${t.label} ${Math.round(t.share)}%`).join(", ")}` : ""}</span>
             </summary>
             <div className="mx-auto w-full max-w-3xl border-t border-line"><MissionFocus /></div>
             {defaultsError ? (
