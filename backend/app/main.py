@@ -1,6 +1,9 @@
 """FastAPI entrypoint. Run from backend/:  uvicorn app.main:app --reload"""
 from __future__ import annotations
 
+import threading
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
@@ -15,10 +18,20 @@ from app.api.imagery_routes import router as imagery_router
 from app.api.routes import router
 from app.config.settings import get_settings
 from app.services.data_loader import DataError
+from app.services import objective_engine
 
 settings = get_settings()
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    """Warm a local model in the background at start, so the first mission is fast."""
+    threading.Thread(target=objective_engine.warm_up, name="llm-warmup", daemon=True).start()
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="Planetary Explorer API",
     version=settings.app_version,
     description="Mars landing-site environmental profiles, explainable suitability scoring, Earth analog matching and citation-backed scientific explanations. Scores are relative decision-support indices under documented assumptions, not safety certifications.",

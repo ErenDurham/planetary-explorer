@@ -44,6 +44,9 @@ export type StudyCard = S["StudyCard"];
 export type InterpretRequest = S["InterpretRequest"];
 export type InterpretResponse = S["InterpretResponse"];
 export type WeightSuggestion = S["WeightSuggestion"];
+export type EvidenceCitation = S["EvidenceCitation"];
+/** Mission type read from the objective text (selects which research applies). */
+export type MissionKind = NonNullable<S["InterpretResponse"]["mission_profile"]>;
 export type GuidanceRequest = S["GuidanceRequest"];
 export type GuidanceResponse = S["GuidanceResponse"];
 export type InfluenceDelta = S["InfluenceDelta"];

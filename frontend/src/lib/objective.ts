@@ -10,6 +10,8 @@ export interface PriorityGuide {
   color: string;
   /** What raising this factor prefers, in one short sentence. */
   preference: string;
+  /** What the priority represents, in one static sentence (hover popups). */
+  description: string;
   /** The measured or modelled quantity actually scored. */
   quantity: string;
   /** What the quantity cannot tell you. */
@@ -26,6 +28,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
     name: "Gentler terrain",
     color: "#f0a03c",
     preference: "Prefers sites whose broad regional ground tilt is small.",
+    description: "How gently the ground tilts across the landing region, since steep slopes can tip a lander over.",
     quantity: "Median slope between neighbouring ~3.7 km MOLA cells over the ~59 km footprint.",
     caveat: "Cannot see boulders, craters or metre-scale slopes.",
     effect: "Rewards lower regional slopes. Moving this right increases their influence on the landing ranking.",
@@ -35,6 +38,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
     name: "Smoother terrain",
     color: "#6fb98f",
     preference: "Prefers less unevenness once the broad tilt is removed.",
+    description: "How bumpy the ground is once its overall tilt is set aside, a sign of uneven terrain at landing scale.",
     quantity: "Detrended relief: standard deviation of MOLA elevation after a best-fit plane, over the footprint.",
     caveat: "Not rock abundance or trafficability. Related to slope but distinct: tilt versus bumpiness.",
     effect: "Rewards less regional relief after removing the broad terrain tilt.",
@@ -44,6 +48,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
     name: "Lower elevation",
     color: "#6ea0d9",
     preference: "Prefers lower-lying footprints.",
+    description: "How low the site sits, since lower ground leaves more atmosphere to slow the lander as it descends.",
     quantity: "Footprint median MOLA elevation relative to the areoid.",
     caveat: "A proxy for the atmospheric column during entry, descent and landing, not a descent simulation.",
     effect: "Rewards lower sites, where more atmosphere may help entry, descent and landing.",
@@ -53,6 +58,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
     name: "Solar energy",
     color: "#c4a4e8",
     preference: "Prefers more annual sunlight.",
+    description: "How much sunlight reaches the site over a Mars year, the energy available for solar power.",
     quantity: "Modelled annual-mean top-of-atmosphere insolation from latitude and Mars' orbit.",
     caveat: "Not panel output; dust, seasons and local shadows are ignored.",
     effect: "Rewards greater annual sunlight above the atmosphere, using latitude and orbital geometry.",
@@ -62,6 +68,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
     name: "Thermal conditions",
     color: "#9aa5b4",
     preference: "Would prefer warmer measured surface temperatures.",
+    description: "How warm the surface is, which no current candidate site has measurements for.",
     quantity: "Mean surface temperature; no site in the v1 profiles carries a measured value.",
     caveat: "Excluded from every score. It is not treated as measured and cannot move a ranking.",
     effect: "Would reward warmer measured surface temperatures.",

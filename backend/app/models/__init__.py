@@ -32,7 +32,22 @@ from .mission import (
     MissionProfile,
     SuitabilityResult,
 )
-from .objective import AnalogWeightSuggestion, DirectionOption, GuidanceRequest, GuidanceResponse, InfluenceDelta, InterpretRequest, InterpretResponse, RankDelta, SiteCandidate, SiteReference, TaskInterpretation, WeightSuggestion
+from .objective import (
+    AnalogWeightSuggestion,
+    DirectionOption,
+    EarthWeightSuggestion,
+    EvidenceCitation,
+    GuidanceRequest,
+    GuidanceResponse,
+    InfluenceDelta,
+    InterpretRequest,
+    InterpretResponse,
+    RankDelta,
+    SiteCandidate,
+    SiteReference,
+    TaskInterpretation,
+    WeightSuggestion,
+)
 from .research import Citation, EvidenceChunk, ExplainRequest, ExplanationSections, ResearchExplanation, SourceDigest, StudyCard
 from .sensitivity import (
     ExcludedCriterion,

@@ -1,0 +1,77 @@
+- **Basics (read first)**
+  - Paths are from the repo root. Frontend = React + TypeScript in `frontend/src`; backend = Python (FastAPI) in `backend/app`. The frontend calls the backend over HTTP with JSON.
+  - A *component* (`.tsx`) is a function that returns one piece of the page. A *hook* (`useX`) is a reusable function that holds state or calls the server.
+  - Shared state lives in one store, `frontend/src/store/useAppStore.ts` (Zustand library). Components read values from it and call its functions to change them; any component reading a value redraws when that value changes.
+
+- **What happens when the user presses Save**
+  - `MissionObjective.tsx` hands the text to `save()` in `LeftSidebar.tsx`.
+  - `useInterpretObjective.ts` sends it to the backend: `POST /api/v1/mission/interpret`.
+  - Backend `objective_engine.py` asks the LLM to weight the 5 landing factors and cite findings from the research registry, then checks the answer in plain code. No LLM available → keyword matching instead.
+  - The answer goes into the store in one call (`applyObjective`): Mars weights, cited research, task reading (which planet, which reference site). The same answer's Earth weights (same factors, own values) go in with `applyEarthSuggestion`. While the model works, the tab shows "Considering the rocket science...".
+  - Sliders, pie and "Why" pop-up redraw from the store. `useEvaluation.ts` re-scores all sites (`POST /scoring/evaluate`) for the Explore and Analyze tabs.
+
+- **Tab shell**
+  - `frontend/src/App.tsx` — page layout. Renders the tab (`LeftSidebar`) and keeps it loaded but hidden on other tabs, so unsaved text survives tab switches. Shows the "Head to explore mission →" footer only after a mission is saved (`missionDesigned` in the store).
+  - `frontend/src/components/layout/TopNav.tsx` — the tab buttons; "Mission Design" is the first entry in `TABS`.
+
+- **Components on the tab** (`frontend/src/components/`)
+  - `layout/LeftSidebar.tsx` — the tab's controller. Keeps local state (saved text, sliders shown yet, open task panel), runs `save()`, and shows: chat box → task panel (only if needed) → Mission focus → the priorities of the chosen planet. Mars and Earth use the same components, fed different factors and values.
+  - `mission/MissionObjective.tsx` — heading, text box (Enter = save, Shift+Enter = new line), saved text, Edit Mission, "Applied task" line, warnings. Flags unsaved edits with `setMissionDraftDirty`, which disables the footer button.
+  - `mission/PrioritySliders.tsx` — the sliders for either planet (shares always total 100%), Reset, (i) tips, hover popups on factor names. Takes the factors, values and what Reset does as props; the "?" button comes in through `headerExtra`.
+  - `mission/WhyThesePriorities.tsx` — the "?" button and its pop-up, for either planet. Per factor: the model's one-line reason and the cited findings (linked). Mars also lists needs the model can't score and the hard constraints with their sources.
+  - `mission/PriorityPie.tsx` — pie of the current shares for either planet (hand-drawn SVG); numbers appear only on hover.
+  - `mission/priorityFactors.ts` — describes each planet's factors: `marsFactors()` (the landing factors, no-data ones left out) and `earthFactors()` (the SAME factors; only the (i) text says what the Earth data are and which ones drive the Earth ranking). Name, colour and hover sentence come from `PRIORITY_GUIDE`.
+  - `mission/PriorityHoverCard.tsx` — the hover popup content (big % + one fixed sentence), used by the pie and the slider names.
+  - `mission/TaskReview.tsx` — panel shown only when the task reading is ambiguous (unclear direction or site name); the user picks, then clicks Apply task.
+  - `mission/MissionFocus.tsx` — Earth/Mars buttons, shown after the first save. Both planets show the same sliders with their own values; switching keeps each planet's values.
+  - `mission/TaskMissionObjective.tsx`, `mission/MissionScoringPanel.tsx`, `mission/HardConstraints.tsx` — not shown on this tab any more; kept for other code and their tests.
+  - `ui/Floating.tsx` — places every popup so it stays 8 px inside the screen and flips above when there's no room below.
+  - `ui/InfoTip.tsx` — the (i) boxes (`closeOnMouseLeave` on sliders). `ui/Section.tsx` — section headers (`large` variant on this tab).
+
+- **State, hooks and helpers** (`frontend/src/`)
+  - `store/useAppStore.ts` — key fields:
+    - `weights`: current slider shares.
+    - `recommendedWeights`: what the mission suggested; Reset restores these.
+    - `applyObjective()`: applies weights, interpretation and task together.
+    - `appliedInterpretation`: reasons, cited research and mission kind, read by the "?" pop-up.
+    - `excludedCriteria`: factors with no data.
+    - `earthWeights` / `recommendedEarthWeights`: Earth's shares on the same factors and the suggestion Reset restores. Earth terrain and smoothness also set `missionProfileWeights.rover_field_test` (slope/relief), which ranks Earth sites in Explore (`roverSharesFrom`).
+    - `missionType` (set by the planet: Mars → `landing`, Earth → `rover_field_test`), `missionDesigned`, `missionDraftDirty`: mission type, whether a mission has been saved, unsaved-edit flag.
+  - `hooks/useInterpretObjective.ts` — calls `/mission/interpret`. If the backend is down, builds a keyword reading in the browser instead. `applicationFromInterpretation()` turns the response into what the store applies.
+  - `hooks/useDefaultMission.ts` — at startup, loads the factor definitions (`/scoring/default-mission`). Seeds default weights with the fast keyword reading (`use_llm: false`), so first rankings never wait on the LLM.
+  - `hooks/useEvaluation.ts` — after weights stop changing for 150 ms, re-scores all sites (`/scoring/evaluate`).
+  - `hooks/useMissionAssessment.ts` — scoring for non-landing types (`/missions/evaluate`).
+  - `lib/allocation.ts` — share maths: moving one slider rescales the others so the total stays 100.
+  - `lib/objective.ts` — `PRIORITY_GUIDE`: each landing factor's display name, colour, hover sentence and caveats. Also holds the browser's offline keyword rules.
+  - `lib/missionProfiles.ts` — mission types and their factors. `lib/analogFeatures.ts` — analog features and planet names.
+  - `services/api.ts` — every HTTP call (`interpret`, `defaultMission`, `evaluate`, `assessMission`).
+  - `types/api.ts` — generated from the backend; never edit by hand. `types/index.ts` — short names for those types.
+  - `index.css` — slider styling and the slide-in animations (`.mission-enter`, `.mission-text-enter`).
+
+- **Backend** (`backend/`)
+  - `app/api/routes.py` — endpoints `/mission/interpret`, `/scoring/default-mission`, `/scoring/evaluate`. `app/api/mission_assessment_routes.py` — `/missions/evaluate`.
+  - `app/services/objective_engine.py` — turns mission text into weights for both planets: the Mars weights, and `earth_weights` on the same factors for choosing an Earth site (Earth reuses the research cited for each factor).
+    - LLM path: rules prompt (`_SYSTEM_RULES`) plus the research registry, answered as JSON in a fixed format.
+    - Then plain-code checks: only known factors; weights 0–100; no-data factors set to 0; citations must be registry IDs for that factor; numbers stripped from the model's text.
+    - Fallback: `rule_based()` keyword reader. Results are cached in memory.
+  - `app/services/evidence.py` + `data/evidence/landing_priorities.v1.json` — the research registry.
+    - Sources: NASA or peer-reviewed, with links.
+    - Findings: a short fact plus the exact sentence it was copied from.
+    - Only sources from the last 15 years are used (`MAX_SOURCE_AGE_YEARS` in `evidence.py`); older ones stay in the file but are never offered to the model or shown.
+    - `tests/test_evidence.py` fails if a number in a fact isn't in its quoted sentence.
+  - `app/services/llm_client.py` — the only code that talks to an LLM: Ollama (free, local) or Anthropic (paid), chosen by `LLM_PROVIDER` in `.env`.
+  - `app/services/task_interpreter.py` — reads the task: Mars landing or analog search, which planet, which reference site.
+  - `app/services/scoring_engine.py` + `app/config/scoring_spec.json` — the 5 landing factors, their scoring rules, and the hard constraints (`default_hard_constraints`: elevation, latitude).
+  - `app/services/mission_assessment.py` + `app/config/mission_profiles.json` — scoring for non-landing types.
+  - `app/models/objective.py` — the request and response format of `/mission/interpret`.
+  - `app/config/settings.py` + `.env` (repo root) — settings: `LLM_PROVIDER`, `OLLAMA_MODEL`, `OLLAMA_THINK`, `OLLAMA_TIMEOUT_S` (30 s cap, then keyword fallback), `OLLAMA_KEEP_ALIVE` (keep the model in memory), `OLLAMA_WARMUP` (pre-load at server start, from `app/main.py`), `ANTHROPIC_API_KEY`.
+
+- **Common edits**
+  - Factor name, colour or hover sentence → `PRIORITY_GUIDE` in `frontend/src/lib/objective.ts`.
+  - Scoring rules or hard constraints → `backend/app/config/scoring_spec.json`.
+  - New research finding → registry JSON. Copy the source's sentence exactly; tests check the numbers.
+  - What the LLM is told → `_SYSTEM_RULES` in `backend/app/services/objective_engine.py`.
+  - Changed a backend response format → run `.venv/bin/python scripts/export_contracts.py` in `backend/`, then `npx openapi-typescript ../docs/openapi.json -o src/types/api.ts` in `frontend/`.
+  - Tests:
+    - Frontend: `npx vitest run` in `frontend/`. The tab's full flow is tested in `MissionObjective.test.tsx`.
+    - Backend: `.venv/bin/python -m pytest` in `backend/`.

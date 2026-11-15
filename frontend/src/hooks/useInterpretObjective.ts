@@ -1,9 +1,9 @@
 // POST /mission/interpret with an offline fallback.
 //
-// "Suggest priorities" sends the draft objective, the current slider shares
-// and the criteria known to be unscorable. The response is a PROPOSAL the user
-// reviews and edits before anything reaches the store; nothing here writes
-// weights. When the backend cannot be reached (or rejects the call) the same
+// Saving a mission sends its text, the current slider shares and the criteria
+// known to be unscorable. `run` resolves to the proposal (or null when a newer
+// call superseded it); the caller decides what reaches the store, and nothing
+// here writes weights. When the backend cannot be reached (or rejects the call) the same
 // proposal shape is built locally from the keyword rules in lib/objective.ts
 // and flagged `offline: true`, so the UI can label it as a rule-based reading
 // and never as a model interpretation.
@@ -17,7 +17,7 @@ import { api } from "@/services/api";
 import { recommendObjective } from "@/lib/objective";
 import type { AppliedInterpretation, InterpretationApplication, ObjectiveMeta, ObjectiveSource } from "@/store/useAppStore";
 import { toAnalogShares } from "@/lib/analogFeatures";
-import type { DirectionOption, InterpretResponse, SiteReference, TaskInterpretation, WeightSuggestion } from "@/types";
+import type { DirectionOption, EvidenceCitation, InterpretResponse, SiteReference, TaskInterpretation, WeightSuggestion } from "@/types";
 
 export interface InterpretResult {
   response: InterpretResponse;
@@ -97,6 +97,10 @@ export function interpretOffline(
     confidence_note:
       "Confidence describes how clearly the text matched the offline keyword rules; it says nothing about how suitable any site is. This reading was made in the browser because the backend could not be reached.",
     validation_notes: excluded.length ? [`Excluded criteria forced to 0: ${excluded.join(", ")}.`] : [],
+    mission_profile: "other",
+    earth_suggestions: [],
+    constraint_evidence: {},
+    evidence_version: null,
     scoring_spec_version: "client-rules",
     cached: false,
     generated_at: new Date().toISOString(),
@@ -161,9 +165,10 @@ export function applicationFromInterpretation(
   source: ObjectiveSource,
   edited?: Record<string, number>,
   resolution: TaskResolution = {},
-): { weights: Record<string, number>; notes: string[]; meta: ObjectiveMeta } {
+): { weights: Record<string, number>; notes: string[]; meta: ObjectiveMeta; earthWeights: Record<string, number> | null } {
   const weights: Record<string, number> = {};
   const reasons: Record<string, string> = {};
+  const evidence: Record<string, EvidenceCitation[]> = {};
   let editedByUser = false;
   for (const s of r.suggestions) {
     const noData = excluded.includes(s.criterion_id) || !s.data_available;
@@ -172,6 +177,7 @@ export function applicationFromInterpretation(
     if (!noData && edited && s.criterion_id in edited && value !== proposed) editedByUser = true;
     weights[s.criterion_id] = value;
     reasons[s.criterion_id] = s.reason;
+    evidence[s.criterion_id] = s.evidence ?? [];
   }
   const interpretation: AppliedInterpretation = {
     reasons,
@@ -183,6 +189,12 @@ export function applicationFromInterpretation(
     confidence: r.confidence ?? null,
     confidenceNote: r.confidence_note,
     editedByUser,
+    evidence,
+    constraintEvidence: r.constraint_evidence ?? {},
+    missionProfile: r.mission_profile ?? "other",
+    earth: (r.earth_suggestions ?? []).length
+      ? { reasons: Object.fromEntries((r.earth_suggestions ?? []).map((e) => [e.factor_id, e.reason])), evidence: Object.fromEntries((r.earth_suggestions ?? []).map((e) => [e.factor_id, e.evidence ?? []])) }
+      : null,
   };
   const notes = [
     ...(r.rationale ?? []),
@@ -190,20 +202,22 @@ export function applicationFromInterpretation(
     ...(editedByUser ? ["You edited the proposed shares before applying them."] : []),
   ];
   const taskApplication = taskApplicationFromInterpretation(r.task_interpretation, r.objective_hash, resolution);
-  return { weights, notes, meta: { objectiveHash: r.objective_hash, source, model: r.model ?? null, interpretation, taskApplication } };
+  const earth = r.earth_suggestions ?? [];
+  const earthWeights = earth.some((e) => e.weight > 0) ? Object.fromEntries(earth.map((e) => [e.factor_id, e.weight])) : null;
+  return { weights, notes, meta: { objectiveHash: r.objective_hash, source, model: r.model ?? null, interpretation, taskApplication }, earthWeights };
 }
 
 export function useInterpretObjective() {
   const [state, setState] = useState<InterpretState>({ status: "idle", result: null });
   const seq = useRef(0);
 
-  const run = useCallback(async (objective: string, currentWeights: Record<string, number>, excluded: string[]) => {
+  const run = useCallback(async (objective: string, currentWeights: Record<string, number>, excluded: string[]): Promise<InterpretResult | null> => {
     const mine = ++seq.current;
     const text = objective.trim();
     setState({ status: "pending", result: null });
     let result: InterpretResult;
     try {
-      const response = await api.interpret({ objective: text, current_weights: currentWeights, excluded_criteria: excluded });
+      const response = await api.interpret({ objective: text, current_weights: currentWeights, excluded_criteria: excluded, use_llm: true });
       result = { response, offline: false, requestedText: text, error: null };
     } catch (e) {
       result = {
@@ -213,8 +227,9 @@ export function useInterpretObjective() {
         error: e instanceof Error ? e : new Error(String(e)),
       };
     }
-    if (mine !== seq.current) return; // a newer Suggest click superseded this one
+    if (mine !== seq.current) return null; // a newer save superseded this one
     setState({ status: "done", result });
+    return result;
   }, []);
 
   const discard = useCallback(() => {

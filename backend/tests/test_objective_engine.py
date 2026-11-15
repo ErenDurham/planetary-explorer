@@ -74,7 +74,7 @@ def test_hard_constraints_are_not_part_of_the_interpretation_contract():
 
 
 def test_llm_path_is_validated_and_numbers_in_rationale_are_guarded(monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
     monkeypatch.setattr(llm_client, "model_name", lambda: "mock-model")
     answer = {"weights": {"terrain_safety": 90, "solar_illumination": 5, "thermal_conditions": 60, "bogus": 40},
               "reasons": {"terrain_safety": "Safety is the stated priority."}, "rationale": ["Safety first.", "Slopes above 12 deg are unsafe."],
@@ -94,7 +94,7 @@ def test_llm_path_is_validated_and_numbers_in_rationale_are_guarded(monkeypatch)
 
 
 def test_llm_failure_falls_back_to_rules(monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
     monkeypatch.setattr(llm_client, "model_name", lambda: "mock-model")
 
     def boom(system, user, schema):
@@ -106,7 +106,7 @@ def test_llm_failure_falls_back_to_rules(monkeypatch):
 
 
 def test_llm_all_zero_proposal_falls_back(monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
     monkeypatch.setattr(llm_client, "model_name", lambda: "mock-model")
     answer = {"weights": {"terrain_safety": 0, "elevation_suitability": 0, "surface_roughness": 0, "solar_illumination": 0}, "reasons": {},
               "rationale": [], "tradeoffs": [], "unsupported_needs": [], "clarifying_questions": [], "confidence": "high"}

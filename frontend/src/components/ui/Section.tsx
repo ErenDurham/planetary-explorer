@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
-export function Section({ title, subtitle, actions, children, id }: { title: string; subtitle?: ReactNode; actions?: ReactNode; children: ReactNode; id?: string }) {
+export function Section({ title, subtitle, actions, children, id, large = false }: { title: string; subtitle?: ReactNode; actions?: ReactNode; children: ReactNode; id?: string; large?: boolean }) {
   return (
-    <section id={id} aria-label={title} className="border-b border-line px-4 py-3 last:border-b-0">
-      <header className="mb-2 flex items-start justify-between gap-2">
+    <section id={id} aria-label={title} className={`border-b border-line last:border-b-0 ${large ? "px-5 py-4" : "px-4 py-3"}`}>
+      <header className={`flex items-start justify-between gap-2 ${large ? "mb-3" : "mb-2"}`}>
         <div>
-          <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-muted">{title}</h2>
-          {subtitle && <p className="mt-0.5 text-xs text-fg-faint">{subtitle}</p>}
+          <h2 className={`font-semibold uppercase tracking-[0.12em] text-fg-muted ${large ? "text-[13px]" : "text-[11px]"}`}>{title}</h2>
+          {subtitle && <p className={`mt-0.5 text-fg-faint ${large ? "text-sm" : "text-xs"}`}>{subtitle}</p>}
         </div>
         {actions}
       </header>

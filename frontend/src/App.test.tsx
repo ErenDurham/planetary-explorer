@@ -21,6 +21,7 @@ import App from "./App";
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 
 let evaluateCalls: Array<{ client_request_id: string | null | undefined }> = [];
+let interpretCalls: Array<{ objective: string; use_llm?: boolean }> = [];
 
 function mockFetch() {
   return vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
@@ -30,6 +31,7 @@ function mockFetch() {
     if (url.match(/\/api\/v1\/sites\/[^/?]+$/)) return json(fixture.site);
     if (url.endsWith("/research/explain")) return json({site_id:"chryse_planitia", generated_by:"deterministic_fallback", model:null, sections:{}, supporting_evidence:[], citations:[], research_studies:[], limitations:[], generated_at:"2026-11-14T17:00:00Z"});
     if (url.endsWith("/scoring/default-mission")) return json(fixture.default_mission);
+    if (url.endsWith("/mission/interpret")) interpretCalls.push(JSON.parse(String(init?.body)));
     if (url.endsWith("/scoring/evaluate")) {
       const body = JSON.parse(String(init?.body));
       evaluateCalls.push(body);
@@ -42,7 +44,7 @@ function mockFetch() {
 const fixture_health = { status: "ok", version: "0.1.0", profile_version: "v1", scoring_spec_version: "landing-v1.0", services: { data: "ok", retrieval: "unavailable", llm: "unconfigured" } };
 const fixture_sites = { planet: "mars", sites: fixture.evaluate.results.map(r => ({...fixture.site.site, id: r.site_id, name: r.site_name})), profile_version: "v1" };
 
-function renderApp() {
+async function renderApp() {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const view = render(
     <QueryClientProvider client={qc}>
@@ -50,29 +52,39 @@ function renderApp() {
     </QueryClientProvider>,
   );
   fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
+  // the tab opens on the chat box; saving a mission brings in the sliders.
+  // No priority keyword matches this text, so the seeded shares are kept.
+  const box = screen.getByLabelText("Your mission objective");
+  fireEvent.change(box, { target: { value: "We want to land on Mars to establish a Research Base." } });
+  await waitFor(() => expect(screen.getByRole("button", { name: "Save" })).toBeEnabled(), { timeout: 2000 });
+  fireEvent.keyDown(box, { key: "Enter" });
   return view;
 }
 
 describe("App", () => {
   beforeEach(() => {
     evaluateCalls = [];
-    useAppStore.setState({ weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore" });
+    interpretCalls = [];
+    useAppStore.setState({ weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore", missionDesigned: false, missionDraftDirty: false });
     mockFetch();
   });
   afterEach(() => vi.restoreAllMocks());
 
   it("seeds sliders from the default mission, evaluates once, and ranks sites", async () => {
-    renderApp();
+    await renderApp();
     expect(screen.getByText("Planetary Explorer")).toBeInTheDocument();
 
     // sliders come from GET /scoring/default-mission
     const slider = await screen.findByLabelText("Gentler terrain share of priorities");
     expect(slider).toHaveValue("27"); // effective allocation, not the old raw weight of 65
-    expect(screen.getAllByRole("slider")).toHaveLength(5);
+    expect(screen.getAllByRole("slider")).toHaveLength(4); // the no-data thermal factor is not shown
 
     // debounced POST /scoring/evaluate with a client_request_id, result rendered
     await waitFor(() => expect(evaluateCalls.length).toBe(1), { timeout: 2000 });
     expect(evaluateCalls[0].client_request_id).toMatch(/^evaluate-/);
+    // the startup default never waits on a language model; the user's own mission asks for it
+    expect(interpretCalls.map((c) => c.use_llm)).toEqual([false, true]);
+    expect(interpretCalls[1].objective).toBe("We want to land on Mars to establish a Research Base.");
     fireEvent.click(screen.getByRole("button", { name: "Explore" }));
     expect(screen.getByTestId("globe-stub")).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: /Chryse Planitia.*rank 1/ })).toBeInTheDocument();
@@ -82,19 +94,29 @@ describe("App", () => {
   });
 
   it("hands off the applied mission to its intended planet and blocks unapplied edits", async () => {
-    renderApp();
+    await renderApp();
     const start = await screen.findByRole("button", { name: "Head to explore mission →" });
     await waitFor(() => expect(start).toBeEnabled());
     useAppStore.setState({viewedBody:"earth"});
     fireEvent.click(start);
     expect(useAppStore.getState()).toMatchObject({activeTab:"explore",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
     fireEvent.click(screen.getByRole("button", {name:"Mission Design"}));
+    fireEvent.click(screen.getByRole("button", {name:/Edit Mission/}));
     fireEvent.change(screen.getByLabelText("Your mission objective"), {target:{value:"An unapplied objective"}});
     expect(screen.getByRole("button", {name:"Head to explore mission →"})).toBeDisabled();
   });
 
+  it("keeps the Mission Design tab to the chat box alone until a mission is saved", () => {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
+    expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Head to explore mission →" })).toBeNull();
+    expect(document.querySelector("div.absolute.inset-0.z-\\[60\\]")).toHaveClass("hidden"); // Astro overlay
+  });
+
   it("re-evaluates once after a burst of slider changes and shows the selected site profile", async () => {
-    renderApp();
+    await renderApp();
     const slider = await screen.findByLabelText("Gentler terrain share of priorities");
     await waitFor(() => expect(evaluateCalls.length).toBe(1), { timeout: 2000 });
 

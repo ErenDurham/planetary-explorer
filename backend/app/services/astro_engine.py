@@ -335,7 +335,7 @@ def chat(req: AstroRequest) -> AstroResponse:
         else actions[:3],
         limitations=list(dict.fromkeys(limitations)),
     )
-    if not llm_client.enabled():
+    if not llm_client.enabled("astro"):   # a local model answers chat only when OLLAMA_FEATURES lists "astro"
         out.limitations.append(
             "Claude is not configured. Showing deterministic context and navigation guidance."
         )

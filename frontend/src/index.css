@@ -74,14 +74,17 @@ button:not(:disabled):active { transform: translateY(1px); }
 textarea { resize: vertical; }
 input[type="range"]:disabled { opacity: .35; }
 
-/* mission drawer: dense share rows, a muted unavailable row, animated bar
-   segments (disabled under prefers-reduced-motion by the rule below) */
+/* mission priorities: share rows and a muted unavailable row */
 .mission-row input[type="range"] { height: 3px; }
 .mission-row input[type="range"]::-webkit-slider-thumb { width: 12px; height: 12px; }
 .mission-row input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; }
 .mission-row-unavailable input[type="range"] { background: var(--color-line); }
 .mission-row-unavailable input[type="range"]::-webkit-slider-thumb { background: var(--color-line-strong); border-color: var(--color-line-strong); }
-.mission-bar > span { transition: width .2s ease-out; }
+/* Mission Design: the saved text slides up under the heading, then the
+   sliders and pie slide in (also neutralised under prefers-reduced-motion) */
+@keyframes mission-slide-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.mission-text-enter { animation: mission-slide-up .45s ease-out backwards; }
+.mission-enter { animation: mission-slide-up .5s ease-out .1s backwards; }
 input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
