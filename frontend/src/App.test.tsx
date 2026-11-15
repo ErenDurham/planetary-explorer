@@ -94,7 +94,7 @@ describe("App", () => {
     expect(evaluateCalls.length).toBe(2);
     expect(evaluateCalls[1].client_request_id).not.toBe(evaluateCalls[0].client_request_id);
 
-    // selecting a site loads its profile into the right sidebar
+    // Selecting a site loads its profile in the restored sidebar.
     fireEvent.click(screen.getByRole("button", { name: "Explore" }));
     fireEvent.click(screen.getByRole("button", { name: /Chryse Planitia/ }));
     const measurements = await screen.findByText("All environmental measurements and sources");

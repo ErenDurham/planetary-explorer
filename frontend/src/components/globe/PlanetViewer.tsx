@@ -2,15 +2,16 @@
 // live inside this tree (R3F local state) and never pass through the Zustand
 // store, per docs/ARCHITECTURE.md. The parent hands in a PlanetConfig, a flat
 // marker list, the selected id and callbacks.
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Stars, useProgress } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Quaternion, Spherical, Vector3, type Mesh } from "three";
-import { RotateCcw, Pause, Play, LocateFixed } from "lucide-react";
+import { RotateCcw, Pause, Play, LocateFixed, X } from "lucide-react";
 import { PlanetSphere, PlaceholderSphere } from "./PlanetSphere";
 import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
+import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
 import { GlobeLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
@@ -23,6 +24,9 @@ export interface PlanetViewerProps {
   selectedId: string | null;
   focusToken?: number;
   onSelect: (id: string) => void;
+  onDeselect?: () => void;
+  overlayBounds?: OverlayBounds|null;
+  onOverlayMaxHeightChange?: (height:number|undefined)=>void;
   autoRotate: boolean;
   onAutoRotateChange: (v: boolean) => void;
   /** Change this value to request a camera reset. */
@@ -47,11 +51,26 @@ export function PlanetViewer(props: PlanetViewerProps) {
   const [focusRequest, setFocusRequest] = useState(0);
   const [navigation, setNavigation] = useState({ id: 0, action: "" });
   const planetRef = useRef<Mesh>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const legendRef=useRef<HTMLDivElement>(null);
+  const [legendBottom,setLegendBottom]=useState(12);
+  useLayoutEffect(()=>{
+    const root=containerRef.current,legend=legendRef.current;if(!root||!legend)return;
+    const update=()=>{const bounds=root.getBoundingClientRect(),size=legend.getBoundingClientRect();setLegendBottom(legendBottomOffset(bounds,size,props.overlayBounds??null));
+      const bottom=window.matchMedia("(max-width: 1023px)").matches ? window.innerHeight : (root.closest("main")?.getBoundingClientRect().bottom ?? bounds.bottom)-12;
+      props.onOverlayMaxHeightChange?.(Math.max(144,Math.floor(Math.min(window.innerHeight*.8,bottom-bounds.top-size.height-24))));};
+    const observer=new ResizeObserver(update);observer.observe(root);observer.observe(legend);window.addEventListener("resize",update);window.addEventListener("scroll",update,true);update();
+    return()=>{observer.disconnect();window.removeEventListener("resize",update);window.removeEventListener("scroll",update,true);};
+  },[props.overlayBounds,props.onOverlayMaxHeightChange]);
+  useEffect(()=>()=>props.onOverlayMaxHeightChange?.(undefined),[props.onOverlayMaxHeightChange]);
+  const deselect = useRef(props.onDeselect);
+  deselect.current = props.onDeselect;
   return (
-    <div tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-[#06090d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
+    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-[#06090d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
       onKeyDown={e => {
         if (e.target !== e.currentTarget || e.altKey || e.ctrlKey || e.metaKey) return;
         const key = e.key.toLowerCase();
+        if (key === "escape") { e.preventDefault(); deselect.current?.(); return; }
         if (!["arrowleft", "arrowright", "arrowup", "arrowdown", "+", "=", "-", "_", "f", "r"].includes(key)) return;
         e.preventDefault();
         onAutoRotateChange(false);
@@ -59,15 +78,15 @@ export function PlanetViewer(props: PlanetViewerProps) {
         else if (key === "f") setFocusRequest(n => n + 1);
         else setNavigation(n => ({ id: n.id + 1, action: key }));
       }}>
-      <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit {body}. Plus and minus zoom. F focuses the selected site. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km; {markers.length} candidate {markers.length === 1 ? "location is" : "locations are"} marked at their real coordinates.</p>
+      <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit {body}. Plus and minus zoom. F focuses the selected site. Escape clears the current selection. Click empty globe space to deselect. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km; {markers.length} candidate {markers.length === 1 ? "location is" : "locations are"} marked at their real coordinates.</p>
       <Canvas
         camera={{ position: DEFAULT_CAMERA.toArray(), fov: 42, near: 0.1, far: 100 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false }}
-        onPointerMissed={() => undefined}
+        onPointerMissed={(event) => { if (event.type === "click") { deselect.current?.(); containerRef.current?.focus({preventScroll:true}); } }}
       >
         <color attach="background" args={["#06090d"]} />
-        <ambientLight intensity={selected ? 1.1 : 0.35} />
+        <ambientLight intensity={1.1} />
         <directionalLight position={[5, 2, 4]} intensity={2.2} color="#fff2e0" />
         <directionalLight position={[-6, -1, -3]} intensity={0.25} color="#8aa0c8" />
         <Stars radius={60} depth={30} count={2500} factor={2.5} saturation={0} fade speed={0.2} />
@@ -93,6 +112,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
             <RotateCcw className="h-3.5 w-3.5" aria-hidden /> Reset view
           </button>
           {selected && <button type="button" onClick={() => { onAutoRotateChange(false); setFocusRequest(n => n + 1); }} aria-label="Focus selected site" className="inline-flex h-8 items-center gap-1 rounded border border-line bg-bg-elev/90 px-2 text-xs text-fg-muted hover:text-fg"><LocateFixed className="h-4 w-4" aria-hidden /> Focus site</button>}
+          {selected && props.onDeselect && <button type="button" onClick={() => deselect.current?.()} aria-label="Clear selection" title="Clear selection" className="inline-flex h-8 items-center gap-1 rounded border border-line bg-bg-elev/90 px-2 text-xs text-fg-muted hover:text-fg"><X className="h-4 w-4" aria-hidden /><span className="hidden xl:inline">Clear</span></button>}
           <button
             type="button"
             onClick={() => onAutoRotateChange(!autoRotate)}
@@ -108,7 +128,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         {statusLine && <div className="pointer-events-auto rounded border border-line bg-bg-elev/90 px-2.5 py-1.5 text-[10.5px] text-fg-muted">{statusLine}</div>}
       </div>
       {selected && <div className="pointer-events-none absolute left-3 right-3 top-16 max-w-md rounded-lg border border-line bg-bg-elev/90 p-3 text-sm text-fg" role="status">{selected.name}{mode === "analog" && <span className="num ml-2 text-xs text-fg-muted">{selected.rank != null ? `match rank ${selected.rank}` : "Not ranked"}{selected.similarity != null ? ` · similarity ${formatNumber(selected.similarity, { maxFractionDigits: 1 })}` : ""}</span>}<p className="mt-1 text-xs text-fg-muted">{config.textureNote}</p></div>}
-      <div className="pointer-events-none absolute bottom-3 left-3">
+      <div ref={legendRef} data-testid="globe-legend" className="pointer-events-none absolute left-3" style={{bottom:legendBottom}}>
         <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />
       </div>
       <div className="pointer-events-none absolute bottom-3 right-3 text-[10.5px] text-fg-faint">
@@ -182,7 +202,8 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
 
   useEffect(() => {
     if (switched.current) { switched.current = false; return; }
-    if (!selectedId || lat === undefined || lonEast === undefined || !ref.current) return;
+    if (!selectedId) { flight.current = null; return; }
+    if (lat === undefined || lonEast === undefined || !ref.current) return;
     const target = latLonToVector3(lat, lonEast, 1).normalize();
     const start = camera.position.clone().normalize();
     const distance = radius * 1.65;

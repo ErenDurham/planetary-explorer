@@ -13,6 +13,7 @@ import { useInterpretObjective, applicationFromInterpretation, taskApplicationFr
 import { toShares } from "@/lib/allocation";
 import { factorName } from "@/lib/objective";
 import { ANALOG_FEATURES, BODY_NAME, analogFeatureLabel, toAnalogShares } from "@/lib/analogFeatures";
+import { AIIndicator } from "@/components/ui/AIIndicator";
 import { Section } from "@/components/ui/Section";
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import type { DirectionOption, SiteReference, TaskInterpretation } from "@/types";
@@ -49,12 +50,13 @@ export function MissionObjective({ excluded }: { excluded: string[] }) {
   };
 
   return (
-    <Section title="Mission objective" subtitle="Describe the mission; review the suggested shares before applying.">
+    <Section title="Mission objective" subtitle="AI can suggest priorities; you review and apply them. Rules are used when AI is unavailable." actions={<AIIndicator label="AI-assisted priorities" iconOnly/>}>
       <form onSubmit={(e) => { e.preventDefault(); onSuggest(); }}>
         <label htmlFor="mission-objective" className="sr-only">Your mission objective</label>
         <textarea id="mission-objective" maxLength={500} rows={2} required value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="For example: land safely and maximise solar energy" className="w-full rounded-lg border border-line-strong bg-bg px-3 py-2 text-sm text-fg" />
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
           <button disabled={!draft.trim() || !Object.keys(defaults).length || interpret.status === "pending"} className="inline-flex items-center gap-2 rounded-lg border border-copper bg-copper/10 px-3 py-1.5 text-sm font-semibold text-copper-bright disabled:opacity-40" type="submit">
+            {interpret.status !== "pending" && <Sparkles className="h-3.5 w-3.5" aria-hidden />}
             {interpret.status === "pending" && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />}
             {interpret.status === "pending" ? "Reading objective…" : "Suggest priorities"}
           </button>

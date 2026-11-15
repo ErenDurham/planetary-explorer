@@ -54,7 +54,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
 
   if (body === "earth") {
     return (
-      <aside ref={panel} aria-label="Location detail" className="scroll-thin flex h-full flex-col overflow-y-auto bg-bg-elev" data-body="earth">
+      <aside ref={panel} aria-label="Location detail" className="scroll-thin flex h-auto flex-col overflow-visible lg:h-full lg:overflow-y-auto bg-bg-elev" data-body="earth">
         {!selectedId ? (
           <Section title="Earth location">
             <EmptyNote>Click a marker on the globe or a row in the candidate list.</EmptyNote>
@@ -74,7 +74,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
   }
 
   return (
-    <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-full flex-col overflow-y-auto bg-bg-elev" data-body="mars">
+    <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-auto flex-col overflow-visible lg:h-full lg:overflow-y-auto bg-bg-elev" data-body="mars">
       {!selectedId ? (
         <Section title="Site">
           <EmptyNote>Click a marker on the globe or a row in the ranked list.</EmptyNote>

@@ -871,3 +871,7 @@ Analyze uses full-precision factor contributions for comparator gaps and points 
 Read-only Earth, Mars and Moon comparison catalogue. `bodies` contains NASA-sourced planetary reference conditions (gravity, atmosphere, normal incident solar irradiance and mean solar day). `locations` contains independent location selectors, coverage, unchanged Earth/Mars measurements and provenance, plus two curated lunar landing-region descriptions. Moon solar-day hours are converted from the 29.53-day synodic period.
 
 This does not extend the Mars scoring model to another body. Lunar locations currently contain qualitative terrain/material descriptions and mission coordinates only. Numeric lunar site measurements remain absent, and the UI renders them as unavailable. Earth POWER temperature is 2 m air temperature; Earth EGM2008 and Mars areoid elevations are not subtracted. Regional slope/relief differences use the existing harmonised Earth/Mars grids.
+
+## Astro conversation
+
+`POST /api/v1/astro/chat` provides bounded, context-aware research guidance. Requests and responses are defined in `models/astro.py` and the generated OpenAPI schema. The backend owns scientific facts, excerpts, citations and navigation targets. Responses identify `llm` versus `deterministic_fallback`; missing Claude configuration does not make the endpoint unavailable. Unknown locations return 404; invalid request bounds or criteria return 422. See [ASTRO.md](ASTRO.md) for configuration, grounding and session behavior.

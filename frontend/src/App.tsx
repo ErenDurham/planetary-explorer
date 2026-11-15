@@ -7,11 +7,14 @@
 // texture and Mars markers on the Mars texture, and an Earth location never
 // carries a landing score.
 import { ExploreView, type ExploreAnalogContext } from "@/components/layout/ExploreView";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TopNav } from "@/components/layout/TopNav";
 import { StatusBanner } from "@/components/layout/StatusBanner";
 import { HealthChip } from "@/components/layout/HealthChip";
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
+import type { OverlayBounds } from "@/lib/overlay";
+import { AstroPanel } from "@/components/astro/AstroPanel";
+import { SitePanelShell } from "@/components/layout/SitePanelShell";
 import { RightSidebar } from "@/components/layout/RightSidebar";
 import { AnalyzeView } from "@/components/layout/AnalyzeView";
 import { ResearchView } from "@/components/layout/ResearchView";
@@ -32,6 +35,10 @@ import { EmptyNote } from "@/components/ui/Section";
 import type { AnalogRankResponse } from "@/types";
 
 export default function App() {
+  const [sitePanelWidth,setSitePanelWidth]=useState(380);
+  const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
+  const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
+  const updateAstroBounds=useCallback((bounds:OverlayBounds)=>setAstroBounds(previous=>previous && previous.left===bounds.left && previous.right===bounds.right && previous.top===bounds.top && previous.bottom===bounds.bottom ? previous : bounds),[]);
   const activeTab = useAppStore((s) => s.activeTab);
   const setActiveTab = useAppStore((s) => s.setActiveTab);
   const focusToken = useAppStore((s) => s.selectionRevision);
@@ -145,11 +152,14 @@ export default function App() {
     <div className="relative h-full">
       <PlanetViewer
         key="planet-viewer"
+        overlayBounds={activeTab === "explore" ? astroBounds : null}
+        onOverlayMaxHeightChange={setExploreOverlayMaxHeight}
         config={config}
         markers={markers}
         selectedId={selectedId}
         focusToken={focusToken}
         onSelect={onSelectVisible}
+        onDeselect={() => selectLocation(viewedBody, null)}
         autoRotate={autoRotate}
         onAutoRotateChange={setAutoRotate}
         resetToken={cameraResetToken}
@@ -256,7 +266,7 @@ export default function App() {
       {(activeTab === "explore" || activeTab === "analyze") && (
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">
           <label htmlFor="mobile-candidate" className="text-sm text-fg-muted">{exploreAnalog ? `${BODY_NAME[viewedBody]} candidate` : "Candidate"}</label>
-          <select id="mobile-candidate" value={mobileSelected ?? ""} onChange={e => (exploreAnalog ? onSelectVisible(e.target.value) : selectSite(e.target.value))} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="" disabled>{exploreAnalog ? "Select a candidate" : "Select a ranked site"}</option>{mobileOptions.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}</select>
+          <select id="mobile-candidate" value={mobileSelected ?? ""} onChange={e => (exploreAnalog ? selectLocation(viewedBody, e.target.value || null) : selectSite(e.target.value || null))} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="">No location selected</option>{mobileOptions.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}</select>
           {exploreAnalog && (
             <>
               <label htmlFor="mobile-reference" className="text-sm text-fg-muted">Reference</label>
@@ -265,7 +275,7 @@ export default function App() {
           )}
         </div>
       )}
-      <main id="workspace" tabIndex={-1} className="min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1"><main style={{"--site-panel-width":`${sitePanelWidth}px`} as React.CSSProperties} id="workspace" tabIndex={-1} className="relative min-w-0 min-h-0 flex-1">
         {/* Mission Design stays mounted (only hidden) on other tabs, as the old
             drawer did, so a draft objective and the excluded-factor sync survive
             switching tabs. */}
@@ -276,26 +286,20 @@ export default function App() {
           <div className="h-full">{centre}</div>
         ) : (
           // Candidates scroll independently of mission settings and reasoning.
-          <div className={`grid h-full grid-cols-1 overflow-y-auto lg:overflow-hidden ${activeTab === "analyze" ? "lg:grid-cols-[280px_minmax(0,1fr)]" : "lg:grid-cols-[280px_minmax(0,1fr)_380px] xl:grid-cols-[280px_minmax(0,1fr)_400px]"}`}>
+          <div className={`grid h-full grid-cols-1 overflow-y-auto lg:overflow-hidden ${activeTab === "analyze" ? "lg:grid-cols-[280px_minmax(0,1fr)]" : "lg:grid-cols-[250px_minmax(0,1fr)_var(--site-panel-width)]"}`}>
             <aside id="ranked-candidates" tabIndex={-1} aria-label="Candidate ranking" className="scroll-thin order-2 hidden min-h-0 overflow-y-auto border-r border-line bg-bg-elev lg:order-1 lg:block">
               {candidatePane}
             </aside>
-            <div className={`order-1 min-h-[320px] lg:order-2 lg:h-full ${activeTab === "analyze" ? "h-[75vh]" : "h-[62vh]"}`}>{centre}</div>
-            {activeTab === "explore" && <div className="order-3 min-h-0 border-t border-line lg:border-l lg:border-t-0">
-              <RightSidebar
-                body={viewedBody}
-                selectedId={selectedId}
-                evaluation={evaluation.data}
-                evaluationPending={evaluation.isPending}
-                mission={evaluation.mission}
-                earthLocation={earthLocation}
-                earthPending={earth.isPending}
-                analog={analog ? { response: rankData, referenceName, palette: rankPalette } : null}
-              />
+            <div className={`relative order-1 min-h-[320px] lg:order-2 lg:h-full ${activeTab === "analyze" ? "h-[75vh]" : "h-[72vh]"}`}>
+              <div className="h-full">{centre}</div>
+            </div>
+            {activeTab === "explore" && <div className="order-3 min-h-0 border-t border-line bg-bg-elev lg:border-l lg:border-t-0">
+                <SitePanelShell width={sitePanelWidth} onWidthChange={setSitePanelWidth}><RightSidebar body={viewedBody} selectedId={selectedId} evaluation={evaluation.data} evaluationPending={evaluation.isPending} mission={evaluation.mission} earthLocation={earthLocation} earthPending={earth.isPending} analog={analog ? { response: rankData, referenceName, palette: rankPalette } : null} /></SitePanelShell>
             </div>}
           </div>
         )}
-      </main>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
+      </main></div>
     </div>
   );
 }

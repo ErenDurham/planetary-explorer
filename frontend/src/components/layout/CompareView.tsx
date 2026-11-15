@@ -6,7 +6,7 @@
 // measurements, planetary context (never folded into the index), what the pair
 // can help test, and the provenance / method / limitation disclosures. The Moon
 // catalogue data and helpers are kept but not offered in this release.
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
 import { api } from "@/services/api";
@@ -68,6 +68,11 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
   const earth = pick(earthLocs, selectedEarthId, appliedReference?.body === "earth" ? appliedReference.id : null, legacyEarthId);
   const mars = pick(marsLocs, selectedMarsId, selectedId, appliedReference?.body === "mars" ? appliedReference.id : null);
   const byBody: Record<Body, { location: ComparisonLocation | null; locations: ComparisonLocation[] }> = { earth: { location: earth, locations: earthLocs }, mars: { location: mars, locations: marsLocs } };
+  const setComparisonPair = useAppStore(s => s.setComparisonPair);
+  useEffect(() => {
+    setComparisonPair({earthId: earth?.id ?? null, marsId: mars?.id ?? null});
+  }, [earth?.id, mars?.id, setComparisonPair]);
+  useEffect(() => () => setComparisonPair(null), [setComparisonPair]);
   const columns = pairColumns(selectionBody, swapped).map(c => ({ ...c, ...byBody[c.body] })) as [PairColumnData, PairColumnData];
   const selectedCol = columns.find(c => c.role === "selected")!;
   const referenceCol = columns.find(c => c.role === "reference")!;

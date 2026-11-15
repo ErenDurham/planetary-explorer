@@ -13,7 +13,7 @@ class ResizeObserverStub {
 const g = globalThis as unknown as Record<string, unknown>;
 if (!g.ResizeObserver) g.ResizeObserver = ResizeObserverStub;
 if (!window.matchMedia) {
-  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+  window.matchMedia = (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -22,5 +22,5 @@ if (!window.matchMedia) {
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
-  }));
+  });
 }

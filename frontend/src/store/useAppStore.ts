@@ -104,6 +104,9 @@ export interface ComparisonSettings {
 
 export interface AppState {
   comparison: ComparisonSettings;
+  /** The resolved pair currently displayed by Compare, including catalogue defaults. */
+  comparisonPair: {earthId: string | null; marsId: string | null} | null;
+  setComparisonPair: (pair: {earthId: string | null; marsId: string | null} | null) => void;
   setComparison: (patch: Partial<ComparisonSettings>) => void;
   missionObjective: string;
   appliedObjective: string;
@@ -237,6 +240,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
   },
   selectionRevision: 0,
+  comparisonPair: null,
+  setComparisonPair: (comparisonPair) => set({comparisonPair}),
   comparison: { mode: "all", earthId: "haughton_crater", moonId: "apollo_11", section: "all", details: false },
   setComparison: (patch) => set(s => ({ comparison: { ...s.comparison, ...patch } })),
   activeTab: "explore",

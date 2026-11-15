@@ -8,6 +8,8 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException, Query
 
 from app.config.settings import get_settings
+from app.models.astro import AstroRequest, AstroResponse
+from app.services import astro_engine
 from app.models import (
     ApiError,
     DefaultMissionResponse,
@@ -162,3 +164,13 @@ def rank_analogs(req: AnalogRankRequest) -> AnalogRankResponse:
         raise _not_found("location", str(e).strip("'")) from e
     except ValueError as e:
         raise HTTPException(status_code=422, detail={"code": "validation_error", "message": str(e), "details": None}) from e
+
+
+@router.post('/astro/chat', response_model=AstroResponse, responses=ERR)
+def astro_chat(req: AstroRequest) -> AstroResponse:
+    try:
+        return astro_engine.chat(req)
+    except KeyError as exc:
+        raise _not_found('location', str(exc).strip("'")) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail={'code': 'validation_error', 'message': str(exc), 'details': None}) from exc

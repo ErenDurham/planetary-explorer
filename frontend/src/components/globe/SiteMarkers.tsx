@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import { Quaternion, Vector3, type Group, type Mesh } from "three";
+import { labelPosition } from "./labelPosition";
 import { markerPosition } from "./geo";
 import type { MarkerDatum } from "./MarkerData";
 import type { PlanetConfig } from "./PlanetConfig";
@@ -166,8 +167,8 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
         </Html>
       )}
       {hovered && (
-        <Html position={[0, BASE * 2.2, 0]} center distanceFactor={2.6} style={{ pointerEvents: "none" }} zIndexRange={[50, 0]}>
-          <div className="whitespace-nowrap rounded border border-line-strong bg-bg-elev-2/95 px-2.5 py-1.5 text-left shadow-lg">
+        <Html position={[0, BASE * 2.2, 0]} center calculatePosition={labelPosition} occlude={planetRef ? [planetRef] : true} style={{ pointerEvents: "none" }} zIndexRange={[50, 0]}>
+          <div data-testid="marker-description" className="w-max max-w-[260px] whitespace-normal break-words rounded border border-line-strong bg-bg-elev-2/95 px-2.5 py-1.5 text-left shadow-lg">
             <div className="text-xs font-semibold text-fg">{datum.name}</div>
             <div className="text-[10.5px] text-fg-muted">{datum.region}</div>
             <div className="num mt-0.5 text-[10.5px] text-fg-muted">{markerStatusText(datum)}</div>

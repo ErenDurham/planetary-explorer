@@ -53,7 +53,7 @@ def call_json(system: str, user: str, schema: dict, max_tokens: int = 2048) -> s
     import anthropic  # lazy: optional dependency from requirements-ai.txt
 
     s = get_settings()
-    client = anthropic.Anthropic(api_key=s.anthropic_api_key)
+    client = anthropic.Anthropic(api_key=s.anthropic_api_key, timeout=30.0, max_retries=1)
     resp = client.messages.create(
         model=s.llm_model,
         max_tokens=max_tokens,
