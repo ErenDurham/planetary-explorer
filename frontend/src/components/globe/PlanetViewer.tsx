@@ -15,7 +15,7 @@ import { hasWebGL, prefersReducedMotion } from "./webgl";
 import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
-import { GlobeLegend } from "./GlobeLegend";
+import { GlobeLegend, type RoleLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
 import type { RankPalette } from "@/lib/rankColor";
@@ -42,6 +42,8 @@ export interface PlanetViewerProps {
   /** Analog mode: names the reference in the legend, e.g. "Earth matches to Elysium Planitia (InSight)". */
   legendHeading?: string;
   rankedCount?: number | null;
+  /** Workbook site-role filter shown in the legend. */
+  roles?: RoleLegend;
   /** Extra scene content drawn on the surface (SurfaceOverlays); the viewer gives it no meaning. */
   overlays?: ReactNode;
   /** Camera distance, as a multiple of the radius, that selecting a marker flies to. 1.65 frames a region; ~1.08 frames a 60 km footprint. */
@@ -74,7 +76,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
   // no WebGL (or a renderer that fails later) gets the flat map with the same markers and legend
   const webgl = useMemo(() => hasWebGL(), []);
   const reducedMotion = useMemo(() => prefersReducedMotion(), []);
-  const legend = <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />;
+  const legend = <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} roles={props.roles} />;
   if (!webgl) return <GlobeFallback config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} reason="This browser cannot draw 3D graphics (WebGL is unavailable)." legend={legend} />;
   return (
     <GlobeErrorBoundary fallback={(error) => <GlobeFallback config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} reason={`The 3D renderer stopped (${error.message}).`} legend={legend} />}>

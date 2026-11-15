@@ -28,6 +28,7 @@ import { CompareAtlasHeader, AtlasPairSelectors as PairSelectors } from "@/compo
 import { AnalogPreferencesSlot } from "@/components/compare/AnalogPreferencesSlot";
 import { SimilarityCard } from "@/components/compare/SimilarityCard";
 import { PairMetricsTable } from "@/components/compare/PairMetricsTable";
+import { PairConditionsTable } from "@/components/compare/PairConditionsTable";
 import { PlanetaryContext } from "@/components/compare/PlanetaryContext";
 import { PairStudies } from "@/components/compare/PairStudies";
 import { ProvenanceDisclosures } from "@/components/compare/ProvenanceDisclosures";
@@ -210,6 +211,10 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
 
         <AtlasSection number="03" title="Compare the measurements" description="Raw values stay in their original units. Unavailable measurements remain explicit.">
         {discoveredSelection ? selectedFound ? <><RegionMeasurements atlas region={selectedFound.region} other={measuredReference ?? undefined}/>{measuredReference && selectedFound.region.baseline!==measuredReference.baseline && <p className="mt-2 text-sm text-warn">Different processing baselines: values are contextual; numerical differences and combined scores are unavailable.</p>}<button className="mt-3 text-info underline" onClick={()=>downloadJson("region-comparison.json",{selected:selectedFound.region,comparison:measuredReference,run_id:discovery.runId,ranking:foundRank ?? null})}>Download measured comparison</button></> : <p role="status">The selected survey footprint is loading or unavailable. No catalog region has been substituted.</p> : <PairMetricsTable columns={columns} candidate={pair.candidate} rankExcluded={pair.rank.data?.excluded_features ?? []} />}
+        </AtlasSection>
+
+        <AtlasSection number="03b" title="Reported conditions" description="What the cited literature reports for each location, side by side. Text only; not part of the index.">
+        <PairConditionsTable columns={columns} />
         </AtlasSection>
 
         <AtlasSection number="04" title="Take the research further">

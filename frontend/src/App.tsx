@@ -35,6 +35,7 @@ import { useAnalogRank } from "@/hooks/useAnalogRank";
 import { effectiveMapMode, referenceIdFor, selectedIdFor, useAppStore } from "@/store/useAppStore";
 import { BODY_NAME, otherBody, toAnalogShares } from "@/lib/analogFeatures";
 import { sharesEqual } from "@/lib/allocation";
+import { passesRole, roleCounts, roleKey, type RoleFilter } from "@/lib/roles";
 import { RankedList, AnalogRankedList } from "@/components/mission/RankedList";
 import type { RankChange } from "@/components/mission/AnalogPreferences";
 import { ErrorNote } from "@/components/ui/ErrorNote";
@@ -118,6 +119,11 @@ export default function App() {
   const referenceName = referenceId ? (refBody === "earth" ? earthNames.get(referenceId) : marsNames.get(referenceId)) ?? rankData?.reference.name ?? referenceId : null;
   const referenceOptions = useMemo(() => (refBody === "earth" ? earth.sites.map((s) => ({ id: s.id, name: s.name })) : (sites.data?.sites ?? []).map((s) => ({ id: s.id, name: s.name }))), [refBody, earth.sites, sites.data]);
 
+  // Workbook site roles (a display filter on markers and lists; ranks and colours come from the full pool)
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const roleOf = useMemo(() => new Map((earth.data?.locations ?? []).filter((l) => l.role).map((l) => [roleKey(l.body, l.id), l.role!])), [earth.data]);
+  const shownOnBody = useCallback((body: string) => (id: string) => passesRole(roleFilter, roleOf.get(roleKey(body, id))), [roleFilter, roleOf]);
+
   const markers: MarkerDatum[] = useMemo(() => {
     if (taskMissionView) {
       const byId = new Map(assessment.data?.results.map(r=>[r.site_id,r])??[]);
@@ -148,6 +154,12 @@ export default function App() {
       return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lon_east, mode: "landing" as const, score: r?.score ?? null, rank: r?.rank ?? null, status: r?.status ?? null, similarity: null, unrankableReason: null, appearance: r?.status === "ok" ? analogMarkerAppearance(missionRankPosition(r.rank,evaluation.data?.results.map(r=>r.rank)??[]),rankPalette) : markerAppearance(r?.status, r?.score) };
     });
   }, [viewedBody, analog, sites.data, evaluation.data, earth.sites, rankData, rankPalette, referenceId, earthMission, taskMissionView, assessment.data, earth.data]);
+
+  const visibleMarkers = useMemo(() => markers.filter((m) => shownOnBody(viewedBody)(m.id)), [markers, shownOnBody, viewedBody]);
+  const roleLegend = useMemo(() => {
+    const counts = roleCounts(markers.map((m) => roleOf.get(roleKey(viewedBody, m.id))));
+    return Object.values(counts).some((n) => n > 0) ? { counts, selected: roleFilter, onChange: setRoleFilter } : undefined;
+  }, [markers, roleOf, viewedBody, roleFilter]);
 
   // A deliberate trip to analogs opens the top match only if that body has no
   // selection. Consume the request once so clearing a site stays cleared.
@@ -217,7 +229,8 @@ export default function App() {
         overlayBounds={activeTab === "explore" ? astroBounds : null}
         onOverlayMaxHeightChange={setExploreOverlayMaxHeight}
         config={config}
-        markers={welcome ? [] : markers}
+        markers={welcome ? [] : visibleMarkers}
+        roles={welcome ? undefined : roleLegend}
         selectedId={selectedId}
         focusToken={focusToken}
         onSelect={onSelectVisible}
@@ -312,11 +325,12 @@ export default function App() {
       emptyReference={referenceSelector}
       filter={listFilter}
       onFilterChange={setListFilter}
+      shown={shownOnBody(viewedBody)}
     />
   ) : (
     <>
       {evaluation.error && <div className="p-3"><ErrorNote error={evaluation.error} context="scoring/evaluate" /></div>}
-      <RankedList results={evaluation.data?.results} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} />
+      <RankedList results={evaluation.data?.results} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} shown={shownOnBody("mars")} />
     </>
   );
 
