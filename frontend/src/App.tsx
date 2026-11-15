@@ -24,7 +24,8 @@ import { MissionGate } from "@/components/layout/MissionGate";
 import { RightSidebar } from "@/components/layout/RightSidebar";
 import { AnalyzeView } from "@/components/layout/AnalyzeView";
 import { ResearchView } from "@/components/layout/ResearchView";
-import { CompareView } from "@/components/layout/CompareView";
+import { CompareEntry } from "@/features/regions/CompareEntry";
+import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
 import { DiscoveryView } from "@/features/discovery";
 import { PlanetViewer, PLANET_CONFIGS, markerAppearance, analogMarkerAppearance, type MarkerDatum } from "@/components/globe";
 import { useSites } from "@/hooks/useSites";
@@ -43,6 +44,7 @@ import type { AnalogRankResponse } from "@/types";
 
 export default function App() {
   const regionTarget = useRegionTarget(s => s.target);
+  const openRegion = useRegionTarget(s => s.open);
   const candidateResearchTarget = useCandidateResearchTarget(s => s.target);
   // Explore's site pane starts collapsed; selecting a site opens it (see the effect below)
   const [sitePanelWidth,setSitePanelWidth]=useState(COLLAPSED_SITE_WIDTH);
@@ -104,7 +106,7 @@ export default function App() {
   // Mission tools retain their first-run prompt; discovery and candidate research
   // are usable immediately without designing a mission.
   const discoveryResearch = activeTab === "research" && candidateResearchTarget != null;
-  const gated = !missionDesigned && activeTab !== "mission" && !findAnalogs && !discoveryResearch && !regionActive;
+  const gated = !missionDesigned && activeTab !== "mission" && !findAnalogs && !discoveryResearch && !regionActive && activeTab !== "compare";
   const gate = (e: React.SyntheticEvent) => {
     if (!gated) return;
     if ((e.target as Element | null)?.closest?.("[data-gate-allow]")) return;
@@ -282,7 +284,7 @@ export default function App() {
     : activeTab === "analyze"
       ? regionTarget ? <RegionWorkspace key={`${regionTarget.kind}:${regionTarget.runId}:${regionTarget.id}`} target={regionTarget} compare={false}/> : missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
       : activeTab === "compare"
-        ? regionTarget ? <RegionWorkspace key={`${regionTarget.kind}:${regionTarget.runId}:${regionTarget.id}`} target={regionTarget} compare/> : <CompareView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} />
+        ? <CompareEntry sites={sites.data?.sites} selectedId={selectedMarsId} />
         : <ResearchView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} mission={evaluation.mission} />;
 
   // Candidate pane for the visible body (Analyze always shows the Mars landing ranking).
@@ -345,7 +347,16 @@ export default function App() {
       <div className="absolute left-4 top-0 z-50 flex gap-2">
         <a className="sr-only rounded bg-bg-elev p-3 text-sm focus:not-sr-only" href="#workspace">Skip to workspace</a>
       </div>
-      <TopNav active={activeTab} onChange={setActiveTab} />
+      <TopNav active={activeTab} onChange={tab=>{
+        if((tab==="compare" || tab==="analyze") && activeTab==="explore"){
+          const discovery=useDiscoveryStore.getState();
+          const id=discovery.runId ? discovery.runs[discovery.runId]?.selectedCandidateId : null;
+          if(exploreMode==="find_analogs" && discovery.runId && id)openRegion({kind:"discovered",id,runId:discovery.runId});
+          else if(exploreMode==="browse" && selectedId)openRegion({kind:"catalog",id:selectedId});
+          else useRegionTarget.getState().choose();
+        }
+        setActiveTab(tab);
+      }} />
       <StatusBanner />
       {((activeTab === "explore" && !findAnalogs) || (activeTab === "analyze" && !regionActive)) && (
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">

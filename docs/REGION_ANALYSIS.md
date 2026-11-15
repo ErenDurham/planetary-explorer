@@ -4,8 +4,12 @@ Discovered footprints now have **Analyze region** and **Compare region** actions
 in their evidence panel. They open a shared raw-measurement workspace instead of
 putting discovery IDs into curated selection fields or Mars mission evaluations.
 
-The workspace also accepts catalog Earth/Mars regions. Existing Analyze and
-Compare have explicit entry actions into it. The original mission-fit analysis
+The workspace also accepts catalog Earth/Mars regions. Normal Advanced → Compare
+navigation carries the current Explore discovery selection (including its run),
+even after an earlier catalog comparison. With no selection, the Compare entry
+shows a grouped chooser of found survey footprints and catalog regions; it never
+silently substitutes the first established site. Existing Analyze and catalog
+imagery tools also have explicit entry actions into the shared workspace. The original mission-fit analysis
 and imagery comparison remain available through “Use established mission tools.”
 
 ## Shared modules
@@ -64,3 +68,7 @@ Morocco candidate and processed Jezero profile through a local API. It also
 switched to a catalog Earth region and verified the baseline warning. At 390px,
 the document width remained 390px; wide measurement tables scroll internally.
 This is software verification, not scientific or field validation.
+
+Regression coverage includes the actual App Advanced → Compare navigation and
+the no-selection chooser, not only the candidate-panel action. A real-data
+headless browser check exercised the same ordinary menu path.
