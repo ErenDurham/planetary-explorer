@@ -17,7 +17,7 @@ def _req(mars="jezero_crater", weights=None, **kw):
                                     requirements={"analog_reference_id": mars}, **kw)
 
 
-@pytest.mark.parametrize("mars", ["jezero_crater", "gale_crater", "elysium_planitia", "utopia_planitia"])
+@pytest.mark.parametrize("mars", ["jezero_crater", "noctis_labyrinthus", "elysium_planitia", "utopia_planitia"])
 def test_scores_and_order_equal_the_explore_analog_ranking(mars):
     r = evaluate(_req(mars))
     ref = rank_pool(AnalogRankRequest(reference_body="mars", reference_id=mars, candidate_body="earth"), get_store())
@@ -27,7 +27,7 @@ def test_scores_and_order_equal_the_explore_analog_ranking(mars):
 
 
 def test_factor_points_add_up_to_the_score():
-    for x in evaluate(_req("gale_crater")).results:
+    for x in evaluate(_req("noctis_labyrinthus")).results:
         assert math.isclose(100 + sum(f.contribution for f in x.factors), x.score, abs_tol=1e-9)
         assert all(f.contribution <= 0 and 0 < f.q <= 1 for f in x.factors)
 
@@ -48,13 +48,13 @@ def test_a_missing_feature_is_dropped_for_every_site_and_disclosed():
 
 
 def test_method_names_the_mars_site_and_requirements_echo_it():
-    r = evaluate(_req("gale_crater"))
-    assert "Gale Crater" in r.profile_label and "Gale Crater" in r.method
-    assert r.requirements.analog_reference_id == "gale_crater"
+    r = evaluate(_req("noctis_labyrinthus"))
+    assert "Noctis Labyrinthus" in r.profile_label and "Noctis Labyrinthus" in r.method
+    assert r.requirements.analog_reference_id == "noctis_labyrinthus"
 
 
 def test_rejects_a_reference_outside_the_earth_rover_test(client):
-    bad = client.post("/api/v1/missions/evaluate", json={"body": "mars", "mission_type": "rover_field_test", "requirements": {"analog_reference_id": "gale_crater"}})
+    bad = client.post("/api/v1/missions/evaluate", json={"body": "mars", "mission_type": "rover_field_test", "requirements": {"analog_reference_id": "noctis_labyrinthus"}})
     assert bad.status_code == 422
     unknown = client.post("/api/v1/missions/evaluate", json={"body": "earth", "mission_type": "rover_field_test", "requirements": {"analog_reference_id": "nowhere"}})
     assert unknown.status_code == 422

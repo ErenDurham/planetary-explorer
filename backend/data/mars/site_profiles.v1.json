@@ -5268,7 +5268,7 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": "Literature labels: periglacial (Soare et al., 2022);  (Levy, Head et al., 2010)."
+          "notes": "Literature labels: periglacial (Soare et al., 2022)."
         },
         {
           "feature_id": "mineralogy_tags",
@@ -5482,16 +5482,6 @@
           "institution": "Planetary Explorer research team",
           "url": "data/workbook/lesser_known_sites.v1.json",
           "access_method": "project workbook (scripts/import_workbook.py)"
-        },
-        "levy2010_protonilus_gullies": {
-          "source_id": "levy2010_protonilus_gullies",
-          "title": "Identification of gully debris flow deposits in Protonilus Mensae, Mars",
-          "institution": "Earth and Planetary Science Letters",
-          "url": "https://doi.org/10.1016/j.epsl.2009.08.002",
-          "access_method": "publication",
-          "cite": "Levy, Head et al., 2010",
-          "year": 2010,
-          "kind": "peer_reviewed"
         },
         "soare2022_protonilus_cycling": {
           "source_id": "soare2022_protonilus_cycling",

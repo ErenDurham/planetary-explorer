@@ -26,10 +26,10 @@ def _measured(profile, feature):
 
 
 def test_comparison_uses_measured_profile_data_and_the_analog_scales():
-    c = analog_check.check("atacama_yungay", "jezero_crater", "rules")
+    c = analog_check.check("rio_tinto", "jezero_crater", "rules")
     store = get_store()
     slope = next(f for f in c.factors if f.criterion_id == "terrain_safety")
-    assert slope.earth_value == _measured(store.earth_profile("atacama_yungay"), "slope_regional_median_deg")
+    assert slope.earth_value == _measured(store.earth_profile("rio_tinto"), "slope_regional_median_deg")
     assert slope.mars_value == _measured(store.profile("jezero_crater"), "slope_regional_median_deg")
     # "comparable" = what the Earth ranking and Explore's analog view call close or
     # moderately different: within the analog spec's scale (slope 1.5 deg, relief 100 m)
@@ -43,7 +43,7 @@ def test_comparison_uses_measured_profile_data_and_the_analog_scales():
 
 
 def test_a_large_difference_is_not_comparable():
-    c = analog_check.check("mauna_kea_summit", "gale_crater", "rules")
+    c = analog_check.check("holuhraun_iceland", "noctis_labyrinthus", "rules")
     relief = next(f for f in c.factors if f.criterion_id == "surface_roughness")
     assert relief.difference > 100 and relief.comparable is False and relief.note.startswith("Not comparable")
 
@@ -53,7 +53,7 @@ def test_earth_sites_carry_only_recent_research_and_say_when_there_is_none():
         for r in analog_check.check(cid, "jezero_crater", "rules").research:
             year = next(s["year"] for s in evidence.registry()["sources"] if s["cite"] == r.cite)
             assert year >= evidence.cutoff_year()
-    assert analog_check.check("atacama_yungay", "jezero_crater", "rules").research    # NASA ARADS, Warren-Rhodes et al.
+    assert analog_check.check("mcmurdo_dry_valleys", "jezero_crater", "rules").research    # registry: analog_deserts_life
     assert analog_check.check("haughton_crater", "jezero_crater", "rules").research == []   # no source in the last 15 years
 
 
@@ -62,16 +62,16 @@ def test_the_model_chooses_the_pair_and_sees_the_data_to_cross_reference(monkeyp
     ids = ("terrain_safety", "elevation_suitability", "surface_roughness", "thermal_conditions", "solar_illumination")
     answer = {"mission_profile": "rover", "weights": {k: 20 for k in ids}, "reasons": {k: "From the text." for k in ids}, "evidence": {},
               "earth_weights": {k: 20 for k in ids}, "earth_reasons": {k: "From the text." for k in ids}, "unsupported_needs": [], "confidence": "high",
-              "focus_body": "mars", "site_guess": "none", "analog_pair": {"earth": "atacama_yungay"}}
+              "focus_body": "mars", "site_guess": "none", "analog_pair": {"earth": "rio_tinto"}}
     seen = {}
     monkeypatch.setattr(oe, "_call_llm", lambda system, user, schema: seen.update(system=system, schema=schema) or json.dumps(answer))
     r = oe.interpret(InterpretRequest(objective="A rover to drill for signs of life", excluded_criteria=EXCL))
     assert r.analog_check.chosen_by == "llm"
     # the model picks the proven Earth site; the Mars site is computed: the one most similar to it
-    assert r.analog_check.earth_site_id == "atacama_yungay"
-    assert r.analog_check.mars_site_id == analog_check.closest_mars("atacama_yungay")
-    assert "slope_regional_median_deg" in seen["system"] and "atacama_yungay" in seen["system"] and "Cross-reference" in seen["system"]
-    assert "analog_atacama_drill" in seen["system"]                       # Earth research is in front of the model
+    assert r.analog_check.earth_site_id == "rio_tinto"
+    assert r.analog_check.mars_site_id == analog_check.closest_mars("rio_tinto")
+    assert "slope_regional_median_deg" in seen["system"] and "rio_tinto" in seen["system"] and "Cross-reference" in seen["system"]
+    assert "analog_deserts_life" in seen["system"]                        # Earth research is in front of the model
     assert seen["schema"]["properties"]["analog_pair"]["properties"]["earth"]["enum"] == analog_check.earth_ids()
     assert "mars" not in seen["schema"]["properties"]["analog_pair"]["properties"]
 
@@ -99,10 +99,10 @@ def test_a_mars_site_named_in_the_text_is_the_one_compared(monkeypatch):
     ids = ("terrain_safety", "elevation_suitability", "surface_roughness", "thermal_conditions", "solar_illumination")
     answer = {"mission_profile": "rover", "weights": {k: 20 for k in ids}, "reasons": {k: "x" for k in ids}, "evidence": {},
               "earth_weights": {k: 20 for k in ids}, "earth_reasons": {k: "x" for k in ids}, "unsupported_needs": [], "confidence": "high",
-              "focus_body": "earth", "site_guess": "none", "analog_pair": {"earth": "mauna_kea_summit"}}
+              "focus_body": "earth", "site_guess": "none", "analog_pair": {"earth": "holuhraun_iceland"}}
     monkeypatch.setattr(oe, "_call_llm", lambda system, user, schema: json.dumps(answer))
     c = oe.interpret(InterpretRequest(objective="Find an Earth field site to test a rover for Elysium Planitia", excluded_criteria=EXCL)).analog_check
-    assert c.mars_site_id == "elysium_planitia" and c.earth_site_id == "mauna_kea_summit"
+    assert c.mars_site_id == "elysium_planitia" and c.earth_site_id == "holuhraun_iceland"
 
 
 def test_closest_mars_is_the_top_of_the_full_analog_ranking():

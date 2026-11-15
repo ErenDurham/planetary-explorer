@@ -58,7 +58,7 @@ def apply() -> None:
             "name": s.get("name") if w["id"] in old and w["id"] not in HERITAGE else w["name"],
             "region": s.get("region") if w["id"] in old and not w["region"] else w["region"],
             "lat": s["lat"] if keep else w["lat"], "lon_east": s["lon_east"] if keep else w["lon_east"],
-            "role": w["role"], "notes": w["notes"], "coordinates_approximate": w["coordinates_approximate"],
+            "role": w["role"], "notes": w["notes"], "coordinates_approximate": w["coordinates_approximate"] and not keep,
             "paired_earth_site_id": w["paired_earth_site_id"],
         })
         if w["id"] in HERITAGE:

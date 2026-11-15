@@ -230,15 +230,15 @@ def test_endpoint_round_trip_and_errors(client):
     assert "ratios" in body["assumption"]
     # errors
     assert client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "nope"}).json()["error"]["code"] == "not_found"
-    assert client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "jezero_crater", "site_ids": ["gale_crater"]}).status_code == 422
+    assert client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "jezero_crater", "site_ids": ["noctis_labyrinthus"]}).status_code == 422
     assert client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "jezero_crater", "range_pp": 0}).status_code == 422
     SensitivityRequest(mission=scoring_engine.default_mission(), focus_site_id="x")  # model builds with defaults
 
 
 def test_sweep_is_deterministic(client):
     m = scoring_engine.default_mission().model_dump()
-    a = client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "gale_crater"}).json()
-    b = client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "gale_crater"}).json()
+    a = client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "noctis_labyrinthus"}).json()
+    b = client.post("/api/v1/scoring/sensitivity", json={"mission": m, "focus_site_id": "noctis_labyrinthus"}).json()
     assert a == b
 
 

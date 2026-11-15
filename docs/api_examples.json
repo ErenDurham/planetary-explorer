@@ -2185,7 +2185,7 @@
         ],
         "role": "Instrument testing",
         "notes": "Not a base; good for instrument-test matches",
-        "coordinates_approximate": true,
+        "coordinates_approximate": false,
         "paired_earth_site_id": "lake_salda",
         "reported_conditions": [
           {
@@ -2796,7 +2796,7 @@
       ],
       "role": "Instrument testing",
       "notes": "Not a base; good for instrument-test matches",
-      "coordinates_approximate": true,
+      "coordinates_approximate": false,
       "paired_earth_site_id": "lake_salda",
       "reported_conditions": [
         {
@@ -5519,245 +5519,6 @@
       {
         "mars_site_id": "jezero_crater",
         "earth_candidate": {
-          "id": "south_pole_station",
-          "name": "Amundsen\u2013Scott South Pole Station",
-          "region": "Antarctic Plateau, geographic South Pole",
-          "country": "Antarctica",
-          "lat": -90.0,
-          "lon_east": 0.0,
-          "footprint": {
-            "shape": "square",
-            "center_lat": -90.0,
-            "center_lon_east": 0.0,
-            "half_width_deg": 0.25,
-            "radius_km": null,
-            "crs": "EPSG:4326",
-            "longitude_convention": "east_-180_180",
-            "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
-          },
-          "description": "Research station on the Antarctic ice sheet at the geographic South Pole, paired with the south polar cap as a polar-base analogue.",
-          "tags": [],
-          "known_analog_use": [],
-          "sources": [],
-          "role": "To evaluate",
-          "coordinates_approximate": false,
-          "paired_mars_site_id": "planum_australe",
-          "why_they_match": "High, cold ice sheet at a pole \u2014 the closest Earth match to a polar base",
-          "reported_conditions": [
-            {
-              "feature": "terrain",
-              "label": "Terrain",
-              "text": null,
-              "note": "The workbook's source for this value is not on the approved source list.",
-              "status": "excluded_source",
-              "source_ids": [],
-              "evidence_source_id": null,
-              "evidence_quote": null,
-              "provenance": "literature-reported (workbook author)"
-            },
-            {
-              "feature": "mineralogy",
-              "label": "Mineralogy",
-              "text": null,
-              "note": "The workbook's source for this value is not on the approved source list.",
-              "status": "excluded_source",
-              "source_ids": [],
-              "evidence_source_id": null,
-              "evidence_quote": null,
-              "provenance": "literature-reported (workbook author)"
-            },
-            {
-              "feature": "elevation",
-              "label": "Elevation",
-              "text": null,
-              "note": "The workbook's source for this value is not on the approved source list.",
-              "status": "excluded_source",
-              "source_ids": [],
-              "evidence_source_id": null,
-              "evidence_quote": null,
-              "provenance": "literature-reported (workbook author)"
-            },
-            {
-              "feature": "thermal",
-              "label": "Thermal",
-              "text": null,
-              "note": "The workbook's source for this value is not on the approved source list.",
-              "status": "excluded_source",
-              "source_ids": [],
-              "evidence_source_id": null,
-              "evidence_quote": null,
-              "provenance": "literature-reported (workbook author)"
-            },
-            {
-              "feature": "solar",
-              "label": "Solar / power",
-              "text": null,
-              "note": "The workbook's source for this value is not on the approved source list.",
-              "status": "excluded_source",
-              "source_ids": [],
-              "evidence_source_id": null,
-              "evidence_quote": null,
-              "provenance": "literature-reported (workbook author)"
-            },
-            {
-              "feature": "wind",
-              "label": "Wind",
-              "text": null,
-              "note": "The workbook's source for this value is not on the approved source list.",
-              "status": "excluded_source",
-              "source_ids": [],
-              "evidence_source_id": null,
-              "evidence_quote": null,
-              "provenance": "literature-reported (workbook author)"
-            }
-          ],
-          "condition_sources": {}
-        },
-        "similarity": 85.47,
-        "distance": 0.17,
-        "rank": 1,
-        "feature_distances": [
-          {
-            "feature_id": "slope_regional_median_deg",
-            "label": "Regional slope (median, ~3.7 km baseline)",
-            "comparable": false,
-            "mars_value": 1.077,
-            "earth_value": null,
-            "unit": "deg",
-            "scale": 1.5,
-            "distance": null,
-            "raw_weight": 25.0,
-            "normalized_weight": null,
-            "contribution": null,
-            "method": "scaled_absolute_difference",
-            "note": "slope_regional_median_deg is missing on the Earth side; not imputed, excluded from D"
-          },
-          {
-            "feature_id": "roughness_regional_m",
-            "label": "Detrended relief (~3.7 km cells)",
-            "comparable": false,
-            "mars_value": 194.4,
-            "earth_value": null,
-            "unit": "m",
-            "scale": 100.0,
-            "distance": null,
-            "raw_weight": 25.0,
-            "normalized_weight": null,
-            "contribution": null,
-            "method": "scaled_absolute_difference",
-            "note": "roughness_regional_m is missing on the Earth side; not imputed, excluded from D"
-          },
-          {
-            "feature_id": "terrain_morphology",
-            "label": "Terrain morphology",
-            "comparable": false,
-            "mars_value": [
-              "impact_crater",
-              "crater_floor",
-              "delta",
-              "paleolake_basin"
-            ],
-            "earth_value": null,
-            "unit": null,
-            "scale": null,
-            "distance": null,
-            "raw_weight": 20.0,
-            "normalized_weight": null,
-            "contribution": null,
-            "method": "jaccard_distance",
-            "note": "terrain_morphology is missing on the Earth side; not imputed, excluded from D"
-          },
-          {
-            "feature_id": "mineralogy_tags",
-            "label": "Mineralogy / composition",
-            "comparable": false,
-            "mars_value": [
-              "carbonates",
-              "olivine",
-              "clays",
-              "sulfates",
-              "perchlorates"
-            ],
-            "earth_value": null,
-            "unit": null,
-            "scale": null,
-            "distance": null,
-            "raw_weight": 20.0,
-            "normalized_weight": null,
-            "contribution": null,
-            "method": "jaccard_distance",
-            "note": "mineralogy_tags is missing on the Earth side; not imputed, excluded from D"
-          },
-          {
-            "feature_id": "precipitation_mm_day",
-            "label": "Aridity (mean precipitation)",
-            "comparable": true,
-            "mars_value": 0.0,
-            "earth_value": 0.17,
-            "unit": "mm/day",
-            "scale": 1.0,
-            "distance": 0.17,
-            "raw_weight": 10.0,
-            "normalized_weight": 1.0,
-            "contribution": 0.17,
-            "method": "scaled_absolute_difference",
-            "note": "Mars 0.00 mm/day vs Earth 0.17 mm/day: |difference| 0.17 mm/day / scale 1.00 mm/day = d 0.17 (close)"
-          },
-          {
-            "feature_id": "insolation_toa_annual_mean_wm2",
-            "label": "Top-of-atmosphere insolation (annual mean)",
-            "comparable": true,
-            "mars_value": 170.4,
-            "earth_value": 172.4,
-            "unit": "W/m2",
-            "scale": 100.0,
-            "distance": 0.02,
-            "raw_weight": 0.0,
-            "normalized_weight": null,
-            "contribution": null,
-            "method": "scaled_absolute_difference",
-            "note": "Mars 170 W/m2 vs Earth 172 W/m2: |difference| 2 W/m2 / scale 100 W/m2 = d 0.02 (close)"
-          }
-        ],
-        "shared_characteristics": [
-          "Aridity: Mars 0.00 mm/day vs Earth 0.17 mm/day (difference 0.17 mm/day, within half the 1.00 mm/day comparison scale)"
-        ],
-        "important_differences": [],
-        "noncomparable_variables": [
-          "Regional slope (median, ~3.7 km baseline): slope_regional_median_deg is missing on the Earth side; not imputed, excluded from D",
-          "Detrended relief (~3.7 km cells): roughness_regional_m is missing on the Earth side; not imputed, excluded from D",
-          "Terrain morphology: terrain_morphology is missing on the Earth side; not imputed, excluded from D",
-          "Mineralogy / composition: mineralogy_tags is missing on the Earth side; not imputed, excluded from D",
-          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
-          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
-          "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
-          "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
-          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
-        ],
-        "research_applications": [],
-        "documented_analog_use": [],
-        "proposed_studies": [],
-        "limitations": [
-          "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
-          "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
-          "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
-        ],
-        "citations": [
-          "copernicus_glo90",
-          "derived_toa_insolation",
-          "farley2022_jezero",
-          "lit_jezero_mineralogy",
-          "mola_megdr_16ppd",
-          "nasa_m2020_landing_site",
-          "nasa_power",
-          "workbook_lesser_known_sites"
-        ],
-        "completeness_fraction": 0.2
-      },
-      {
-        "mars_site_id": "jezero_crater",
-        "earth_candidate": {
           "id": "jaroso_ravine",
           "name": "Jaroso Ravine, Sierra Almagrera",
           "region": "Almer\u00eda, Andalusia",
@@ -5884,7 +5645,7 @@
         },
         "similarity": 68.54,
         "distance": 0.459,
-        "rank": 2,
+        "rank": 1,
         "feature_distances": [
           {
             "feature_id": "slope_regional_median_deg",
@@ -6185,7 +5946,7 @@
         },
         "similarity": 61.32,
         "distance": 0.6308,
-        "rank": 3,
+        "rank": 2,
         "feature_distances": [
           {
             "feature_id": "slope_regional_median_deg",
@@ -6333,6 +6094,322 @@
           "nasa_power"
         ],
         "completeness_fraction": 1.0
+      },
+      {
+        "mars_site_id": "jezero_crater",
+        "earth_candidate": {
+          "id": "dalangtan_playa",
+          "name": "Dalangtan Playa, western Qaidam Basin",
+          "region": "Qaidam Basin, Qinghai (NE Tibetan Plateau)",
+          "country": "China",
+          "lat": 38.4,
+          "lon_east": 91.4,
+          "footprint": {
+            "shape": "square",
+            "center_lat": 38.4,
+            "center_lon_east": 91.4,
+            "half_width_deg": 0.25,
+            "radius_km": null,
+            "crs": "EPSG:4326",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 43.6,
+            "description": "0.5 deg square centred on the site"
+          },
+          "description": "Saline playa in the hyperarid western Qaidam Basin on the Tibetan Plateau, with Mars-like salts (magnesium sulfates, chlorides, perchlorates) and polygonal landforms.",
+          "tags": [
+            "chlorides",
+            "perchlorates",
+            "playa",
+            "polygonal_terrain",
+            "sulfates"
+          ],
+          "known_analog_use": [
+            "Mars analog site studied since 2008 (Kong et al., 2018)"
+          ],
+          "sources": [
+            "kong2018_dalangtan",
+            "zhu2025_qaidam_polygons"
+          ],
+          "role": "Base candidate",
+          "coordinates_approximate": true,
+          "paired_mars_site_id": "utopia_planitia",
+          "why_they_match": "Dried paleolake on a high plateau with Mars-like salts, low pressure and wind erosion",
+          "reported_conditions": [
+            {
+              "feature": "terrain",
+              "label": "Terrain",
+              "text": "Hyperarid closed basin; salt playa; yardangs",
+              "note": null,
+              "status": "cited_not_verified",
+              "source_ids": [
+                "kong2018_dalangtan",
+                "angles_li2017_qaidam",
+                "zhu2025_qaidam_polygons"
+              ],
+              "evidence_source_id": null,
+              "evidence_quote": null,
+              "provenance": "literature-reported (workbook author)"
+            },
+            {
+              "feature": "mineralogy",
+              "label": "Mineralogy",
+              "text": "Gypsum, bassanite, kieserite, starkeyite, halite, sylvite; perchlorates",
+              "note": null,
+              "status": "cited_not_verified",
+              "source_ids": [
+                "kong2018_dalangtan",
+                "zhu2025_qaidam_polygons"
+              ],
+              "evidence_source_id": null,
+              "evidence_quote": null,
+              "provenance": "literature-reported (workbook author)"
+            },
+            {
+              "feature": "elevation",
+              "label": "Elevation",
+              "text": "2,690 m",
+              "note": null,
+              "status": "cited_not_verified",
+              "source_ids": [
+                "kong2018_dalangtan"
+              ],
+              "evidence_source_id": null,
+              "evidence_quote": null,
+              "provenance": "literature-reported (workbook author)"
+            },
+            {
+              "feature": "thermal",
+              "label": "Thermal",
+              "text": "Annual mean 3.5 \u00b0C; Jan \u221210.7 \u00b0C, Jul 16 \u00b0C",
+              "note": null,
+              "status": "cited_not_verified",
+              "source_ids": [
+                "kong2018_dalangtan"
+              ],
+              "evidence_source_id": null,
+              "evidence_quote": null,
+              "provenance": "literature-reported (workbook author)"
+            },
+            {
+              "feature": "solar",
+              "label": "Solar / power",
+              "text": "220\u2013320 sunshine h/month",
+              "note": null,
+              "status": "cited_not_verified",
+              "source_ids": [
+                "kong2018_dalangtan"
+              ],
+              "evidence_source_id": null,
+              "evidence_quote": null,
+              "provenance": "literature-reported (workbook author)"
+            },
+            {
+              "feature": "wind",
+              "label": "Wind",
+              "text": "1.5\u20133.5 m/s monthly; gusts 20\u201322 m/s",
+              "note": null,
+              "status": "cited_not_verified",
+              "source_ids": [
+                "kong2018_dalangtan"
+              ],
+              "evidence_source_id": null,
+              "evidence_quote": null,
+              "provenance": "literature-reported (workbook author)"
+            }
+          ],
+          "condition_sources": {
+            "angles_li2017_qaidam": {
+              "source_id": "angles_li2017_qaidam",
+              "kind": "doi",
+              "cite": "Angl\u00e9s & Li, 2017",
+              "title": "The western Qaidam Basin as a potential Martian environmental analogue: an overview",
+              "url": "https://doi.org/10.1002/2017JE005293",
+              "year": 2017,
+              "restriction": null
+            },
+            "kong2018_dalangtan": {
+              "source_id": "kong2018_dalangtan",
+              "kind": "doi",
+              "cite": "Kong et al., 2018",
+              "title": "The Dalangtan saline playa in a hyperarid region on Tibet Plateau: I. Evolution and environments",
+              "url": "https://doi.org/10.1089/ast.2018.1830",
+              "year": 2018,
+              "restriction": null
+            },
+            "zhu2025_qaidam_polygons": {
+              "source_id": "zhu2025_qaidam_polygons",
+              "kind": "doi",
+              "cite": "Zhu et al., 2025",
+              "title": "Polygonal landforms in the western Qaidam Basin (EPSC-DPS 2025-244)",
+              "url": "https://doi.org/10.5194/epsc-dps2025-244",
+              "year": 2025,
+              "restriction": null
+            }
+          }
+        },
+        "similarity": 61.12,
+        "distance": 0.6363,
+        "rank": 3,
+        "feature_distances": [
+          {
+            "feature_id": "slope_regional_median_deg",
+            "label": "Regional slope (median, ~3.7 km baseline)",
+            "comparable": true,
+            "mars_value": 1.077,
+            "earth_value": 0.485,
+            "unit": "deg",
+            "scale": 1.5,
+            "distance": 0.39466666666666667,
+            "raw_weight": 25.0,
+            "normalized_weight": 0.25,
+            "contribution": 0.09866666666666667,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 1.08 deg vs Earth 0.48 deg: |difference| 0.59 deg / scale 1.50 deg = d 0.39 (close at the harmonised ~3.7 km baseline)"
+          },
+          {
+            "feature_id": "roughness_regional_m",
+            "label": "Detrended relief (~3.7 km cells)",
+            "comparable": true,
+            "mars_value": 194.4,
+            "earth_value": 118.3,
+            "unit": "m",
+            "scale": 100.0,
+            "distance": 0.7610000000000001,
+            "raw_weight": 25.0,
+            "normalized_weight": 0.25,
+            "contribution": 0.19025000000000003,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 194 m vs Earth 118 m: |difference| 76 m / scale 100 m = d 0.76 (moderately different at the harmonised ~3.7 km baseline)"
+          },
+          {
+            "feature_id": "terrain_morphology",
+            "label": "Terrain morphology",
+            "comparable": true,
+            "mars_value": [
+              "impact_crater",
+              "crater_floor",
+              "delta",
+              "paleolake_basin"
+            ],
+            "earth_value": [
+              "playa",
+              "polygonal_terrain"
+            ],
+            "unit": null,
+            "scale": null,
+            "distance": 1.0,
+            "raw_weight": 20.0,
+            "normalized_weight": 0.2,
+            "contribution": 0.2,
+            "method": "jaccard_distance",
+            "note": "shared 0 of 6 distinct tags (none); Mars only: crater floor, delta, impact crater, paleolake basin; Earth only: playa, polygonal terrain; Jaccard distance 1.00"
+          },
+          {
+            "feature_id": "mineralogy_tags",
+            "label": "Mineralogy / composition",
+            "comparable": true,
+            "mars_value": [
+              "carbonates",
+              "olivine",
+              "clays",
+              "sulfates",
+              "perchlorates"
+            ],
+            "earth_value": [
+              "sulfates",
+              "chlorides",
+              "perchlorates"
+            ],
+            "unit": null,
+            "scale": null,
+            "distance": 0.6666666666666667,
+            "raw_weight": 20.0,
+            "normalized_weight": 0.2,
+            "contribution": 0.13333333333333336,
+            "method": "jaccard_distance",
+            "note": "shared 2 of 6 distinct tags (perchlorates, sulfates); Mars only: carbonates, clays, olivine; Earth only: chlorides; Jaccard distance 0.67"
+          },
+          {
+            "feature_id": "precipitation_mm_day",
+            "label": "Aridity (mean precipitation)",
+            "comparable": true,
+            "mars_value": 0.0,
+            "earth_value": 0.14,
+            "unit": "mm/day",
+            "scale": 1.0,
+            "distance": 0.14,
+            "raw_weight": 10.0,
+            "normalized_weight": 0.1,
+            "contribution": 0.014000000000000002,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 0.00 mm/day vs Earth 0.14 mm/day: |difference| 0.14 mm/day / scale 1.00 mm/day = d 0.14 (close)"
+          },
+          {
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "label": "Top-of-atmosphere insolation (annual mean)",
+            "comparable": true,
+            "mars_value": 170.4,
+            "earth_value": 334.8,
+            "unit": "W/m2",
+            "scale": 100.0,
+            "distance": 1.6440000000000001,
+            "raw_weight": 0.0,
+            "normalized_weight": null,
+            "contribution": null,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 170 W/m2 vs Earth 335 W/m2: |difference| 164 W/m2 / scale 100 W/m2 = d 1.64 (very different)"
+          }
+        ],
+        "shared_characteristics": [
+          "Composition shared: perchlorates, sulfates",
+          "Regional slope: Mars 1.08 deg vs Earth 0.48 deg (difference 0.59 deg, within half the 1.50 deg comparison scale)",
+          "Aridity: Mars 0.00 mm/day vs Earth 0.14 mm/day (difference 0.14 mm/day, within half the 1.00 mm/day comparison scale)"
+        ],
+        "important_differences": [
+          "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: playa, polygonal terrain)"
+        ],
+        "noncomparable_variables": [
+          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
+          "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
+          "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
+          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
+        ],
+        "research_applications": [
+          "Mars analog site studied since 2008 (Kong et al., 2018)"
+        ],
+        "documented_analog_use": [
+          "Mars analog site studied since 2008 (Kong et al., 2018)"
+        ],
+        "proposed_studies": [
+          {
+            "kind": "proposed_study",
+            "title": "Instrument and sample-handling tests on shared materials (perchlorates, sulfates)",
+            "research_question": "Can instrument calibration and sample-handling procedures developed on perchlorates, sulfates at Dalangtan Playa, western Qaidam Basin be validated before use on the materials reported at Jezero Crater?",
+            "method": "Field spectroscopy and sample preparation on the Earth materials; compare instrument response against laboratory reference measurements; document which procedures depend on Earth-only conditions.",
+            "why_here": "Both sites carry cited perchlorates, sulfates; the comparison targets materials, not landing suitability.",
+            "motivating_citation_ids": [],
+            "cannot_infer": "Composition tags are literature labels, not spectral matches; weathering, humidity and biology on Earth have no Mars counterpart.",
+            "analog_candidate_id": "dalangtan_playa"
+          }
+        ],
+        "limitations": [
+          "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
+          "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
+          "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
+        ],
+        "citations": [
+          "copernicus_glo90",
+          "derived_toa_insolation",
+          "farley2022_jezero",
+          "kong2018_dalangtan",
+          "lit_jezero_mineralogy",
+          "mola_megdr_16ppd",
+          "nasa_m2020_landing_site",
+          "nasa_power",
+          "zhu2025_qaidam_polygons"
+        ],
+        "completeness_fraction": 1.0
       }
     ],
     "analog_spec_version": "analog-v1.0",
@@ -6390,7 +6467,7 @@
         "document_id": "crossref_farley2022_jezero",
         "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
         "institution": "Science / American Association for the Advancement of Science (AAAS)",
-        "url": "https://api.crossref.org/works/10.1126/science.abo2196",
+        "url": "https://doi.org/10.1126/science.abo2196",
         "publication_date": "2022-09-30",
         "geographic_relevance": [
           "jezero_crater",
@@ -6404,7 +6481,7 @@
         "document_id": "crossref_brown2020_jezero_olivine_carbonate",
         "title": "Olivine\u2010Carbonate Mineralogy of the Jezero Crater Region",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1029/2019JE006011",
+        "url": "https://doi.org/10.1029/2019JE006011",
         "publication_date": "2020-03",
         "geographic_relevance": [
           "jezero_crater",
@@ -6418,7 +6495,7 @@
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1002/2014JE004782",
+        "url": "https://doi.org/10.1002/2014JE004782",
         "publication_date": "2015-04",
         "geographic_relevance": [
           "jezero_crater",
@@ -6432,7 +6509,7 @@
         "document_id": "crossref_brown2020_jezero_olivine_carbonate",
         "title": "Olivine\u2010Carbonate Mineralogy of the Jezero Crater Region",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1029/2019JE006011",
+        "url": "https://doi.org/10.1029/2019JE006011",
         "publication_date": "2020-03",
         "geographic_relevance": [
           "jezero_crater",
@@ -6446,7 +6523,7 @@
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1002/2014JE004782",
+        "url": "https://doi.org/10.1002/2014JE004782",
         "publication_date": "2015-04",
         "geographic_relevance": [
           "jezero_crater",
@@ -6505,7 +6582,7 @@
         "document_id": "crossref_farley2022_jezero",
         "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
         "institution": "Science / American Association for the Advancement of Science (AAAS)",
-        "url": "https://api.crossref.org/works/10.1126/science.abo2196"
+        "url": "https://doi.org/10.1126/science.abo2196"
       },
       {
         "citation_id": "[C2]",
@@ -6513,7 +6590,7 @@
         "document_id": "crossref_brown2020_jezero_olivine_carbonate",
         "title": "Olivine\u2010Carbonate Mineralogy of the Jezero Crater Region",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1029/2019JE006011"
+        "url": "https://doi.org/10.1029/2019JE006011"
       },
       {
         "citation_id": "[C3]",
@@ -6521,7 +6598,7 @@
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1002/2014JE004782"
+        "url": "https://doi.org/10.1002/2014JE004782"
       },
       {
         "citation_id": "[C4]",
@@ -6529,7 +6606,7 @@
         "document_id": "crossref_brown2020_jezero_olivine_carbonate",
         "title": "Olivine\u2010Carbonate Mineralogy of the Jezero Crater Region",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1029/2019JE006011"
+        "url": "https://doi.org/10.1029/2019JE006011"
       },
       {
         "citation_id": "[C5]",
@@ -6537,7 +6614,7 @@
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1002/2014JE004782"
+        "url": "https://doi.org/10.1002/2014JE004782"
       },
       {
         "citation_id": "[C6]",
@@ -6569,7 +6646,7 @@
         "document_id": "crossref_farley2022_jezero",
         "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
         "institution": "Science / American Association for the Advancement of Science (AAAS)",
-        "url": "https://api.crossref.org/works/10.1126/science.abo2196",
+        "url": "https://doi.org/10.1126/science.abo2196",
         "publication_date": "2022-09-30",
         "purpose_label": "Peer-reviewed record",
         "chunk_ids": [
@@ -6588,7 +6665,7 @@
         "document_id": "crossref_brown2020_jezero_olivine_carbonate",
         "title": "Olivine\u2010Carbonate Mineralogy of the Jezero Crater Region",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1029/2019JE006011",
+        "url": "https://doi.org/10.1029/2019JE006011",
         "publication_date": "2020-03",
         "purpose_label": "Peer-reviewed record",
         "chunk_ids": [
@@ -6609,7 +6686,7 @@
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
         "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1002/2014JE004782",
+        "url": "https://doi.org/10.1002/2014JE004782",
         "publication_date": "2015-04",
         "purpose_label": "Peer-reviewed record",
         "chunk_ids": [
@@ -6712,7 +6789,7 @@
       "Citations point at retrieved passages only; read the source before relying on a claim."
     ],
     "cached": false,
-    "generated_at": "2026-11-15T19:14:07+00:00"
+    "generated_at": "2026-11-15T19:37:12+00:00"
   },
   "error_404": {
     "error": {

@@ -269,14 +269,6 @@
       "kind": "peer_reviewed",
       "url": "https://doi.org/10.1016/j.icarus.2022.115115"
     },
-    "levy2010_protonilus_gullies": {
-      "cite": "Levy, Head et al., 2010",
-      "title": "Identification of gully debris flow deposits in Protonilus Mensae, Mars",
-      "venue": "Earth and Planetary Science Letters",
-      "year": 2010,
-      "kind": "peer_reviewed",
-      "url": "https://doi.org/10.1016/j.epsl.2009.08.002"
-    },
     "hou2026_zhurong_mn_oxides": {
       "cite": "Hou, Sun, Hu et al., 2026",
       "title": "Manganese (hydr)oxides record a Hesperian ocean in Utopia Planitia",
@@ -967,13 +959,6 @@
           ],
           "source_id": "soare2022_protonilus_cycling",
           "quote": "A billion or more years of possible periglacial/glacial cycling in Protonilus Mensae, Mars"
-        },
-        {
-          "feature": "terrain_morphology",
-          "tags": [],
-          "source_id": "levy2010_protonilus_gullies",
-          "quote": "Identification of gully debris flow deposits in Protonilus Mensae, Mars: Characterization of a water-bearing, energetic gully-forming process",
-          "role": "location"
         }
       ]
     },

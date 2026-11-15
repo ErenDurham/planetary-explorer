@@ -44,7 +44,7 @@ def test_earth_never_gets_landing_score(client, monkeypatch):
     monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
-        json=request(viewed_body="earth", selected_earth_id="atacama_yungay"),
+        json=request(viewed_body="earth", selected_earth_id="rio_tinto"),
     ).json()
     assert "landing index" not in " ".join(data["facts"]).lower()
 
@@ -87,7 +87,7 @@ def test_research_uses_mars_after_earth_explore(client, monkeypatch):
         json=request(
             active_tab="research",
             viewed_body="earth",
-            selected_earth_id="atacama_yungay",
+            selected_earth_id="rio_tinto",
         ),
     ).json()
     assert data["context_label"].startswith("Mars · Jezero")
@@ -162,14 +162,14 @@ def test_compare_uses_explicit_candidate_direction_and_selected_pair(
         json=request(
             active_tab="compare",
             candidate_body="mars",
-            selected_earth_id="atacama_yungay",
-            selected_mars_id="gale_crater",
+            selected_earth_id="rio_tinto",
+            selected_mars_id="noctis_labyrinthus",
         ),
     ).json()
     assert any("candidate body: mars" in f for f in data["facts"])
-    assert any("Gale" in f and "analog rank" in f for f in data["facts"])
+    assert any("Noctis" in f and "analog rank" in f for f in data["facts"])
     assert all(
-        "Gale" in f
+        "Noctis" in f
         for f in data["facts"]
         if "Landing index" in f or "; contribution:" in f
     )
@@ -240,19 +240,19 @@ def test_task_mission_context_uses_earth_assessment_not_landing(client, monkeypa
             active_tab="analyze",
             viewed_body="mars",
             map_mode="mission_browse",
-            selected_earth_id="atacama_yungay",
+            selected_earth_id="rio_tinto",
             assessment=assessment,
         ),
     )
     assert response.status_code == 200
     data = response.json()
-    assert data["context_label"].startswith("Earth · Atacama")
+    assert data["context_label"].startswith("Earth · Río Tinto")
     assert any("Task mission:" in f and "Earth" in f for f in data["facts"])
     assert all("Landing index" not in f for f in data["facts"])
     assert any(
         a["tab"] == "analyze"
         and a["body"] == "earth"
-        and a["location_id"] == "atacama_yungay"
+        and a["location_id"] == "rio_tinto"
         for a in data["actions"]
     )
 

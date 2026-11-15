@@ -1,13 +1,13 @@
 {
   "profile_version": "v1",
-  "generated_at": "2026-11-15T18:54:02+00:00",
+  "generated_at": "2026-11-15T19:26:20+00:00",
   "footprint_definition": "Square footprint of half-width 0.25 degrees (about 56 km N-S full width, 56*cos(lat) km E-W) centred on the site. Smaller than the Mars footprint because Earth analog field sites are typically a few tens of km across; terrain statistics are computed on a grid block-averaged to the MOLA 16 ppd cell size (~3.7 km, separately per axis) so they are comparable to the Mars values.",
   "profiles": [
     {
       "site_id": "mcmurdo_dry_valleys",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x63 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -442,6 +442,20 @@
         }
       ],
       "sources": {
+        "nasa_power": {
+          "source_id": "nasa_power",
+          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
+          "institution": "NASA Langley Research Center",
+          "url": "https://power.larc.nasa.gov/",
+          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
+          "dataset_id": "POWER climatology v2.x, community RE",
+          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
+          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
+          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
+          "access_method": "REST API, no login",
+          "license": "Public domain (NASA)",
+          "retrieved_at": "2026-11-15"
+        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -464,20 +478,6 @@
           "observation_period": "2011-2015 acquisitions",
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-15"
-        },
-        "nasa_power": {
-          "source_id": "nasa_power",
-          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
-          "institution": "NASA Langley Research Center",
-          "url": "https://power.larc.nasa.gov/",
-          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
-          "dataset_id": "POWER climatology v2.x, community RE",
-          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
-          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
-          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
-          "access_method": "REST API, no login",
-          "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-15"
         },
         "goordial2016_university_valley": {
@@ -512,7 +512,7 @@
       "site_id": "summit_station_greenland",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x45 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -1005,18 +1005,18 @@
       "site_id": "south_pole_station",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
-      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction nan) + block-average 1x1 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
+      "generated_at": "2026-11-15T19:26:20+00:00",
+      "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 41x41 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
           "feature_id": "elevation_median_m",
           "label": "Elevation (footprint median)",
           "category": "ground",
-          "value": null,
+          "value": 2831.5,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "nan m (N-S) x nan m (E-W) pixels; 0 pixels",
+          "spatial_resolution": "90 m (N-S) x 90 m (E-W) pixels; 190096 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1026,22 +1026,22 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": "Copernicus DEM GLO-90 absolute vertical accuracy < 4 m (90% linear error); surface model, so includes vegetation/buildings where present. Datum EGM2008 - NOT comparable to Mars areoid elevations.",
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": null
         },
         {
           "feature_id": "elevation_p10_m",
           "label": "Elevation (10th percentile)",
           "category": "ground",
-          "value": null,
+          "value": 2810.1,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "nan m (N-S) x nan m (E-W) pixels; 0 pixels",
+          "spatial_resolution": "90 m (N-S) x 90 m (E-W) pixels; 190096 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1051,22 +1051,22 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": null
         },
         {
           "feature_id": "elevation_p90_m",
           "label": "Elevation (90th percentile)",
           "category": "ground",
-          "value": null,
+          "value": 2842.4,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "measured",
-          "spatial_resolution": "nan m (N-S) x nan m (E-W) pixels; 0 pixels",
+          "spatial_resolution": "90 m (N-S) x 90 m (E-W) pixels; 190096 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1076,22 +1076,22 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": null
         },
         {
           "feature_id": "elevation_std_m",
           "label": "Elevation variability (std)",
           "category": "ground",
-          "value": null,
+          "value": 13.3,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "nan m (N-S) x nan m (E-W) pixels; 0 pixels",
+          "spatial_resolution": "90 m (N-S) x 90 m (E-W) pixels; 190096 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1101,22 +1101,22 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": null
         },
         {
           "feature_id": "slope_regional_median_deg",
           "label": "Regional slope (median, harmonised ~3.7 km)",
           "category": "ground",
-          "value": null,
+          "value": 0.085,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~nan km (N-S) x nan km (E-W) cells (DEM block-averaged 1x1); 0 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 41x41); 100 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1126,22 +1126,22 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": "Block-averaged before gradient",
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "regional_scale_only",
+          "is_missing": false,
+          "notes": "Harmonised to the MOLA 16 ppd cell size so it is comparable with Mars regional statistics."
         },
         {
           "feature_id": "slope_regional_p90_deg",
           "label": "Regional slope (90th pct, harmonised)",
           "category": "ground",
-          "value": null,
+          "value": 0.175,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~nan km (N-S) x nan km (E-W) cells (DEM block-averaged 1x1); 0 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 41x41); 100 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1151,22 +1151,22 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "regional_scale_only",
+          "is_missing": false,
+          "notes": "Harmonised to the MOLA 16 ppd cell size so it is comparable with Mars regional statistics."
         },
         {
           "feature_id": "roughness_regional_m",
           "label": "Detrended relief (harmonised ~3.7 km)",
           "category": "ground",
-          "value": null,
+          "value": 5.6,
           "unit": "m",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "~nan km (N-S) x nan km (E-W) cells (DEM block-averaged 1x1); 0 cells",
+          "spatial_resolution": "~3.7 km (N-S) x 3.7 km (E-W) cells (DEM block-averaged 41x41); 100 cells",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1176,22 +1176,22 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "regional_scale_only",
+          "is_missing": false,
+          "notes": "Harmonised to the MOLA 16 ppd cell size so it is comparable with Mars regional statistics."
         },
         {
           "feature_id": "slope_fine_median_deg",
           "label": "Fine-scale slope (median, 90 m)",
           "category": "ground",
-          "value": null,
+          "value": 0.312,
           "unit": "deg",
           "source_id": "copernicus_glo90",
           "measurement_type": "derived",
-          "spatial_resolution": "nan m (N-S) x nan m (E-W) pixels; 0 pixels",
+          "spatial_resolution": "90 m (N-S) x 90 m (E-W) pixels; 190096 pixels",
           "geographic_footprint": {
             "shape": "square",
             "center_lat": -90.0,
@@ -1201,12 +1201,12 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "Copernicus GLO-90 could not serve this footprint (RasterioIOError: HTTP response code: 404); not estimated."
+          "quality_flag": "good",
+          "is_missing": false,
+          "notes": "Information only: Mars has no counterpart at this baseline in v1."
         },
         {
           "feature_id": "latitude_abs_deg",
@@ -1226,7 +1226,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
           "quality_flag": "good",
@@ -1251,7 +1251,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": "Model",
           "quality_flag": "good",
@@ -1276,7 +1276,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": "Satellite-derived reanalysis product; converted from kWh/m2/day",
           "quality_flag": "good",
@@ -1301,7 +1301,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": "MERRA-2 reanalysis; coarse grid may not resolve valley/summit microclimates",
           "quality_flag": "good",
@@ -1326,7 +1326,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
           "quality_flag": "good",
@@ -1351,7 +1351,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
           "quality_flag": "good",
@@ -1376,7 +1376,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": "Bias-corrected MERRA-2 precipitation; underestimates orographic extremes",
           "quality_flag": "good",
@@ -1401,7 +1401,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": null,
           "quality_flag": "missing",
@@ -1426,7 +1426,7 @@
             "crs": "EPSG:4326",
             "longitude_convention": "east_-180_180",
             "approx_width_km": 55.6,
-            "description": "At the geographic pole the 0.5 deg square is a polar cap of radius 0.25 deg; width given is its pole-to-edge-to-pole diameter"
+            "description": "Polar cap: the 0.5 deg square collapses at the pole, so the DEM cap of radius 0.25 deg was reprojected to an azimuthal equidistant plane and binned at 90 m; statistics use the 39.3 km square inscribed in the cap"
           },
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "missing",
@@ -1483,17 +1483,9 @@
       },
       "completeness": {
         "features_requested": 17,
-        "features_available": 7,
-        "fraction": 0.4118,
+        "features_available": 15,
+        "fraction": 0.8824,
         "missing_feature_ids": [
-          "elevation_median_m",
-          "elevation_p10_m",
-          "elevation_p90_m",
-          "elevation_std_m",
-          "slope_regional_median_deg",
-          "slope_regional_p90_deg",
-          "roughness_regional_m",
-          "slope_fine_median_deg",
           "terrain_morphology",
           "mineralogy_tags"
         ]
@@ -1503,7 +1495,7 @@
       "site_id": "painted_desert",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x49 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -1999,7 +1991,7 @@
       "site_id": "jaroso_ravine",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x50 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -2492,7 +2484,7 @@
       "site_id": "liwa_desert",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x43 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -2986,7 +2978,7 @@
       "site_id": "sudbury_impact_structure",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x58 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -3479,7 +3471,7 @@
       "site_id": "yilgarn_salt_lakes",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x47 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -3972,7 +3964,7 @@
       "site_id": "granby_tuff",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x54 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -4406,6 +4398,20 @@
         }
       ],
       "sources": {
+        "nasa_power": {
+          "source_id": "nasa_power",
+          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
+          "institution": "NASA Langley Research Center",
+          "url": "https://power.larc.nasa.gov/",
+          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
+          "dataset_id": "POWER climatology v2.x, community RE",
+          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
+          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
+          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
+          "access_method": "REST API, no login",
+          "license": "Public domain (NASA)",
+          "retrieved_at": "2026-11-15"
+        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -4428,20 +4434,6 @@
           "observation_period": "2011-2015 acquisitions",
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-15"
-        },
-        "nasa_power": {
-          "source_id": "nasa_power",
-          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
-          "institution": "NASA Langley Research Center",
-          "url": "https://power.larc.nasa.gov/",
-          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
-          "dataset_id": "POWER climatology v2.x, community RE",
-          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
-          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
-          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
-          "access_method": "REST API, no login",
-          "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-15"
         },
         "bultel2025_granby_alteration": {
@@ -4478,7 +4470,7 @@
       "site_id": "galena_creek_rock_glacier",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x56 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -4972,7 +4964,7 @@
       "site_id": "haughton_crater",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x53 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -5409,6 +5401,20 @@
         }
       ],
       "sources": {
+        "nasa_power": {
+          "source_id": "nasa_power",
+          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
+          "institution": "NASA Langley Research Center",
+          "url": "https://power.larc.nasa.gov/",
+          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
+          "dataset_id": "POWER climatology v2.x, community RE",
+          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
+          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
+          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
+          "access_method": "REST API, no login",
+          "license": "Public domain (NASA)",
+          "retrieved_at": "2026-11-15"
+        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -5431,20 +5437,6 @@
           "observation_period": "2011-2015 acquisitions",
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-15"
-        },
-        "nasa_power": {
-          "source_id": "nasa_power",
-          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
-          "institution": "NASA Langley Research Center",
-          "url": "https://power.larc.nasa.gov/",
-          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
-          "dataset_id": "POWER climatology v2.x, community RE",
-          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
-          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
-          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
-          "access_method": "REST API, no login",
-          "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-15"
         },
         "izawa2011_haughton": {
@@ -5489,7 +5481,7 @@
       "site_id": "channeled_scablands",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x59 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -5983,7 +5975,7 @@
       "site_id": "rio_tinto",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x51 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -6417,6 +6409,20 @@
         }
       ],
       "sources": {
+        "nasa_power": {
+          "source_id": "nasa_power",
+          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
+          "institution": "NASA Langley Research Center",
+          "url": "https://power.larc.nasa.gov/",
+          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
+          "dataset_id": "POWER climatology v2.x, community RE",
+          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
+          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
+          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
+          "access_method": "REST API, no login",
+          "license": "Public domain (NASA)",
+          "retrieved_at": "2026-11-15"
+        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -6439,20 +6445,6 @@
           "observation_period": "2011-2015 acquisitions",
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-15"
-        },
-        "nasa_power": {
-          "source_id": "nasa_power",
-          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
-          "institution": "NASA Langley Research Center",
-          "url": "https://power.larc.nasa.gov/",
-          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
-          "dataset_id": "POWER climatology v2.x, community RE",
-          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
-          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
-          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
-          "access_method": "REST API, no login",
-          "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-15"
         },
         "amils2014_rio_tinto": {
@@ -6499,7 +6491,7 @@
       "site_id": "lake_salda",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x50 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -6992,7 +6984,7 @@
       "site_id": "dalangtan_playa",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x51 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -7429,6 +7421,20 @@
         }
       ],
       "sources": {
+        "nasa_power": {
+          "source_id": "nasa_power",
+          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
+          "institution": "NASA Langley Research Center",
+          "url": "https://power.larc.nasa.gov/",
+          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
+          "dataset_id": "POWER climatology v2.x, community RE",
+          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
+          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
+          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
+          "access_method": "REST API, no login",
+          "license": "Public domain (NASA)",
+          "retrieved_at": "2026-11-15"
+        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -7451,20 +7457,6 @@
           "observation_period": "2011-2015 acquisitions",
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-15"
-        },
-        "nasa_power": {
-          "source_id": "nasa_power",
-          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
-          "institution": "NASA Langley Research Center",
-          "url": "https://power.larc.nasa.gov/",
-          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
-          "dataset_id": "POWER climatology v2.x, community RE",
-          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
-          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
-          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
-          "access_method": "REST API, no login",
-          "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-15"
         },
         "kong2018_dalangtan": {
@@ -7499,7 +7491,7 @@
       "site_id": "holuhraun_iceland",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x47 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {
@@ -7937,6 +7929,20 @@
         }
       ],
       "sources": {
+        "nasa_power": {
+          "source_id": "nasa_power",
+          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
+          "institution": "NASA Langley Research Center",
+          "url": "https://power.larc.nasa.gov/",
+          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
+          "dataset_id": "POWER climatology v2.x, community RE",
+          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
+          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
+          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
+          "access_method": "REST API, no login",
+          "license": "Public domain (NASA)",
+          "retrieved_at": "2026-11-15"
+        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -7959,20 +7965,6 @@
           "observation_period": "2011-2015 acquisitions",
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
-          "retrieved_at": "2026-11-15"
-        },
-        "nasa_power": {
-          "source_id": "nasa_power",
-          "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
-          "institution": "NASA Langley Research Center",
-          "url": "https://power.larc.nasa.gov/",
-          "instrument_or_model": "MERRA-2 reanalysis and CERES/FLASHFlux solar products",
-          "dataset_id": "POWER climatology v2.x, community RE",
-          "spatial_resolution": "0.5 x 0.625 deg (meteorology), 1 deg (solar)",
-          "units": "T2M degC; ALLSKY_SFC_SW_DWN kWh/m2/day; PRECTOTCORR mm/day",
-          "observation_period": "25-year monthly and annual climatology, January 2001 - December 2025 (API header \"range\", read 2026-11-14)",
-          "access_method": "REST API, no login",
-          "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-15"
         },
         "hartley2018_holuhraun": {
@@ -8017,7 +8009,7 @@
       "site_id": "svalbard_fan_delta",
       "planet": "earth",
       "profile_version": "v1",
-      "generated_at": "2026-11-15T18:54:02+00:00",
+      "generated_at": "2026-11-15T19:26:20+00:00",
       "pipeline": "scripts/build_earth_profiles.py: Copernicus GLO-90 windowed COG read (nodata fraction 0.000) + block-average 40x63 (rows x cols) + scripts/geo.py terrain statistics + NASA POWER climatology (NASA/POWER Source Native Resolution Climatology Climatologies, API v2.10.1)",
       "measurements": [
         {

@@ -61,17 +61,6 @@ NASA_PRODUCTS: list[dict] = [
          coverage="First 360-degree panorama from the rover at its landing site (Octavia E. Butler Landing); the candidate coordinate is that touchdown point.",
          relevance="What the ground looks like at the candidate point: the surface panorama from the landing site, with the crater rim on the horizon.",
          appearance="Mastcam-Z colour balanced for Earth-like lighting; the horizon is tens of kilometres away."),
-    # ---- Gale (Curiosity) ----
-    dict(entry_id="gale_hirise_hardware", site_id="gale_crater", nasa_id="PIA16001", view="orbital", image_type="orbital_image", instrument="HiRISE (MRO)", mission="MSL / MRO",
-         acquisition_date=None, acquisition_note="Caption: captured about 24 hours after the 6 Aug 2012 landing; exact date not stated.", relationship="exact_location", distance_km=0.0,
-         coverage="Caption: the four pieces of landing hardware spotted by MRO; Bradbury Landing is the candidate coordinate.",
-         relevance="The landing point and its surroundings from orbit, with the rover, heat shield, parachute and descent stage marked.",
-         appearance="HiRISE image; contrast adjusted to show hardware."),
-    dict(entry_id="gale_mastcam_pano", site_id="gale_crater", nasa_id="PIA16029", view="surface", image_type="surface_panorama", instrument="Mastcam (Curiosity)", mission="MSL",
-         acquisition_date=None, acquisition_note="First 360-degree colour panorama from the landing site, assembled from thumbnails within days of the 6 Aug 2012 landing; sol not stated on the page.", relationship="exact_location", distance_km=0.0,
-         coverage="Caption: first 360-degree colour panorama of the Gale Crater landing site (Bradbury Landing), which is the candidate coordinate.",
-         relevance="Ground view from the landing point: the crater floor with Mount Sharp and the crater rim on the horizon.",
-         appearance="Thumbnail-resolution mosaic; colours as returned by Mastcam."),
     # ---- Elysium (InSight) ----
     dict(entry_id="elysium_hirise_hardware", site_id="elysium_planitia", nasa_id="PIA22875", view="orbital", image_type="orbital_image", instrument="HiRISE (MRO)", mission="InSight / MRO",
          acquisition_date="2018-12-06", acquisition_note="Caption: imaged on Dec. 6 and 11, 2018.", relationship="exact_location", distance_km=0.0,
@@ -99,34 +88,6 @@ NASA_PRODUCTS: list[dict] = [
          coverage="Lander camera mosaic from the landing point, the candidate coordinate.",
          relevance="Wide afternoon mosaic of the Chryse Planitia surface around the lander.",
          appearance="Reprocessed 1970s lander data; colour approximate."),
-    # ---- Utopia (Viking 2) ----
-    dict(entry_id="utopia_themis_regional", site_id="utopia_planitia", nasa_id="PIA04023", view="orbital", image_type="orbital_image", instrument="THEMIS infrared band 9 (Mars Odyssey)", mission="Mars Odyssey",
-         acquisition_date=None, acquisition_note="Acquisition date not stated (released 2002-12-13).", relationship="candidate_region", distance_km=None,
-         coverage="Caption: covers the Viking 2 landing site marked with an X; it also states the lander's exact location is less well established than Viking 1's.",
-         relevance="Regional thermal-infrared view of the Utopia plain around the landing site, showing pedestal craters and gentle ridges.",
-         appearance="Single-band THEMIS infrared (12.6 micron) brightness, not visible colour."),
-    dict(entry_id="utopia_viking2_first_color", site_id="utopia_planitia", nasa_id="PIA00568", view="surface", image_type="surface_image", instrument="Viking Lander 2 Camera 2", mission="Viking",
-         acquisition_date=None, acquisition_note="Product page states spacecraft and camera but not the acquisition date (first colour image after the Sept 1976 landing).", relationship="exact_location", distance_km=0.0,
-         coverage="Taken from the lander at its landing point, the candidate coordinate.",
-         relevance="The first colour view of the surface at the Viking 2 site: a rock-strewn plain.",
-         appearance="1976 vidicon colour reconstruction; colours are approximate."),
-    # ---- Meridiani (Opportunity) ----
-    dict(entry_id="meridiani_hirise_eagle", site_id="meridiani_planum", nasa_id="PIA21494", view="orbital", image_type="orbital_image", instrument="HiRISE (MRO)", mission="MER / MRO",
-         acquisition_date="2017-04-08", acquisition_note="Caption: April 8, 2017 observation.", relationship="exact_location", distance_km=0.0,
-         coverage="Caption gives Eagle Crater at 1.95 S, 354.47 E with the lander platform visible; the candidate coordinate is that landing point.",
-         relevance="Eagle Crater (about 22 m across) and the plains around it from orbit, with the landing platform still visible.",
-         appearance="HiRISE colour; small crater inside a flat plain."),
-    dict(entry_id="meridiani_pancam_eagle", site_id="meridiani_planum", nasa_id="PIA05163", view="surface", image_type="surface_image", instrument="Panoramic Camera (Opportunity)", mission="MER",
-         acquisition_date=None, acquisition_note="Released 2004-01-28, four days after landing inside Eagle Crater; sol not stated on the page.", relationship="exact_location", distance_km=0.0,
-         coverage="Pancam view from inside Eagle Crater, where the rover landed; the crater is about 22 m across so the camera position is within tens of metres of the candidate coordinate.",
-         relevance="The bedrock outcrop inside the landing crater; the plains beyond are what the candidate footprint mostly consists of.",
-         appearance="Pancam colour mosaic of an outcrop inside a small crater, not the open plain."),
-    # ---- Gusev (Spirit) ----
-    dict(entry_id="gusev_pancam_pano", site_id="gusev_crater", nasa_id="PIA05049", view="surface", image_type="surface_panorama", instrument="Panoramic Camera (Spirit)", mission="MER",
-         acquisition_date=None, acquisition_note="Released 2004-01-12, eight days after landing; sol not stated on the page.", relationship="exact_location", distance_km=0.0,
-         coverage="Pancam panorama taken from the landing platform at Columbia Memorial Station, the candidate coordinate.",
-         relevance="The Gusev plains from the landing point: rock-strewn basaltic surface with the Columbia Hills on the horizon.",
-         appearance="Pancam colour mosaic; horizon features are kilometres away."),
     # ---- Oxia Planum (no landed mission) ----
     dict(entry_id="oxia_hirise_clay", site_id="oxia_planum", nasa_id="PIA19851", view="orbital", image_type="orbital_image", instrument="HiRISE (MRO)", mission="MRO",
          acquisition_date=None, acquisition_note="Acquisition date not stated (released 2015-07-01).", relationship="candidate_region", distance_km=None,
@@ -167,24 +128,6 @@ COMMONS_PRODUCTS: list[dict] = [
     dict(entry_id="mcmurdo_beacon_valley_nasa", site_id="mcmurdo_dry_valleys", title="File:Beacon Valley.jpg", view="surface", image_type="surface_image", instrument="Field photograph (Alfonso Davila, NASA)", mission="NASA Ames Antarctic analog field work",
          acquisition_date=None, acquisition_note="Commons records the date as unknown.", relationship="nearby_scene", distance_km=8.0,
          coverage="Beacon Valley, adjacent to the University Valley candidate centre.", relevance="Wide view of the rocky valley floor over buried glacial ice, the permafrost analog terrain.", appearance="Ordinary daylight photograph."),
-    dict(entry_id="death_valley_badwater_salt_nps", site_id="death_valley", title="File:Salt detail, Badwater Basin.JPG", view="surface", image_type="surface_image", instrument="Field photograph (National Park Service)", mission="Death Valley National Park",
-         acquisition_date="2006-11-28", acquisition_note="Commons DateTimeOriginal 28 November 2006 (from EXIF).", relationship="nearby_scene", distance_km=25.0,
-         coverage="Badwater Basin lies about 25 km south of the candidate footprint centre, within the same valley floor.", relevance="Evaporite salt crust of the valley floor - the playa surface the candidate footprint includes.", appearance="Close-up daylight photograph; not a landscape view."),
-    dict(entry_id="death_valley_mesquite_dunes_nps", site_id="death_valley", title="File:Mesquite Flat Sand Dunes.jpg", view="surface", image_type="surface_image", instrument="Field photograph (National Park Service)", mission="Death Valley National Park",
-         acquisition_date="2006-12-06", acquisition_note="Commons DateTimeOriginal 6 December 2006 (from EXIF).", relationship="nearby_scene", distance_km=20.0,
-         coverage="Mesquite Flat near Stovepipe Wells, in central Death Valley, roughly 20 km north-west of the candidate footprint centre.", relevance="Dune field and basin-and-range backdrop typical of the valley floor.", appearance="Ordinary daylight photograph."),
-    dict(entry_id="mauna_kea_summit_usgs", site_id="mauna_kea_summit", title="File:Mauna Kea Summit in Winter.jpg", view="surface", image_type="surface_image", instrument="Field photograph (USGS)", mission="USGS",
-         acquisition_date="2011-08-09", acquisition_note="Commons DateTimeOriginal 2011-08-09.", relationship="exact_location", distance_km=0.0,
-         coverage="The summit region, which is the candidate footprint centre.", relevance="Cinder cones of the summit region (here under snow): the tephra and basalt slopes used for ISRU and rover trials.", appearance="Small (800x400) daylight photograph with seasonal snow, which the analog tests avoid."),
-    dict(entry_id="mauna_kea_puu_cc", site_id="mauna_kea_summit", title="File:Pu'u on Mauna Kea.jpg", view="surface", image_type="surface_image", instrument="Field photograph (Commons contributor)", mission=None,
-         acquisition_date="2025-06-11", acquisition_note="Commons DateTimeOriginal 2025-06-11.", relationship="candidate_region", distance_km=None,
-         coverage="A cinder cone (pu'u) on Mauna Kea's upper slopes; exact position relative to the summit not stated.", relevance="Close view of the reddish tephra cone surfaces that make the upper mountain a Mars analog.", appearance="Ordinary daylight photograph."),
-    dict(entry_id="mdrs_bdj_landscape", site_id="mdrs_utah", title="File:Mars Desert Research Station (10.3897-BDJ.8.e55063) Figure 1 a.jpeg", view="surface", image_type="surface_image", instrument="Field photograph (Sokoloff et al. 2020, Biodiversity Data Journal, CC BY 4.0)", mission="MDRS biodiversity survey",
-         acquisition_date=None, acquisition_note="Figure from a 2020 open-access paper; the photograph date is not stated on Commons.", relationship="exact_location", distance_km=0.0,
-         coverage="Landscape at the Mars Desert Research Station, which is the candidate footprint centre.", relevance="The badland terrain around the station: Jurassic-Cretaceous mudstone and sandstone slopes.", appearance="Ordinary daylight photograph."),
-    dict(entry_id="mdrs_station_2020", site_id="mdrs_utah", title="File:Mars Desert Research Station 2020.jpg", view="surface", image_type="surface_image", instrument="Field photograph (The Mars Society / MDRS, CC BY-SA 4.0)", mission="Mars Desert Research Station",
-         acquisition_date="2020-10-07", acquisition_note="Commons DateTimeOriginal 2020-10-07.", relationship="exact_location", distance_km=0.0,
-         coverage="The station itself, which is the candidate footprint centre.", relevance="The habitat and the surrounding desert terrain where crewed simulations run.", appearance="Ordinary daylight photograph; the structures are the station, not natural features."),
     dict(entry_id="haughton_devon_aerial_hmp", site_id="haughton_crater", title="File:Flying over Devon Island (2665527817).jpg", view="orbital", image_type="orbital_image", instrument="Aerial photograph (Haughton-Mars Project)", mission="Haughton-Mars Project",
          acquisition_date=None, acquisition_note="Commons gives only 'taken on' without a verified date.", relationship="candidate_region", distance_km=None,
          coverage="Low-altitude aerial view over Devon Island near the crater; the frame's position relative to the crater centre is not stated.", relevance="Oblique aerial context of the polar desert surface (not an orbital map; no georeferencing).", appearance="Oblique aerial photograph, not nadir imagery."),
@@ -322,11 +265,21 @@ def ctx_entries(sites: dict[str, dict]) -> list[dict]:
 
 
 def main() -> int:
+    """--reuse-downloads: keep NASA / Commons entries (and their cached assets) from the
+    existing manifest instead of fetching them again; only the CTX / GIBS context
+    entries (rebuilt by site_imagery_ctx.py / site_imagery_earth.py) change."""
+    reuse = {}
+    if "--reuse-downloads" in sys.argv and (IMG / "manifest.json").exists():
+        old = json.loads((IMG / "manifest.json").read_text(encoding="utf-8"))
+        reuse = {e["entry_id"]: e for site in old["sites"].values() for e in site["entries"] if (ASSETS / e["local_asset"]).exists()}
     ASSETS.mkdir(parents=True, exist_ok=True)
-    sites = {s["id"]: s for s in json.loads((BACKEND / "data" / "mars" / "sites.json").read_text())["sites"]}
-    earth = {c["id"]: c for c in json.loads((BACKEND / "data" / "earth" / "candidates.json").read_text())["candidates"]}
+    sites = {s["id"]: s for s in json.loads((BACKEND / "data" / "mars" / "sites.json").read_text(encoding="utf-8"))["sites"]}
+    earth = {c["id"]: c for c in json.loads((BACKEND / "data" / "earth" / "candidates.json").read_text(encoding="utf-8"))["candidates"]}
     entries: list[dict] = ctx_entries(sites) + earth_context_entries(earth)
     for spec in NASA_PRODUCTS + EARTH_NASA_PRODUCTS:
+        if spec["entry_id"] in reuse:
+            entries.append(reuse[spec["entry_id"]])
+            continue
         meta, assets = nasa_metadata(spec["nasa_id"])
         asset_url = pick_asset(assets)
         fn = f"{spec['entry_id']}.jpg"
@@ -348,6 +301,9 @@ def main() -> int:
         print(f"{spec['entry_id']:<30} {meta['title'][:50]:<52} {w}x{h} {nbytes:>8} B", flush=True)
         time.sleep(0.5)
     for spec in COMMONS_PRODUCTS:
+        if spec["entry_id"] in reuse:
+            entries.append(reuse[spec["entry_id"]])
+            continue
         try:
             info = commons_info(spec["title"])
         except FileNotFoundError as e:
@@ -374,6 +330,9 @@ def main() -> int:
         es = [e for e in entries if e["site_id"] == sid]
         views = {e["view"] for e in es}
         notes = []
+        if "orbital" not in views:
+            notes.append("No usable orbital context image: the orbital tiles for this footprint came back blank (uniform ice sheet or no "
+                         "coverage), so none is shown rather than an empty picture.")
         if "surface" not in views:
             notes.append("No landed mission has imaged this candidate from the ground, so no surface view exists; orbital views only." if s["body"] == "mars"
                          else "No field photograph with a documented licence and location could be verified for this site; orbital context only.")

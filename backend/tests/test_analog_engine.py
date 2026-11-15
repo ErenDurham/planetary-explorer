@@ -244,27 +244,31 @@ def test_committed_data_every_candidate_fully_comparable_and_deterministic():
     a, w1 = match_all(site, prof, cands, None, 20)
     b, w2 = match_all(site, prof, cands, None, 20)
     assert [(m.earth_candidate.id, m.similarity, m.rank) for m in a] == [(m.earth_candidate.id, m.similarity, m.rank) for m in b]
-    assert w1 == [] and len(a) == len(cands) == 7
+    assert w1 == [] and len(a) == len(cands) == 17
     for m in a:
-        assert m.completeness_fraction == 1.0, "every weighted feature exists on both planets in v1"
+        # literature labels exist only where a recent source states them, so coverage is disclosed, not assumed
+        prof_c = next(p for c, p in cands if c.id == m.earth_candidate.id)
+        labelled = not ({"terrain_morphology", "mineralogy_tags"} & set(prof_c.completeness.missing_feature_ids))
+        assert (m.completeness_fraction == 1.0) == labelled, m.earth_candidate.id
         assert 0 < m.similarity <= 100 and m.citations and m.limitations
         assert all(f.note for f in m.feature_distances), "every FeatureDistance.note is informative"
         json.dumps(m.model_dump(), allow_nan=False)
 
 
 def test_terrain_only_weights_rank_haughton_first_for_jezero():
-    """Haughton is the only impact-crater candidate, so with morphology as the
-    sole criterion it must lead for Jezero; and the ordering must differ from
-    the default-weight ordering, which MDRS leads (it shares clays, carbonates and
-    sulfates with Jezero in the literature labels)."""
+    """Haughton (impact crater) and the Svalbard fan-delta (delta) each share one
+    landform with Jezero, so with morphology as the sole criterion they lead; the
+    ordering differs from the default-weight ordering. Candidates with no cited
+    landform label cannot be compared and say so."""
     site, prof, cands = _real("jezero_crater")
-    base, _ = match_all(site, prof, cands, None, 7)
+    base, _ = match_all(site, prof, cands, None, 17)
     w = _weights(terrain_morphology=100, slope_regional_median_deg=0, roughness_regional_m=0, mineralogy_tags=0, precipitation_mm_day=0)
-    alt, warnings = match_all(site, prof, cands, w, 7)
-    assert warnings == []
-    assert alt[0].earth_candidate.id == "haughton_crater"
+    alt, warnings = match_all(site, prof, cands, w, 17)
+    unlabelled = {c.id for c, p in cands if "terrain_morphology" in p.completeness.missing_feature_ids}
+    assert len(warnings) == len(unlabelled) and all("no comparable weighted feature" in x for x in warnings)
+    assert {alt[0].earth_candidate.id, alt[1].earth_candidate.id} == {"haughton_crater", "svalbard_fan_delta"}
+    alt = [m for m in alt if m.earth_candidate.id == "haughton_crater"] + [m for m in alt if m.earth_candidate.id != "haughton_crater"]
     assert [m.earth_candidate.id for m in alt] != [m.earth_candidate.id for m in base]
-    assert base[0].earth_candidate.id == "mdrs_utah"
     terrain = next(f for f in alt[0].feature_distances if f.feature_id == TERRAIN)
     assert terrain.normalized_weight == 1.0 and "impact crater" in terrain.note
     assert any(x.startswith("Terrain morphology shared: impact crater") for x in alt[0].shared_characteristics)
@@ -276,13 +280,13 @@ def test_basalt_only_mineralogy_weights_favour_volcanic_candidates_for_elysium()
     site, prof, cands = _real("elysium_planitia")
     w = _weights(mineralogy_tags=100, terrain_morphology=0, slope_regional_median_deg=0, roughness_regional_m=0, precipitation_mm_day=0)
     alt, _ = match_all(site, prof, cands, w, 7)
-    assert alt[0].earth_candidate.id in {"holuhraun_iceland", "mauna_kea_summit"}  # both basalt + regolith
+    assert {alt[0].earth_candidate.id, alt[1].earth_candidate.id} == {"channeled_scablands", "holuhraun_iceland"}  # both cite basalt
 
 
 # --- HTTP wiring (router owned by Engineer 5; this only confirms the engine is reachable) ----
 def test_http_similarity_formula_and_noncomparable_disclosure(client):
     body = client.post("/api/v1/analogs/match", json={"mars_site_id": "elysium_planitia", "top_k": 7}).json()
-    assert len(body["matches"]) == 7 and body["analog_spec_version"] == SPEC["version"]
+    assert len(body["matches"]) == 7 and body["analog_spec_version"] == SPEC["version"]   # top_k of 17 candidates
     for m in body["matches"]:
         comp = [f for f in m["feature_distances"] if f["comparable"] and f["raw_weight"] > 0]
         D = sum(f["contribution"] for f in comp)
@@ -298,7 +302,8 @@ def test_http_custom_weights_and_unknown_weight_warning(client):
     w = [{"feature_id": "terrain_morphology", "weight": 100}, {"feature_id": "slope_regional_median_deg", "weight": 0}, {"feature_id": "roughness_regional_m", "weight": 0},
          {"feature_id": "mineralogy_tags", "weight": 0}, {"feature_id": "precipitation_mm_day", "weight": 0}]
     alt = client.post("/api/v1/analogs/match", json={"mars_site_id": "jezero_crater", "top_k": 7, "weights": w}).json()
-    assert alt["matches"][0]["earth_candidate"]["id"] == "haughton_crater" and alt["warnings"] == []
+    assert alt["matches"][0]["earth_candidate"]["id"] in {"haughton_crater", "svalbard_fan_delta"}
+    assert all("no comparable weighted feature" in x for x in alt["warnings"])   # unlabelled candidates are disclosed
     bad = client.post("/api/v1/analogs/match", json={"mars_site_id": "jezero_crater", "weights": [{"feature_id": "bogus", "weight": 5}]}).json()
     assert any("bogus" in x for x in bad["warnings"])
     assert bad["matches"][0]["similarity"] is not None, "an unknown id is ignored, the defaults still apply"
