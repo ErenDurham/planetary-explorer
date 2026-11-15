@@ -8,10 +8,13 @@
 // matching, not from research. The applied task reading (Earth-Mars release:
 // task, body, destination, reference) is shown under the saved text.
 import { useState, type FormEvent, type KeyboardEvent } from "react";
-import { Loader2, Pencil, TriangleAlert } from "lucide-react";
+import { Pencil, TriangleAlert } from "lucide-react";
+import { ShootingStar } from "@/components/mission/SpaceDecor";
 import { useAppStore } from "@/store/useAppStore";
 import { BODY_NAME } from "@/lib/analogFeatures";
-import { TASK_LABEL } from "@/components/mission/TaskReview";
+import type { Task } from "@/store/useAppStore";
+
+const TASK_LABEL: Record<Task, string> = { landing_screening: "Mars landing screening", analog_site_selection: "Analog site selection" };
 
 const PLACEHOLDER = "We want to land on Mars to establish a Research Base.";
 
@@ -101,9 +104,10 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
               <Pencil className="h-4 w-4" aria-hidden /> Edit Mission
             </button>
             {pending && (
-              <span className="inline-flex items-center gap-1.5 text-sm text-fg-muted" role="status">
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Considering the rocket science...
-              </span>
+              <div className="mt-4 flex w-full items-center justify-center gap-2.5 text-xl font-medium text-fg" role="status" data-testid="mission-loading">
+                <ShootingStar />
+                <p>Considering the rocket science...</p>
+              </div>
             )}
           </div>
         </div>
