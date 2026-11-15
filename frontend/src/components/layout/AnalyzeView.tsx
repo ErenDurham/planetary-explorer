@@ -1,3 +1,4 @@
+import { useRegionTarget } from "@/features/regions/store";
 import { ContourArtwork } from "@/components/atlas/AtlasSurface";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ const EMPTY_NEEDS: string[] = [];
 const signed=(n:number)=>`${n>0?"+":""}${n.toFixed(2)}`;
 const card="rounded-lg border border-line-strong bg-bg-elev p-4";
 export function AnalyzeView({sites,evaluation,selectedId,onSelect}: {sites: Site[]|undefined;evaluation:EvaluateResponse|undefined;selectedId:string|null;onSelect:(id:string)=>void}) {
+  const openRegion=useRegionTarget(s=>s.open);
   const scroll=useRef<HTMLDivElement>(null);
   useEffect(()=>{if(scroll.current)scroll.current.scrollTop=0;},[selectedId]);
   const objective=useAppStore(s=>s.appliedObjective);
@@ -37,6 +39,7 @@ export function AnalyzeView({sites,evaluation,selectedId,onSelect}: {sites: Site
   const unsupported=needs.length ? needs : /\b(ice|water|habitation|base|biology|life|lunar|moon)\b/i.test(objective) ? ["This objective includes needs outside the current landing model. The index does not assess those needs."] : [];
   return <div data-pane="analysis" ref={scroll} className="scroll-thin h-full overflow-y-auto p-4">
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><ContourArtwork /><div><h1 className="text-xl font-semibold">Site analysis</h1><p className="mt-1 text-sm text-fg-muted">Mission fit, alternatives and priority sensitivity.</p></div><div className="flex items-center gap-2"><label htmlFor="analysis-site" className="text-sm text-fg-muted">Mars site</label><select id="analysis-site" value={selectedId ?? ""} onChange={e=>onSelect(e.target.value)} className="max-w-full rounded-lg border border-line bg-bg-elev p-2 text-sm"><option disabled value="">Select a site</option>{sites?.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select></div></div>
+    {selectedId && <button className="mb-4 text-info underline" onClick={()=>openRegion({kind:"catalog",id:selectedId})}>Analyze shared region measurements</button>}
     {!selectedId ? <EmptyNote>Select a candidate to analyse its fit for the applied mission.</EmptyNote> : !focus || !evaluation ? <p role="status" className="p-4 text-sm text-fg-muted">Waiting for the current mission evaluation…</p> : <div className="space-y-4">
       <section className={card} aria-label="Decision summary"><p className="text-xs text-copper-bright">APPLIED MISSION · {custom?"CUSTOMISED PRIORITIES":"SUGGESTED PRIORITIES"}</p><p className="mt-2 text-sm">{objective || "Regional Mars landing screening"}</p>{draft!==objective && <p className="mt-2 text-xs text-warn">The draft objective has not been applied. This analysis uses the objective above.</p>}
         <div className="mt-4 flex flex-wrap items-end justify-between gap-4"><div><h2 className="text-lg font-semibold">{focus.site_name}</h2><p className="mt-1 text-sm text-fg-muted">{focus.status==="ok" ? `Rank ${focus.rank} of ${evaluation.results.filter(r=>r.status==="ok").length} ranked sites` : focus.status.replace(/_/g," ")}</p></div><p className="num text-3xl text-copper-bright">{focus.score?.toFixed(2) ?? "—"}<span className="ml-2 text-sm text-fg-muted">/ 100</span></p></div>

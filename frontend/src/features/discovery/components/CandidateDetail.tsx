@@ -1,3 +1,4 @@
+import { RegionActions } from "@/features/regions/RegionActions";
 // Evidence for one proposed candidate, organised around the three questions a
 // reader actually has - what matches the reference, what differs, and what we
 // still need to investigate - with the way in to research placed where it is
@@ -101,6 +102,7 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
           <Badge tone="neutral" title={reviewStatusLabel(candidate.novelty.review_status)}>{candidate.novelty.review_status === "desktop_reviewed" ? "Desktop reviewed" : "Not desktop reviewed"}</Badge>
         </div>
         {effectiveWeights && <p className="mt-3 text-xs leading-relaxed text-fg-muted">{similarityExplanation(candidate, reference.name, effectiveWeights)}</p>}
+        <RegionActions target={runId ? {kind:"discovered",id:candidate.id,runId} : null}/>
         <button type="button" disabled={!runId} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-info bg-info/15 px-3 py-2.5 text-sm font-semibold text-info hover:bg-info/25 disabled:opacity-40" onClick={research} data-testid="research-this-candidate"><Microscope className="h-4 w-4" aria-hidden />Research this candidate</button>
       </div>
 

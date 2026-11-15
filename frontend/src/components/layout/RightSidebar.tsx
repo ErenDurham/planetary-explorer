@@ -1,3 +1,4 @@
+import { RegionActions } from "@/features/regions/RegionActions";
 import { useEffect, useRef } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { MapPin } from "lucide-react";
@@ -63,6 +64,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
         ) : earthLocation ? (
           <>
             {analogPanel}
+            <div className="px-4"><RegionActions target={{kind:"catalog",id:earthLocation.id}}/></div>
             <EarthLocationPanel location={earthLocation} />
           </>
         ) : earthPending ? (
@@ -76,6 +78,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
 
   return (
     <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-auto flex-col overflow-visible lg:h-full lg:overflow-y-auto bg-bg-elev" data-body="mars">
+      {selectedId && <div className="px-4"><RegionActions target={{kind:"catalog",id:selectedId}}/></div>}
       {!selectedId ? (
         <Section title="Site">
           <EmptyNote>Click a marker on the globe or a row in the ranked list.</EmptyNote>

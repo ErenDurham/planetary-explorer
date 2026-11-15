@@ -1,3 +1,4 @@
+import { useRegionTarget } from "@/features/regions/store";
 // Compare: two linked location columns, Earth and Mars, for one hand-selected
 // pair. Order follows the applied objective (selection body first, reference
 // body second); a swap button reorders the display only. The page leads with
@@ -43,6 +44,7 @@ export function currentEntry(imagery: PaneImagery, view: PaneView, choice: strin
 }
 
 export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; selectedId: string | null; onSelect?: (id: string) => void }) {
+  const openRegion = useRegionTarget(s=>s.open);
   const q = useQuery({ queryKey: ["comparison-catalog"], queryFn: api.comparisonCatalog, staleTime: Infinity });
   const selectionBody = useAppStore(s => s.selectionBody);
   const appliedReference = useAppStore(s => s.appliedReference);
@@ -128,6 +130,7 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
 
   return <AtlasSurface label="Earth and Mars pair comparison">
     <div className={atlasStyles.content}>
+      {earth && <button type="button" className="mb-3 text-sm text-info underline" onClick={()=>openRegion({kind:"catalog",id:earth.id})}>Compare shared region measurements</button>}
       <CompareAtlasHeader focusBody={selectionBody} />
       {q.isPending && <Spinner label="Loading comparison locations" />}
       {q.error && <div className="mb-4"><ErrorNote error={q.error} context="comparison/catalog" /><button className="mt-3 text-sm text-copper-bright underline" onClick={() => q.refetch()}>Retry comparison</button></div>}

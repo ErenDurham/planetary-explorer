@@ -1,3 +1,5 @@
+import { useRegionTarget } from "@/features/regions/store";
+import { useAppStore } from "@/store/useAppStore";
 // The evidence panel for one candidate: the three reader questions (what
 // matches, what differs, what we still need to investigate) answered from a
 // rank-response candidate plus the detail row, the research entry where it is
@@ -5,7 +7,7 @@
 // value traceable to a field, absent context reported as absent, and nothing
 // claimed that the service did not say.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CandidateDetail } from "./CandidateDetail";
 import { useDiscoveryStore } from "../store/useDiscoveryStore";
@@ -106,3 +108,13 @@ describe("CandidateDetail", () => {
     expect(within(card).queryByRole("table")).toBeNull();
   });
 });
+
+ it("opens Analyze and Compare with the discovered run and candidate rather than a curated ID", () => {
+   mount();
+   fireEvent.click(screen.getByRole("button", {name:"Analyze region"}));
+   expect(useRegionTarget.getState().target).toEqual({kind:"discovered",runId:run.run_id,id:candidates[1].id});
+   expect(useAppStore.getState().activeTab).toBe("analyze");
+   fireEvent.click(screen.getByRole("button", {name:"Compare region"}));
+   expect(useAppStore.getState().activeTab).toBe("compare");
+   useRegionTarget.getState().clear();
+ });
