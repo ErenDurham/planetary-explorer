@@ -1,0 +1,21 @@
+{
+ "document_id": "crossref_liu2018_columbus_gypsum",
+ "title": "Raman, Mid-IR, and NIR spectroscopic study of calcium sulfates and mapping gypsum abundances in Columbus crater, Mars",
+ "institution": "Planetary and Space Science / Elsevier BV",
+ "url": "https://api.crossref.org/works/10.1016/j.pss.2018.04.010",
+ "final_url": "https://api.crossref.org/works/10.1016/j.pss.2018.04.010",
+ "publication_date": "2018-11",
+ "retrieved_at": "2026-11-15",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "Raman, mid-IR and NIR spectroscopic study of calcium sulfates and mapping gypsum abundances in Columbus crater, Mars",
+ "excluded_paragraph_terms": [],
+ "default_geographic_relevance": [
+  "columbus_crater"
+ ],
+ "sha256": "a616c74540f2bc27326bd23973614f2df851857d93ee5092d00d8af4a7df1dff",
+ "char_count": 675,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): Raman, Mid-IR, and NIR spectroscopic study of calcium sulfates and mapping gypsum abundances in Columbus crater, Mars.\n\nAuthors: Yang Liu.\n\nPublished in Planetary and Space Science, volume 163, pages 35-41 (2018), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.pss.2018.04.010.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_text": "Bibliographic record (Crossref metadata, not the paper's full text): Raman, Mid-IR, and NIR spectroscopic study of calcium sulfates and mapping gypsum abundances in Columbus crater, Mars.\n\nAuthors: Yang Liu.\n\nPublished in Planetary and Space Science, volume 163, pages 35-41 (2018), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.pss.2018.04.010.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_char_count": 675
+}

@@ -5,10 +5,11 @@
  "url": "https://science.nasa.gov/mission/insight/science/",
  "final_url": "https://science.nasa.gov/mission/insight/science/",
  "publication_date": "2024-03-25",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "text/html; charset=UTF-8",
  "kind": "html",
  "topic": "InSight science",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "elysium_planitia"
  ],

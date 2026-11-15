@@ -5,10 +5,11 @@
  "url": "https://api.crossref.org/works/10.1089/ast.2019.2191",
  "final_url": "https://api.crossref.org/works/10.1089/ast.2019.2191",
  "publication_date": "2021-03",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1089/ast.2019.2191",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "oxia_planum"
  ],

@@ -1,0 +1,22 @@
+{
+ "document_id": "crossref_moores2012_sudbury_sample_return",
+ "title": "A Mission Control Architecture for robotic lunar sample return as field tested in an analogue deployment to the sudbury impact structure",
+ "institution": "Advances in Space Research / Elsevier BV",
+ "url": "https://api.crossref.org/works/10.1016/j.asr.2012.05.008",
+ "final_url": "https://api.crossref.org/works/10.1016/j.asr.2012.05.008",
+ "publication_date": "2012-12",
+ "retrieved_at": "2026-11-15",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "A mission control architecture for robotic lunar sample return as field tested in an analogue deployment to the Sudbury impact structure",
+ "excluded_paragraph_terms": [],
+ "default_geographic_relevance": [
+  "sudbury_impact_structure",
+  "huygens_crater"
+ ],
+ "sha256": "2410eece24417135a35161e387b6a620567620b0c2ae4253b680d466c7322bc9",
+ "char_count": 1251,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): A Mission Control Architecture for robotic lunar sample return as field tested in an analogue deployment to the sudbury impact structure.\n\nAuthors: John E. Moores, Raymond Francis, Marianne Mader, G.R. Osinski, T. Barfoot, N. Barry, G. Basic, M. Battler, M. Beauchamp, S. Blain, M. Bondy, R-D. Capitan, A. Chanou, J. Clayton, E. Cloutis, M. Daly, C. Dickinson, H. Dong, R. Flemming, P. Furgale, J. Gammel, N. Gharfoor, M. Hussein, R. Grieve, H. Henrys, P. Jaziobedski, A. Lambert, K. Leung, C. Marion, E. McCullough, C. McManus, C.D. Neish, H.K. Ng, A. Ozaruk, A. Pickersgill, L.J. Preston, D. Redman, H. Sapers, B. Shankar, A. Singleton, K. Souders, B. Stenning, P. Stooke, P. Sylvester, L. Tornabene.\n\nPublished in Advances in Space Research, volume 50, issue 12, pages 1666-1686 (2012), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.asr.2012.05.008.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_text": "Bibliographic record (Crossref metadata, not the paper's full text): A Mission Control Architecture for robotic lunar sample return as field tested in an analogue deployment to the sudbury impact structure.\n\nAuthors: John E. Moores, Raymond Francis, Marianne Mader, G.R. Osinski, T. Barfoot, N. Barry, G. Basic, M. Battler, M. Beauchamp, S. Blain, M. Bondy, R-D. Capitan, A. Chanou, J. Clayton, E. Cloutis, M. Daly, C. Dickinson, H. Dong, R. Flemming, P. Furgale, J. Gammel, N. Gharfoor, M. Hussein, R. Grieve, H. Henrys, P. Jaziobedski, A. Lambert, K. Leung, C. Marion, E. McCullough, C. McManus, C.D. Neish, H.K. Ng, A. Ozaruk, A. Pickersgill, L.J. Preston, D. Redman, H. Sapers, B. Shankar, A. Singleton, K. Souders, B. Stenning, P. Stooke, P. Sylvester, L. Tornabene.\n\nPublished in Advances in Space Research, volume 50, issue 12, pages 1666-1686 (2012), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.asr.2012.05.008.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_char_count": 1251
+}

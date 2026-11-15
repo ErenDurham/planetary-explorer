@@ -5,12 +5,14 @@
  "url": "https://api.crossref.org/works/10.1016/j.jvolgeores.2017.02.027",
  "final_url": "https://api.crossref.org/works/10.1016/j.jvolgeores.2017.02.027",
  "publication_date": "2017-06",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "application/json",
  "kind": "crossref",
- "topic": "Bibliographic record for DOI 10.1016/j.jvolgeores.2017.02.027",
+ "topic": "Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
-  "holuhraun_iceland"
+  "holuhraun_iceland",
+  "elysium_planitia"
  ],
  "sha256": "e84b0f62aa6c7d0b5942ab512003f1bccb85e5b47215a584e5cc9abe5e2bfc93",
  "char_count": 957,

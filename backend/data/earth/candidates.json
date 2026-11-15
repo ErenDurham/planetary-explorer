@@ -29,44 +29,71 @@
       "access_method": "REST API, no login",
       "license": "Public domain (NASA)"
     },
-    "adams2014_maunakea": {
-      "source_id": "adams2014_maunakea",
-      "title": "Pu'u Poli'ahu, Mauna Kea: A Possible Analog for the Hematite Bearing Layer Located in Gale Crater, Mars",
-      "institution": "NASA Technical Reports Server 20140010577",
-      "url": "https://ntrs.nasa.gov/citations/20140010577",
-      "access_method": "publication",
-      "cite": "Adams, 2014",
-      "year": 2014,
-      "kind": "nasa"
+    "workbook_lesser_known_sites": {
+      "source_id": "workbook_lesser_known_sites",
+      "title": "Lesser-Known Mars Sites - Conditions Comparison (research workbook; coordinates as compiled by the workbook author)",
+      "institution": "Planetary Explorer research team",
+      "url": "data/workbook/lesser_known_sites.v1.json",
+      "access_method": "project workbook (scripts/import_workbook.py)"
     },
-    "clarke2011_hanksville": {
-      "source_id": "clarke2011_hanksville",
-      "title": "Concretions in Exhumed Channels Near Hanksville Utah: Implications for Mars",
-      "institution": "NASA Technical Reports Server 20110023235",
-      "url": "https://ntrs.nasa.gov/citations/20110023235",
+    "aerts2019_yilgarn_lakes": {
+      "source_id": "aerts2019_yilgarn_lakes",
+      "title": "Microbial communities in sediments from four mildly acidic ephemeral salt lakes in the Yilgarn Craton (Australia)",
+      "institution": "Frontiers in Microbiology",
+      "url": "https://doi.org/10.3389/fmicb.2019.00779",
       "access_method": "publication",
-      "cite": "Clarke & Stoker, 2011",
-      "year": 2011,
-      "kind": "nasa"
-    },
-    "das2026_deathvalley": {
-      "source_id": "das2026_deathvalley",
-      "title": "Estimating past fluid pH and evaporative conditions in Gale crater using terrestrial analog samples from Death Valley, CA",
-      "institution": "Meteoritics & Planetary Science",
-      "url": "https://doi.org/10.1111/maps.70237",
-      "access_method": "publication",
-      "cite": "Das et al., 2026",
-      "year": 2026,
+      "cite": "Aerts et al., 2019",
+      "year": 2019,
       "kind": "peer_reviewed"
     },
-    "elmaarry2015_playas": {
-      "source_id": "elmaarry2015_playas",
-      "title": "Field investigation of dried lakes in western United States as an analogue to desiccation fractures on Mars",
-      "institution": "Journal of Geophysical Research: Planets",
-      "url": "https://doi.org/10.1002/2015JE004895",
+    "amils2014_rio_tinto": {
+      "source_id": "amils2014_rio_tinto",
+      "title": "R\u00edo Tinto: a geochemical and mineralogical terrestrial analogue of Mars",
+      "institution": "Life",
+      "url": "https://doi.org/10.3390/life4030511",
       "access_method": "publication",
-      "cite": "El-Maarry et al., 2015",
-      "year": 2015,
+      "cite": "Amils & Fern\u00e1ndez-Remolar, 2014",
+      "year": 2014,
+      "kind": "peer_reviewed"
+    },
+    "bishop2025_painted_desert": {
+      "source_id": "bishop2025_painted_desert",
+      "title": "Constraining the ancient geochemical environments of Mawrth Vallis (EPSC-DPS 2025-1957)",
+      "institution": "EPSC-DPS Joint Meeting 2025",
+      "url": "https://doi.org/10.5194/epsc-dps2025-1957",
+      "access_method": "publication",
+      "cite": "Bishop et al., 2025",
+      "year": 2025,
+      "kind": "conference_abstract"
+    },
+    "bultel2025_granby_alteration": {
+      "source_id": "bultel2025_granby_alteration",
+      "title": "Deciphering the alteration processes of a vermiculite-rich sample (EPSC-DPS 2025-1550)",
+      "institution": "EPSC-DPS Joint Meeting 2025",
+      "url": "https://doi.org/10.5194/epsc-dps2025-1550",
+      "access_method": "publication",
+      "cite": "Bultel et al., 2025",
+      "year": 2025,
+      "kind": "conference_abstract"
+    },
+    "demaret2022_jaroso_vents": {
+      "source_id": "demaret2022_jaroso_vents",
+      "title": "Fe-rich fossil vents as Mars analog samples: identification of extinct chimneys in Miocene marine sediments using Raman spectroscopy, X-ray diffraction, and scanning electron microscopy-energy dispersive X-ray analysis",
+      "institution": "Astrobiology",
+      "url": "https://doi.org/10.1089/ast.2021.0128",
+      "access_method": "publication",
+      "cite": "Demaret et al., 2022",
+      "year": 2022,
+      "kind": "peer_reviewed"
+    },
+    "gilbert2018_svalbard_fjord_valley": {
+      "source_id": "gilbert2018_svalbard_fjord_valley",
+      "title": "Late Quaternary sedimentation and permafrost development in a Svalbard fjord-valley, Norwegian high Arctic",
+      "institution": "Sedimentology",
+      "url": "https://doi.org/10.1111/sed.12476",
+      "access_method": "publication",
+      "cite": "Gilbert et al., 2018",
+      "year": 2018,
       "kind": "peer_reviewed"
     },
     "goordial2016_university_valley": {
@@ -79,15 +106,15 @@
       "year": 2016,
       "kind": "peer_reviewed"
     },
-    "graham2013_maunakea": {
-      "source_id": "graham2013_maunakea",
-      "title": "Rover-Based Instrumentation and Scientific Investigations During the 2012 Analog Field Test on Mauna Kea Volcano, Hawaii",
-      "institution": "NASA Technical Reports Server 20130009908",
-      "url": "https://ntrs.nasa.gov/citations/20130009908",
+    "gunes2024_salda_microbialites": {
+      "source_id": "gunes2024_salda_microbialites",
+      "title": "Morphological and microbial diversity of hydromagnesite microbialites in Lake Salda",
+      "institution": "Geobiology",
+      "url": "https://doi.org/10.1111/gbi.12619",
       "access_method": "publication",
-      "cite": "Graham & Graff, 2013",
-      "year": 2013,
-      "kind": "nasa"
+      "cite": "Gunes et al., 2024",
+      "year": 2024,
+      "kind": "peer_reviewed"
     },
     "hartley2018_holuhraun": {
       "source_id": "hartley2018_holuhraun",
@@ -109,16 +136,6 @@
       "year": 2015,
       "kind": "nasa"
     },
-    "horstmann2024_yungay": {
-      "source_id": "horstmann2024_yungay",
-      "title": "Persistent microbial communities in hyperarid subsurface habitats of the Atacama Desert: Insights from intracellular DNA analysis",
-      "institution": "PNAS Nexus",
-      "url": "https://doi.org/10.1093/pnasnexus/pgae123",
-      "access_method": "publication",
-      "cite": "Horstmann et al., 2024",
-      "year": 2024,
-      "kind": "peer_reviewed"
-    },
     "izawa2011_haughton": {
       "source_id": "izawa2011_haughton",
       "title": "Weathering of Post-Impact Hydrothermal Deposits from the Haughton Impact Structure: Implications for Microbial Colonization and Biosignature Preservation",
@@ -129,14 +146,44 @@
       "year": 2011,
       "kind": "peer_reviewed"
     },
-    "lasser2020_badwater": {
-      "source_id": "lasser2020_badwater",
-      "title": "Surface and subsurface characterisation of salt pans expressing polygonal patterns",
-      "institution": "Earth System Science Data",
-      "url": "https://doi.org/10.5194/essd-12-2881-2020",
+    "kong2018_dalangtan": {
+      "source_id": "kong2018_dalangtan",
+      "title": "The Dalangtan saline playa in a hyperarid region on Tibet Plateau: I. Evolution and environments",
+      "institution": "Astrobiology",
+      "url": "https://doi.org/10.1089/ast.2018.1830",
       "access_method": "publication",
-      "cite": "Lasser et al., 2020",
-      "year": 2020,
+      "cite": "Kong et al., 2018",
+      "year": 2018,
+      "kind": "peer_reviewed"
+    },
+    "krishnamoorthi2025_uae_dunes": {
+      "source_id": "krishnamoorthi2025_uae_dunes",
+      "title": "Aeolian sediment lithification from late-stage aqueous activity",
+      "institution": "Journal of Geophysical Research: Planets",
+      "url": "https://doi.org/10.1029/2024JE008804",
+      "access_method": "publication",
+      "cite": "Krishnamoorthi, Atri et al., 2025",
+      "year": 2025,
+      "kind": "peer_reviewed"
+    },
+    "krzesinska2021_oxia_granby": {
+      "source_id": "krzesinska2021_oxia_granby",
+      "title": "Mineralogy, aqueous history and biosignature preservation potential at Oxia Planum (EGU21-841)",
+      "institution": "EGU General Assembly 2021",
+      "url": "https://doi.org/10.5194/egusphere-egu21-841",
+      "access_method": "publication",
+      "cite": "Krzesi\u0144ska et al., 2021",
+      "year": 2021,
+      "kind": "conference_abstract"
+    },
+    "lambert_reimold2023_impact_analogs": {
+      "source_id": "lambert_reimold2023_impact_analogs",
+      "title": "Terrestrial impact sites as field analogs for planetary exploration",
+      "institution": "Frontiers in Astronomy and Space Sciences",
+      "url": "https://doi.org/10.3389/fspas.2023.1186173",
+      "access_method": "publication",
+      "cite": "Lambert & Reimold, 2023",
+      "year": 2023,
       "kind": "peer_reviewed"
     },
     "lit_holuhraun": {
@@ -149,6 +196,26 @@
       "year": 2017,
       "kind": "peer_reviewed"
     },
+    "nasa_eo_channeled_scablands": {
+      "source_id": "nasa_eo_channeled_scablands",
+      "title": "Channeled Scablands",
+      "institution": "NASA Earth Observatory",
+      "url": "https://earthobservatory.nasa.gov/images/92025/channeled-scablands",
+      "access_method": "publication",
+      "cite": "NASA Earth Observatory, 2018",
+      "year": 2018,
+      "kind": "nasa"
+    },
+    "nasa_lmap_rio_tinto": {
+      "source_id": "nasa_lmap_rio_tinto",
+      "title": "Drilling for data: simulating the search for life on Mars (LMAP at R\u00edo Tinto)",
+      "institution": "NASA Ames",
+      "url": "https://www.nasa.gov/missions/analog-field-testing/drilling-for-data-simulating-the-search-for-life-on-mars",
+      "access_method": "publication",
+      "cite": "NASA, 2015",
+      "year": 2015,
+      "kind": "nasa"
+    },
     "parnell2012_haughton": {
       "source_id": "parnell2012_haughton",
       "title": "Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars",
@@ -159,25 +226,25 @@
       "year": 2012,
       "kind": "peer_reviewed"
     },
-    "sager2020_yungay": {
-      "source_id": "sager2020_yungay",
-      "title": "New type of sand wedge polygons in the salt cemented soils of the hyper-arid Atacama Desert",
-      "institution": "Geomorphology",
-      "url": "https://doi.org/10.1016/j.geomorph.2020.107481",
+    "petersen2019_galena_creek": {
+      "source_id": "petersen2019_galena_creek",
+      "title": "New insights into ice accumulation at Galena Creek Rock Glacier from radar imaging of its internal structure",
+      "institution": "Journal of Glaciology",
+      "url": "https://doi.org/10.1017/jog.2019.67",
       "access_method": "publication",
-      "cite": "Sager et al., 2020",
-      "year": 2020,
+      "cite": "Petersen et al., 2019",
+      "year": 2019,
       "kind": "peer_reviewed"
     },
-    "stoker2011_mdrs": {
-      "source_id": "stoker2011_mdrs",
-      "title": "Properties of Subsurface Soil Cores from Four Geologic Provinces Surrounding Mars Desert Research Station, Utah: Characterizing Analog Martian Soil in a Human Exploration Scenario",
-      "institution": "42nd Lunar and Planetary Science Conference (NASA Technical Reports Server 20110014304)",
-      "url": "https://ntrs.nasa.gov/citations/20110014304",
+    "sobron2014_rio_tinto": {
+      "source_id": "sobron2014_rio_tinto",
+      "title": "Natural Fe-bearing oxides and sulfates from the Rio Tinto Mars analog site: critical assessment of VNIR reflectance spectroscopy, laser Raman spectroscopy, and XRD as mineral identification tools",
+      "institution": "American Mineralogist",
+      "url": "https://doi.org/10.2138/am.2014.4595",
       "access_method": "publication",
-      "cite": "Stoker et al., 2011",
-      "year": 2011,
-      "kind": "nasa"
+      "cite": "Sobron et al., 2014",
+      "year": 2014,
+      "kind": "peer_reviewed"
     },
     "trowbridge2024_haughton": {
       "source_id": "trowbridge2024_haughton",
@@ -198,35 +265,29 @@
       "cite": "Voigt et al., 2025",
       "year": 2025,
       "kind": "peer_reviewed"
+    },
+    "yoldi2020_greenland_old_ice": {
+      "source_id": "yoldi2020_greenland_old_ice",
+      "title": "Surface-exposed old ice along the Greenland ice sheet margin as an analogue for the north polar layered deposits",
+      "institution": "Europlanet Science Congress 2020",
+      "url": "https://doi.org/10.5194/epsc2020-1065",
+      "access_method": "publication",
+      "cite": "Yoldi et al., 2020",
+      "year": 2020,
+      "kind": "conference_abstract"
+    },
+    "zhu2025_qaidam_polygons": {
+      "source_id": "zhu2025_qaidam_polygons",
+      "title": "Polygonal landforms in the western Qaidam Basin (EPSC-DPS 2025-244)",
+      "institution": "EPSC-DPS Joint Meeting 2025",
+      "url": "https://doi.org/10.5194/epsc-dps2025-244",
+      "access_method": "publication",
+      "cite": "Zhu et al., 2025",
+      "year": 2025,
+      "kind": "conference_abstract"
     }
   },
   "candidates": [
-    {
-      "id": "atacama_yungay",
-      "name": "Atacama Desert - Yungay region",
-      "region": "Antofagasta Region",
-      "country": "Chile",
-      "lat": -24.08,
-      "lon_east": -69.95,
-      "description": "Hyperarid core of the Atacama near Yungay: playa sediments over alluvial fan deposits, and polygonal ground cemented by sulfates, nitrates and chlorides. Used by NASA ARADS for rover and drill testing.",
-      "tags_terrain": [
-        "alluvial_fan",
-        "playa",
-        "polygonal_terrain"
-      ],
-      "tags_mineralogy": [
-        "sulfates",
-        "nitrates",
-        "chlorides"
-      ],
-      "known_analog_use": [
-        "NASA ARADS rover and drilling campaigns"
-      ],
-      "sources": [
-        "horstmann2024_yungay",
-        "sager2020_yungay"
-      ]
-    },
     {
       "id": "mcmurdo_dry_valleys",
       "name": "McMurdo Dry Valleys - University Valley",
@@ -248,6 +309,191 @@
       "sources": [
         "heldmann2015_dryvalleys",
         "goordial2016_university_valley"
+      ],
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "amazonis_arcadia_ap8"
+    },
+    {
+      "id": "summit_station_greenland",
+      "name": "Summit Station, Greenland Ice Sheet",
+      "region": "Greenland Ice Sheet summit",
+      "country": "Greenland (Denmark)",
+      "lat": 72.596,
+      "lon_east": -38.422,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "planum_boreum",
+      "description": "Research station at the summit of the Greenland Ice Sheet, paired with the north polar layered deposits; old ice exposed at the ice-sheet margin shows dusty layering.",
+      "tags_terrain": [],
+      "tags_mineralogy": [],
+      "known_analog_use": [
+        "Greenland Ice Sheet margin ice studied as an analogue for the north polar layered deposits (Yoldi et al., 2020)"
+      ],
+      "sources": [
+        "yoldi2020_greenland_old_ice"
+      ]
+    },
+    {
+      "id": "south_pole_station",
+      "name": "Amundsen\u2013Scott South Pole Station",
+      "region": "Antarctic Plateau, geographic South Pole",
+      "country": "Antarctica",
+      "lat": -90.0,
+      "lon_east": 0.0,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "planum_australe",
+      "description": "Research station on the Antarctic ice sheet at the geographic South Pole, paired with the south polar cap as a polar-base analogue.",
+      "tags_terrain": [],
+      "tags_mineralogy": [],
+      "known_analog_use": [],
+      "sources": []
+    },
+    {
+      "id": "painted_desert",
+      "name": "Painted Desert, Petrified Forest National Park",
+      "region": "Northeastern Arizona",
+      "country": "United States",
+      "lat": 35.088,
+      "lon_east": -109.806,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "mawrth_vallis",
+      "description": "Badlands in Arizona with wide clay-bearing horizons interspersed with iron oxide/hydroxide and carbonate units, compared with the layered clays of Mawrth Vallis.",
+      "tags_terrain": [],
+      "tags_mineralogy": [
+        "clays",
+        "iron_oxides",
+        "carbonates"
+      ],
+      "known_analog_use": [
+        "Field site compared with Mawrth Vallis phyllosilicate and sulfate assemblages (Bishop et al., 2025)"
+      ],
+      "sources": [
+        "bishop2025_painted_desert"
+      ]
+    },
+    {
+      "id": "jaroso_ravine",
+      "name": "Jaroso Ravine, Sierra Almagrera",
+      "region": "Almer\u00eda, Andalusia",
+      "country": "Spain",
+      "lat": 37.25,
+      "lon_east": -1.8,
+      "coordinates_approximate": true,
+      "paired_mars_site_id": "noctis_labyrinthus",
+      "description": "Ravine in the Jaroso hydrothermal system, SE Spain, with extinct iron-rich hydrothermal chimneys studied as Mars analog samples.",
+      "tags_terrain": [],
+      "tags_mineralogy": [],
+      "known_analog_use": [
+        "Fossil hydrothermal vent analysed as a Mars analog sample (Demaret et al., 2022)"
+      ],
+      "sources": [
+        "demaret2022_jaroso_vents"
+      ]
+    },
+    {
+      "id": "liwa_desert",
+      "name": "Liwa Desert",
+      "region": "Abu Dhabi",
+      "country": "United Arab Emirates",
+      "lat": 23.1,
+      "lon_east": 53.8,
+      "coordinates_approximate": true,
+      "paired_mars_site_id": "hebrus_valles",
+      "description": "Desert of large dunes and salt flats in Abu Dhabi; lithified aeolian deposits in the UAE were used as analogues for calcium-sulfate-cemented Martian dunes.",
+      "tags_terrain": [],
+      "tags_mineralogy": [
+        "sulfates"
+      ],
+      "known_analog_use": [
+        "UAE lithified aeolian deposits used as analogues for the Stimson formation, Gale crater (Krishnamoorthi et al., 2025)"
+      ],
+      "sources": [
+        "krishnamoorthi2025_uae_dunes"
+      ]
+    },
+    {
+      "id": "sudbury_impact_structure",
+      "name": "Sudbury impact structure",
+      "region": "Ontario",
+      "country": "Canada",
+      "lat": 46.6,
+      "lon_east": -81.0,
+      "coordinates_approximate": true,
+      "paired_mars_site_id": "huygens_crater",
+      "description": "One of Earth's largest impact structures, in Ontario, assessed as a field analog for planetary exploration.",
+      "tags_terrain": [],
+      "tags_mineralogy": [],
+      "known_analog_use": [
+        "Ranked among terrestrial impact sites as field analogs (Lambert & Reimold, 2023)",
+        "Robotic sample-return analogue deployment (Moores et al., 2012)"
+      ],
+      "sources": [
+        "lambert_reimold2023_impact_analogs"
+      ]
+    },
+    {
+      "id": "yilgarn_salt_lakes",
+      "name": "Yilgarn Craton acid saline lakes",
+      "region": "Kalgoorlie region, Western Australia",
+      "country": "Australia",
+      "lat": -30.75,
+      "lon_east": 121.47,
+      "coordinates_approximate": true,
+      "paired_mars_site_id": "columbus_crater",
+      "description": "Mildly acidic ephemeral salt lakes on the Yilgarn Craton, Western Australia, studied as terrestrial analogs to ancient Mars.",
+      "tags_terrain": [],
+      "tags_mineralogy": [],
+      "known_analog_use": [
+        "Sediment microbiology of acidic salt lakes as terrestrial analogs to ancient Mars (Aerts et al., 2019)"
+      ],
+      "sources": [
+        "aerts2019_yilgarn_lakes"
+      ]
+    },
+    {
+      "id": "granby_tuff",
+      "name": "Granby Basaltic Tuff",
+      "region": "Granby, Massachusetts (Connecticut Valley)",
+      "country": "United States",
+      "lat": 42.256,
+      "lon_east": -72.517,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "oxia_planum",
+      "description": "Hydrothermally altered basaltic flows, dikes and tuffs at Granby, Massachusetts, whose Fe-rich vermiculite clays are the best spectral match found for the clays of Oxia Planum.",
+      "tags_terrain": [],
+      "tags_mineralogy": [
+        "basalt",
+        "clays",
+        "volcanic_glass"
+      ],
+      "known_analog_use": [
+        "Spectral analogue for the Fe/Mg clays of Oxia Planum (Krzesi\u0144ska et al., 2021; Bultel et al., 2022, 2025)"
+      ],
+      "sources": [
+        "bultel2025_granby_alteration",
+        "krzesinska2021_oxia_granby"
+      ]
+    },
+    {
+      "id": "galena_creek_rock_glacier",
+      "name": "Galena Creek Rock Glacier",
+      "region": "Absaroka Mountains, Wyoming",
+      "country": "United States",
+      "lat": 44.64,
+      "lon_east": -109.8,
+      "coordinates_approximate": true,
+      "paired_mars_site_id": "deuteronilus_mensae",
+      "description": "Ice-cored rock glacier in the Absaroka Mountains, Wyoming, with a boulder debris layer over ice; radar-surveyed as an analog for Martian debris-covered glaciers.",
+      "tags_terrain": [
+        "rocky_surface"
+      ],
+      "tags_mineralogy": [
+        "water_ice"
+      ],
+      "known_analog_use": [
+        "Ground-penetrating radar surveys of ice and debris structure (Petersen et al., 2019; Aguilar et al., 2024)"
+      ],
+      "sources": [
+        "petersen2019_galena_creek"
       ]
     },
     {
@@ -274,34 +520,102 @@
         "trowbridge2024_haughton",
         "izawa2011_haughton",
         "parnell2012_haughton"
+      ],
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "protonilus_mensae"
+    },
+    {
+      "id": "channeled_scablands",
+      "name": "Channeled Scablands",
+      "region": "Eastern Washington",
+      "country": "United States",
+      "lat": 47.31,
+      "lon_east": -119.52,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "chryse_planitia",
+      "description": "Flood-carved landscape on the Columbia Plateau, eastern Washington, where megafloods stripped the loess and exposed volcanic basalt.",
+      "tags_terrain": [
+        "rocky_surface"
+      ],
+      "tags_mineralogy": [
+        "basalt"
+      ],
+      "known_analog_use": [
+        "Compared with Martian outflow channels such as Ares Vallis (NASA)"
+      ],
+      "sources": [
+        "nasa_eo_channeled_scablands"
       ]
     },
     {
-      "id": "death_valley",
-      "name": "Death Valley - central basin",
-      "region": "California",
-      "country": "United States",
-      "lat": 36.46,
-      "lon_east": -116.87,
-      "description": "Desert basin with dry lakebeds (playas) and polygon-patterned salt pans at Badwater Basin; its playa sediments hold clays, chloride and sulfate salts and borate minerals. Used as an analog for Gale crater's lake deposits.",
+      "id": "rio_tinto",
+      "name": "R\u00edo Tinto (Pe\u00f1a de Hierro, Nerva)",
+      "region": "Huelva, Andalusia",
+      "country": "Spain",
+      "lat": 37.7,
+      "lon_east": -6.55,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "meridiani_planum",
+      "description": "Acidic river basin in Huelva, Spain, whose sulfide bioleaching products resemble the sulfate and iron oxide deposits of Mars; a NASA drilling test site.",
+      "tags_terrain": [],
+      "tags_mineralogy": [
+        "sulfates",
+        "iron_oxides",
+        "regolith"
+      ],
+      "known_analog_use": [
+        "Life-detection Mars Analog Project drilling tests (NASA Ames, 2015)"
+      ],
+      "sources": [
+        "amils2014_rio_tinto",
+        "sobron2014_rio_tinto",
+        "nasa_lmap_rio_tinto"
+      ]
+    },
+    {
+      "id": "lake_salda",
+      "name": "Lake Salda",
+      "region": "Burdur, southwestern Turkey",
+      "country": "Turkey",
+      "lat": 37.553,
+      "lon_east": 29.681,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "jezero_crater",
+      "description": "Alkaline lake in southwestern Turkey hosting hydromagnesite microbialites; a terrestrial analog for the paleolake in Jezero Crater.",
+      "tags_terrain": [],
+      "tags_mineralogy": [],
+      "known_analog_use": [
+        "Analog for the Jezero Crater paleolake (Gunes et al., 2024)"
+      ],
+      "sources": [
+        "gunes2024_salda_microbialites"
+      ]
+    },
+    {
+      "id": "dalangtan_playa",
+      "name": "Dalangtan Playa, western Qaidam Basin",
+      "region": "Qaidam Basin, Qinghai (NE Tibetan Plateau)",
+      "country": "China",
+      "lat": 38.4,
+      "lon_east": 91.4,
+      "coordinates_approximate": true,
+      "paired_mars_site_id": "utopia_planitia",
+      "description": "Saline playa in the hyperarid western Qaidam Basin on the Tibetan Plateau, with Mars-like salts (magnesium sulfates, chlorides, perchlorates) and polygonal landforms.",
       "tags_terrain": [
         "playa",
         "polygonal_terrain"
       ],
       "tags_mineralogy": [
-        "chlorides",
         "sulfates",
-        "clays",
-        "borates"
+        "chlorides",
+        "perchlorates"
       ],
       "known_analog_use": [
-        "Named in the Space Apps challenge statement",
-        "Terrestrial analog for Gale crater lake deposits (Das et al., 2026)"
+        "Mars analog site studied since 2008 (Kong et al., 2018)"
       ],
       "sources": [
-        "elmaarry2015_playas",
-        "lasser2020_badwater",
-        "das2026_deathvalley"
+        "kong2018_dalangtan",
+        "zhu2025_qaidam_polygons"
       ]
     },
     {
@@ -330,56 +644,29 @@
         "lit_holuhraun",
         "voigt2025_holuhraun",
         "hartley2018_holuhraun"
-      ]
+      ],
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "elysium_planitia"
     },
     {
-      "id": "mdrs_utah",
-      "name": "San Rafael Swell - MDRS area",
-      "region": "Utah",
-      "country": "United States",
-      "lat": 38.41,
-      "lon_east": -110.79,
-      "description": "Area around the Mars Desert Research Station near Hanksville, Utah: Jurassic and Cretaceous sandstone and shale with smectite clays and sulfate salts, and exhumed, inverted palaeochannels with carbonate concretions.",
+      "id": "svalbard_fan_delta",
+      "name": "Terraced fan-delta, Svalbard",
+      "region": "Svalbard (Adventdalen area)",
+      "country": "Norway",
+      "lat": 77.74,
+      "lon_east": 15.64,
+      "coordinates_approximate": false,
+      "paired_mars_site_id": "xanthe_terra_tyras",
+      "description": "Adventdalen fjord-valley, central Spitsbergen, whose Holocene fill includes a Gilbert-type delta and permafrost with excess ground ice.",
       "tags_terrain": [
-        "inverted_channels"
+        "delta"
       ],
       "tags_mineralogy": [
-        "carbonates",
-        "sandstone",
-        "sulfates",
-        "clays"
+        "water_ice"
       ],
-      "known_analog_use": [
-        "Mars Desert Research Station crewed simulations"
-      ],
+      "known_analog_use": [],
       "sources": [
-        "clarke2011_hanksville",
-        "stoker2011_mdrs"
-      ]
-    },
-    {
-      "id": "mauna_kea_summit",
-      "name": "Mauna Kea volcano (summit-centred footprint)",
-      "region": "Hawai'i Island",
-      "country": "United States",
-      "lat": 19.82,
-      "lon_east": -155.47,
-      "description": "Summit region of Mauna Kea: tephra cones such as Pu'u Poli'ahu, which holds a hematite-bearing outcrop, and upper flanks used for NASA rover and in-situ resource field tests. NOTE: the 0.5 deg footprint centred on the summit spans the whole upper mountain, so footprint statistics describe the summit region as a whole, not only the test sites.",
-      "tags_terrain": [
-        "cinder_cone",
-        "volcanic_slope"
-      ],
-      "tags_mineralogy": [
-        "tephra",
-        "iron_oxides"
-      ],
-      "known_analog_use": [
-        "NASA / CSA / DLR in-situ resource utilization field tests (Sanders et al., 2011)",
-        "2012 Moon and Mars Analog Mission Activities rover test (Graham & Graff, 2013)"
-      ],
-      "sources": [
-        "adams2014_maunakea",
-        "graham2013_maunakea"
+        "gilbert2018_svalbard_fjord_valley"
       ]
     }
   ]

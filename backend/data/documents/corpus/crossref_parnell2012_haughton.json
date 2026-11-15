@@ -9,6 +9,7 @@
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1017/S1473550411000395",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "haughton_crater"
  ],

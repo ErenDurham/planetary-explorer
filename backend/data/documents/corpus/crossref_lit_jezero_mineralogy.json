@@ -5,10 +5,11 @@
  "url": "https://api.crossref.org/works/10.1002/2014JE004782",
  "final_url": "https://api.crossref.org/works/10.1002/2014JE004782",
  "publication_date": "2015-04",
- "retrieved_at": "2026-11-14",
+ "retrieved_at": "2026-11-15",
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1002/2014JE004782",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "jezero_crater"
  ],

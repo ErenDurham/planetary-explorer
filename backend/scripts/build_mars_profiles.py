@@ -95,6 +95,8 @@ def measurement(fid, label, category, value, unit, source_id, mtype, res, fp, un
 
 def build(site: dict, grid: np.ndarray, sources: dict, now: str) -> dict:
     lat, lon = site["lat"], site["lon_east"]
+    # a site with no literature source yet cites its coordinate source (site_literature then marks the labels missing)
+    comp = (site.get("composition_sources") or site["coordinate_sources"])[0]
     fp = {
         "shape": "square", "center_lat": lat, "center_lon_east": lon, "half_width_deg": HALF_WIDTH_DEG,
         "radius_km": None, "crs": "IAU2000:49900", "longitude_convention": "east_-180_180",
@@ -118,8 +120,8 @@ def build(site: dict, grid: np.ndarray, sources: dict, now: str) -> dict:
         measurement("latitude_abs_deg", "Absolute latitude", "light", round(abs(lat), 4), "deg", site["coordinate_sources"][0], "measured", "point", fp, None, "good", "Used by the default latitude-band hard constraint."),
         measurement("insolation_toa_annual_mean_wm2", "Annual-mean insolation (top of atmosphere)", "light", round(toa_annual_mean_insolation_wm2(lat, "mars"), 1), "W/m2", "derived_toa_insolation", "derived", "latitude only", fp, "Model; ignores dust and horizon", "good", "Seasonal variation not yet exposed as a separate metric."),
         measurement("terrain_morphology", "Terrain morphology", "ground", site["tags_terrain"], None, site["coordinate_sources"][0], "literature", None, fp, None, "qualitative"),
-        measurement("mineralogy_tags", "Mineral / compositional evidence", "composition", site["tags_mineralogy"], None, site["composition_sources"][0], "literature", None, fp, "Qualitative tags from the cited source", "qualitative"),
-        measurement("water_ice_evidence", "Water / ice evidence", "water_ice", site["water_ice_evidence"], None, site["composition_sources"][0], "literature", None, fp, None, "qualitative"),
+        measurement("mineralogy_tags", "Mineral / compositional evidence", "composition", site["tags_mineralogy"], None, comp, "literature", None, fp, "Qualitative tags from the cited source", "qualitative"),
+        measurement("water_ice_evidence", "Water / ice evidence", "water_ice", site["water_ice_evidence"], None, comp, "literature", None, fp, None, "qualitative"),
         measurement("precipitation_mm_day", "Mean precipitation", "atmosphere_thermal", 0.0, "mm/day", site["coordinate_sources"][0], "literature", None, fp, None, "qualitative", "Mars has no liquid precipitation; stated as a physical fact for the aridity comparison, not a measurement."),
         # Honest gaps: nothing in v1 measures these, so they are null, not zero.
         measurement("surface_temperature_mean_c", "Mean surface temperature", "atmosphere_thermal", None, "degC", None, "measured", None, fp, None, "missing", "Not yet integrated. Candidate sources: THEMIS/TES-derived surface temperature or thermal inertia (PDS), Mars Climate Database. Engineer 2 task.", missing=True),
@@ -128,7 +130,7 @@ def build(site: dict, grid: np.ndarray, sources: dict, now: str) -> dict:
         measurement("dust_cover_index", "Dust cover", "hazards", None, None, None, "measured", None, fp, None, "missing", "Not yet integrated. Candidate source: TES Dust Cover Index (Ruff & Christensen 2002).", missing=True),
     ]
     missing = [m["feature_id"] for m in ms if m["is_missing"]]
-    used = {"mola_megdr_16ppd", "derived_toa_insolation", site["coordinate_sources"][0], site["composition_sources"][0]}
+    used = {"mola_megdr_16ppd", "derived_toa_insolation", site["coordinate_sources"][0], comp}
     return {
         "site_id": site["id"], "planet": "mars", "profile_version": PROFILE_VERSION, "generated_at": now,
         "pipeline": "scripts/build_mars_profiles.py: MOLA MEGDR 16 ppd footprint sampling + scripts/geo.py terrain statistics + analytic TOA insolation",
@@ -139,7 +141,7 @@ def build(site: dict, grid: np.ndarray, sources: dict, now: str) -> dict:
 
 
 def main() -> int:
-    cfg = json.loads((DATA / "mars" / "sites.json").read_text())
+    cfg = json.loads((DATA / "mars" / "sites.json").read_text(encoding="utf-8"))
     grid = load_grid()
     # Landmark check: Olympus Mons summit region must be the highest of these three.
     def px(lat, lon):
