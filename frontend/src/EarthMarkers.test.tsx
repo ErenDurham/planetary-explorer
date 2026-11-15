@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import fixture from "@/test/fixtures/api_examples.json";
 import assessments from "@/test/fixtures/mission_assessment.json";
 import catalog from "@/test/fixtures/comparison_catalog.json";
-import { useAppStore } from "@/store/useAppStore";
+import { useAppStore, roverSharesFrom } from "@/store/useAppStore";
 
 vi.mock("@/components/globe/PlanetViewer", () => ({
   PlanetViewer: (props: { config: { id: string }; markers: Array<{ id: string; mode: string; score: number | null }>; mode?: string; legendHeading?: string }) => (
@@ -95,11 +95,17 @@ describe("Earth and Mars markers", () => {
   it("explicit Earth focus opens scored mission profiles, then ranks Mars analogs against the Earth selection", async () => {
     renderApp();
     fireEvent.click(screen.getByRole("button",{name:"Mission Design"}));
-    fireEvent.click(screen.getByRole("button",{name:"Earth"}));
+    // the tab opens on the chat box alone; Mission focus appears once a mission is saved
+    const box=screen.getByLabelText("Your mission objective");
+    fireEvent.change(box,{target:{value:"Test a rover on Earth terrain"}});
+    await waitFor(()=>expect(screen.getByRole("button",{name:"Save"})).toBeEnabled());
+    fireEvent.keyDown(box,{key:"Enter"});
+    fireEvent.click(await screen.findByRole("button",{name:"Earth"}));
     expect(screen.getByRole("heading",{name:"Mission priorities"})).toBeInTheDocument();
-    expect(screen.getAllByRole("slider")).toHaveLength(2);
-    fireEvent.change(screen.getByLabelText("Target regional slope mission priority"),{target:{value:"40"}});
-    expect(useAppStore.getState().missionProfileWeights.rover_field_test.slope).toBe(40);
+    expect(screen.getAllByRole("slider")).toHaveLength(4); // the same sliders as Mars
+    fireEvent.change(screen.getByLabelText("Gentler terrain share of priorities"),{target:{value:"40"}});
+    expect(useAppStore.getState().earthWeights.terrain_safety).toBe(40);
+    expect(useAppStore.getState().missionProfileWeights.rover_field_test).toEqual(roverSharesFrom(useAppStore.getState().earthWeights));
     const start=screen.getByRole("button",{name:"Head to explore mission →"});
     await waitFor(()=>expect(start).toBeEnabled());
     fireEvent.click(start);

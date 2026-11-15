@@ -1,0 +1,459 @@
+{
+  "version": "landing-evidence-v1",
+  "verified_at": "2026-11-14",
+  "note": "Curated evidence for weighting the landing-site priorities. Every source is a NASA publication or a peer-reviewed paper. Each item's `fact` is a short display line; every number in it appears in the item's verbatim `quotes`, copied from the text at `verified_from` (tests enforce the number rule). The language model may only cite these items by id; it never supplies numbers of its own. Only sources published within the last 15 years are served to the model or shown (services/evidence.py, MAX_SOURCE_AGE_YEARS); older entries stay here for the record.",
+  "sources": [
+    {
+      "source_id": "golombek2003_mer",
+      "cite": "Golombek et al., 2003",
+      "title": "Mars Exploration Rover Landing Site Selection",
+      "venue": "Sixth International Conference on Mars, abstract 3222 (JPL)",
+      "year": 2003,
+      "kind": "nasa",
+      "url": "https://ntrs.nasa.gov/citations/20030066722",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20030066722/downloads/20030066722.pdf"
+    },
+    {
+      "source_id": "golombek2012_msl",
+      "cite": "Golombek et al., 2012",
+      "title": "Selection of the Mars Science Laboratory Landing Site",
+      "venue": "Space Science Reviews 170, 641-737",
+      "year": 2012,
+      "kind": "peer_reviewed",
+      "url": "https://doi.org/10.1007/s11214-012-9916-y",
+      "verified_from": "https://pubs.usgs.gov/publication/70047380"
+    },
+    {
+      "source_id": "golombek2017_insight",
+      "cite": "Golombek et al., 2017",
+      "title": "Selection of the InSight Landing Site",
+      "venue": "Space Science Reviews 211, 5-95",
+      "year": 2017,
+      "kind": "peer_reviewed",
+      "url": "https://doi.org/10.1007/s11214-016-0321-9",
+      "verified_from": "https://pubs.usgs.gov/publication/70190673"
+    },
+    {
+      "source_id": "grant2018_m2020",
+      "cite": "Grant et al., 2018",
+      "title": "The science process for selecting the landing site for the 2020 Mars rover",
+      "venue": "Planetary and Space Science 164, 106-126",
+      "year": 2018,
+      "kind": "peer_reviewed",
+      "url": "https://doi.org/10.1016/j.pss.2018.07.001",
+      "verified_from": "https://authors.library.caltech.edu/87552"
+    },
+    {
+      "source_id": "braun_manning2006",
+      "cite": "Braun & Manning, 2006",
+      "title": "Mars Exploration Entry, Descent and Landing Challenges",
+      "venue": "IEEE Aerospace Conference, Big Sky, MT (NASA NTRS 20060050781)",
+      "year": 2006,
+      "kind": "peer_reviewed",
+      "url": "https://doi.org/10.1109/AERO.2006.1655790",
+      "verified_from": "https://resolver.caltech.edu/CaltechAUTHORS:20230314-222623000.21"
+    },
+    {
+      "source_id": "bussey_hoffman2016",
+      "cite": "Bussey & Hoffman, 2016",
+      "title": "Human Mars Landing Site and Impacts on Mars Surface Operations",
+      "venue": "IEEE Aerospace Conference 2016 (NASA Headquarters)",
+      "year": 2016,
+      "kind": "nasa",
+      "url": "https://ntrs.nasa.gov/citations/20160002370",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20160002370/downloads/20160002370.pdf"
+    },
+    {
+      "source_id": "nasa_mars_factsheet",
+      "cite": "NASA Mars Fact Sheet",
+      "title": "Mars Fact Sheet",
+      "venue": "NASA Goddard Space Flight Center, NSSDCA",
+      "year": 2025,
+      "kind": "nasa",
+      "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+      "verified_from": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+      "year_note": "Page states 'Last Updated: 19 May 2025'."
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "slope_mer",
+      "source_id": "golombek2003_mer",
+      "criteria": [
+        "terrain_safety"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander",
+        "rover"
+      ],
+      "fact": "Slopes <2° over 1 km, <5° over 100 m and <15° over 5 m; steep slopes can spoof the radar altimeter.",
+      "quotes": [
+        "Steep slopes can spoof the radar altimeter and cause premature or late firing of the solid rockets and airbag inflation.",
+        "As a result, surface slopes should be <2° over 1 km; <5° over 100 m, and <15° over 5 m."
+      ]
+    },
+    {
+      "evidence_id": "slope_msl",
+      "source_id": "golombek2012_msl",
+      "criteria": [
+        "terrain_safety"
+      ],
+      "constraints": [],
+      "missions": [
+        "rover"
+      ],
+      "fact": "Slopes <30° at 2-5 m baselines for rover stability at touchdown.",
+      "quotes": [
+        "(4) slopes of <30° at baselines of 2-5 m for rover stability at touchdown"
+      ]
+    },
+    {
+      "evidence_id": "slope_insight",
+      "source_id": "golombek2017_insight",
+      "criteria": [
+        "terrain_safety"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander"
+      ],
+      "fact": "Slopes <15° at 84 m and 2 m length scales for radar tracking and touchdown stability.",
+      "quotes": [
+        "with slopes <15° at 84 m and 2 m length scales for radar tracking and touchdown stability"
+      ]
+    },
+    {
+      "evidence_id": "edl_m2020",
+      "source_id": "grant2018_m2020",
+      "criteria": [
+        "terrain_safety",
+        "elevation_suitability"
+      ],
+      "constraints": [],
+      "missions": [
+        "rover"
+      ],
+      "fact": "Perseverance rover: with the new EDL capabilities, elevation and latitude limits no longer decided site viability; more than 30 candidate sites were considered.",
+      "quotes": [
+        "Mission engineering constraints on elevation and latitude were used to identify candidate landing sites that addressed the scientific objectives of the mission. However, for the first time these constraints did not have a major influence on the viability of candidate sites and, with the new entry, descent, and landing capabilities included in the baseline mission, the vast majority of sites were evaluated and down-selected on the basis of science merit. More than 30 candidate sites with likely acceptable surface and atmospheric conditions were considered"
+      ]
+    },
+    {
+      "evidence_id": "elev_mer",
+      "source_id": "golombek2003_mer",
+      "criteria": [
+        "elevation_suitability"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander",
+        "rover"
+      ],
+      "fact": "MER could land only below –1.3 km (MOLA): the parachute needs an adequate atmospheric density column.",
+      "quotes": [
+        "the MER spacecraft are capable of landing below –1.3 km, with respect to the MOLA defined geoid [1, 2, 3]. This requirement stems mostly from the need for an adequate atmospheric density column for the parachute"
+      ]
+    },
+    {
+      "evidence_id": "elev_msl",
+      "source_id": "golombek2012_msl",
+      "criteria": [
+        "elevation_suitability"
+      ],
+      "constraints": [],
+      "missions": [
+        "rover"
+      ],
+      "fact": "Elevation <-1 km for sufficient atmosphere to slow the spacecraft.",
+      "quotes": [
+        "(2) elevation (<-1 km) for sufficient atmosphere to slow the spacecraft"
+      ]
+    },
+    {
+      "evidence_id": "elev_insight",
+      "source_id": "golombek2017_insight",
+      "criteria": [
+        "elevation_suitability"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander"
+      ],
+      "fact": "Elevation ≤−2.5 km for sufficient atmosphere to slow the lander.",
+      "quotes": [
+        "≤−2.5 km for sufficient atmosphere to slow the lander"
+      ]
+    },
+    {
+      "evidence_id": "elev_heritage",
+      "source_id": "braun_manning2006",
+      "criteria": [
+        "elevation_suitability"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander",
+        "rover"
+      ],
+      "fact": "All five successful US landers: landed mass <0.6 t, footprints of hundreds of km, sites below -1 km MOLA for sufficient atmospheric density.",
+      "quotes": [
+        "The United States has successfully landed five robotic systems on the surface of Mars. These systems all had landed mass below 0.6 metric tons (t), had landed footprints on the order of hundreds of km and landed at sites below -1 km MOLA elevation due the need to perform entry, descent and landing operations in an environment with sufficient atmospheric density."
+      ]
+    },
+    {
+      "evidence_id": "mass_human",
+      "source_id": "braun_manning2006",
+      "criteria": [
+        "elevation_suitability",
+        "terrain_safety"
+      ],
+      "constraints": [],
+      "missions": [
+        "human"
+      ],
+      "fact": "Human missions plan 40-80 t surface elements landed within 10's of m of pre-positioned assets; robotic landers were <0.6 t.",
+      "quotes": [
+        "These systems all had landed mass below 0.6 metric tons (t)",
+        "Current plans for human exploration of Mars call for the landing of 40-80 t surface elements at scientifically interesting locations within close proximity (10's of m) of pre-positioned robotic assets."
+      ]
+    },
+    {
+      "evidence_id": "pressure_mars",
+      "source_id": "nasa_mars_factsheet",
+      "criteria": [
+        "elevation_suitability"
+      ],
+      "constraints": [],
+      "missions": [
+        "any"
+      ],
+      "fact": "Mean surface pressure 6.36 mb at mean radius (4.0-8.7 mb with season).",
+      "quotes": [
+        "Surface pressure: 6.36 mb at mean radius (variable from 4.0 to 8.7 mb depending on season)"
+      ]
+    },
+    {
+      "evidence_id": "relief_msl",
+      "source_id": "golombek2012_msl",
+      "criteria": [
+        "surface_roughness"
+      ],
+      "constraints": [],
+      "missions": [
+        "rover"
+      ],
+      "fact": "Relief <100-130 m at 1-1000 m baselines for control authority and fuel during powered descent.",
+      "quotes": [
+        "(3) relief of <100-130 m at baselines of 1-1000 m for control authority and sufficient fuel during powered descent"
+      ]
+    },
+    {
+      "evidence_id": "rocks_mer",
+      "source_id": "golombek2003_mer",
+      "criteria": [
+        "surface_roughness"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander",
+        "rover"
+      ],
+      "fact": "Airbags qualified for 0.5 m rocks: <1% of the surface may be covered by rocks >0.5 m (met where total rock coverage is <20%).",
+      "quotes": [
+        "The MER airbags have been qualified to protect the lander from damage when landing on 0.5 m high rocks in any orientation. This requires a landing site with less than 1% of the surface covered by rocks greater than 0.5 m high.",
+        "requirement can be satisfied at locations with total rock coverage of <20% as derived from thermal infrared measurements"
+      ]
+    },
+    {
+      "evidence_id": "rocks_insight",
+      "source_id": "golombek2017_insight",
+      "criteria": [
+        "surface_roughness"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander"
+      ],
+      "fact": "Rock abundance <10% to avoid impact and spacecraft tip-over.",
+      "quotes": [
+        "low rock abundance (<10 %) to avoid impact and spacecraft tip over"
+      ]
+    },
+    {
+      "evidence_id": "surface_msl",
+      "source_id": "golombek2012_msl",
+      "criteria": [
+        "surface_roughness"
+      ],
+      "constraints": [],
+      "missions": [
+        "rover"
+      ],
+      "fact": "Moderate rock abundance to avoid belly-pan impact; load-bearing, trafficable surface not dominated by fine-grained dust.",
+      "quotes": [
+        "(5) moderate rock abundance to avoid impacting the belly pan during touchdown",
+        "(6) a radar-reflective, load-bearing, and trafficable surface that is safe for landing and roving and not dominated by fine-grained dust"
+      ]
+    },
+    {
+      "evidence_id": "traverse_human",
+      "source_id": "bussey_hoffman2016",
+      "criteria": [
+        "surface_roughness"
+      ],
+      "constraints": [],
+      "missions": [
+        "human"
+      ],
+      "fact": "Crew surface traverses planned out to a 100 km radius, 2-week duration.",
+      "quotes": [
+        "Surface traversing capability out to 100 km radius and 2-week duration"
+      ]
+    },
+    {
+      "evidence_id": "irradiance_mars",
+      "source_id": "nasa_mars_factsheet",
+      "criteria": [
+        "solar_illumination"
+      ],
+      "constraints": [],
+      "missions": [
+        "any"
+      ],
+      "fact": "Solar irradiance 586.2 W/m² at Mars vs 1361.0 W/m² at Earth (ratio 0.431).",
+      "quotes": [
+        "Solar irradiance (W/m 2 ) 586.2 1361.0 0.431"
+      ]
+    },
+    {
+      "evidence_id": "lat_mer",
+      "source_id": "golombek2003_mer",
+      "criteria": [
+        "solar_illumination",
+        "thermal_conditions"
+      ],
+      "constraints": [],
+      "missions": [
+        "rover"
+      ],
+      "fact": "Power and thermal cycling over the 90-sol mission held MER near the subsolar latitude: 5°N-15°S (MER-A), 10°N-10°S (MER-B).",
+      "quotes": [
+        "Analyses of power generation/usage and thermal cycling of the rovers for the required 90 Sols restricts the landing sites to near the subsolar latitude at arrival. This translates to 5°N to 15°S for MER-A and 10°N to 10°S for MER-B"
+      ]
+    },
+    {
+      "evidence_id": "lat_insight",
+      "source_id": "golombek2017_insight",
+      "criteria": [
+        "solar_illumination",
+        "thermal_conditions"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander"
+      ],
+      "fact": "Latitude band narrowed from 15°S-5°N to 3°N-5°N for solar power and thermal management.",
+      "quotes": [
+        "latitude (initially 15°S–5°N and later 3°N–5°N for solar power and thermal management of the spacecraft)"
+      ]
+    },
+    {
+      "evidence_id": "dust_mer",
+      "source_id": "golombek2003_mer",
+      "criteria": [
+        "solar_illumination"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander",
+        "rover"
+      ],
+      "fact": "Excess dust can cover solar panels and shorten surface lifetime; areas with fine-component thermal inertia <125-165 SI were avoided.",
+      "quotes": [
+        "excessive dust would coat rocks, which are of prime scientific interest (but which can impede mobility), and could reduce surface lifetime by covering the solar panels.",
+        "Areas with fine component thermal inertia of less than 125-165 J m-2 s-0.5 K-1 or SI units should therefore be avoided"
+      ]
+    },
+    {
+      "evidence_id": "latitude_tradeoff_human",
+      "source_id": "bussey_hoffman2016",
+      "criteria": [
+        "solar_illumination"
+      ],
+      "constraints": [],
+      "missions": [
+        "human"
+      ],
+      "fact": "Landing and ascent favour mid-to-low latitudes and elevations; water-ice access for science and ISRU favours higher latitudes.",
+      "quotes": [
+        "Landing and ascent technology options place boundaries on surface locations leading to a preference for mid- to low- latitudes and mid- to low- elevations",
+        "Accessing water ice for science and ISRU purposes is attractive, leading to a preference for higher latitudes"
+      ]
+    },
+    {
+      "evidence_id": "lat_msl",
+      "source_id": "golombek2012_msl",
+      "criteria": [
+        "thermal_conditions"
+      ],
+      "constraints": [],
+      "missions": [
+        "rover"
+      ],
+      "fact": "Latitude within ±30° for thermal management of the rover and instruments.",
+      "quotes": [
+        "(1) latitude (±30°) for thermal management of the rover and instruments"
+      ]
+    },
+    {
+      "evidence_id": "cold_mer",
+      "source_id": "golombek2003_mer",
+      "criteria": [
+        "thermal_conditions"
+      ],
+      "constraints": [],
+      "missions": [
+        "lander",
+        "rover"
+      ],
+      "fact": "Low-thermal-inertia, high-albedo sites imply extreme cold: bulk thermal inertia >250 and >200 SI with albedo <0.26 and <0.18.",
+      "quotes": [
+        "Extremely low temperatures likely at low thermal inertia, high albedo sites further requires bulk thermal inertia to be >250 and >200 SI units with albedos <0.26 and <0.18, respectively."
+      ]
+    },
+    {
+      "evidence_id": "elev_limit_human",
+      "source_id": "bussey_hoffman2016",
+      "criteria": [
+        "elevation_suitability"
+      ],
+      "constraints": [
+        "max_elevation"
+      ],
+      "missions": [
+        "human"
+      ],
+      "fact": "Human Exploration Zones: preliminary elevation limit no higher than +2 km (MOLA).",
+      "quotes": [
+        "Preliminary elevation boundary set at no higher than +2 km (MOLA reference)"
+      ]
+    },
+    {
+      "evidence_id": "lat_limit_human",
+      "source_id": "bussey_hoffman2016",
+      "criteria": [],
+      "constraints": [
+        "latitude_band"
+      ],
+      "missions": [
+        "human"
+      ],
+      "fact": "Human Exploration Zones: preliminary latitude limits ±50°; 47 zones were proposed at the Exploration Zone workshop.",
+      "quotes": [
+        "Preliminary latitude boundaries set at +/- 50 degrees",
+        "Forty-five individuals or teams proposed 47 EZs"
+      ]
+    }
+  ]
+}

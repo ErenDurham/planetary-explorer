@@ -82,13 +82,9 @@ export function ExplanationPanel({ siteId, mission }: { siteId: string | null; m
       {data && (
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-1.5">
-            {data.generated_by === "llm" ? (
+            {data.generated_by === "llm" && (
               <Badge tone="copper" title={data.model ?? undefined}>
                 <Sparkles className="h-3 w-3" aria-hidden /> Language model{data.model ? ` · ${data.model}` : ""}
-              </Badge>
-            ) : (
-              <Badge tone="neutral" title="No language model configured; sections assembled deterministically from scores, measurements and retrieved excerpts.">
-                <Cpu className="h-3 w-3" aria-hidden /> Rule based proposals
               </Badge>
             )}
           </div>

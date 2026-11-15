@@ -46,6 +46,7 @@ export default function App() {
   const navigateExplore = useAppStore(s => s.navigateExplore);
   const missionBody = useAppStore(s => s.selectionBody);
   const appliedObjective = useAppStore(s => s.appliedObjective);
+  const missionDesigned = useAppStore((s) => s.missionDesigned);
   const draftDirty = useAppStore(s => s.missionDraftDirty);
   const exploreRevision = useAppStore(s => s.exploreRevision);
   const activeTab = useAppStore((s) => s.activeTab);
@@ -309,10 +310,11 @@ export default function App() {
             switching tabs. */}
         <div className={`${activeTab === "mission" ? "flex" : "hidden"} h-full flex-col bg-bg-elev`}>
           <div className="scroll-thin min-h-0 flex-1 overflow-y-auto"><LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} /></div>
-          <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line bg-bg-elev px-5 py-4">
+{/* shown once a mission is saved: the tab opens on the chat box alone */}
+          {missionDesigned && <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line bg-bg-elev px-5 py-4">
             <p className="max-w-2xl text-sm text-fg-muted">{draftDirty ? "Review and apply your edited objective before exploring." : `Next: explore ${BODY_NAME[missionBody]} sites for your applied mission objective.`}</p>
             <button type="button" disabled={!appliedObjective || draftDirty || !initialMissionId || (missionType === "landing" ? evaluation.isPending : assessment.isPending)} onClick={() => navigateExplore("mission", initialMissionId)} className="ml-auto rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">Head to explore mission →</button>
-          </footer>
+          </footer>}
         </div>
         {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" ? (
           <div className="h-full">{centre}</div>
@@ -330,7 +332,8 @@ export default function App() {
             </div>}
           </div>
         )}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
+        {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${activeTab === "mission" && !missionDesigned ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );

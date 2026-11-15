@@ -13,7 +13,7 @@ import type { ComparisonMode } from "@/lib/comparison";
 import { create } from "zustand";
 import { setShare, toShares } from "@/lib/allocation";
 import { ANALOG_FEATURE_IDS, otherBody, toAnalogShares, type Body } from "@/lib/analogFeatures";
-import type { HardConstraint } from "@/types";
+import type { EvidenceCitation, HardConstraint, MissionKind } from "@/types";
 
 export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
 export type { Body };
@@ -77,6 +77,13 @@ export interface AppliedInterpretation {
   confidenceNote: string;
   /** True when the user edited the proposed shares before applying. */
   editedByUser: boolean;
+  /** Research findings cited for each weight, by criterion_id (from the evidence registry). */
+  evidence: Record<string, EvidenceCitation[]>;
+  /** Research behind each hard constraint, by constraint_id. */
+  constraintEvidence: Record<string, EvidenceCitation[]>;
+  missionProfile: MissionKind;
+  /** The same reading for the Earth field-test site factors (slope, relief). */
+  earth: { reasons: Record<string, string>; evidence: Record<string, EvidenceCitation[]> } | null;
 }
 
 export interface ObjectiveMeta {
@@ -112,6 +119,16 @@ export interface AppState {
   missionRequirements: Record<Body, MissionRequirements>;
   setMissionProfileWeight: (id: string, value: number) => void;
   resetMissionProfileWeights: () => void;
+  /** Earth-mode priorities: the SAME criteria as the Mars landing weights, in shares,
+   * with their own values. Terrain and smoothness also drive the Earth site
+   * ranking (its slope / relief shares, `missionProfileWeights.rover_field_test`). */
+  earthWeights: Record<string, number>;
+  /** What the applied mission suggested for Earth; Reset restores it. */
+  recommendedEarthWeights: Record<string, number>;
+  setEarthWeight: (criterionId: string, share: number) => void;
+  resetEarthWeights: () => void;
+  /** Apply the reading's Earth weights (normalised to shares) and remember them for Reset. */
+  applyEarthSuggestion: (weights: Record<string, number>) => void;
   patchMissionRequirements: (patch: Partial<MissionRequirements>) => void;
   applyTaskObjective: (text: string, weights: Record<string, number>, requirements: Partial<MissionRequirements>) => void;
   missionFocusOverride: Body | null;
@@ -119,6 +136,9 @@ export interface AppState {
   setMissionFocus: (body: Body | null) => void;
   missionDraftDirty: boolean;
   setMissionDraftDirty: (dirty: boolean) => void;
+  /** True once a mission has been saved in the Mission Design chat box (the tab opens on the chat box alone until then). */
+  missionDesigned: boolean;
+  setMissionDesigned: (designed: boolean) => void;
   exploreStage: "mission" | "analogs";
   exploreRevision: number;
   navigateExplore: (stage: "mission" | "analogs", initialMissionId?: string) => void;
@@ -245,6 +265,17 @@ export const useAppStore = create<AppState>((set, get) => ({
     return {missionProfileWeights:{...s.missionProfileWeights,[s.missionType]:setShare(s.missionProfileWeights[s.missionType],id,value)}};
   }),
   resetMissionProfileWeights: () => set(s => s.missionType === "landing" ? {} : ({missionProfileWeights:{...s.missionProfileWeights,[s.missionType]:{...DEFAULT_PROFILE_WEIGHTS[s.missionType]}}})),
+  earthWeights: {},
+  recommendedEarthWeights: {},
+  setEarthWeight: (criterionId, share) => set(s => {
+    const next = setShare(s.earthWeights, criterionId, share, s.excludedCriteria);
+    return next === s.earthWeights ? {} : { earthWeights: next, missionProfileWeights: { ...s.missionProfileWeights, rover_field_test: roverSharesFrom(next) } };
+  }),
+  resetEarthWeights: () => set(s => ({ earthWeights: { ...s.recommendedEarthWeights }, missionProfileWeights: { ...s.missionProfileWeights, rover_field_test: roverSharesFrom(s.recommendedEarthWeights) } })),
+  applyEarthSuggestion: (weights) => set(s => {
+    const shares = toShares(weights, s.excludedCriteria);
+    return { earthWeights: shares, recommendedEarthWeights: { ...shares }, missionProfileWeights: { ...s.missionProfileWeights, rover_field_test: roverSharesFrom(shares) } };
+  }),
   patchMissionRequirements: (patch) => set(s => ({missionRequirements:{...s.missionRequirements,[s.selectionBody]:{...s.missionRequirements[s.selectionBody],...patch}}})),
   applyTaskObjective: (text,weights,requirements) => set(s => ({missionObjective:text,appliedObjective:text,missionDraftDirty:false,appliedObjectiveSource:"rule_based",appliedObjectiveModel:null,
     missionProfileWeights:s.missionType === "landing" ? s.missionProfileWeights : {...s.missionProfileWeights,[s.missionType]:weights},
@@ -253,7 +284,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   suggestedMissionFocus: null,
   setMissionFocus: (body) => set(s => {
     const focus = body ?? s.suggestedMissionFocus ?? s.selectionBody;
-    const kind = focus === "earth" && s.missionType === "landing" ? "rover_field_test" : s.missionType;
+    const kind = missionTypeFor(focus, s.missionType);
     return {missionType:kind,missionFocusOverride: body, selectionBody: focus, appliedFocusBody: focus,
       viewedBody: focus, exploreStage: "mission", followObjective: true,
       mapMode: missionViewMode(focus,kind),
@@ -261,6 +292,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   }),
   missionDraftDirty: false,
   setMissionDraftDirty: (missionDraftDirty) => set({ missionDraftDirty }),
+  missionDesigned: false,
+  setMissionDesigned: (missionDesigned) => set({ missionDesigned }),
   exploreStage: "mission",
   exploreRevision: 0,
   navigateExplore: (stage, initialMissionId) => set(s => {
@@ -325,7 +358,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       const same = ids.length === s.excludedCriteria.length && ids.every((id) => s.excludedCriteria.includes(id));
       if (same) return {};
       const renorm = (w: Record<string, number>) => (Object.keys(w).length ? toShares(w, ids) : w);
-      return { excludedCriteria: [...ids], weights: renorm(s.weights), recommendedWeights: renorm(s.recommendedWeights) };
+      return { excludedCriteria: [...ids], weights: renorm(s.weights), recommendedWeights: renorm(s.recommendedWeights), earthWeights: renorm(s.earthWeights), recommendedEarthWeights: renorm(s.recommendedEarthWeights) };
     }),
   priorityChange: null,
   hardConstraints: [],
@@ -416,10 +449,25 @@ function clamp(n: number): number {
 /** The patch a reviewed objective applies, once. It sets the task, where to
  * look, where the mission flies, the reference (selecting it on its own body)
  * and the analog preferences. Nothing else in the store ever writes these. */
+/** The Earth site ranking scores regional slope and relief: their shares follow
+ * the Earth "Gentler terrain" and "Smoother terrain" priorities. */
+export function roverSharesFrom(earth: Record<string, number>): Record<string, number> {
+  const slope = earth.terrain_safety ?? 0, relief = earth.surface_roughness ?? 0;
+  return slope + relief > 0 ? toShares({ slope, relief }) : { ...DEFAULT_PROFILE_WEIGHTS.rover_field_test };
+}
+
+/** Mars means Mars landing screening; Earth means a field-test site (rover
+ * field testing unless an Earth profile is already chosen). Switching planet
+ * therefore always switches the mission view, in both directions. */
+function missionTypeFor(focus: Body, current: MissionType): MissionType {
+  if (focus === "mars") return "landing";
+  return current === "landing" ? "rover_field_test" : current;
+}
+
 function taskPatch(s: AppState, app: InterpretationApplication): Partial<AppState> {
   const suggestedFocus: Body = app.focusBody ?? (app.task === "landing_screening" ? "mars" : app.reference ? otherBody(app.reference.body) : s.selectionBody);
   const focus = s.missionFocusOverride ?? suggestedFocus;
-  const kind = focus === "earth" && s.missionType === "landing" ? "rover_field_test" : s.missionType;
+  const kind = missionTypeFor(focus, s.missionType);
   const analog = app.analogWeights ? toAnalogShares(app.analogWeights) : null;
   const patch: Partial<AppState> = {
     missionType: kind,

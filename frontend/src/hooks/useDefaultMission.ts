@@ -5,7 +5,9 @@
 // POST /mission/interpret (current_weights null = spec defaults, excluded
 // criteria from the store, i.e. thermal until an evaluation says otherwise)
 // and its validated suggestion is applied as shares, labelled with the
-// interpretation's real provenance. Only when that call fails does the
+// interpretation's real provenance. It asks for the fast keyword reading
+// (use_llm: false) so the first rankings never wait on a language model;
+// the user's own mission in the Mission Design tab is the one the model reads. Only when that call fails does the
 // browser's keyword fallback seed the sliders, and then it is labelled
 // "offline rule-based" so it can never pass for a model reading.
 //
@@ -40,7 +42,7 @@ export function useDefaultMission() {
     (async () => {
       let application: { weights: Record<string, number>; notes: string[]; meta: ObjectiveMeta };
       try {
-        const res = await api.interpret({ objective, current_weights: null, excluded_criteria: excluded });
+        const res = await api.interpret({ objective, current_weights: null, excluded_criteria: excluded, use_llm: false });
         application = applicationFromInterpretation(res, excluded, res.generated_by);
       } catch {
         const labels = Object.fromEntries(data.criteria.map((c) => [c.criterion_id, c.label]));

@@ -131,7 +131,7 @@ def guide(req: GuidanceRequest, store) -> GuidanceResponse:
         return hit.model_copy(update={"cached": True, "client_request_id": req.client_request_id})
     f = facts(req, store)
     summary, generated_by, model = rule_summary(f, req.objective), "rule_based", None
-    if llm_client.enabled() and not f["no_ranking"]:
+    if llm_client.enabled("guidance") and not f["no_ranking"]:
         payload = {"objective": (req.objective or "")[:500].replace("<<<", "<<").replace(">>>", ">>"), "changed": f["changed_label"],
                    "influence": [d.model_dump() for d in f["influence"]], "de_emphasised": f["de_emphasised"], "gained": f["gained"],
                    "leader_changed": f["leader_changed"], "previous_leader": f["prev_leader"], "new_leader": f["new_leader"],

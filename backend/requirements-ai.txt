@@ -5,4 +5,4 @@
 #           embedding model, ~80 MB, is downloaded on first use)
 # anthropic: LLM explanations when ANTHROPIC_API_KEY is set
 chromadb>=0.5
-anthropic>=0.40
+anthropic>=2.8

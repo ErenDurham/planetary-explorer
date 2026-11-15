@@ -46,7 +46,7 @@ def test_all_zero_weights_is_explained_not_crashed():
 
 
 def test_llm_phrasing_is_number_guarded_and_cached(monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
     monkeypatch.setattr(llm_client, "model_name", lambda: "mock-model")
     calls = []
     monkeypatch.setattr(ge, "_call_llm", lambda system, user, schema: calls.append(user) or json.dumps({"summary": "Elevation now dominates; terrain safety is de-emphasised and Chryse Planitia still leads."}))

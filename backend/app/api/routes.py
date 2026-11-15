@@ -30,7 +30,7 @@ from app.models import (
 )
 from app.models import AnalogRankRequest, AnalogRankResponse
 from app.services import analog_rank_engine
-from app.services import analog_engine, explanation_engine, guidance_engine, objective_engine, ranking_engine, scoring_engine
+from app.services import analog_engine, explanation_engine, guidance_engine, llm_client, objective_engine, ranking_engine, scoring_engine
 from app.services.data_loader import DataError, get_store
 from app.services.retrieval_engine import get_retriever
 
@@ -52,6 +52,8 @@ def health() -> HealthResponse:
         data = "error"
     retrieval = get_retriever().status()
     llm = explanation_engine.llm_status()   # configured | unconfigured | error (a call failed recently)
+    if llm == "unconfigured" and llm_client.enabled():
+        llm = llm_client.status()          # a local model reads mission objectives even when explanations stay deterministic
     return HealthResponse(status="ok" if data == "ok" else "degraded", version=s.app_version, profile_version=s.profile_version,
                           scoring_spec_version=scoring_engine.load_spec()["version"], services=ServiceStatus(data=data, retrieval=retrieval, llm=llm))
 

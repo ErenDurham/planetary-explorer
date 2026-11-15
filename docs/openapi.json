@@ -2214,6 +2214,45 @@
         ],
         "title": "EarthCandidate"
       },
+      "EarthWeightSuggestion": {
+        "properties": {
+          "factor_id": {
+            "type": "string",
+            "title": "Factor Id",
+            "description": "A scoring-spec criterion_id, as in `suggestions`"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "weight": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceCitation"
+            },
+            "type": "array",
+            "title": "Evidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "factor_id",
+          "label",
+          "weight",
+          "reason"
+        ],
+        "title": "EarthWeightSuggestion",
+        "description": "The same mission read for choosing an Earth site (field test / analog):\nthe same criteria as Mars, weighted for Earth."
+      },
       "Eligibility": {
         "properties": {
           "eligible": {
@@ -2608,6 +2647,65 @@
           "excerpt"
         ],
         "title": "EvidenceChunk"
+      },
+      "EvidenceCitation": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "fact": {
+            "type": "string",
+            "title": "Fact"
+          },
+          "quotes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Quotes",
+            "description": "Verbatim excerpts from the source that carry the fact's numbers"
+          },
+          "cite": {
+            "type": "string",
+            "title": "Cite",
+            "description": "Author-year citation, e.g. 'Golombek et al., 2017'"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "venue": {
+            "type": "string",
+            "title": "Venue"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "DOI or official NASA link to the source"
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": [
+              "nasa",
+              "peer_reviewed"
+            ],
+            "title": "Source Kind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "fact",
+          "quotes",
+          "cite",
+          "title",
+          "venue",
+          "url",
+          "source_kind"
+        ],
+        "title": "EvidenceCitation",
+        "description": "One curated research finding (data/evidence). `fact` is the display line;\nevery number in it appears in `quotes`, copied verbatim from the source."
       },
       "EvidenceQuote": {
         "properties": {
@@ -3781,6 +3879,12 @@
             "type": "array",
             "title": "Excluded Criteria",
             "description": "Criteria the client knows are unscorable (no data); forced to 0"
+          },
+          "use_llm": {
+            "type": "boolean",
+            "title": "Use Llm",
+            "description": "False = the fast keyword reading only (used for the app's startup default)",
+            "default": true
           }
         },
         "type": "object",
@@ -3877,6 +3981,48 @@
             "type": "array",
             "title": "Validation Notes",
             "description": "Deterministic corrections applied to the proposal"
+          },
+          "mission_profile": {
+            "type": "string",
+            "enum": [
+              "lander",
+              "rover",
+              "human",
+              "other"
+            ],
+            "title": "Mission Profile",
+            "description": "Mission type read from the text; selects which research applies",
+            "default": "other"
+          },
+          "earth_suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/EarthWeightSuggestion"
+            },
+            "type": "array",
+            "title": "Earth Suggestions",
+            "description": "Earth field-test site priorities from the same text (slope, relief)"
+          },
+          "constraint_evidence": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/EvidenceCitation"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Constraint Evidence",
+            "description": "Research behind each hard constraint, by constraint_id"
+          },
+          "evidence_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence Version"
           },
           "scoring_spec_version": {
             "type": "string",
@@ -6097,6 +6243,14 @@
           "data_available": {
             "type": "boolean",
             "title": "Data Available"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceCitation"
+            },
+            "type": "array",
+            "title": "Evidence",
+            "description": "Research findings cited for this weight (0-3); empty = none in the registry applies"
           }
         },
         "type": "object",

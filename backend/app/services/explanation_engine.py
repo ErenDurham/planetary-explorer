@@ -276,23 +276,7 @@ def build_user_message(site: Site, profile: EnvironmentalProfile, result: Suitab
 # --------------------------------------------------------------------------
 def _call_llm(system: str, user: str) -> str:
     """Returns the model's text. Raises on any failure. Replaced in tests."""
-    import anthropic  # lazy: optional dependency from requirements-ai.txt
-
-    s = get_settings()
-    client = anthropic.Anthropic(api_key=s.anthropic_api_key)
-    resp = client.messages.create(
-        model=s.llm_model,
-        max_tokens=LLM_MAX_TOKENS,
-        system=system,
-        messages=[{"role": "user", "content": user}],
-        output_config={"format": {"type": "json_schema", "schema": _OUTPUT_SCHEMA}},
-    )
-    if getattr(resp, "stop_reason", None) == "refusal":
-        raise RuntimeError("model refused the request")
-    text = "".join(getattr(b, "text", "") for b in resp.content if getattr(b, "type", "") == "text")
-    if not text.strip():
-        raise RuntimeError("model returned no text")
-    return text
+    return llm_client.call_json(system, user, _OUTPUT_SCHEMA, max_tokens=LLM_MAX_TOKENS)
 
 
 # --------------------------------------------------------------------------

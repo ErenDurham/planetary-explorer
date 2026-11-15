@@ -769,6 +769,26 @@ export interface components {
             /** Sources */
             sources?: string[];
         };
+        /**
+         * EarthWeightSuggestion
+         * @description The same mission read for choosing an Earth site (field test / analog):
+         *     the same criteria as Mars, weighted for Earth.
+         */
+        EarthWeightSuggestion: {
+            /**
+             * Factor Id
+             * @description A scoring-spec criterion_id, as in `suggestions`
+             */
+            factor_id: string;
+            /** Label */
+            label: string;
+            /** Weight */
+            weight: number;
+            /** Reason */
+            reason: string;
+            /** Evidence */
+            evidence?: components["schemas"]["EvidenceCitation"][];
+        };
         /** Eligibility */
         Eligibility: {
             /** Eligible */
@@ -912,6 +932,41 @@ export interface components {
              * @description retrieval score; higher is more relevant
              */
             score?: number | null;
+        };
+        /**
+         * EvidenceCitation
+         * @description One curated research finding (data/evidence). `fact` is the display line;
+         *     every number in it appears in `quotes`, copied verbatim from the source.
+         */
+        EvidenceCitation: {
+            /** Evidence Id */
+            evidence_id: string;
+            /** Fact */
+            fact: string;
+            /**
+             * Quotes
+             * @description Verbatim excerpts from the source that carry the fact's numbers
+             */
+            quotes: string[];
+            /**
+             * Cite
+             * @description Author-year citation, e.g. 'Golombek et al., 2017'
+             */
+            cite: string;
+            /** Title */
+            title: string;
+            /** Venue */
+            venue: string;
+            /**
+             * Url
+             * @description DOI or official NASA link to the source
+             */
+            url: string;
+            /**
+             * Source Kind
+             * @enum {string}
+             */
+            source_kind: "nasa" | "peer_reviewed";
         };
         /** EvidenceQuote */
         EvidenceQuote: {
@@ -1352,6 +1407,12 @@ export interface components {
              * @description Criteria the client knows are unscorable (no data); forced to 0
              */
             excluded_criteria?: string[];
+            /**
+             * Use Llm
+             * @description False = the fast keyword reading only (used for the app's startup default)
+             * @default true
+             */
+            use_llm: boolean;
         };
         /** InterpretResponse */
         InterpretResponse: {
@@ -1400,6 +1461,27 @@ export interface components {
              * @description Deterministic corrections applied to the proposal
              */
             validation_notes?: string[];
+            /**
+             * Mission Profile
+             * @description Mission type read from the text; selects which research applies
+             * @default other
+             * @enum {string}
+             */
+            mission_profile: "lander" | "rover" | "human" | "other";
+            /**
+             * Earth Suggestions
+             * @description Earth field-test site priorities from the same text (slope, relief)
+             */
+            earth_suggestions?: components["schemas"]["EarthWeightSuggestion"][];
+            /**
+             * Constraint Evidence
+             * @description Research behind each hard constraint, by constraint_id
+             */
+            constraint_evidence?: {
+                [key: string]: components["schemas"]["EvidenceCitation"][];
+            };
+            /** Evidence Version */
+            evidence_version?: string | null;
             /** Scoring Spec Version */
             scoring_spec_version: string;
             /** @description Task / body / reference reading; additive to the landing-weight proposal */
@@ -2258,6 +2340,11 @@ export interface components {
             reason: string;
             /** Data Available */
             data_available: boolean;
+            /**
+             * Evidence
+             * @description Research findings cited for this weight (0-3); empty = none in the registry applies
+             */
+            evidence?: components["schemas"]["EvidenceCitation"][];
         };
     };
     responses: never;

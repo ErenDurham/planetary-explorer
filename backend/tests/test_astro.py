@@ -14,7 +14,7 @@ def request(**patch):
 
 
 def test_offline_guidance_has_context_and_real_actions(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     response = client.post("/api/v1/astro/chat", json=request())
     assert response.status_code == 200
     data = response.json()
@@ -41,7 +41,7 @@ def test_unknown_location_and_unbounded_history_rejected(client):
 
 
 def test_earth_never_gets_landing_score(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
         json=request(viewed_body="earth", selected_earth_id="atacama_yungay"),
@@ -50,7 +50,7 @@ def test_earth_never_gets_landing_score(client, monkeypatch):
 
 
 def test_invalid_model_output_falls_back(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
     monkeypatch.setattr(
         llm_client,
         "call_json",
@@ -64,7 +64,7 @@ def test_invalid_model_output_falls_back(client, monkeypatch):
 
 
 def test_model_cannot_create_actions_or_unsupported_evidence(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
     monkeypatch.setattr(
         llm_client,
         "call_json",
@@ -81,7 +81,7 @@ def test_model_cannot_create_actions_or_unsupported_evidence(client, monkeypatch
 
 
 def test_research_uses_mars_after_earth_explore(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
         json=request(
@@ -95,7 +95,7 @@ def test_research_uses_mars_after_earth_explore(client, monkeypatch):
 
 
 def test_model_selects_server_facts_without_rewriting_them(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
 
     def model(system, user, schema, **kw):
         payload = json.loads(user)
@@ -121,7 +121,7 @@ def test_model_selects_server_facts_without_rewriting_them(client, monkeypatch):
     ["This site is certified safe to land.", "The regional slope is 88.7 degrees."],
 )
 def test_freeform_claims_rejected_even_with_valid_evidence(client, monkeypatch, answer):
-    monkeypatch.setattr(llm_client, "enabled", lambda: True)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
 
     def model(system, user, schema, **kw):
         handle, excerpt = next(iter(json.loads(user)["excerpts"].items()))
@@ -140,7 +140,7 @@ def test_freeform_claims_rejected_even_with_valid_evidence(client, monkeypatch, 
 
 
 def test_mars_alone_can_suggest_earth_analogs(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
         json=request(question="Which Earth analogs should I investigate?"),
@@ -152,7 +152,7 @@ def test_mars_alone_can_suggest_earth_analogs(client, monkeypatch):
 def test_compare_uses_explicit_candidate_direction_and_selected_pair(
     client, monkeypatch
 ):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
         json=request(
@@ -194,7 +194,7 @@ def test_claude_schema_has_only_supported_constraints():
 
 
 def test_no_selection_offers_mission_level_candidates(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
         json=request(
@@ -210,7 +210,7 @@ def test_no_selection_offers_mission_level_candidates(client, monkeypatch):
 def test_no_earth_selection_or_reference_offers_catalog_without_ranks(
     client, monkeypatch
 ):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
         json=request(
@@ -224,7 +224,7 @@ def test_no_earth_selection_or_reference_offers_catalog_without_ranks(
 
 
 def test_task_mission_context_uses_earth_assessment_not_landing(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     assessment = {
         "body": "earth",
         "mission_type": "rover_field_test",
@@ -254,7 +254,7 @@ def test_task_mission_context_uses_earth_assessment_not_landing(client, monkeypa
 
 
 def test_base_planning_chat_keeps_scores_unavailable(client, monkeypatch):
-    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
     data = client.post(
         "/api/v1/astro/chat",
         json=request(
