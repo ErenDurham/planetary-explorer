@@ -2,17 +2,19 @@
 // live inside this tree (R3F local state) and never pass through the Zustand
 // store, per docs/ARCHITECTURE.md. The parent hands in a PlanetConfig, a flat
 // marker list, the selected id and callbacks.
-import { Suspense, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Stars, useProgress } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import { Quaternion, Spherical, Vector3, type Mesh } from "three";
+import { ACESFilmicToneMapping, Quaternion, Spherical, Vector3, type DirectionalLight, type Mesh } from "three";
 import { RotateCcw, Pause, Play, LocateFixed, X } from "lucide-react";
 import { PlanetSphere, PlaceholderSphere } from "./PlanetSphere";
+import { Atmosphere } from "./Atmosphere";
+import { GlobeErrorBoundary, GlobeFallback } from "./GlobeFallback";
+import { hasWebGL, prefersReducedMotion } from "./webgl";
 import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
-import { token } from "@/lib/theme";
 import { GlobeLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
@@ -69,8 +71,14 @@ export function PlanetViewer(props: PlanetViewerProps) {
   useEffect(()=>()=>props.onOverlayMaxHeightChange?.(undefined),[props.onOverlayMaxHeightChange]);
   const deselect = useRef(props.onDeselect);
   deselect.current = props.onDeselect;
+  // no WebGL (or a renderer that fails later) gets the flat map with the same markers and legend
+  const webgl = useMemo(() => hasWebGL(), []);
+  const reducedMotion = useMemo(() => prefersReducedMotion(), []);
+  const legend = <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />;
+  if (!webgl) return <GlobeFallback config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} reason="This browser cannot draw 3D graphics (WebGL is unavailable)." legend={legend} />;
   return (
-    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
+    <GlobeErrorBoundary fallback={(error) => <GlobeFallback config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} reason={`The 3D renderer stopped (${error.message}).`} legend={legend} />}>
+    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 42%, var(--color-bg-elev) 0%, var(--color-canvas) 65%)" }}
       onKeyDown={e => {
         if (e.target !== e.currentTarget || e.altKey || e.ctrlKey || e.metaKey) return;
         const key = e.key.toLowerCase();
@@ -85,21 +93,24 @@ export function PlanetViewer(props: PlanetViewerProps) {
       <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit {body}. Plus and minus zoom. F focuses the selected site. Escape clears the current selection. Click empty globe space to deselect. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km; {markers.length} candidate {markers.length === 1 ? "location is" : "locations are"} marked at their real coordinates.</p>
       <Canvas
         camera={{ position: DEFAULT_CAMERA.toArray(), fov: 42, near: 0.02, far: 100 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: false }}
+        // capped device pixel ratio: 1.5 is indistinguishable from 2 on a 4k texture and halves the fill cost on phones
+        dpr={[1, 1.5]}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        onCreated={({ gl }) => { gl.toneMapping = ACESFilmicToneMapping; gl.toneMappingExposure = config.lighting.exposure; gl.setClearColor(0x000000, 0); }}
         onPointerMissed={(event) => { if (event.type === "click") { deselect.current?.(); containerRef.current?.focus({preventScroll:true}); } }}
       >
-        <color attach="background" args={[token("--color-canvas")]} />
-        <ambientLight intensity={config.id === "earth" ? 2.2 : 1.1} />
-        <directionalLight position={[5, 2, 4]} intensity={2.2} color="#fff2e0" />
-        <directionalLight position={[-6, -1, -3]} intensity={0.25} color="#8aa0c8" />
-        <Stars radius={60} depth={30} count={2500} factor={2.5} saturation={0} fade speed={0.2} />
+        {/* a sky/ground hemisphere lifts the night side; the warm key rides with the camera so a focused site is never on the dark side */}
+        <hemisphereLight args={[config.lighting.sky, config.lighting.ground, config.lighting.hemisphere]} />
+        <KeyLight intensity={config.lighting.keyIntensity} color={config.lighting.key} />
+        <directionalLight position={[-6, -1, -3]} intensity={0.18} color="#8aa0c8" />
+        <Stars radius={60} depth={30} count={1800} factor={2.2} saturation={0} fade speed={reducedMotion ? 0 : 0.15} />
         <Suspense fallback={<PlaceholderSphere config={config} meshRef={planetRef} />}>
           <PlanetSphere config={config} meshRef={planetRef} />
         </Suspense>
+        <Atmosphere radius={config.radius} spec={config.atmosphere} />
         {overlays}
-        <SiteMarkers config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} planetRef={planetRef} />
-        <Controls bodyId={config.id} autoRotate={autoRotate} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} focusDistance={focusDistance} />
+        <SiteMarkers config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} planetRef={planetRef} reducedMotion={reducedMotion} />
+        <Controls bodyId={config.id} autoRotate={autoRotate && !reducedMotion} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} focusDistance={focusDistance} />
       </Canvas>
 
       <LoadingOverlay body={body} />
@@ -133,9 +144,10 @@ export function PlanetViewer(props: PlanetViewerProps) {
         {statusLine && <div className="sr-only">{statusLine}</div>}
       </div>
       <div ref={legendRef} data-testid="globe-legend" className="pointer-events-none absolute left-3" style={{bottom:legendBottom}}>
-        <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />
+        {legend}
       </div>
     </div>
+    </GlobeErrorBoundary>
   );
 }
 
@@ -160,6 +172,25 @@ function LoadingOverlay({ body }: { body: string }) {
 }
 
 interface CameraMemory { position: Vector3; target: Vector3 }
+
+/** The key light follows the camera, offset up and to the camera's right, so
+ * whatever the user is looking at is lit from a consistent "sun over the
+ * shoulder" angle and relief still shades. A world-fixed light left a focused
+ * site in darkness whenever the camera flew to the far side of the globe. */
+function KeyLight({ intensity, color }: { intensity: number; color: string }) {
+  const ref = useRef<DirectionalLight>(null);
+  const { camera } = useThree();
+  const scratch = useMemo(() => ({ right: new Vector3(), up: new Vector3(), pos: new Vector3() }), []);
+  useFrame(() => {
+    const light = ref.current; if (!light) return;
+    const { right, up, pos } = scratch;
+    right.setFromMatrixColumn(camera.matrixWorld, 0);
+    up.setFromMatrixColumn(camera.matrixWorld, 1);
+    pos.copy(camera.position).normalize().multiplyScalar(6).addScaledVector(right, 3.2).addScaledVector(up, 2.6);
+    light.position.copy(pos);
+  });
+  return <directionalLight ref={ref} position={[5, 2.5, 4]} intensity={intensity} color={color} />;
+}
 
 /** OrbitControls with auto-rotate that pauses while the user interacts, reset,
  * and a per-body camera memory: switching Earth <-> Mars saves the current

@@ -16,12 +16,14 @@ interface Props {
   onHoverChange?: (hovering: boolean) => void;
   /** The planet body; rank labels are hidden when it is between them and the camera. */
   planetRef?: RefObject<Mesh>;
+  /** prefers-reduced-motion: the selection ring holds still instead of pulsing. */
+  reducedMotion?: boolean;
 }
 
 const BASE = 0.022;
 const DARK = "var(--color-canvas)";
 
-export function SiteMarkers({ config, markers, selectedId, onSelect, onHoverChange, planetRef }: Props) {
+export function SiteMarkers({ config, markers, selectedId, onSelect, onHoverChange, planetRef, reducedMotion = false }: Props) {
   const [hovered, setHovered] = useState<string | null>(null);
   return (
     <group>
@@ -33,6 +35,7 @@ export function SiteMarkers({ config, markers, selectedId, onSelect, onHoverChan
           selected={m.id === selectedId}
           hovered={m.id === hovered}
           planetRef={planetRef}
+          reducedMotion={reducedMotion}
           onSelect={() => onSelect(m.id)}
           onHover={(h) => {
             setHovered(h ? m.id : null);
@@ -57,7 +60,7 @@ export function markerStatusText(d: MarkerDatum): string {
   return "not evaluated";
 }
 
-function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef }: { datum: MarkerDatum; config: PlanetConfig; selected: boolean; hovered: boolean; onSelect: () => void; onHover: (h: boolean) => void; planetRef?: RefObject<Mesh> }) {
+function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef, reducedMotion }: { datum: MarkerDatum; config: PlanetConfig; selected: boolean; hovered: boolean; onSelect: () => void; onHover: (h: boolean) => void; planetRef?: RefObject<Mesh>; reducedMotion: boolean }) {
   const pos = useMemo(() => markerPosition(datum.lat, datum.lonEast, config.radius), [datum.lat, datum.lonEast, config.radius]);
   const ringRef = useRef<Mesh>(null);
   const groupRef = useRef<Group>(null);
@@ -75,7 +78,10 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
     // (down to a twentieth when the camera is close enough to frame a single footprint)
     if (groupRef.current) groupRef.current.scale.setScalar(Math.max(0.05, Math.min(1, camera.position.distanceTo(pos) / 2.1)));
     if (!ringRef.current) return;
-    if (selected) {
+    if (selected && reducedMotion) {
+      ringRef.current.scale.setScalar(1.35);
+      (ringRef.current.material as { opacity: number }).opacity = 0.5;
+    } else if (selected) {
       const t = (clock.elapsedTime % 1.6) / 1.6;
       const s = 1 + t * 1.4;
       ringRef.current.scale.setScalar(s);
@@ -166,6 +172,12 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
           >
             {datum.rank ?? "NR"}
           </span>
+        </Html>
+      )}
+      {selected && !hovered && (
+        // the selected location is always named: a small readable tag beside the marker, never colour alone
+        <Html position={[BASE * 2.4, -BASE * 2.2, 0]} occlude={planetRef ? [planetRef] : true} zIndexRange={[45, 0]} style={{ pointerEvents: "none" }}>
+          <span data-testid="selected-marker-label" className="inline-block max-w-[220px] truncate rounded-md border border-line-strong px-2 py-1 text-[11px] font-medium leading-tight text-fg shadow" style={{ backgroundColor: "var(--overlay-bg)" }}>{datum.name}</span>
         </Html>
       )}
       {hovered && (
