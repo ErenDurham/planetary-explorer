@@ -1,0 +1,20 @@
+{
+ "document_id": "crossref_lit_dry_valleys",
+ "title": "Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars",
+ "institution": "Icarus / Elsevier BV",
+ "url": "https://api.crossref.org/works/10.1016/j.icarus.2007.06.018",
+ "final_url": "https://api.crossref.org/works/10.1016/j.icarus.2007.06.018",
+ "publication_date": "2007-12",
+ "retrieved_at": "2026-11-14",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "Bibliographic record for DOI 10.1016/j.icarus.2007.06.018",
+ "default_geographic_relevance": [
+  "mcmurdo_dry_valleys"
+ ],
+ "sha256": "bc1c3fe7886c41cb3b21006d2865b1adae887f5ec7bc9a69174195ca36cd17c8",
+ "char_count": 705,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars.\n\nAuthors: David R. Marchant, James W. Head.\n\nPublished in Icarus, volume 192, issue 1, pages 187-222 (2007), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.icarus.2007.06.018.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_text": "Bibliographic record (Crossref metadata, not the paper's full text): Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars.\n\nAuthors: David R. Marchant, James W. Head.\n\nPublished in Icarus, volume 192, issue 1, pages 187-222 (2007), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.icarus.2007.06.018.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_char_count": 705
+}
