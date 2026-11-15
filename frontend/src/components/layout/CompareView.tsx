@@ -12,7 +12,10 @@ import { useAppStore } from "@/store/useAppStore";
 import { api } from "@/services/api";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { Spinner } from "@/components/ui/Spinner";
-import { PairSelectors, type PairColumnData } from "@/components/compare/PairSelectors";
+import type { PairColumnData } from "@/components/compare/PairSelectors";
+import { AtlasSurface, AtlasSection } from "@/components/atlas/AtlasSurface";
+import atlasStyles from "@/components/atlas/atlas.module.css";
+import { CompareAtlasHeader, AtlasPairSelectors as PairSelectors } from "@/components/atlas/CompareAtlas";
 import { AnalogPreferencesSlot } from "@/components/compare/AnalogPreferencesSlot";
 import { SimilarityCard } from "@/components/compare/SimilarityCard";
 import { PairMetricsTable } from "@/components/compare/PairMetricsTable";
@@ -42,7 +45,6 @@ export function currentEntry(imagery: PaneImagery, view: PaneView, choice: strin
 export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; selectedId: string | null; onSelect?: (id: string) => void }) {
   const q = useQuery({ queryKey: ["comparison-catalog"], queryFn: api.comparisonCatalog, staleTime: Infinity });
   const selectionBody = useAppStore(s => s.selectionBody);
-  const task = useAppStore(s => s.task);
   const appliedReference = useAppStore(s => s.appliedReference);
   const selectedEarthId = useAppStore(s => s.selectedEarthId);
   const selectedMarsId = useAppStore(s => s.selectedMarsId);
@@ -124,31 +126,17 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
     ? "Field photographs have no map scale, so their zoom cannot be linked."
     : "Both panes need georeferenced orbital imagery (image bounds) before scales can be linked.";
 
-  return <div className="scroll-thin h-full overflow-y-auto bg-bg" aria-label="Earth and Mars pair comparison">
-    <div className="mx-auto max-w-[1800px] px-4 py-6 md:px-8">
-      <header className="mb-5">
-        <h1 className="text-2xl font-semibold text-fg">Compare an Earth and a Mars location</h1>
-        <p className="mt-2 text-sm text-fg-muted">
-          {task === "analog_site_selection" ? <>Analog site selection: choosing a location on <span className="text-fg">{BODY_NAME[selectionBody]}</span> for a reference on {BODY_NAME[otherBody(selectionBody)]}.</> : <>Landing screening: the selected Mars candidate beside an Earth reference for field context.</>}
-          {" "}Columns follow the objective; swap only changes the display order.
-        </p>
-      </header>
+  return <AtlasSurface label="Earth and Mars pair comparison">
+    <div className={atlasStyles.content}>
+      <CompareAtlasHeader focusBody={selectionBody} />
       {q.isPending && <Spinner label="Loading comparison locations" />}
       {q.error && <div className="mb-4"><ErrorNote error={q.error} context="comparison/catalog" /><button className="mt-3 text-sm text-copper-bright underline" onClick={() => q.refetch()}>Retry comparison</button></div>}
-      {data && <div className="space-y-5">
+      {data && <div className="space-y-4">
         <PairSelectors columns={columns} swapped={swapped} onSwap={() => setSwapped(s => !s)} onSelect={(body, id) => selectLocation(body, id)} onShowOnGlobe={(body, id) => showOnGlobe(body, id)} />
 
-        <section aria-label="Reference context" className="rounded border border-line bg-bg-elev px-4 py-3">
-          <p className="text-sm text-fg" data-testid="context-line">
-            <span className="text-fg-muted">Reference:</span> <span className="font-medium">{referenceName}</span> on {BODY_NAME[referenceCol.body]}
-            <span className="text-fg-muted"> · analog preferences: </span><span className="num">{emphasisSummary(shares)}</span> <span className="text-fg-faint">({customised ? "customised" : recommendedAnalogWeights ? "objective's suggestion" : "spec defaults"})</span>
-          </p>
-          {appliedReference && appliedReference.id !== (byBody[appliedReference.body].location?.id ?? null) && <p className="mt-1 text-xs text-fg-muted">The applied objective named {appliedReference.name} on {BODY_NAME[appliedReference.body]}; the {BODY_NAME[appliedReference.body]} selector now shows {byBody[appliedReference.body].location?.name ?? "nothing"}. The objective itself is unchanged.</p>}
-          <details className="mt-2 text-sm"><summary className="cursor-pointer text-fg-muted">Adjust analog preferences</summary><div className="mt-3 max-w-2xl"><AnalogPreferencesSlot /></div></details>
-        </section>
-
-        <section aria-label="Side-by-side visual field views" className="space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-line bg-bg-elev px-3 py-2">
+        <AtlasSection number="01" title="Read the landscape" description="Orbital views show regional context. Field photos offer a view from the ground.">
+        <section aria-label="Side-by-side visual field views" className={atlasStyles.imagery}>
+          <div className={atlasStyles.imageryToolbar}>
             <div className="flex flex-wrap gap-1 rounded border border-line p-1" role="group" aria-label="Imagery view for both panes">
               {(["orbital", "surface"] as const).map(v => <button key={v} type="button" aria-pressed={sharedView === v} onClick={() => changeSharedView(v)} className={`rounded px-3 py-1.5 text-sm ${sharedView === v ? "bg-copper/15 text-copper-bright" : "text-fg-muted hover:bg-bg-elev-2"}`}>{VIEW_LABEL[v]}</button>)}
             </div>
@@ -166,18 +154,36 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
             })}
           </div>
         </section>
+        </AtlasSection>
 
-        <SimilarityCard rank={pair.rank} candidate={pair.candidate} candidateBody={selectedCol.body} candidateName={selectedCol.location?.name ?? BODY_NAME[selectedCol.body]} referenceName={referenceName} />
+        <section aria-label="Reference context" className={atlasStyles.reference}>
+          <p className="text-sm text-fg" data-testid="context-line">
+            <span className="text-fg-muted">Reference:</span> <span className="font-medium">{referenceName}</span> on {BODY_NAME[referenceCol.body]}
+            <span className="text-fg-muted"> · analog preferences: </span><span className="num">{emphasisSummary(shares)}</span> <span className="text-fg-faint">({customised ? "customised" : recommendedAnalogWeights ? "objective's suggestion" : "spec defaults"})</span>
+          </p>
+          {appliedReference && appliedReference.id !== (byBody[appliedReference.body].location?.id ?? null) && <p className="mt-1 text-xs text-fg-muted">The applied objective named {appliedReference.name} on {BODY_NAME[appliedReference.body]}; the {BODY_NAME[appliedReference.body]} selector now shows {byBody[appliedReference.body].location?.name ?? "nothing"}. The objective itself is unchanged.</p>}
+          <details className="mt-2 text-sm"><summary className="cursor-pointer text-fg-muted">Adjust analog preferences</summary><div className="mt-3 max-w-2xl"><AnalogPreferencesSlot /></div></details>
+        </section>
 
+        <AtlasSection number="02" title="Understand the match" description="A similarity index for this pair under your current analog preferences.">
+        <div className={atlasStyles.evidence}><SimilarityCard rank={pair.rank} candidate={pair.candidate} candidateBody={selectedCol.body} candidateName={selectedCol.location?.name ?? BODY_NAME[selectedCol.body]} referenceName={referenceName} /></div>
+        </AtlasSection>
+
+        <AtlasSection number="03" title="Compare the measurements" description="Raw values stay in their original units. Unavailable measurements remain explicit.">
         <PairMetricsTable columns={columns} candidate={pair.candidate} rankExcluded={pair.rank.data?.excluded_features ?? []} />
+        </AtlasSection>
 
-        <PlanetaryContext differences={pair.rank.data?.planetary_differences ?? pair.match.data?.planetary_differences} bodies={bodies} />
-
-        <PairStudies pairMatch={pair.pairMatch} earthName={earth?.name ?? "the Earth location"} marsName={mars?.name ?? "the Mars site"} pending={pair.match.isPending} onOpenResearch={() => setActiveTab("research")} />
+        <AtlasSection number="04" title="Take the research further">
+        <div className={atlasStyles.evidence}><PairStudies pairMatch={pair.pairMatch} earthName={earth?.name ?? "the Earth location"} marsName={mars?.name ?? "the Mars site"} pending={pair.match.isPending} onOpenResearch={() => setActiveTab("research")} /></div>
+        </AtlasSection>
         {pair.match.error && <ErrorNote error={pair.match.error} context="analogs/match" />}
 
+        <AtlasSection number="05" title="Context and sources" description="Review planetary differences, data provenance, and limits before drawing conclusions.">
+        <PlanetaryContext differences={pair.rank.data?.planetary_differences ?? pair.match.data?.planetary_differences} bodies={bodies} />
+
         <ProvenanceDisclosures columns={columns} bodies={bodies} rank={pair.rank.data} pairMatch={pair.pairMatch} imagery={[imagery.earth.data, imagery.mars.data]} />
+        </AtlasSection>
       </div>}
     </div>
-  </div>;
+  </AtlasSurface>;
 }

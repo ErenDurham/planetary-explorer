@@ -56,7 +56,7 @@ function renderApp() {
 describe("App", () => {
   beforeEach(() => {
     evaluateCalls = [];
-    useAppStore.setState({ weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore" });
+    useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, activeTab: "explore" });
     mockFetch();
   });
   afterEach(() => vi.restoreAllMocks());

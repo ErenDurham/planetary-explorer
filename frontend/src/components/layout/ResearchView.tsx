@@ -1,6 +1,9 @@
 // Research prospects for the selected Mars site: the citation-backed digest,
 // and from it the Expedition Planner (features/expedition), which opens in
 // place with the same region, body and research context.
+import { AtlasSurface } from "@/components/atlas/AtlasSurface";
+import atlasStyles from "@/components/atlas/atlas.module.css";
+import { ResearchAtlasCover } from "@/components/atlas/ResearchAtlasCover";
 import { ExplanationPanel } from "@/components/intelligence/ExplanationPanel";
 import { EmptyNote } from "@/components/ui/Section";
 import { ExpeditionPlanner, PlanEntryCard, useExpeditionStore } from "@/features/expedition";
@@ -11,23 +14,24 @@ export function ResearchView({ sites, selectedId, onSelect, mission }: { sites: 
   const plannerOpen = useExpeditionStore(s => s.open);
   const openPlanner = useExpeditionStore(s => s.openPlanner);
   const planning = plannerOpen && !!site;
-  return <div className="scroll-thin h-full overflow-y-auto">
+  return <AtlasSurface enabled={!planning}>
     <div className="border-b border-line bg-bg-elev p-4">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div><h1 className="text-xl font-semibold text-fg">Research</h1><p className="mt-1 text-sm text-fg-muted">{planning ? "Planning an expedition for the selected site." : "Investigate what a site could help us learn."}</p></div>
           <div className="flex items-center gap-2"><label htmlFor="research-site" className="text-sm text-fg-muted">Mars site</label><select id="research-site" value={selectedId ?? ""} onChange={e => onSelect(e.target.value)} className="max-w-full rounded-lg border border-line-strong bg-bg p-3 text-sm text-fg"><option value="" disabled>Select a site…</option>{sites?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></div>
         </div>
-        {site && !planning && <p className="mt-3 max-w-3xl text-sm text-fg-muted"><span className="font-semibold text-fg">{site.name}</span> · {site.description}</p>}
+
       </div>
     </div>
+    {site && !planning && <ResearchAtlasCover key={site.id} site={site} />}
     <div className="mx-auto max-w-7xl space-y-4 p-4">
       {!selectedId || !site ? <EmptyNote>Choose a Mars site above, or select a ranked candidate in Explore. Its study ideas and evidence will appear here.</EmptyNote>
         : planning ? <ExpeditionPlanner key={site.id} region={{ body: "mars", id: site.id, name: site.name, region: site.region, description: site.description, lat: site.lat, lonEast: site.lon_east }} mission={mission} />
         : <>
-          <PlanEntryCard body="mars" siteId={site.id} siteName={site.name} onOpen={() => openPlanner({ body: "mars", siteId: site.id })} />
-          <ExplanationPanel key={selectedId} siteId={selectedId} mission={mission} />
+          <div id="research-expedition-entry"><PlanEntryCard body="mars" siteId={site.id} siteName={site.name} onOpen={() => openPlanner({ body: "mars", siteId: site.id })} /></div>
+          <div id="research-dossier-evidence" className={atlasStyles.researchNotes}><ExplanationPanel key={selectedId} siteId={selectedId} mission={mission} /></div>
         </>}
     </div>
-  </div>;
+  </AtlasSurface>;
 }
