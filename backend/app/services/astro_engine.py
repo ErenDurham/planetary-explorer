@@ -73,7 +73,7 @@ def output_schema() -> dict:
                 not in {"minLength", "maxLength", "maxItems", "minimum", "maximum"}
             }
             if "maxItems" in value:
-                result["description"] = f"{result.get("description", "")} Return at most {value["maxItems"]} items.".strip()
+                result["description"] = f"{result.get('description', '')} Return at most {value['maxItems']} items.".strip()
             if result.get("type") == "object":
                 result["additionalProperties"] = False
             return result
