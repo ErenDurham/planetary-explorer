@@ -10,6 +10,14 @@ The palette is the atlas look that first shipped on Compare and Research (warm n
 off-white type, copper accent, Manrope for text, IBM Plex Mono for numbers). `components/atlas/` no longer
 carries its own palette or font import; it only contributes layout.
 
+## Pane styles
+
+`frontend/src/theme/panes.css` holds the per-pane rules that hang off `data-pane` attributes
+(`navigation`, `mission`, `mission-objective`, `explore`, `site`, `analysis`). The Mission Design
+composer lives there: the lede, the objective box and its copper focus ring, the example pills, the
+applied-objective card, the next-step card and the scoring-priorities disclosure, with a phone block
+for widths under 640 px. All of it reads the tokens above; nothing in it is a literal colour.
+
 ## Where literal colours are still needed
 
 Recharts presentation attributes and three.js colours cannot take a CSS variable, so they read the same
