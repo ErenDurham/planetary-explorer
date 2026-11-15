@@ -270,8 +270,8 @@ def test_terrain_only_weights_rank_a_shared_landform_first_for_jezero():
     assert alt[0].earth_candidate.id == "svalbard_fan_delta" and jez & set(alt[0].earth_candidate.tags)
     assert [m.earth_candidate.id for m in alt] != [m.earth_candidate.id for m in base]
     terrain = next(f for f in alt[0].feature_distances if f.feature_id == TERRAIN)
-    assert terrain.normalized_weight == 1.0 and "impact crater" in terrain.note
-    assert any(x.startswith("Terrain morphology shared: impact crater") for x in alt[0].shared_characteristics)
+    assert terrain.normalized_weight == 1.0 and "delta" in terrain.note
+    assert any(x.startswith("Terrain morphology shared: delta") for x in alt[0].shared_characteristics)
     # with only one comparable feature, similarity is 100/(1+d_terrain) exactly
     assert alt[0].similarity == pytest.approx(100 / (1 + terrain.distance), abs=0.01)
 

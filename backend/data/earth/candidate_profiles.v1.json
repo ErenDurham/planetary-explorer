@@ -216,7 +216,7 @@
           "category": "light",
           "value": 77.86,
           "unit": "deg",
-          "source_id": "goordial2016_university_valley",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -478,6 +478,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "goordial2016_university_valley": {
           "source_id": "goordial2016_university_valley",
           "title": "Nearing the cold-arid limits of microbial life in permafrost of an upper dry valley, Antarctica",
@@ -711,7 +718,7 @@
           "category": "light",
           "value": 72.596,
           "unit": "deg",
-          "source_id": "yoldi2020_greenland_old_ice",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -969,6 +976,13 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
+        },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
         },
         "yoldi2020_greenland_old_ice": {
           "source_id": "yoldi2020_greenland_old_ice",
@@ -1694,7 +1708,7 @@
           "category": "light",
           "value": 35.088,
           "unit": "deg",
-          "source_id": "bishop2025_painted_desert",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -1957,6 +1971,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "bishop2025_painted_desert": {
           "source_id": "bishop2025_painted_desert",
           "title": "Constraining the ancient geochemical environments of Mawrth Vallis (EPSC-DPS 2025-1957)",
@@ -2190,7 +2211,7 @@
           "category": "light",
           "value": 37.25,
           "unit": "deg",
-          "source_id": "demaret2022_jaroso_vents",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -2449,6 +2470,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "demaret2022_jaroso_vents": {
           "source_id": "demaret2022_jaroso_vents",
           "title": "Fe-rich fossil vents as Mars analog samples: identification of extinct chimneys in Miocene marine sediments using Raman spectroscopy, X-ray diffraction, and scanning electron microscopy-energy dispersive X-ray analysis",
@@ -2683,7 +2711,7 @@
           "category": "light",
           "value": 23.1,
           "unit": "deg",
-          "source_id": "krishnamoorthi2025_uae_dunes",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -2944,6 +2972,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "krishnamoorthi2025_uae_dunes": {
           "source_id": "krishnamoorthi2025_uae_dunes",
           "title": "Aeolian sediment lithification from late-stage aqueous activity",
@@ -3177,7 +3212,7 @@
           "category": "light",
           "value": 46.6,
           "unit": "deg",
-          "source_id": "lambert_reimold2023_impact_analogs",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -3438,6 +3473,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "lambert_reimold2023_impact_analogs": {
           "source_id": "lambert_reimold2023_impact_analogs",
           "title": "Terrestrial impact sites as field analogs for planetary exploration",
@@ -3671,7 +3713,7 @@
           "category": "light",
           "value": 30.75,
           "unit": "deg",
-          "source_id": "aerts2019_yilgarn_lakes",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -3933,6 +3975,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "aerts2019_yilgarn_lakes": {
           "source_id": "aerts2019_yilgarn_lakes",
           "title": "Microbial communities in sediments from four mildly acidic ephemeral salt lakes in the Yilgarn Craton (Australia)",
@@ -4166,7 +4215,7 @@
           "category": "light",
           "value": 42.256,
           "unit": "deg",
-          "source_id": "bultel2025_granby_alteration",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -4429,6 +4478,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "bultel2025_granby_alteration": {
           "source_id": "bultel2025_granby_alteration",
           "title": "Deciphering the alteration processes of a vermiculite-rich sample (EPSC-DPS 2025-1550)",
@@ -4672,7 +4728,7 @@
           "category": "light",
           "value": 44.64,
           "unit": "deg",
-          "source_id": "petersen2019_galena_creek",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -4935,6 +4991,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "petersen2019_galena_creek": {
           "source_id": "petersen2019_galena_creek",
           "title": "New insights into ice accumulation at Galena Creek Rock Glacier from radar imaging of its internal structure",
@@ -5166,7 +5229,7 @@
           "category": "light",
           "value": 75.38,
           "unit": "deg",
-          "source_id": "ntrs_haughton_gullies",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -5427,6 +5490,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "ntrs_haughton_gullies": {
           "source_id": "ntrs_haughton_gullies",
           "title": "Haughton crater gullies (LPSC 2020)",
@@ -5660,7 +5730,7 @@
           "category": "light",
           "value": 47.31,
           "unit": "deg",
-          "source_id": "nasa_eo_channeled_scablands",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -5923,6 +5993,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "nasa_eo_channeled_scablands": {
           "source_id": "nasa_eo_channeled_scablands",
           "title": "Channeled Scablands",
@@ -6154,7 +6231,7 @@
           "category": "light",
           "value": 37.7,
           "unit": "deg",
-          "source_id": "amils2014_rio_tinto",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -6417,6 +6494,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "amils2014_rio_tinto": {
           "source_id": "amils2014_rio_tinto",
           "title": "R\u00edo Tinto: a geochemical and mineralogical terrestrial analogue of Mars",
@@ -6670,7 +6754,7 @@
           "category": "light",
           "value": 37.553,
           "unit": "deg",
-          "source_id": "gunes2024_salda_microbialites",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -6929,6 +7013,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "gunes2024_salda_microbialites": {
           "source_id": "gunes2024_salda_microbialites",
           "title": "Morphological and microbial diversity of hydromagnesite microbialites in Lake Salda",
@@ -7163,7 +7254,7 @@
           "category": "light",
           "value": 38.4,
           "unit": "deg",
-          "source_id": "kong2018_dalangtan",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -7429,6 +7520,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "kong2018_dalangtan": {
           "source_id": "kong2018_dalangtan",
           "title": "The Dalangtan saline playa in a hyperarid region on Tibet Plateau: I. Evolution and environments",
@@ -7670,7 +7768,7 @@
           "category": "light",
           "value": 64.85,
           "unit": "deg",
-          "source_id": "lit_holuhraun",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -7936,6 +8034,13 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
+        },
         "lit_holuhraun": {
           "source_id": "lit_holuhraun",
           "title": "Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland",
@@ -8177,7 +8282,7 @@
           "category": "light",
           "value": 77.74,
           "unit": "deg",
-          "source_id": "gilbert2018_svalbard_fjord_valley",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -8439,6 +8544,13 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
+        },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
         },
         "gilbert2018_svalbard_fjord_valley": {
           "source_id": "gilbert2018_svalbard_fjord_valley",

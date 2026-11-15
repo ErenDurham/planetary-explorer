@@ -4,14 +4,13 @@ import { MapPin } from "lucide-react";
 import { Section, EmptyNote, BulletList } from "@/components/ui/Section";
 import { Spinner } from "@/components/ui/Spinner";
 import { ErrorNote } from "@/components/ui/ErrorNote";
-import { Badge } from "@/components/ui/Badge";
 import { EnvironmentalProfilePanel } from "@/components/sites/EnvironmentalProfilePanel";
 import { SourcesList } from "@/components/sites/SourcesList";
 import { FullScoringCalculation, SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
 import { useSiteProfile } from "@/hooks/useSites";
-import { formatLatLon, formatNumber, humanize } from "@/lib/format";
+import { formatLatLon, formatNumber } from "@/lib/format";
 import { AnalogMatchPanel, EarthLocationPanel } from "@/components/sites/LocationPanels";
-import { ApproximateNote, EarthAnalogNotesPanel, ReportedConditionsPanel, RoleBadge } from "@/components/sites/WorkbookPanels";
+import { ApproximateNote, ReportedConditionsPanel, RoleBadge, SiteLabelsPanel } from "@/components/sites/SiteConditionPanels";
 import type { RankPalette } from "@/lib/rankColor";
 import type { AnalogRankResponse, ComparisonLocation, EvaluateResponse, MissionProfile } from "@/types";
 
@@ -103,23 +102,14 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
             {q.data.site.role && <div className="mt-1.5"><RoleBadge role={q.data.site.role} /></div>}
             {q.data.site.heritage && <p className="mt-1.5 text-[11px] text-copper-bright">{q.data.site.heritage}</p>}
             <p className="mt-1.5 text-xs leading-relaxed text-fg-muted">{q.data.site.description}</p>
-            {q.data.site.notes && <p className="mt-1.5 text-xs text-fg-muted" data-testid="site-notes"><span className="text-fg-faint">Workbook note:</span> {q.data.site.notes}</p>}
-            {(q.data.site.tags ?? []).length > 0 && (
-              <ul className="mt-2 flex flex-wrap gap-1" aria-label="Site tags">
-                {(q.data.site.tags ?? []).map((t) => (
-                  <li key={t}>
-                    <Badge>{humanize(t)}</Badge>
-                  </li>
-                ))}
-              </ul>
-            )}
+            {q.data.site.notes && <p className="mt-1.5 text-xs text-fg-muted" data-testid="site-notes"><span className="text-fg-faint">Project note:</span> {q.data.site.notes}</p>}
           </Section>
+          <SiteLabelsPanel measurements={q.data.profile.measurements} sources={q.data.profile.sources} />
 
           <div>
             {analogPanel}
             {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} palette={rankPalette} />}
             <ReportedConditionsPanel conditions={q.data.site.reported_conditions} sources={q.data.site.condition_sources} />
-            <EarthAnalogNotesPanel analogs={q.data.site.earth_analogs} />
             <Section title="Risks and limitations">
               <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
               <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>

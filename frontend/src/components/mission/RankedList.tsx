@@ -79,7 +79,7 @@ export interface AnalogRankedListProps {
   /** Text filter; filtering never recolours the remaining rows (positions come from the full pool). */
   filter?: string;
   onFilterChange?: (f: string) => void;
-  /** Role display filter (workbook roles); never recolours or re-ranks. */
+  /** Optional display filter; never recolours or re-ranks. */
   shown?: (id: string) => boolean;
 }
 

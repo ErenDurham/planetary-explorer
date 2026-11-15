@@ -71,6 +71,14 @@ export function PairMetricsTable({ columns, candidate, rankExcluded }: { columns
           {numRow("roughness_regional_m", "Detrended relief", "Unevenness after removing the broad tilt, per ~3.7 km cell. Not rock-scale roughness.")}
           {tagRow("terrain_morphology", "Landforms", "Documented landform tags from the literature.")}
           {tagRow("mineralogy_tags", "Materials", "Documented composition tags; not a spectral or quantitative mineral measurement.")}
+          <tr data-testid="metrics-sources">
+            <th scope="row" className="compare-metric"><span className="font-medium text-fg">Sources for these values</span><p className="mt-1 text-xs font-normal leading-relaxed text-fg-muted">The dataset or publication each row above comes from.</p></th>
+            {[a, b].map(c => {
+              const ids = [...new Set(["slope_regional_median_deg", "roughness_regional_m", "terrain_morphology", "mineralogy_tags"].map(f => c.location?.measurements.find(m => m.feature_id === f && !m.is_missing)?.source_id).filter((x): x is string => !!x))];
+              return <td key={c.body} className="text-xs text-fg-muted">{ids.length ? <ul className="space-y-0.5">{ids.map(id => { const src = c.location!.sources[id]; return <li key={id}>{src ? <a href={src.url} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-fg">{src.title}</a> : id}</li>; })}</ul> : "—"}</td>;
+            })}
+            <td />
+          </tr>
           <tr>
             <th scope="row" className="compare-metric"><span className="font-medium text-fg">Dataset coverage & methods</span><p className="mt-1 text-xs font-normal leading-relaxed text-fg-muted">Footprint, grids and what did not enter the index.</p></th>
             {[a, b].map(c => <td key={c.body} className="text-xs text-fg-muted">{c.location ? <><span className="text-fg">{c.location.coverage}</span><ul className="mt-1 space-y-0.5">{[...new Set(c.location.measurements.filter(m => !m.is_missing).map(m => m.source_id && c.location!.sources[m.source_id]?.title).filter(Boolean))].slice(0, 4).map(t => <li key={String(t)}>{t}</li>)}</ul>{c.location.measurements.some(m => m.is_missing) && <p className="mt-1 text-warn">Missing here: {c.location.measurements.filter(m => m.is_missing).map(m => m.label).join(", ")}</p>}</> : "—"}</td>)}
