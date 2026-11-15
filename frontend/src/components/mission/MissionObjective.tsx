@@ -6,6 +6,7 @@
 // and proposed values are shown as SHARES (before -> proposed) so they read
 // the same way the sliders do. Applying is the ONLY action that replaces the
 // current shares; editing the text alone never touches them.
+import { TaskMissionObjective } from "./TaskMissionObjective";
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, Sparkles, Cpu, WifiOff } from "lucide-react";
 import { useAppStore, type ObjectiveSource } from "@/store/useAppStore";
@@ -26,6 +27,11 @@ const TASK_LABEL: Record<TaskInterpretation["task"], string> = {
 const CONFIDENCE_TONE: Record<string, BadgeTone> = { high: "ok", medium: "warn", low: "neutral" };
 
 export function MissionObjective({ excluded }: { excluded: string[] }) {
+  const kind=useAppStore(s=>s.missionType);
+  return kind === "landing" ? <LandingMissionObjective excluded={excluded}/> : <TaskMissionObjective key={kind}/>;
+}
+
+function LandingMissionObjective({ excluded }: { excluded: string[] }) {
   const objective = useAppStore((s) => s.missionObjective);
   const applied = useAppStore((s) => s.appliedObjective);
   const appliedSource = useAppStore((s) => s.appliedObjectiveSource);
@@ -39,6 +45,7 @@ export function MissionObjective({ excluded }: { excluded: string[] }) {
   const appliedFocusBody = useAppStore((s) => s.appliedFocusBody);
   const appliedDestination = useAppStore((s) => s.appliedMissionDestination);
   const appliedReference = useAppStore((s) => s.appliedReference);
+  const setDraftDirty = useAppStore(s => s.setMissionDraftDirty);
   const [draft, setDraft] = useState(objective);
   const interpret = useInterpretObjective();
   const draftDiffers = Boolean(applied) && draft.trim() !== applied;
@@ -52,7 +59,7 @@ export function MissionObjective({ excluded }: { excluded: string[] }) {
     <Section title="Mission objective" subtitle="Describe the mission; review the suggested shares before applying.">
       <form onSubmit={(e) => { e.preventDefault(); onSuggest(); }}>
         <label htmlFor="mission-objective" className="sr-only">Your mission objective</label>
-        <textarea id="mission-objective" maxLength={500} rows={2} required value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="For example: land safely and maximise solar energy" className="w-full rounded-lg border border-line-strong bg-bg px-3 py-2 text-sm text-fg" />
+        <textarea id="mission-objective" maxLength={500} rows={2} required value={draft} onChange={(e) => { setDraft(e.target.value); useAppStore.setState({missionObjective:e.target.value}); setDraftDirty(e.target.value.trim() !== applied.trim()); }} placeholder="For example: land safely and maximise solar energy" className="w-full rounded-lg border border-line-strong bg-bg px-3 py-2 text-sm text-fg" />
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
           <button disabled={!draft.trim() || !Object.keys(defaults).length || interpret.status === "pending"} className="inline-flex items-center gap-2 rounded-lg border border-copper bg-copper/10 px-3 py-1.5 text-sm font-semibold text-copper-bright disabled:opacity-40" type="submit">
             {interpret.status === "pending" && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />}
@@ -179,7 +186,7 @@ function ProposalReview({ result, draft, excluded, current, onRerun, onDiscard, 
   return (
     <div className="mt-2 rounded-lg border border-copper/40 bg-copper/5 p-2.5" role="region" aria-label="Proposed priority allocation">
       <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-        <h3 className="text-sm font-semibold text-fg">Proposed landing priorities</h3>
+        <h3 className="text-sm font-semibold text-fg">Proposed mission priorities</h3>
         <ProvenanceBadge source={source} model={r.model} muted={stale} />
         <Badge tone={CONFIDENCE_TONE[r.confidence] ?? "neutral"} title={r.confidence_note}>confidence {r.confidence}</Badge>
         {r.cached && <Badge tone="neutral">cached</Badge>}

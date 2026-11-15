@@ -77,7 +77,7 @@ export function AnalogMatchPanel({ candidate, response, palette, referenceName }
         <span className="num inline-flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold" style={unranked ? { borderColor: colour ?? undefined, borderStyle: "dashed", color: colour ?? undefined } : { backgroundColor: colour ?? undefined, borderColor: "#fff", color: "#fff", textShadow: "0 0 2px #000" }} aria-hidden>{candidate.rank ?? "–"}</span>
         <div className="text-xs text-fg">
           <div>{unranked ? "Not ranked" : `Match rank ${candidate.rank} of ${response.ranked_count}`}</div>
-          <div className="num text-fg-muted">{candidate.similarity != null ? `similarity ${formatNumber(candidate.similarity, { maxFractionDigits: 1 })} / 100` : "no similarity"} · coverage {Math.round(candidate.coverage_fraction * 100)}% of basis features</div>
+          <div className="num text-fg-muted">{candidate.similarity != null ? `${formatNumber(candidate.similarity, { maxFractionDigits: 1 })}% match` : "no similarity"} · coverage {Math.round(candidate.coverage_fraction * 100)}% of basis features</div>
         </div>
       </div>
       {candidate.unrankable_reason && <p className="mt-2 text-xs text-warn">{candidate.unrankable_reason}</p>}

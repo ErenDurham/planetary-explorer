@@ -2,6 +2,8 @@
 // recommendation card (right), stacked on narrow screens. It also tells the
 // store which factors the latest evaluation excluded, so the share maths and
 // the "Unavailable" row follow the backend rather than a hard-coded list.
+import { MissionScoringPanel } from "@/components/mission/MissionScoringPanel";
+import { MissionFocus } from "@/components/mission/MissionFocus";
 import { useEffect } from "react";
 import { MissionObjective } from "@/components/mission/MissionObjective";
 import { Spinner } from "@/components/ui/Spinner";
@@ -20,6 +22,8 @@ interface Props {
 }
 
 export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationError }: Props) {
+  const focus = useAppStore(s => s.selectionBody);
+  const kind = useAppStore(s => s.missionType);
   const excludedIds = useAppStore((s) => s.excludedCriteria);
   const setExcludedCriteria = useAppStore((s) => s.setExcludedCriteria);
   const first = evaluation?.results[0];
@@ -33,13 +37,14 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
   return (
     <div aria-label="Mission settings" className="mission-panel grid bg-bg-elev md:grid-cols-[minmax(240px,300px)_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_340px]">
       <div className="min-w-0 border-b border-line md:border-b-0 md:border-r">
+        <MissionFocus/>
         <MissionObjective excluded={excludedIds} />
-        <details className="mx-4 mb-3 rounded-lg border border-line-strong">
+        {focus === "mars" && kind === "landing" && <details className="mx-4 mb-3 rounded-lg border border-line-strong">
           <summary className="cursor-pointer px-3 py-2 text-xs text-fg-muted">Landing constraints · fixed assumptions</summary>
           <HardConstraints constraints={defaults?.mission.hard_constraints ?? []} />
-        </details>
+        </details>}
       </div>
-      {defaultsError ? (
+      {kind !== "landing" ? <MissionScoringPanel/> : defaultsError ? (
         <div className="p-4 md:col-span-2"><ErrorNote error={defaultsError} context="scoring/default-mission" /></div>
       ) : !defaults ? (
         <div className="p-4 md:col-span-2"><Spinner label="Loading scoring defaults" /></div>

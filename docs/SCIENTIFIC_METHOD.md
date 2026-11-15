@@ -799,3 +799,18 @@ page, with their status as of 2026-11-14:
 9. **Open.** `candidates.json` still records the POWER climatology period as
    "multi-decade climatology (see API header)"; the pipeline does not store
    the header's span.
+
+
+## Task-specific mission screening (mission-screening-v1.0)
+
+The general mission profiles live in `backend/app/config/mission_profiles.json`. They reuse the deterministic piecewise-linear evaluator; they do not use an LLM or the analog distance as a mission score. Earth and Mars are evaluated separately using a common feature basis within the requested body's complete candidate pool. Missing, non-finite, unit-incompatible or demo measurements exclude a criterion for every site. Available active weights are renormalized; requested weighted evidence coverage and exclusions are returned separately. No active criteria means no score.
+
+Research-site selection measures **documented target alignment**: for each configured materials/landforms criterion, q equals the number of unique requested tags documented in the profile divided by the number of unique requested tags. The score is 100 times the weighted mean q. Users must choose research targets; unknown vocabulary is rejected. Unreported tags are not evidence of physical absence. Tags and their profile provenance are qualitative, and this index is not scientific value, biological potential, discovery probability or accessibility.
+
+Regional rover test fit uses q = max(0, 1 - abs(x - target) / tolerance). The score is 100 times the weighted mean q over regional median slope and detrended relief. Default targets (1 degree and 100 m) and tolerances (5 degrees and 300 m) are **editable example preferences**, not published operating limits or validated vehicle thresholds. Higher ruggedness may be the desired test environment: the evaluator rewards closeness to the requested target, not universally flatter terrain. The roughly 3.7 km data baseline cannot resolve wheel-scale or landing hazards, trafficability, bearing capacity or operational safety.
+
+Full-precision scores determine competition ranks; sites with equal scores share rank, with stable ID ordering. Display rounding does not determine rank. The ROYGBIV palette encodes relative rank within the full pool, not absolute merit or safety.
+
+Base planning returns an evidence-gap review and no aggregate score. Essential evidence includes resources/extraction, seasonal surface power/storage, local thermal and radiation conditions, geotechnical capacity, detailed hazards and logistics/access. The separate Mars landing profile and its assumptions remain available for landing-only screening.
+
+Field-test context: [NASA Analog Missions](https://www.nasa.gov/analog-missions/) and [Planetary Analog Explorer](https://science.nasa.gov/solar-system/analog-explorer/). These sources motivate the application; they do not validate the app's example preferences or numerical scores.

@@ -1,0 +1,2302 @@
+{
+  "earth": {
+    "body": "earth",
+    "mission_type": "rover_field_test",
+    "spec_version": "mission-screening-v1.0",
+    "profile_label": "Regional rover test fit",
+    "method": "q = max(0, 1 \u2212 |measured regional value \u2212 user target| / user tolerance). Index = 100 \u00d7 weighted mean q.",
+    "assumptions": [
+      "Target 1 degree with tolerance 5 degrees and target relief 100 m with tolerance 300 m are editable example preferences, not validated rover operating limits.",
+      "Both terrain metrics use roughly 3.7 km cells. They cannot resolve rocks, metre-scale slopes, trafficability or wheel\u2013soil interactions.",
+      "The index measures regional environment fit for planning a test, not vehicle performance or safety."
+    ],
+    "warnings": [],
+    "requirements": {
+      "material_targets": [],
+      "landform_targets": [],
+      "slope_target_deg": 1.0,
+      "slope_tolerance_deg": 5.0,
+      "relief_target_m": 100.0,
+      "relief_tolerance_m": 300.0
+    },
+    "results": [
+      {
+        "site_id": "mdrs_utah",
+        "site_name": "San Rafael Swell - MDRS area",
+        "body": "earth",
+        "score": 94.29666666666667,
+        "rank": 1,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.923,
+            "unit": "deg",
+            "q": 0.9846,
+            "normalized_weight": 0.5,
+            "contribution": 49.230000000000004,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.077 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 129.6,
+            "unit": "m",
+            "q": 0.9013333333333332,
+            "normalized_weight": 0.5,
+            "contribution": 45.06666666666666,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 29.6 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "atacama_yungay",
+        "site_name": "Atacama Desert - Yungay region",
+        "body": "earth",
+        "score": 93.92333333333332,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 1.166,
+            "unit": "deg",
+            "q": 0.9667999999999999,
+            "normalized_weight": 0.5,
+            "contribution": 48.339999999999996,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.166 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 126.5,
+            "unit": "m",
+            "q": 0.9116666666666666,
+            "normalized_weight": 0.5,
+            "contribution": 45.58333333333333,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 26.5 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "haughton_crater",
+        "site_name": "Haughton impact structure",
+        "body": "earth",
+        "score": 86.43666666666667,
+        "rank": 3,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.567,
+            "unit": "deg",
+            "q": 0.9134,
+            "normalized_weight": 0.5,
+            "contribution": 45.67,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.433 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 44.6,
+            "unit": "m",
+            "q": 0.8153333333333334,
+            "normalized_weight": 0.5,
+            "contribution": 40.766666666666666,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 55.4 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "mcmurdo_dry_valleys",
+        "site_name": "McMurdo Dry Valleys - University Valley",
+        "body": "earth",
+        "score": 77.75,
+        "rank": 4,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 1.955,
+            "unit": "deg",
+            "q": 0.8089999999999999,
+            "normalized_weight": 0.5,
+            "contribution": 40.449999999999996,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.955 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 176.2,
+            "unit": "m",
+            "q": 0.746,
+            "normalized_weight": 0.5,
+            "contribution": 37.3,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 76.2 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "holuhraun_iceland",
+        "site_name": "Holuhraun lava field",
+        "body": "earth",
+        "score": 72.50333333333333,
+        "rank": 5,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 1.628,
+            "unit": "deg",
+            "q": 0.8744,
+            "normalized_weight": 0.5,
+            "contribution": 43.72,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.628 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 227.3,
+            "unit": "m",
+            "q": 0.5756666666666667,
+            "normalized_weight": 0.5,
+            "contribution": 28.78333333333333,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 127.3 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "death_valley",
+        "site_name": "Death Valley - central basin",
+        "body": "earth",
+        "score": 24.580000000000002,
+        "rank": 6,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 3.542,
+            "unit": "deg",
+            "q": 0.49160000000000004,
+            "normalized_weight": 0.5,
+            "contribution": 24.580000000000002,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 2.542 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 589.2,
+            "unit": "m",
+            "q": 0.0,
+            "normalized_weight": 0.5,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 489.2 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "mauna_kea_summit",
+        "site_name": "Mauna Kea volcano (summit-centred footprint)",
+        "body": "earth",
+        "score": 14.989999999999998,
+        "rank": 7,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 4.501,
+            "unit": "deg",
+            "q": 0.29979999999999996,
+            "normalized_weight": 0.5,
+            "contribution": 14.989999999999998,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 3.501 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 637.1,
+            "unit": "m",
+            "q": 0.0,
+            "normalized_weight": 0.5,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "copernicus_glo90",
+              "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
+              "institution": "ESA / Airbus / Copernicus Programme (AWS Open Data mirror)",
+              "url": "https://registry.opendata.aws/copernicus-dem/",
+              "instrument_or_model": "TanDEM-X derived DSM",
+              "dataset_id": "copernicus-dem-90m",
+              "coverage": null,
+              "spatial_resolution": "90 m (3 arc-second)",
+              "units": "metres above EGM2008 geoid",
+              "observation_period": "2011-2015 acquisitions",
+              "uncertainty_notes": null,
+              "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
+              "license": "Free for any use under the Copernicus DEM licence (attribution required)",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 537.1 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      }
+    ],
+    "client_request_id": null
+  },
+  "mars": {
+    "body": "mars",
+    "mission_type": "rover_field_test",
+    "spec_version": "mission-screening-v1.0",
+    "profile_label": "Regional rover test fit",
+    "method": "q = max(0, 1 \u2212 |measured regional value \u2212 user target| / user tolerance). Index = 100 \u00d7 weighted mean q.",
+    "assumptions": [
+      "Target 1 degree with tolerance 5 degrees and target relief 100 m with tolerance 300 m are editable example preferences, not validated rover operating limits.",
+      "Both terrain metrics use roughly 3.7 km cells. They cannot resolve rocks, metre-scale slopes, trafficability or wheel\u2013soil interactions.",
+      "The index measures regional environment fit for planning a test, not vehicle performance or safety."
+    ],
+    "warnings": [],
+    "requirements": {
+      "material_targets": [],
+      "landform_targets": [],
+      "slope_target_deg": 1.0,
+      "slope_tolerance_deg": 5.0,
+      "relief_target_m": 100.0,
+      "relief_tolerance_m": 300.0
+    },
+    "results": [
+      {
+        "site_id": "meridiani_planum",
+        "site_name": "Meridiani Planum (Opportunity)",
+        "body": "mars",
+        "score": 89.77000000000001,
+        "rank": 1,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.242,
+            "unit": "deg",
+            "q": 0.8484,
+            "normalized_weight": 0.5,
+            "contribution": 42.42,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.758 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 84.1,
+            "unit": "m",
+            "q": 0.9470000000000001,
+            "normalized_weight": 0.5,
+            "contribution": 47.35,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 15.9 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "oxia_planum",
+        "site_name": "Oxia Planum",
+        "body": "mars",
+        "score": 85.41000000000001,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.336,
+            "unit": "deg",
+            "q": 0.8672000000000001,
+            "normalized_weight": 0.5,
+            "contribution": 43.36000000000001,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.664 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 52.3,
+            "unit": "m",
+            "q": 0.8410000000000001,
+            "normalized_weight": 0.5,
+            "contribution": 42.050000000000004,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 47.7 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "jezero_crater",
+        "site_name": "Jezero Crater",
+        "body": "mars",
+        "score": 83.49666666666667,
+        "rank": 3,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 1.077,
+            "unit": "deg",
+            "q": 0.9846,
+            "normalized_weight": 0.5,
+            "contribution": 49.230000000000004,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.077 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 194.4,
+            "unit": "m",
+            "q": 0.6853333333333333,
+            "normalized_weight": 0.5,
+            "contribution": 34.266666666666666,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 94.4 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "gusev_crater",
+        "site_name": "Gusev Crater (Spirit)",
+        "body": "mars",
+        "score": 81.11999999999999,
+        "rank": 4,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.167,
+            "unit": "deg",
+            "q": 0.8333999999999999,
+            "normalized_weight": 0.5,
+            "contribution": 41.669999999999995,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.833 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 36.7,
+            "unit": "m",
+            "q": 0.7889999999999999,
+            "normalized_weight": 0.5,
+            "contribution": 39.449999999999996,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 63.3 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "elysium_planitia",
+        "site_name": "Elysium Planitia (InSight)",
+        "body": "mars",
+        "score": 80.10666666666665,
+        "rank": 5,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.159,
+            "unit": "deg",
+            "q": 0.8318,
+            "normalized_weight": 0.5,
+            "contribution": 41.589999999999996,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.841 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 31.1,
+            "unit": "m",
+            "q": 0.7703333333333333,
+            "normalized_weight": 0.5,
+            "contribution": 38.516666666666666,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 68.9 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "utopia_planitia",
+        "site_name": "Utopia Planitia (Viking 2)",
+        "body": "mars",
+        "score": 79.37,
+        "rank": 6,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.232,
+            "unit": "deg",
+            "q": 0.8464,
+            "normalized_weight": 0.5,
+            "contribution": 42.32,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.768 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 22.3,
+            "unit": "m",
+            "q": 0.741,
+            "normalized_weight": 0.5,
+            "contribution": 37.05,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 77.7 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "chryse_planitia",
+        "site_name": "Chryse Planitia (Viking 1)",
+        "body": "mars",
+        "score": 78.02333333333334,
+        "rank": 7,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 0.144,
+            "unit": "deg",
+            "q": 0.8288,
+            "normalized_weight": 0.5,
+            "contribution": 41.44,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 0.856 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 19.5,
+            "unit": "m",
+            "q": 0.7316666666666667,
+            "normalized_weight": 0.5,
+            "contribution": 36.583333333333336,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 80.5 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "gale_crater",
+        "site_name": "Gale Crater (Bradbury Landing)",
+        "body": "mars",
+        "score": 11.94,
+        "rank": 8,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "slope",
+            "label": "Target regional slope",
+            "feature_id": "slope_regional_median_deg",
+            "value": 4.806,
+            "unit": "deg",
+            "q": 0.23879999999999998,
+            "normalized_weight": 0.5,
+            "contribution": 11.94,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 1 deg; tolerance 5 deg. Absolute difference 3.806 deg.",
+            "quality": "regional_scale_only"
+          },
+          {
+            "criterion_id": "relief",
+            "label": "Target regional relief",
+            "feature_id": "roughness_regional_m",
+            "value": 1139.2,
+            "unit": "m",
+            "q": 0.0,
+            "normalized_weight": 0.5,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "mola_megdr_16ppd",
+              "title": "MGS MOLA Mission Experiment Gridded Data Record (MEGDR), 16 pixel/degree global topography (MEGT90N000EB)",
+              "institution": "NASA PDS Geosciences Node / Goddard Space Flight Center (MOLA Science Team)",
+              "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+              "instrument_or_model": "Mars Global Surveyor / Mars Orbiter Laser Altimeter (MOLA)",
+              "dataset_id": "MGS-M-MOLA-5-MEGDR-L3-V1.0 / MEGT90N000EB.IMG v2.0",
+              "coverage": "Global, 90N-90S, 0-360E; simple cylindrical; IAU2000; areoid GMM3 (mgm1025) to degree and order 50",
+              "spatial_resolution": "0.0625 deg (16 ppd) = ~3.7 km per cell at the equator",
+              "units": "metres (planetary radius minus areoid radius)",
+              "observation_period": "1997-09-15 to 2001-06-30 (MGS mapping, primary and extended missions)",
+              "uncertainty_notes": "Each cell is the MEDIAN of MOLA shots inside it; near the equator only ~55% of cells contain a shot and the rest are interpolated, with gaps of up to 12 km between profiles. The MOLA team reports radial (vertical) shot accuracy of order 1 m after crossover adjustment (Smith et al., 2001, J. Geophys. Res. 106(E10), doi:10.1029/2000JE001364; not stated in this product label); interpolated cells inherit the local relief uncertainty. Slopes and roughness are REGIONAL (~3.7 km baseline) and say nothing about metre-scale hazards.",
+              "access_method": "HTTPS download of the raw binary + PDS3 label (scripts/fetch_mola.py)",
+              "license": "NASA PDS data are public domain; cite the MOLA Science Team",
+              "retrieved_at": "2026-11-14"
+            },
+            "method": "target_distance",
+            "note": "Target 100 m; tolerance 300 m. Absolute difference 1039.2 m.",
+            "quality": "regional_scale_only"
+          }
+        ],
+        "evidence_gaps": []
+      }
+    ],
+    "client_request_id": null
+  },
+  "research_empty": {
+    "body": "earth",
+    "mission_type": "research",
+    "spec_version": "mission-screening-v1.0",
+    "profile_label": "Research target alignment",
+    "method": "For each configured criterion, q = number of requested tags documented at the site / number of unique requested tags. Index = 100 \u00d7 weighted mean q.",
+    "assumptions": [
+      "This index measures alignment with the user's stated geological targets, not scientific value, discovery likelihood or sample accessibility.",
+      "Tags are qualitative literature descriptions over the recorded region; an unreported target is not proof of physical absence.",
+      "Materials and landforms may overlap conceptually; their weights are user preferences, not independent probabilities."
+    ],
+    "warnings": [
+      "Select target materials to activate this priority.",
+      "Select target landforms to activate this priority."
+    ],
+    "requirements": {
+      "material_targets": [],
+      "landform_targets": [],
+      "slope_target_deg": 1.0,
+      "slope_tolerance_deg": 5.0,
+      "relief_target_m": 100.0,
+      "relief_tolerance_m": 300.0
+    },
+    "results": [
+      {
+        "site_id": "atacama_yungay",
+        "site_name": "Atacama Desert - Yungay region",
+        "body": "earth",
+        "score": null,
+        "rank": null,
+        "status": "needs_requirements",
+        "coverage_fraction": 0.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "nitrates",
+              "sulfates",
+              "perchlorates",
+              "halite",
+              "regolith"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "lit_yungay",
+              "title": "Navarro-Gonzalez et al. (2003), Mars-like soils in the Atacama Desert, Chile, and the dry limit of microbial life, Science 302",
+              "institution": "AAAS (peer-reviewed literature)",
+              "url": "https://doi.org/10.1126/science.1089143",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "desert_plain",
+              "smooth_plains",
+              "alluvial_fan",
+              "hyperarid"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_arads",
+              "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
+              "institution": "NASA Ames",
+              "url": "https://www.nasa.gov/ames/arads",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Select target materials to activate this priority.",
+          "Select target landforms to activate this priority."
+        ]
+      },
+      {
+        "site_id": "death_valley",
+        "site_name": "Death Valley - central basin",
+        "body": "earth",
+        "score": null,
+        "rank": null,
+        "status": "needs_requirements",
+        "coverage_fraction": 0.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "evaporites",
+              "halite",
+              "borates",
+              "basalt",
+              "iron_oxides"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "desert_plain",
+              "playa",
+              "alluvial_fan",
+              "basin_and_range"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Select target materials to activate this priority.",
+          "Select target landforms to activate this priority."
+        ]
+      },
+      {
+        "site_id": "haughton_crater",
+        "site_name": "Haughton impact structure",
+        "body": "earth",
+        "score": null,
+        "rank": null,
+        "status": "needs_requirements",
+        "coverage_fraction": 0.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "impact_breccia",
+              "carbonates",
+              "sulfates",
+              "gypsum"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "lit_haughton",
+              "title": "Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, Meteoritics & Planetary Science 40",
+              "institution": "Wiley (peer-reviewed literature)",
+              "url": "https://doi.org/10.1111/j.1945-5100.2005.tb00147.x",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "impact_crater",
+              "polar_desert",
+              "periglacial",
+              "crater_floor"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_hmp",
+              "title": "Haughton-Mars Project (Devon Island)",
+              "institution": "NASA Ames / Mars Institute",
+              "url": "https://www.marsinstitute.no/hmp",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Select target materials to activate this priority.",
+          "Select target landforms to activate this priority."
+        ]
+      },
+      {
+        "site_id": "holuhraun_iceland",
+        "site_name": "Holuhraun lava field",
+        "body": "earth",
+        "score": null,
+        "rank": null,
+        "status": "needs_requirements",
+        "coverage_fraction": 0.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "basalt",
+              "olivine",
+              "glass",
+              "regolith"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "lava_plain",
+              "fissure_vent",
+              "outwash_plain"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "lit_holuhraun",
+              "title": "Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, J. Volcanol. Geotherm. Res. 340",
+              "institution": "Elsevier (peer-reviewed literature)",
+              "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Select target materials to activate this priority.",
+          "Select target landforms to activate this priority."
+        ]
+      },
+      {
+        "site_id": "mauna_kea_summit",
+        "site_name": "Mauna Kea volcano (summit-centred footprint)",
+        "body": "earth",
+        "score": null,
+        "rank": null,
+        "status": "needs_requirements",
+        "coverage_fraction": 0.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "basalt",
+              "tephra",
+              "volcanic_glass",
+              "regolith"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "volcanic_slope",
+              "tephra_field",
+              "lava_plain"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Select target materials to activate this priority.",
+          "Select target landforms to activate this priority."
+        ]
+      },
+      {
+        "site_id": "mcmurdo_dry_valleys",
+        "site_name": "McMurdo Dry Valleys - University Valley",
+        "body": "earth",
+        "score": null,
+        "rank": null,
+        "status": "needs_requirements",
+        "coverage_fraction": 0.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "ice_cemented_permafrost",
+              "salts",
+              "dolerite",
+              "sandstone"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "polar_desert",
+              "periglacial",
+              "polygonal_terrain",
+              "glacial_valley"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "lit_dry_valleys",
+              "title": "Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, Icarus 192",
+              "institution": "Elsevier (peer-reviewed literature)",
+              "url": "https://doi.org/10.1016/j.icarus.2007.06.018",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Select target materials to activate this priority.",
+          "Select target landforms to activate this priority."
+        ]
+      },
+      {
+        "site_id": "mdrs_utah",
+        "site_name": "San Rafael Swell - MDRS area",
+        "body": "earth",
+        "score": null,
+        "rank": null,
+        "status": "needs_requirements",
+        "coverage_fraction": 0.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "sandstone",
+              "clays",
+              "gypsum",
+              "iron_oxides"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "mdrs",
+              "title": "Mars Desert Research Station",
+              "institution": "The Mars Society",
+              "url": "https://mdrs.marssociety.org/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "badlands",
+              "sedimentary_plain",
+              "mesa",
+              "desert_plain"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "mdrs",
+              "title": "Mars Desert Research Station",
+              "institution": "The Mars Society",
+              "url": "https://mdrs.marssociety.org/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "No targets selected.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Select target materials to activate this priority.",
+          "Select target landforms to activate this priority."
+        ]
+      }
+    ],
+    "client_request_id": null
+  },
+  "research": {
+    "body": "earth",
+    "mission_type": "research",
+    "spec_version": "mission-screening-v1.0",
+    "profile_label": "Research target alignment",
+    "method": "For each configured criterion, q = number of requested tags documented at the site / number of unique requested tags. Index = 100 \u00d7 weighted mean q.",
+    "assumptions": [
+      "This index measures alignment with the user's stated geological targets, not scientific value, discovery likelihood or sample accessibility.",
+      "Tags are qualitative literature descriptions over the recorded region; an unreported target is not proof of physical absence.",
+      "Materials and landforms may overlap conceptually; their weights are user preferences, not independent probabilities."
+    ],
+    "warnings": [],
+    "requirements": {
+      "material_targets": [
+        "carbonates"
+      ],
+      "landform_targets": [],
+      "slope_target_deg": 1.0,
+      "slope_tolerance_deg": 5.0,
+      "relief_target_m": 100.0,
+      "relief_tolerance_m": 300.0
+    },
+    "results": [
+      {
+        "site_id": "haughton_crater",
+        "site_name": "Haughton impact structure",
+        "body": "earth",
+        "score": 100.0,
+        "rank": 1,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "impact_breccia",
+              "carbonates",
+              "sulfates",
+              "gypsum"
+            ],
+            "unit": null,
+            "q": 1.0,
+            "normalized_weight": 1.0,
+            "contribution": 100.0,
+            "source": {
+              "source_id": "lit_haughton",
+              "title": "Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, Meteoritics & Planetary Science 40",
+              "institution": "Wiley (peer-reviewed literature)",
+              "url": "https://doi.org/10.1111/j.1945-5100.2005.tb00147.x",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "1 of 1 requested tags documented: carbonates. Unreported tags are not confirmed absent.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "impact_crater",
+              "polar_desert",
+              "periglacial",
+              "crater_floor"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_hmp",
+              "title": "Haughton-Mars Project (Devon Island)",
+              "institution": "NASA Ames / Mars Institute",
+              "url": "https://www.marsinstitute.no/hmp",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "Weight is zero.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "atacama_yungay",
+        "site_name": "Atacama Desert - Yungay region",
+        "body": "earth",
+        "score": 0.0,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "nitrates",
+              "sulfates",
+              "perchlorates",
+              "halite",
+              "regolith"
+            ],
+            "unit": null,
+            "q": 0.0,
+            "normalized_weight": 1.0,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "lit_yungay",
+              "title": "Navarro-Gonzalez et al. (2003), Mars-like soils in the Atacama Desert, Chile, and the dry limit of microbial life, Science 302",
+              "institution": "AAAS (peer-reviewed literature)",
+              "url": "https://doi.org/10.1126/science.1089143",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "0 of 1 requested tags documented: none. Unreported tags are not confirmed absent.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "desert_plain",
+              "smooth_plains",
+              "alluvial_fan",
+              "hyperarid"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_arads",
+              "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
+              "institution": "NASA Ames",
+              "url": "https://www.nasa.gov/ames/arads",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "Weight is zero.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": []
+      },
+      {
+        "site_id": "death_valley",
+        "site_name": "Death Valley - central basin",
+        "body": "earth",
+        "score": 0.0,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "evaporites",
+              "halite",
+              "borates",
+              "basalt",
+              "iron_oxides"
+            ],
+            "unit": null,
+            "q": 0.0,
+            "normalized_weight": 1.0,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "0 of 1 requested tags documented: none. Unreported tags are not confirmed absent. Site-specific provenance needs verification.",
+            "quality": "low_confidence"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "desert_plain",
+              "playa",
+              "alluvial_fan",
+              "basin_and_range"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "Weight is zero.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Target materials: catalogue tags cite a general analog overview; verify site-specific support."
+        ]
+      },
+      {
+        "site_id": "holuhraun_iceland",
+        "site_name": "Holuhraun lava field",
+        "body": "earth",
+        "score": 0.0,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "basalt",
+              "olivine",
+              "glass",
+              "regolith"
+            ],
+            "unit": null,
+            "q": 0.0,
+            "normalized_weight": 1.0,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "0 of 1 requested tags documented: none. Unreported tags are not confirmed absent. Site-specific provenance needs verification.",
+            "quality": "low_confidence"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "lava_plain",
+              "fissure_vent",
+              "outwash_plain"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "lit_holuhraun",
+              "title": "Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, J. Volcanol. Geotherm. Res. 340",
+              "institution": "Elsevier (peer-reviewed literature)",
+              "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "Weight is zero.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Target materials: catalogue tags cite a general analog overview; verify site-specific support."
+        ]
+      },
+      {
+        "site_id": "mauna_kea_summit",
+        "site_name": "Mauna Kea volcano (summit-centred footprint)",
+        "body": "earth",
+        "score": 0.0,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "basalt",
+              "tephra",
+              "volcanic_glass",
+              "regolith"
+            ],
+            "unit": null,
+            "q": 0.0,
+            "normalized_weight": 1.0,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "0 of 1 requested tags documented: none. Unreported tags are not confirmed absent. Site-specific provenance needs verification.",
+            "quality": "low_confidence"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "volcanic_slope",
+              "tephra_field",
+              "lava_plain"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "Weight is zero.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Target materials: catalogue tags cite a general analog overview; verify site-specific support."
+        ]
+      },
+      {
+        "site_id": "mcmurdo_dry_valleys",
+        "site_name": "McMurdo Dry Valleys - University Valley",
+        "body": "earth",
+        "score": 0.0,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "ice_cemented_permafrost",
+              "salts",
+              "dolerite",
+              "sandstone"
+            ],
+            "unit": null,
+            "q": 0.0,
+            "normalized_weight": 1.0,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "nasa_analogs_overview",
+              "title": "NASA Analog Missions",
+              "institution": "NASA",
+              "url": "https://www.nasa.gov/analog-missions/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "0 of 1 requested tags documented: none. Unreported tags are not confirmed absent. Site-specific provenance needs verification.",
+            "quality": "low_confidence"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "polar_desert",
+              "periglacial",
+              "polygonal_terrain",
+              "glacial_valley"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "lit_dry_valleys",
+              "title": "Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, Icarus 192",
+              "institution": "Elsevier (peer-reviewed literature)",
+              "url": "https://doi.org/10.1016/j.icarus.2007.06.018",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "DOI",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "Weight is zero.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": [
+          "Target materials: catalogue tags cite a general analog overview; verify site-specific support."
+        ]
+      },
+      {
+        "site_id": "mdrs_utah",
+        "site_name": "San Rafael Swell - MDRS area",
+        "body": "earth",
+        "score": 0.0,
+        "rank": 2,
+        "status": "scored",
+        "coverage_fraction": 1.0,
+        "factors": [
+          {
+            "criterion_id": "materials",
+            "label": "Target materials",
+            "feature_id": "mineralogy_tags",
+            "value": [
+              "sandstone",
+              "clays",
+              "gypsum",
+              "iron_oxides"
+            ],
+            "unit": null,
+            "q": 0.0,
+            "normalized_weight": 1.0,
+            "contribution": 0.0,
+            "source": {
+              "source_id": "mdrs",
+              "title": "Mars Desert Research Station",
+              "institution": "The Mars Society",
+              "url": "https://mdrs.marssociety.org/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "0 of 1 requested tags documented: none. Unreported tags are not confirmed absent.",
+            "quality": "qualitative"
+          },
+          {
+            "criterion_id": "landforms",
+            "label": "Target landforms",
+            "feature_id": "terrain_morphology",
+            "value": [
+              "badlands",
+              "sedimentary_plain",
+              "mesa",
+              "desert_plain"
+            ],
+            "unit": null,
+            "q": null,
+            "normalized_weight": null,
+            "contribution": null,
+            "source": {
+              "source_id": "mdrs",
+              "title": "Mars Desert Research Station",
+              "institution": "The Mars Society",
+              "url": "https://mdrs.marssociety.org/",
+              "instrument_or_model": null,
+              "dataset_id": null,
+              "coverage": null,
+              "spatial_resolution": null,
+              "units": null,
+              "observation_period": null,
+              "uncertainty_notes": null,
+              "access_method": "web page",
+              "license": null,
+              "retrieved_at": null
+            },
+            "method": "tag_target_coverage",
+            "note": "Weight is zero.",
+            "quality": "qualitative"
+          }
+        ],
+        "evidence_gaps": []
+      }
+    ],
+    "client_request_id": null
+  }
+}

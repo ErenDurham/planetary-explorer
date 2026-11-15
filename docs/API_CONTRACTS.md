@@ -871,3 +871,12 @@ Analyze uses full-precision factor contributions for comparator gaps and points 
 Read-only Earth, Mars and Moon comparison catalogue. `bodies` contains NASA-sourced planetary reference conditions (gravity, atmosphere, normal incident solar irradiance and mean solar day). `locations` contains independent location selectors, coverage, unchanged Earth/Mars measurements and provenance, plus two curated lunar landing-region descriptions. Moon solar-day hours are converted from the 29.53-day synodic period.
 
 This does not extend the Mars scoring model to another body. Lunar locations currently contain qualitative terrain/material descriptions and mission coordinates only. Numeric lunar site measurements remain absent, and the UI renders them as unavailable. Earth POWER temperature is 2 m air temperature; Earth EGM2008 and Mars areoid elevations are not subtracted. Regional slope/relief differences use the existing harmonised Earth/Mars grids.
+
+
+## Task-specific mission assessment
+
+`GET /api/v1/missions/profiles` exposes versioned task definitions and documented assumptions. `POST /api/v1/missions/evaluate` accepts `body` (earth/mars), `mission_type` (research/rover_field_test/base_planning), per-profile `weights`, `requirements`, and `client_request_id`. Landing scoring remains at `/scoring/evaluate`.
+
+Research weights are `materials` / `landforms`, with requirements `material_targets` / `landform_targets`. Rover weights are `slope` / `relief`, with `slope_target_deg`, positive `slope_tolerance_deg`, `relief_target_m` and positive `relief_tolerance_m`. All weights must be finite 0..100 and at least one supplied weight positive. Unknown criteria and unrecognized research targets are rejected (422). Target lists are normalized and deduplicated.
+
+Responses include spec version, method, assumptions, warnings, echoed requirements/request ID, and all body candidates. Each result has score/rank or an explicit `needs_requirements`, `insufficient_data` or `not_supported` status. Factors contain the raw value/unit, source, q, normalized weight, weighted contribution and explanation. `coverage_fraction` reports the available fraction of configured positive priority weight before evidence exclusions. Base planning has null scores/ranks and explicit evidence gaps.

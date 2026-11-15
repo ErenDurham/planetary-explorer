@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.comparison_routes import router as comparison_router
+from app.api.mission_assessment_routes import router as mission_assessment_router
 from app.api.analysis_routes import router as analysis_router
 from app.api.imagery_routes import router as imagery_router
 from app.api.routes import router
@@ -25,6 +26,7 @@ app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origin_list, allo
 app.include_router(router)
 app.include_router(imagery_router)
 app.include_router(analysis_router)
+app.include_router(mission_assessment_router)
 app.include_router(comparison_router)
 
 

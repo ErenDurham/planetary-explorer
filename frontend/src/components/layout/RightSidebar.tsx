@@ -112,7 +112,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
 
           <div>
             {analogPanel}
-            <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />
+            {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />}
             <Section title="Research potential" subtitle="Turn this site's characteristics into questions to investigate.">
               <button type="button" onClick={() => openResearch("research")} className="w-full rounded-lg border border-info/50 bg-info/10 p-3 text-left text-sm font-semibold text-info">Explore study ideas and supporting evidence →</button>
             </Section>

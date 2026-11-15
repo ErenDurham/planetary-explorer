@@ -13,7 +13,7 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
   const viewedBody = useAppStore((s) => s.viewedBody);
   const mapMode = useAppStore((s) => s.mapMode);
   const analog = effectiveMapMode({ viewedBody, mapMode }) === "analog_match";
-  const subtitle = active === "compare" ? "Earth · Mars · analog pair" : active === "explore" && analog ? `${viewedBody === "earth" ? "Earth" : "Mars"} · analog matching · v1` : "Mars · landing phase · v1";
+  const subtitle = active === "compare" ? "Earth · Mars · analog pair" : active === "explore" && analog ? `${viewedBody === "earth" ? "Earth" : "Mars"} · analog matching · v1` : "Mission planning · Earth & Mars";
   return (
     <header className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-bg-elev px-4 py-2 sm:h-12 sm:flex-nowrap sm:py-0">
       <div className="flex items-center gap-3">
