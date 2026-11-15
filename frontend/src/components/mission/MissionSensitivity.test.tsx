@@ -1,0 +1,21 @@
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { MissionSensitivity } from "./MissionSensitivity";
+import { useAppStore } from "@/store/useAppStore";
+import fixture from "@/test/fixtures/mission_assessment.json";
+import type { MissionAssessmentResponse } from "@/types";
+beforeEach(()=>useAppStore.setState(useAppStore.getInitialState(),true));
+afterEach(()=>vi.restoreAllMocks());
+it("samples priorities without changing the mission's stored weights or requirements",async()=>{
+ const data=fixture.earth as unknown as MissionAssessmentResponse;
+ const before=structuredClone(useAppStore.getState().missionProfileWeights);
+ const calls:Array<Record<string,any>>=[];
+ vi.spyOn(globalThis,"fetch").mockImplementation(async(_input,init)=>{const req=JSON.parse(String(init?.body));calls.push(req);return new Response(JSON.stringify({...data,client_request_id:req.client_request_id}));});
+ render(<MissionSensitivity data={data} siteId={data.results[0].site_id}/>);
+ fireEvent.click(screen.getByRole("button",{name:"Test priority sensitivity"}));
+ expect(await screen.findByText(/Sampled scenarios only/)).toBeInTheDocument();
+ expect(calls).toHaveLength(4);
+ expect(calls.every(r=>r.body==="earth"&&r.mission_type==="rover_field_test")).toBe(true);
+ expect(calls.map(r=>r.weights.slope)).toEqual([40,60,60,40]);
+ expect(useAppStore.getState().missionProfileWeights).toEqual(before);
+});

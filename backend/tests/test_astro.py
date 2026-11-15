@@ -221,3 +221,46 @@ def test_no_earth_selection_or_reference_offers_catalog_without_ranks(
     assert all(
         "Landing index" not in f and "analog rank" not in f for f in data["facts"]
     )
+
+
+def test_task_mission_context_uses_earth_assessment_not_landing(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    assessment = {
+        "body": "earth",
+        "mission_type": "rover_field_test",
+        "weights": {"slope": 50, "relief": 50},
+    }
+    response = client.post(
+        "/api/v1/astro/chat",
+        json=request(
+            active_tab="analyze",
+            viewed_body="mars",
+            map_mode="mission_browse",
+            selected_earth_id="atacama_yungay",
+            assessment=assessment,
+        ),
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["context_label"].startswith("Earth · Atacama")
+    assert any("Task mission:" in f and "Earth" in f for f in data["facts"])
+    assert all("Landing index" not in f for f in data["facts"])
+    assert any(
+        a["tab"] == "analyze"
+        and a["body"] == "earth"
+        and a["location_id"] == "atacama_yungay"
+        for a in data["actions"]
+    )
+
+
+def test_base_planning_chat_keeps_scores_unavailable(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda: False)
+    data = client.post(
+        "/api/v1/astro/chat",
+        json=request(
+            map_mode="mission_browse",
+            assessment={"body": "mars", "mission_type": "base_planning"},
+        ),
+    ).json()
+    assert any("not_supported" in f for f in data["facts"])
+    assert all("Landing index" not in f for f in data["facts"])

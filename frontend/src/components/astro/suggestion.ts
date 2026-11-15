@@ -5,6 +5,8 @@ export function astroSuggestion(context: {
   hasMars: boolean;
   hasEarth: boolean;
   hasConversation: boolean;
+  analysisBody?: Body;
+  taskMission?: boolean;
 }): string {
   const { tab, body, hasMars, hasEarth, hasConversation } = context;
   if (tab === "mission") return "Which priorities fit my research objective?";
@@ -12,16 +14,22 @@ export function astroSuggestion(context: {
     return hasMars && hasEarth
       ? "What are the key differences in this pair?"
       : "Help me choose an Earth–Mars pair to compare.";
-  const selected = ["research", "analyze"].includes(tab)
-    ? hasMars
-    : body === "mars"
-      ? hasMars
-      : hasEarth;
+  const effectiveBody =
+    tab === "research"
+      ? "mars"
+      : tab === "analyze"
+        ? (context.analysisBody ?? "mars")
+        : body;
+  const selected = effectiveBody === "mars" ? hasMars : hasEarth;
   if (!selected)
-    return body === "earth" && tab === "explore"
-      ? "Help me find an Earth analog for my research."
+    return effectiveBody === "earth"
+      ? context.taskMission
+        ? "Help me find an Earth site for my research."
+        : "Help me find an Earth analog for my research."
       : "Help me find a Mars site for my research.";
   if (hasConversation) return "What should I investigate next?";
+  if (context.taskMission)
+    return "Which factors explain this site’s mission fit?";
   if (tab === "research")
     return "Which evidence gaps should I investigate here?";
   if (body === "earth" && tab === "explore")

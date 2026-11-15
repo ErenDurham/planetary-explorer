@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from .analog import AnalogWeight
 from .mission import MissionProfile
+from .mission_assessment import MissionAssessmentRequest
 from .research import Citation
 
 
@@ -22,12 +23,15 @@ class AstroRequest(BaseModel):
         "explore"
     )
     viewed_body: Literal["earth", "mars"] = "mars"
-    map_mode: Literal["landing_suitability", "analog_match"] = "landing_suitability"
+    map_mode: Literal["landing_suitability", "analog_match", "mission_browse"] = (
+        "landing_suitability"
+    )
     selected_mars_id: str | None = Field(None, max_length=100)
     selected_earth_id: str | None = Field(None, max_length=100)
     candidate_body: Literal["earth", "mars"] = "mars"
     objective: str = Field("", max_length=500)
     mission: MissionProfile | None = None
+    assessment: MissionAssessmentRequest | None = None
     analog_weights: list[AnalogWeight] | None = Field(None, max_length=10)
 
 

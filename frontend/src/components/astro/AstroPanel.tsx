@@ -43,6 +43,15 @@ export function AstroPanel({
     candidate_body: state.selectionBody,
     objective: state.appliedObjective.slice(0, 500),
     mission,
+    assessment:
+      state.missionType === "landing"
+        ? null
+        : {
+            body: state.selectionBody,
+            mission_type: state.missionType,
+            weights: state.missionProfileWeights[state.missionType],
+            requirements: state.missionRequirements[state.selectionBody],
+          },
     analog_weights: state.analogWeights
       ? Object.entries(state.analogWeights).map(([feature_id, weight]) => ({
           feature_id,
@@ -91,7 +100,9 @@ export function AstroPanel({
         (!state.selectedMarsId || !state.selectedEarthId)
       )
         return;
-      if (["research", "analyze"].includes(action.tab)) {
+      if (action.tab === "analyze" && action.body && action.location_id)
+        state.selectLocation(action.body, action.location_id);
+      else if (action.tab === "research") {
         if (action.body === "mars" && action.location_id)
           state.selectLocation("mars", action.location_id);
         else if (!state.selectedMarsId) return;
@@ -103,6 +114,11 @@ export function AstroPanel({
   const suggestion = astroSuggestion({
     tab: state.activeTab,
     body: state.viewedBody,
+    analysisBody:
+      state.missionType === "landing" ? "mars" : state.selectionBody,
+    taskMission:
+      state.missionType !== "landing" &&
+      (state.activeTab === "analyze" || state.mapMode === "mission_browse"),
     hasMars: !!context.selected_mars_id,
     hasEarth: !!context.selected_earth_id,
     hasConversation: entries.length > 0,

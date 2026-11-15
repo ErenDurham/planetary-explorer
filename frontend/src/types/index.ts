@@ -117,3 +117,9 @@ export type ImageBounds = S["ImageBounds"];
 export type AstroRequest = S['AstroRequest'];
 export type AstroResponse = S['AstroResponse'];
 export type AstroAction = S['AstroAction'];
+
+export type MissionRequirements = S["MissionRequirements"];
+export type MissionAssessmentRequest = S["MissionAssessmentRequest"];
+export type MissionAssessmentResponse = S["MissionAssessmentResponse"];
+export type MissionAssessmentResult = S["MissionAssessmentResult"];
+export type MissionFactor = S["MissionFactor"];

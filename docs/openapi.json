@@ -947,6 +947,60 @@
         }
       }
     },
+    "/api/v1/missions/profiles": {
+      "get": {
+        "summary": "Profiles",
+        "operationId": "profiles_api_v1_missions_profiles_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/missions/evaluate": {
+      "post": {
+        "summary": "Assess",
+        "operationId": "assess_api_v1_missions_evaluate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MissionAssessmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionAssessmentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/comparison/catalog": {
       "get": {
         "summary": "Get Comparison Catalog",
@@ -1469,7 +1523,8 @@
             "type": "string",
             "enum": [
               "landing_suitability",
-              "analog_match"
+              "analog_match",
+              "mission_browse"
             ],
             "title": "Map Mode",
             "default": "landing_suitability"
@@ -1517,6 +1572,16 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/MissionProfile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MissionAssessmentRequest"
               },
               {
                 "type": "null"
@@ -3965,6 +4030,334 @@
         ],
         "title": "MatchResponse"
       },
+      "MissionAssessmentRequest": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Body"
+          },
+          "mission_type": {
+            "type": "string",
+            "enum": [
+              "research",
+              "rover_field_test",
+              "base_planning"
+            ],
+            "title": "Mission Type"
+          },
+          "weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Weights"
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/MissionRequirements"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "body",
+          "mission_type"
+        ],
+        "title": "MissionAssessmentRequest"
+      },
+      "MissionAssessmentResponse": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Body"
+          },
+          "mission_type": {
+            "type": "string",
+            "enum": [
+              "research",
+              "rover_field_test",
+              "base_planning"
+            ],
+            "title": "Mission Type"
+          },
+          "spec_version": {
+            "type": "string",
+            "title": "Spec Version"
+          },
+          "profile_label": {
+            "type": "string",
+            "title": "Profile Label"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/MissionRequirements"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/MissionAssessmentResult"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body",
+          "mission_type",
+          "spec_version",
+          "profile_label",
+          "method",
+          "assumptions",
+          "warnings",
+          "requirements",
+          "results",
+          "client_request_id"
+        ],
+        "title": "MissionAssessmentResponse"
+      },
+      "MissionAssessmentResult": {
+        "properties": {
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "site_name": {
+            "type": "string",
+            "title": "Site Name"
+          },
+          "body": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "mars"
+            ],
+            "title": "Body"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "scored",
+              "needs_requirements",
+              "insufficient_data",
+              "not_supported"
+            ],
+            "title": "Status"
+          },
+          "coverage_fraction": {
+            "type": "number",
+            "title": "Coverage Fraction"
+          },
+          "factors": {
+            "items": {
+              "$ref": "#/components/schemas/MissionFactor"
+            },
+            "type": "array",
+            "title": "Factors"
+          },
+          "evidence_gaps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Gaps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "site_id",
+          "site_name",
+          "body",
+          "status",
+          "coverage_fraction",
+          "factors",
+          "evidence_gaps"
+        ],
+        "title": "MissionAssessmentResult"
+      },
+      "MissionFactor": {
+        "properties": {
+          "criterion_id": {
+            "type": "string",
+            "title": "Criterion Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "q": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Q"
+          },
+          "normalized_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Normalized Weight"
+          },
+          "contribution": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contribution"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Provenance"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "quality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quality"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criterion_id",
+          "label",
+          "feature_id",
+          "method",
+          "note"
+        ],
+        "title": "MissionFactor"
+      },
       "MissionProfile": {
         "properties": {
           "mission_phase": {
@@ -4002,6 +4395,57 @@
           "criteria"
         ],
         "title": "MissionProfile"
+      },
+      "MissionRequirements": {
+        "properties": {
+          "material_targets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Material Targets"
+          },
+          "landform_targets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Landform Targets"
+          },
+          "slope_target_deg": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": 0.0,
+            "title": "Slope Target Deg",
+            "default": 1.0
+          },
+          "slope_tolerance_deg": {
+            "type": "number",
+            "maximum": 90.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Slope Tolerance Deg",
+            "default": 5.0
+          },
+          "relief_target_m": {
+            "type": "number",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Relief Target M",
+            "default": 100.0
+          },
+          "relief_tolerance_m": {
+            "type": "number",
+            "maximum": 10000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Relief Tolerance M",
+            "default": 300.0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "MissionRequirements"
       },
       "Provenance": {
         "properties": {

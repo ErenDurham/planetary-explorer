@@ -6,6 +6,9 @@
 // location on the other body. Earth markers only ever render on the Earth
 // texture and Mars markers on the Mars texture, and an Earth location never
 // carries a landing score.
+import { MissionAssessmentList, MissionAssessmentDetail } from "@/components/mission/MissionAssessmentView";
+import { missionRankPosition } from "@/lib/rankColor";
+import { useMissionAssessment } from "@/hooks/useMissionAssessment";
 import { ExploreView, type ExploreAnalogContext } from "@/components/layout/ExploreView";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TopNav } from "@/components/layout/TopNav";
@@ -39,6 +42,13 @@ export default function App() {
   const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
   const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
   const updateAstroBounds=useCallback((bounds:OverlayBounds)=>setAstroBounds(previous=>previous && previous.left===bounds.left && previous.right===bounds.right && previous.top===bounds.top && previous.bottom===bounds.bottom ? previous : bounds),[]);
+  const missionType = useAppStore(s => s.missionType);
+  const assessment = useMissionAssessment();
+  const navigateExplore = useAppStore(s => s.navigateExplore);
+  const missionBody = useAppStore(s => s.selectionBody);
+  const appliedObjective = useAppStore(s => s.appliedObjective);
+  const draftDirty = useAppStore(s => s.missionDraftDirty);
+  const exploreRevision = useAppStore(s => s.exploreRevision);
   const activeTab = useAppStore((s) => s.activeTab);
   const setActiveTab = useAppStore((s) => s.setActiveTab);
   const focusToken = useAppStore((s) => s.selectionRevision);
@@ -65,6 +75,10 @@ export default function App() {
 
   const mode = effectiveMapMode({ viewedBody, mapMode });
   const analog = mode === "analog_match";
+  const earthMission = viewedBody === "earth" && mode === "mission_browse";
+  const taskMissionView = missionType !== "landing" && mode === "mission_browse";
+  const missionSelectedId = missionBody === "earth" ? selectedEarthId : selectedMarsId;
+  const missionLocation = earth.data?.locations.find(l => l.body === missionBody && l.id === missionSelectedId);
   const selectedId = selectedIdFor({ selectedEarthId, selectedMarsId }, viewedBody);
   const referenceId = referenceIdFor({ viewedBody, selectedEarthId, selectedMarsId });
   const refBody = otherBody(viewedBody);
@@ -81,11 +95,20 @@ export default function App() {
   const referenceOptions = useMemo(() => (refBody === "earth" ? earth.sites.map((s) => ({ id: s.id, name: s.name })) : (sites.data?.sites ?? []).map((s) => ({ id: s.id, name: s.name }))), [refBody, earth.sites, sites.data]);
 
   const markers: MarkerDatum[] = useMemo(() => {
+    if (taskMissionView) {
+      const byId = new Map(assessment.data?.results.map(r=>[r.site_id,r])??[]);
+      return (earth.data?.locations.filter(l=>l.body===viewedBody)??[]).map(l=>{
+        const r=byId.get(l.id);const scored=r?.score!=null;
+        return {id:l.id,name:l.name,region:l.region,lat:l.lat,lonEast:l.lon_east,mode:scored?"mission" as const:"browse" as const,
+          score:r?.score??null,rank:r?.rank??null,status:scored?"ok" as const:"insufficient_data" as const,similarity:null,unrankableReason:null,
+          appearance:scored?analogMarkerAppearance(missionRankPosition(r?.rank,assessment.data?.results.map(r=>r.rank)??[]),rankPalette):markerAppearance("insufficient_data",null)};
+      });
+    }
     if (viewedBody === "earth") {
       const byId = new Map(rankData?.candidates.map((c) => [c.location.id, c]) ?? []);
       return earth.sites.map((s) => {
         const c = byId.get(s.id);
-        return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lonEast, mode: "analog" as const, score: null, rank: c?.rank ?? null, status: null, similarity: c?.similarity ?? null, unrankableReason: c?.unrankable_reason ?? (c ? null : referenceId ? null : "no reference selected"), appearance: analogMarkerAppearance(c?.rank_color_position ?? null, rankPalette) };
+        return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lonEast, mode: earthMission ? "browse" as const : "analog" as const, score: null, rank: earthMission ? null : c?.rank ?? null, status: null, similarity: earthMission ? null : c?.similarity ?? null, unrankableReason: null, appearance: analogMarkerAppearance(earthMission ? null : c?.rank_color_position ?? null, rankPalette) };
       });
     }
     if (analog) {
@@ -98,9 +121,9 @@ export default function App() {
     const byId = new Map(evaluation.data?.results.map((r) => [r.site_id, r]) ?? []);
     return (sites.data?.sites ?? []).map((s) => {
       const r = byId.get(s.id);
-      return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lon_east, mode: "landing" as const, score: r?.score ?? null, rank: r?.rank ?? null, status: r?.status ?? null, similarity: null, unrankableReason: null, appearance: markerAppearance(r?.status, r?.score) };
+      return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lon_east, mode: "landing" as const, score: r?.score ?? null, rank: r?.rank ?? null, status: r?.status ?? null, similarity: null, unrankableReason: null, appearance: r?.status === "ok" ? analogMarkerAppearance(missionRankPosition(r.rank,evaluation.data?.results.map(r=>r.rank)??[]),rankPalette) : markerAppearance(r?.status, r?.score) };
     });
-  }, [viewedBody, analog, sites.data, evaluation.data, earth.sites, rankData, rankPalette, referenceId]);
+  }, [viewedBody, analog, sites.data, evaluation.data, earth.sites, rankData, rankPalette, referenceId, earthMission, taskMissionView, assessment.data, earth.data]);
 
   // One-time best-match hint: only when a reference (a known selected site on
   // the other body) exists and the visible body has no selection yet. Shown as
@@ -135,8 +158,8 @@ export default function App() {
   }, [rankData, viewedBody, referenceId, analogWeights]);
 
   const rankedCount = rankData?.ranked_count ?? null;
-  const statusLine = viewedBody === "earth"
-    ? earth.isPending ? "Loading Earth locations…" : earth.error ? "Earth locations unavailable" : `${markers.length} Earth analog candidates · ${referenceName ? `${rankedCount ?? 0} ranked against ${referenceName}` : "no Mars reference selected"}`
+  const statusLine = taskMissionView ? `${markers.length} mission sites · ${assessment.data?.profile_label ?? "calculating task fit"}` : viewedBody === "earth"
+    ? earth.isPending ? "Loading Earth locations…" : earth.error ? "Earth locations unavailable" : earthMission ? `${markers.length} Earth mission locations · select a site` : `${markers.length} Earth analog candidates · ${referenceName ? `${rankedCount ?? 0} ranked against ${referenceName}` : "no Mars reference selected"}`
     : analog
       ? `${markers.length} Mars sites · ${referenceName ? `${rankedCount ?? 0} ranked against ${referenceName}` : "no Earth reference selected"}`
       : sites.isPending
@@ -165,11 +188,11 @@ export default function App() {
         resetToken={cameraResetToken}
         onRequestReset={requestCameraReset}
         statusLine={statusLine}
-        mode={analog ? "analog" : "landing"}
+        mode={taskMissionView ? assessment.data?.results.some(r=>r.score!=null)?"mission":"browse" : earthMission ? "browse" : analog ? "analog" : "landing"}
         palette={rankPalette}
         onPaletteChange={setRankPalette}
         legendHeading={legendHeading}
-        rankedCount={rankedCount}
+        rankedCount={analog?rankedCount:taskMissionView?Math.max(0,...(assessment.data?.results.map(r=>r.rank??0)??[])):Math.max(0,...(evaluation.data?.results.map(r=>r.rank??0)??[]))}
       />
       {viewedBody === "mars" && sites.error && (
         <div className="absolute left-3 top-14 max-w-sm">
@@ -194,10 +217,15 @@ export default function App() {
     : sites.data?.sites.find((s) => s.id === selectedId);
   const earthLocation = viewedBody === "earth" ? earth.data?.locations.find((l) => l.body === "earth" && l.id === selectedId) ?? null : null;
 
+  const initialMissionId = missionType !== "landing" ? assessment.data?.results.find(r=>r.rank===1)?.site_id ?? earth.data?.locations.find(l=>l.body===missionBody)?.id : missionBody === "mars"
+    ? evaluation.data?.results.find(r => r.rank === 1)?.site_id ?? sites.data?.sites[0]?.id
+    : (rankData?.candidate_body === "earth" ? rankData.candidates.find(c => c.rank === 1)?.location.id : undefined) ?? earth.sites[0]?.id;
+
+  useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
   const centre = activeTab === "explore"
-    ? <ExploreView globe={globe} site={imagerySubject} analog={analogContext} />
+    ? <ExploreView key={exploreRevision} initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
-      ? <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
+      ? missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
       : activeTab === "compare"
         ? <CompareView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} />
         : <ResearchView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} mission={evaluation.mission} />;
@@ -228,7 +256,8 @@ export default function App() {
       )}
     </div>
   );
-  const candidatePane = exploreAnalog ? (
+  const taskCandidates = missionType !== "landing" && (activeTab === "analyze" || taskMissionView);
+  const candidatePane = taskCandidates ? <MissionAssessmentList data={assessment.data} pending={assessment.isPending} error={assessment.error} selectedId={missionSelectedId} onSelect={id=>selectLocation(missionBody,id)}/> : exploreAnalog ? (
     <AnalogRankedList
       candidates={rankData?.candidates}
       bodyName={BODY_NAME[viewedBody]}
@@ -251,10 +280,10 @@ export default function App() {
   );
 
   // Narrow screens: one reachable selector for the visible body's candidates.
-  const mobileOptions = exploreAnalog
-    ? (rankData?.candidates.map((c) => ({ id: c.location.id, label: `${c.rank ?? "—"}. ${c.location.name} · ${c.similarity != null ? `similarity ${c.similarity.toFixed(1)}` : "not ranked"}` })) ?? markers.map((m) => ({ id: m.id, label: `${m.name} · not ranked` })))
+  const mobileOptions = taskCandidates ? (assessment.data?.results.map(r=>({id:r.site_id,label:`${r.rank??"—"}. ${r.site_name} · ${r.score?.toFixed(1)??"not scored"}`}))??[]) : exploreAnalog
+    ? (rankData?.candidates.map((c) => ({ id: c.location.id, label: `${c.rank ?? "—"}. ${c.location.name} · ${c.similarity != null ? `${c.similarity.toFixed(1)}% match` : "not ranked"}` })) ?? markers.map((m) => ({ id: m.id, label: `${m.name} · not ranked` })))
     : (evaluation.data?.results.map((r) => ({ id: r.site_id, label: `${r.rank ?? "—"}. ${r.site_name} · ${r.score?.toFixed(1) ?? r.status.replace(/_/g, " ")}` })) ?? []);
-  const mobileSelected = exploreAnalog ? selectedId : selectedMarsId;
+  const mobileSelected = taskCandidates ? missionSelectedId : exploreAnalog ? selectedId : selectedMarsId;
 
   return (
     <div className="flex h-full flex-col">
@@ -266,7 +295,7 @@ export default function App() {
       {(activeTab === "explore" || activeTab === "analyze") && (
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">
           <label htmlFor="mobile-candidate" className="text-sm text-fg-muted">{exploreAnalog ? `${BODY_NAME[viewedBody]} candidate` : "Candidate"}</label>
-          <select id="mobile-candidate" value={mobileSelected ?? ""} onChange={e => (exploreAnalog ? selectLocation(viewedBody, e.target.value || null) : selectSite(e.target.value || null))} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="">No location selected</option>{mobileOptions.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}</select>
+          <select id="mobile-candidate" value={mobileSelected ?? ""} onChange={e => (taskCandidates ? selectLocation(missionBody,e.target.value || null) : exploreAnalog ? selectLocation(viewedBody,e.target.value || null) : selectSite(e.target.value || null))} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="">No location selected</option>{mobileOptions.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}</select>
           {exploreAnalog && (
             <>
               <label htmlFor="mobile-reference" className="text-sm text-fg-muted">Reference</label>
@@ -279,8 +308,12 @@ export default function App() {
         {/* Mission Design stays mounted (only hidden) on other tabs, as the old
             drawer did, so a draft objective and the excluded-factor sync survive
             switching tabs. */}
-        <div hidden={activeTab !== "mission"} className="scroll-thin h-full overflow-y-auto border-b border-line bg-bg-elev">
-          <LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} />
+        <div className={`${activeTab === "mission" ? "flex" : "hidden"} h-full flex-col bg-bg-elev`}>
+          <div className="scroll-thin min-h-0 flex-1 overflow-y-auto"><LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} /></div>
+          <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line bg-bg-elev px-5 py-4">
+            <p className="max-w-2xl text-sm text-fg-muted">{draftDirty ? "Review and apply your edited objective before exploring." : `Next: explore ${BODY_NAME[missionBody]} sites for your applied mission objective.`}</p>
+            <button type="button" disabled={!appliedObjective || draftDirty || !initialMissionId || (missionType === "landing" ? evaluation.isPending : assessment.isPending)} onClick={() => navigateExplore("mission", initialMissionId)} className="ml-auto rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">Head to explore mission →</button>
+          </footer>
         </div>
         {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" ? (
           <div className="h-full">{centre}</div>
@@ -294,7 +327,7 @@ export default function App() {
               <div className="h-full">{centre}</div>
             </div>
             {activeTab === "explore" && <div className="order-3 min-h-0 border-t border-line bg-bg-elev lg:border-l lg:border-t-0">
-                <SitePanelShell width={sitePanelWidth} onWidthChange={setSitePanelWidth}><RightSidebar body={viewedBody} selectedId={selectedId} evaluation={evaluation.data} evaluationPending={evaluation.isPending} mission={evaluation.mission} earthLocation={earthLocation} earthPending={earth.isPending} analog={analog ? { response: rankData, referenceName, palette: rankPalette } : null} /></SitePanelShell>
+                <SitePanelShell width={sitePanelWidth} onWidthChange={setSitePanelWidth}>{taskMissionView ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===selectedId)} location={missionLocation} pending={assessment.isPending}/> : <RightSidebar body={viewedBody} selectedId={selectedId} evaluation={evaluation.data} evaluationPending={evaluation.isPending} mission={evaluation.mission} earthLocation={earthLocation} earthPending={earth.isPending} analog={analog ? { response: rankData, referenceName, palette: rankPalette } : null} />}</SitePanelShell>
             </div>}
           </div>
         )}

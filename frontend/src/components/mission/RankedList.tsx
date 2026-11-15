@@ -8,7 +8,7 @@ import { Section, EmptyNote } from "@/components/ui/Section";
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import { Spinner } from "@/components/ui/Spinner";
 import { markerAppearance } from "@/components/globe/colors";
-import { NOT_RANKED_COLOR, rankColor, type RankPalette } from "@/lib/rankColor";
+import { NOT_RANKED_COLOR, missionRankPosition, rankColor, type RankPalette } from "@/lib/rankColor";
 import { formatNumber } from "@/lib/format";
 import type { RankedCandidate, SuitabilityResult, SuitabilityStatus } from "@/types";
 
@@ -18,7 +18,7 @@ const STATUS: Record<SuitabilityStatus, { label: string; tone: BadgeTone }> = {
   ineligible: { label: "ineligible", tone: "danger" },
 };
 
-function rowKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+export function rowKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
   if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
   const buttons = Array.from(e.currentTarget.closest("ol")?.querySelectorAll<HTMLButtonElement>("button") ?? []);
@@ -52,7 +52,7 @@ export function RankedList({ results, selectedId, onSelect, isPending, warnings 
       ) : (
         <ol className="space-y-1" aria-label="Ranked sites">
           {results.map((r) => {
-            const { color } = markerAppearance(r.status, r.score);
+            const color = r.status === "ok" ? rankColor(missionRankPosition(r.rank,results.map(r=>r.rank))) ?? NOT_RANKED_COLOR : markerAppearance(r.status,r.score).color;
             const selected = r.site_id === selectedId;
             const st = STATUS[r.status];
             return (
@@ -115,7 +115,7 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
   return (
     <Section
       title={`${bodyName} analog candidates`}
-      subtitle={referenceName ? <>Match rank against <span className="text-fg">{referenceName}</span> · similarity index 0–100, not scientific equivalence.</> : `Pick a reference on the other body to rank ${bodyName} candidates.`}
+      subtitle={referenceName ? <>Match rank against <span className="text-fg">{referenceName}</span> · match % is a similarity index, not a probability.</> : `Pick a reference on the other body to rank ${bodyName} candidates.`}
       actions={isPending ? <Spinner label="Ranking" /> : undefined}
     >
       <p className="mb-2 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
@@ -137,7 +137,7 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
             const selected = c.location.id === selectedId;
             const unranked = c.rank == null;
             const sim = c.similarity != null ? formatNumber(c.similarity, { maxFractionDigits: 1 }) : null;
-            const label = `${c.location.name}, ${unranked ? "not ranked" : `match rank ${c.rank} of ${ranked}`}${sim ? `, similarity ${sim}` : ""}${c.location.id === suggestedId ? ", suggested reference" : ""}`;
+            const label = `${c.location.name}, ${unranked ? "not ranked" : `match rank ${c.rank} of ${ranked}`}${sim ? `, ${sim}% match` : ""}${c.location.id === suggestedId ? ", suggested reference" : ""}`;
             return (
               <li key={c.location.id}>
                 <button type="button" onClick={() => onSelect(c.location.id)} onKeyDown={rowKeyDown} aria-pressed={selected} aria-label={label} className={ROW(selected)}>
@@ -153,8 +153,8 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
                     <span className="block truncate text-[10.5px] text-fg-muted">{unranked ? `Not ranked${c.unrankable_reason ? ` · ${c.unrankable_reason}` : ""}` : `rank ${c.rank} of ${ranked}`}{c.location.id === suggestedId && <Badge tone="info" className="ml-1">Suggested reference</Badge>}</span>
                   </span>
                   <span className="flex flex-col items-end gap-0.5">
-                    <span className="num text-xs text-fg">{sim ?? "—"}</span>
-                    <span className="text-[10px] uppercase tracking-wide text-fg-faint">{unranked ? "not ranked" : "similarity"}</span>
+                    <span className="num text-xs text-fg">{sim != null ? `${sim}%` : "—"}</span>
+                    <span className="text-[10px] uppercase tracking-wide text-fg-faint">{unranked ? "not ranked" : "match"}</span>
                   </span>
                 </button>
               </li>

@@ -95,3 +95,8 @@ export function rankGradient(palette: RankPalette): string {
   const stops = paletteStops(palette);
   return `linear-gradient(to right, ${stops.map((c, i) => `${c} ${Math.round((i / (stops.length - 1)) * 100)}%`).join(", ")})`;
 }
+
+/** Use the full pool's maximum rank so tied weakest sites share violet. */
+export function missionRankPosition(rank: number | null | undefined, ranks: Array<number | null | undefined>): number | null {
+  return rankPosition(rank, Math.max(0, ...ranks.filter((r): r is number => r != null)));
+}

@@ -14,6 +14,7 @@ from app.services import (
     analog_rank_engine,
     explanation_engine,
     llm_client,
+    mission_assessment,
     ranking_engine,
     scoring_engine,
 )
@@ -74,7 +75,15 @@ def chat(req: AstroRequest) -> AstroResponse:
         raise KeyError(req.selected_mars_id)
     if req.selected_earth_id and not earth:
         raise KeyError(req.selected_earth_id)
-    body = "mars" if req.active_tab in ("analyze", "research") else req.viewed_body
+    body = (
+        "mars"
+        if req.active_tab == "research"
+        else req.assessment.body
+        if req.assessment and req.active_tab in ("analyze", "mission")
+        else "mars"
+        if req.active_tab == "analyze"
+        else req.viewed_body
+    )
     current = mars if body == "mars" else earth
     label = f"{body.title()} · {current.name if current else 'No location selected'}"
     if req.active_tab == "compare":
@@ -102,14 +111,62 @@ def chat(req: AstroRequest) -> AstroResponse:
                 body="mars",
                 location_id=mars.id,
             ),
+        ]
+    if req.assessment:
+        assessed = mission_assessment.evaluate(req.assessment)
+        task_location = mars if assessed.body == "mars" else earth
+        facts.append(
+            f"Task mission: {assessed.profile_label}; body: {assessed.body.title()}; method: {assessed.method}."
+        )
+        selected_result = next(
+            (
+                result
+                for result in assessed.results
+                if task_location and result.site_id == task_location.id
+            ),
+            None,
+        )
+        relevant = [selected_result] if selected_result else assessed.results[:3]
+        for result in relevant:
+            facts.append(
+                f"{result.site_name} — {assessed.profile_label}: score {result.score}; rank {result.rank}; status {result.status}."
+            )
+            for factor in result.factors:
+                facts.append(
+                    f"{result.site_name} — {factor.label}: {factor.value} {factor.unit or ''}; contribution: {factor.contribution}; {factor.note}"
+                )
+            limitations.extend(result.evidence_gaps)
+            if not task_location:
+                actions.append(
+                    AstroAction(
+                        id=f"location:{result.site_id}",
+                        label=f"Inspect {result.site_name}",
+                        tab="explore",
+                        body=assessed.body,
+                        location_id=result.site_id,
+                    )
+                )
+        limitations.extend(assessed.assumptions + assessed.warnings)
+        if task_location:
+            actions.append(
+                AstroAction(
+                    id="analyze",
+                    label="Inspect task mission factors",
+                    tab="analyze",
+                    body=assessed.body,
+                    location_id=task_location.id,
+                )
+            )
+    elif mars:
+        actions.append(
             AstroAction(
                 id="analyze",
                 label="Inspect landing factors",
                 tab="analyze",
                 body="mars",
                 location_id=mars.id,
-            ),
-        ]
+            )
+        )
     if mars and earth:
         actions.append(
             AstroAction(
@@ -118,7 +175,7 @@ def chat(req: AstroRequest) -> AstroResponse:
         )
     if current:
         facts.append(f"Selected location: {current.name}. {current.description}")
-    if (body == "mars" or req.active_tab == "compare") and mars:
+    if not req.assessment and (body == "mars" or req.active_tab == "compare") and mars:
         sites = store.sites("mars")
         results, warnings = scoring_engine.evaluate(
             sites, {s.id: store.profile(s.id) for s in sites}, mission
@@ -186,7 +243,8 @@ def chat(req: AstroRequest) -> AstroResponse:
             + [f"{f.label}: {f.reason}" for f in ranked.excluded_features]
         )
     if (
-        not current
+        not req.assessment
+        and not current
         and body == "mars"
         and (
             req.map_mode == "landing_suitability"
@@ -213,7 +271,7 @@ def chat(req: AstroRequest) -> AstroResponse:
                 )
             )
         limitations.extend(warnings)
-    elif not current and body == "earth" and not mars:
+    elif not req.assessment and not current and body == "earth" and not mars:
         for location in store.earth_candidates()[:3]:
             facts.append(
                 f"Earth catalog location: {location.name}. {location.description}"
@@ -306,6 +364,7 @@ def chat(req: AstroRequest) -> AstroResponse:
         "active_tab": req.active_tab,
         "map_mode": req.map_mode,
         "mission": mission.model_dump(),
+        "assessment": req.assessment.model_dump() if req.assessment else None,
         "objective": req.objective,
         "history": [t.model_dump() for t in req.history],
         "question": req.question,

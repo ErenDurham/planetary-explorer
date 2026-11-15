@@ -4,23 +4,23 @@ import { Section, BulletList, EmptyNote } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import { Spinner } from "@/components/ui/Spinner";
 import { formatNumber, formatPercent, formatValueWithUnit } from "@/lib/format";
-import { scoreToColor } from "@/components/globe/colors";
+import { rankColor, rankPosition } from "@/lib/rankColor";
 import { FactorBreakdownChart } from "@/components/charts/FactorBreakdownChart";
 import type { SuitabilityResult } from "@/types";
 
 export function SuitabilityPanel({ result, scoringSpecVersion, isPending, totalRanked }: { result: SuitabilityResult | undefined; scoringSpecVersion?: string; isPending?: boolean; totalRanked?: number }) {
   if (!result) {
     return (
-      <Section title="Landing suitability" subtitle="Relative index under the current mission priorities">
+      <Section title="Mission suitability" subtitle="Relative index under the current mission priorities">
         {isPending ? <Spinner label="Scoring" /> : <EmptyNote>Select a site to see its suitability under the current priorities.</EmptyNote>}
       </Section>
     );
   }
-  const color = result.status === "ok" && result.score != null ? scoreToColor(result.score) : undefined;
+  const color = result.status === "ok" && result.score != null ? rankColor(rankPosition(result.rank,totalRanked??1)) ?? undefined : undefined;
   return (
     <>
       <Section
-        title="Landing suitability"
+        title="Mission suitability"
         subtitle={<span>Relative suitability index, not a probability · spec {scoringSpecVersion ?? "—"}</span>}
         actions={isPending ? <Spinner label="Updating" /> : undefined}
       >

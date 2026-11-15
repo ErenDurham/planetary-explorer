@@ -80,6 +80,18 @@ describe("App", () => {
     expect(screen.getByTestId("globe-stub")).toHaveTextContent(`${fixture_sites.sites.length} markers`);
   });
 
+  it("hands off the applied mission to its intended planet and blocks unapplied edits", async () => {
+    renderApp();
+    const start = await screen.findByRole("button", { name: "Head to explore mission →" });
+    await waitFor(() => expect(start).toBeEnabled());
+    useAppStore.setState({viewedBody:"earth"});
+    fireEvent.click(start);
+    expect(useAppStore.getState()).toMatchObject({activeTab:"explore",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
+    fireEvent.click(screen.getByRole("button", {name:"Mission Design"}));
+    fireEvent.change(screen.getByLabelText("Your mission objective"), {target:{value:"An unapplied objective"}});
+    expect(screen.getByRole("button", {name:"Head to explore mission →"})).toBeDisabled();
+  });
+
   it("re-evaluates once after a burst of slider changes and shows the selected site profile", async () => {
     renderApp();
     const slider = await screen.findByLabelText("Gentler terrain share of priorities");
@@ -101,13 +113,13 @@ describe("App", () => {
     fireEvent.click(measurements);
     expect(await screen.findByRole("heading", { name: "Environmental profile" })).toBeInTheDocument();
     expect(screen.getByTestId("metric-surface_temperature_mean_c")).toHaveTextContent("No data");
-    expect(screen.getByRole("heading", { name: "Landing suitability" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mission suitability" })).toBeInTheDocument();
     const selectedSite = useAppStore.getState().selectedSiteId;
     fireEvent.click(screen.getByRole("button", {name:"Research"}));
     expect(await screen.findByRole("heading", {name:"Research"})).toBeInTheDocument();
     expect(screen.getByLabelText("Mars site")).toHaveValue(selectedSite);
     expect(useAppStore.getState().selectedSiteId).toBe(selectedSite);
     fireEvent.click(screen.getByRole("button", {name:"Explore"}));
-    expect(await screen.findByRole("heading", {name:"Landing suitability"})).toBeInTheDocument();
+    expect(await screen.findByRole("heading", {name:"Mission suitability"})).toBeInTheDocument();
   });
 });

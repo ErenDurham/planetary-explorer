@@ -45,6 +45,8 @@ describe("Astro", () => {
       selectedMarsId: "jezero_crater",
       selectedEarthId: null,
       activeTab: "explore",
+      missionType: "landing",
+      selectionBody: "mars",
     });
   });
   afterEach(() => {
@@ -135,6 +137,52 @@ describe("Astro", () => {
     );
     expect(useAppStore.getState().selectedMarsId).toBe("jezero_crater");
     expect(useAppStore.getState().activeTab).toBe("research");
+  });
+  it("sends the active Earth task assessment and opens its Analyze action", async () => {
+    useAppStore.setState({
+      activeTab: "analyze",
+      missionType: "research",
+      selectionBody: "earth",
+      viewedBody: "mars",
+      mapMode: "mission_browse",
+      selectedMarsId: null,
+      selectedEarthId: "atacama_yungay",
+    });
+    vi.spyOn(api, "astroChat").mockResolvedValue({
+      ...response,
+      context_label: "Earth · Atacama",
+      actions: [
+        {
+          id: "analyze",
+          label: "Inspect task mission factors",
+          tab: "analyze",
+          body: "earth",
+          location_id: "atacama_yungay",
+        },
+      ],
+    });
+    render(<AstroPanel />);
+    fireEvent.click(screen.getByRole("button", { name: "Expand Astro" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Message Astro" }), {
+      target: { value: "Why this task fit?" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }));
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Inspect task mission factors",
+      }),
+    );
+    expect(api.astroChat).toHaveBeenCalledWith(
+      expect.objectContaining({
+        assessment: expect.objectContaining({
+          body: "earth",
+          mission_type: "research",
+        }),
+        map_mode: "mission_browse",
+      }),
+    );
+    expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
+    expect(useAppStore.getState().activeTab).toBe("analyze");
   });
   it("offers retry after network failure", async () => {
     vi.spyOn(api, "astroChat")

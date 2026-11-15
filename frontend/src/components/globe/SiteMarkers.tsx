@@ -46,9 +46,10 @@ export function SiteMarkers({ config, markers, selectedId, onSelect, onHoverChan
 
 /** Text shown in the hover card under the name: never colour alone. */
 export function markerStatusText(d: MarkerDatum): string {
+  if (d.mode === "browse") return "Mission site · no suitability score";
   if (d.mode === "analog") {
     if (d.rank == null) return `Not ranked${d.unrankableReason ? `: ${d.unrankableReason}` : ""}`;
-    return `match rank ${d.rank}${d.similarity != null ? ` · similarity ${formatNumber(d.similarity, { maxFractionDigits: 1 })}` : ""}`;
+    return `match rank ${d.rank}${d.similarity != null ? ` · ${formatNumber(d.similarity, { maxFractionDigits: 1 })}% match` : ""}`;
   }
   if (d.status === "ok" && d.score != null) return `index ${formatNumber(d.score, { maxFractionDigits: 1 })}${d.rank != null ? ` · rank ${d.rank}` : ""}`;
   if (d.status === "ineligible") return "ineligible";
@@ -168,7 +169,7 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
       )}
       {hovered && (
         <Html position={[0, BASE * 2.2, 0]} center calculatePosition={labelPosition} occlude={planetRef ? [planetRef] : true} style={{ pointerEvents: "none" }} zIndexRange={[50, 0]}>
-          <div data-testid="marker-description" className="w-max max-w-[260px] whitespace-normal break-words rounded border border-line-strong bg-bg-elev-2/95 px-2.5 py-1.5 text-left shadow-lg">
+          <div role="tooltip" data-testid="marker-description" className="w-max max-w-[260px] whitespace-normal break-words rounded border border-line-strong bg-bg-elev-2/95 px-2.5 py-1.5 text-left shadow-lg">
             <div className="text-xs font-semibold text-fg">{datum.name}</div>
             <div className="text-[10.5px] text-fg-muted">{datum.region}</div>
             <div className="num mt-0.5 text-[10.5px] text-fg-muted">{markerStatusText(datum)}</div>

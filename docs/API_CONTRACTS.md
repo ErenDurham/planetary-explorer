@@ -874,4 +874,13 @@ This does not extend the Mars scoring model to another body. Lunar locations cur
 
 ## Astro conversation
 
-`POST /api/v1/astro/chat` provides bounded, context-aware research guidance. Requests and responses are defined in `models/astro.py` and the generated OpenAPI schema. The backend owns scientific facts, excerpts, citations and navigation targets. Responses identify `llm` versus `deterministic_fallback`; missing Claude configuration does not make the endpoint unavailable. Unknown locations return 404; invalid request bounds or criteria return 422. See [ASTRO.md](ASTRO.md) for configuration, grounding and session behavior.
+`POST /api/v1/astro/chat` provides bounded, context-aware research guidance. Requests and responses are defined in `models/astro.py` and the generated OpenAPI schema. The backend owns scientific facts, excerpts, citations and navigation targets. Responses identify `llm` versus `deterministic_fallback`; missing Claude configuration does not make the endpoint unavailable. Unknown locations return 404; invalid request bounds or criteria return 422. `map_mode` accepts landing suitability, analog match and mission browse. Optional `assessment` uses the same task/body/weights/requirements contract as `/missions/evaluate`; the server recalculates those facts before responding. See [ASTRO.md](ASTRO.md) for configuration, grounding and session behavior.
+
+
+## Task-specific mission assessment
+
+`GET /api/v1/missions/profiles` exposes versioned task definitions and documented assumptions. `POST /api/v1/missions/evaluate` accepts `body` (earth/mars), `mission_type` (research/rover_field_test/base_planning), per-profile `weights`, `requirements`, and `client_request_id`. Landing scoring remains at `/scoring/evaluate`.
+
+Research weights are `materials` / `landforms`, with requirements `material_targets` / `landform_targets`. Rover weights are `slope` / `relief`, with `slope_target_deg`, positive `slope_tolerance_deg`, `relief_target_m` and positive `relief_tolerance_m`. All weights must be finite 0..100 and at least one supplied weight positive. Unknown criteria and unrecognized research targets are rejected (422). Target lists are normalized and deduplicated.
+
+Responses include spec version, method, assumptions, warnings, echoed requirements/request ID, and all body candidates. Each result has score/rank or an explicit `needs_requirements`, `insufficient_data` or `not_supported` status. Factors contain the raw value/unit, source, q, normalized weight, weighted contribution and explanation. `coverage_fraction` reports the available fraction of configured positive priority weight before evidence exclusions. Base planning has null scores/ranks and explicit evidence gaps.

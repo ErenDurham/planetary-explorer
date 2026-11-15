@@ -12,6 +12,19 @@ describe("Contextual suggestions", () => {
       }),
     ).toBe("Why does this site rank this way?");
   });
+  it("uses the Earth task context for Analyze rather than the remembered Mars globe", () => {
+    expect(
+      astroSuggestion({
+        tab: "analyze",
+        body: "mars",
+        analysisBody: "earth",
+        taskMission: true,
+        hasMars: false,
+        hasEarth: true,
+        hasConversation: false,
+      }),
+    ).toBe("Which factors explain this site’s mission fit?");
+  });
   it("does not refer to a selected site after deselection", () => {
     expect(
       astroSuggestion({

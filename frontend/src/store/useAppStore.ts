@@ -6,6 +6,8 @@
 // over the active (data-available) factors, excluded factors at 0. The
 // backend normalises whatever it receives, so a share IS the weight it scores
 // with, and the number beside a slider equals `normalized_weight` * 100.
+import { DEFAULT_PROFILE_WEIGHTS, defaultRequirements, missionViewMode, type MissionType, type AssessmentType } from "@/lib/missionProfiles";
+import type { MissionRequirements } from "@/types";
 import type { ComparisonMode } from "@/lib/comparison";
 import { create } from "zustand";
 import { setShare, toShares } from "@/lib/allocation";
@@ -22,7 +24,7 @@ export type Task = "landing_screening" | "analog_site_selection";
 
 /** How the visible globe's candidates are coloured. `landing_suitability` is
  * only meaningful on Mars; use `effectiveMapMode()` for what to render. */
-export type MapMode = "landing_suitability" | "analog_match";
+export type MapMode = "landing_suitability" | "analog_match" | "mission_browse";
 
 /** Palette for analog rank colours. ROYGBIV by default; single hue is the
  * accessible alternative (both are monotonic in rank). */
@@ -103,6 +105,22 @@ export interface ComparisonSettings {
 }
 
 export interface AppState {
+  missionType: MissionType;
+  setMissionType: (kind: MissionType) => void;
+  missionProfileWeights: Record<AssessmentType, Record<string, number>>;
+  missionRequirements: Record<Body, MissionRequirements>;
+  setMissionProfileWeight: (id: string, value: number) => void;
+  resetMissionProfileWeights: () => void;
+  patchMissionRequirements: (patch: Partial<MissionRequirements>) => void;
+  applyTaskObjective: (text: string, weights: Record<string, number>, requirements: Partial<MissionRequirements>) => void;
+  missionFocusOverride: Body | null;
+  suggestedMissionFocus: Body | null;
+  setMissionFocus: (body: Body | null) => void;
+  missionDraftDirty: boolean;
+  setMissionDraftDirty: (dirty: boolean) => void;
+  exploreStage: "mission" | "analogs";
+  exploreRevision: number;
+  navigateExplore: (stage: "mission" | "analogs", initialMissionId?: string) => void;
   comparison: ComparisonSettings;
   /** The resolved pair currently displayed by Compare, including catalogue defaults. */
   comparisonPair: {earthId: string | null; marsId: string | null} | null;
@@ -214,6 +232,44 @@ export interface AppState {
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
+  missionType: "landing",
+  setMissionType: (kind) => set(s => {
+    if (kind === "landing" && s.selectionBody !== "mars") return {};
+    return {missionType:kind,exploreStage:"mission",viewedBody:s.selectionBody,mapMode:missionViewMode(s.selectionBody,kind),exploreRevision:s.exploreRevision+1};
+  }),
+  missionProfileWeights: structuredClone(DEFAULT_PROFILE_WEIGHTS),
+  missionRequirements: {earth:defaultRequirements(),mars:defaultRequirements()},
+  setMissionProfileWeight: (id,value) => set(s => {
+    if(s.missionType === "landing" || !(id in s.missionProfileWeights[s.missionType])) return {};
+    return {missionProfileWeights:{...s.missionProfileWeights,[s.missionType]:setShare(s.missionProfileWeights[s.missionType],id,value)}};
+  }),
+  resetMissionProfileWeights: () => set(s => s.missionType === "landing" ? {} : ({missionProfileWeights:{...s.missionProfileWeights,[s.missionType]:{...DEFAULT_PROFILE_WEIGHTS[s.missionType]}}})),
+  patchMissionRequirements: (patch) => set(s => ({missionRequirements:{...s.missionRequirements,[s.selectionBody]:{...s.missionRequirements[s.selectionBody],...patch}}})),
+  applyTaskObjective: (text,weights,requirements) => set(s => ({missionObjective:text,appliedObjective:text,missionDraftDirty:false,appliedObjectiveSource:"rule_based",appliedObjectiveModel:null,
+    missionProfileWeights:s.missionType === "landing" ? s.missionProfileWeights : {...s.missionProfileWeights,[s.missionType]:weights},
+    missionRequirements:{...s.missionRequirements,[s.selectionBody]:{...s.missionRequirements[s.selectionBody],...requirements}},objectiveRevision:s.objectiveRevision+1})),
+  missionFocusOverride: null,
+  suggestedMissionFocus: null,
+  setMissionFocus: (body) => set(s => {
+    const focus = body ?? s.suggestedMissionFocus ?? s.selectionBody;
+    const kind = focus === "earth" && s.missionType === "landing" ? "rover_field_test" : s.missionType;
+    return {missionType:kind,missionFocusOverride: body, selectionBody: focus, appliedFocusBody: focus,
+      viewedBody: focus, exploreStage: "mission", followObjective: true,
+      mapMode: missionViewMode(focus,kind),
+      exploreRevision: s.exploreRevision + 1, selectionRevision: s.selectionRevision + 1, autoRotate: false};
+  }),
+  missionDraftDirty: false,
+  setMissionDraftDirty: (missionDraftDirty) => set({ missionDraftDirty }),
+  exploreStage: "mission",
+  exploreRevision: 0,
+  navigateExplore: (stage, initialMissionId) => set(s => {
+    const body = stage === "mission" ? s.selectionBody : otherBody(s.selectionBody);
+    const id = selectedIdFor(s, s.selectionBody) ?? initialMissionId;
+    return { activeTab: "explore", exploreStage: stage, viewedBody: body, followObjective: stage === "mission",
+      mapMode: stage === "mission" ? missionViewMode(s.selectionBody,s.missionType) : "analog_match",
+      ...(id ? s.selectionBody === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id } : {}),
+      exploreRevision: s.exploreRevision + 1, selectionRevision: s.selectionRevision + 1, cameraResetToken: s.cameraResetToken + 1, autoRotate: false };
+  }),
   missionObjective: "Find a safe landing site with reliable solar energy.",
   appliedObjective: "",
   recommendedWeights: {},
@@ -227,6 +283,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     const shares = toShares(weights, state.excludedCriteria);
     set({
       missionObjective: text,
+      missionDraftDirty: false,
       appliedObjective: text,
       recommendedWeights: shares,
       objectiveNotes: notes,
@@ -332,6 +389,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     set((s) => ({
       activeTab: "explore",
       viewedBody: body,
+      exploreStage: body === s.selectionBody ? "mission" : "analogs",
+      mapMode: body === s.selectionBody ? missionViewMode(body,s.missionType) : "analog_match",
       // a request to look at a body other than the objective's is an override
       followObjective: s.appliedFocusBody == null || s.appliedFocusBody === body ? s.followObjective : false,
       ...(body === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id }),
@@ -357,15 +416,20 @@ function clamp(n: number): number {
  * look, where the mission flies, the reference (selecting it on its own body)
  * and the analog preferences. Nothing else in the store ever writes these. */
 function taskPatch(s: AppState, app: InterpretationApplication): Partial<AppState> {
-  const focus: Body = app.focusBody ?? (app.task === "landing_screening" ? "mars" : app.reference ? otherBody(app.reference.body) : s.selectionBody);
+  const suggestedFocus: Body = app.focusBody ?? (app.task === "landing_screening" ? "mars" : app.reference ? otherBody(app.reference.body) : s.selectionBody);
+  const focus = s.missionFocusOverride ?? suggestedFocus;
+  const kind = focus === "earth" && s.missionType === "landing" ? "rover_field_test" : s.missionType;
   const analog = app.analogWeights ? toAnalogShares(app.analogWeights) : null;
   const patch: Partial<AppState> = {
+    missionType: kind,
+    suggestedMissionFocus: suggestedFocus,
     task: app.task,
     missionDestination: app.missionDestination ?? (app.task === "landing_screening" ? "mars" : s.missionDestination),
     selectionBody: focus,
+    exploreStage: "mission",
     viewedBody: focus,
     followObjective: true,
-    mapMode: app.task === "analog_site_selection" ? "analog_match" : "landing_suitability",
+    mapMode: missionViewMode(focus,kind),
     appliedTask: app.task,
     appliedFocusBody: focus,
     appliedMissionDestination: app.missionDestination ?? null,
@@ -389,7 +453,7 @@ function taskPatch(s: AppState, app: InterpretationApplication): Partial<AppStat
 
 /** Landing colours only exist on Mars; everywhere else the globe is in analog mode. */
 export function effectiveMapMode(s: Pick<AppState, "viewedBody" | "mapMode">): MapMode {
-  return s.viewedBody === "mars" ? s.mapMode : "analog_match";
+  return s.mapMode === "mission_browse" ? "mission_browse" : s.viewedBody === "mars" ? s.mapMode : "analog_match";
 }
 
 /** The reference for ranking the VIEWED body's candidates: the selected location on the other body. */

@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import mission from "@/test/fixtures/mission_examples.json";
 import { useAppStore } from "@/store/useAppStore";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MissionObjective } from "./MissionObjective";
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -14,6 +15,7 @@ const current = { terrain_safety: 27, elevation_suitability: 19, surface_roughne
 let interpretCalls: Array<Record<string, unknown>> = [];
 
 function seed() {
+  useAppStore.setState(useAppStore.getInitialState(), true);
   useAppStore.setState({
     defaultWeights: defaults,
     weights: { ...current },
@@ -42,7 +44,7 @@ describe("MissionObjective interpretation", () => {
       }
       return json({ error: { code: "not_found", message: `unmocked ${String(input)}` } }, 404);
     });
-    render(<MissionObjective excluded={["thermal_conditions"]} />);
+    render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><MissionObjective excluded={["thermal_conditions"]} /></QueryClientProvider>);
 
     fireEvent.click(screen.getByRole("button", { name: "Suggest priorities" }));
     const region = await screen.findByRole("region", { name: "Proposed priority allocation" });
@@ -101,7 +103,7 @@ describe("MissionObjective interpretation", () => {
 
   it("falls back to the offline rule-based reading when /mission/interpret rejects, and labels it so", async () => {
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new TypeError("Failed to fetch"));
-    render(<MissionObjective excluded={["thermal_conditions"]} />);
+    render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><MissionObjective excluded={["thermal_conditions"]} /></QueryClientProvider>);
     fireEvent.click(screen.getByRole("button", { name: "Suggest priorities" }));
     const region = await screen.findByRole("region", { name: "Proposed priority allocation" });
     expect(region).toHaveTextContent("Offline rule-based suggestion");
@@ -120,7 +122,7 @@ describe("MissionObjective interpretation", () => {
 
   it("discards a proposal without touching the store", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(json(mission.interpret));
-    render(<MissionObjective excluded={["thermal_conditions"]} />);
+    render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><MissionObjective excluded={["thermal_conditions"]} /></QueryClientProvider>);
     fireEvent.click(screen.getByRole("button", { name: "Suggest priorities" }));
     const region = await screen.findByRole("region", { name: "Proposed priority allocation" });
     expect(within(region).getByText("Rule-based reading (no model)")).toBeInTheDocument();
@@ -147,7 +149,7 @@ describe("MissionObjective task reading", () => {
 
   it("shows the task, focus body, destination and reference, and applies them with the landing weights in one action (destination stays Mars)", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ ...mission.interpret, task_interpretation: { task: "analog_site_selection", focus_body: "earth", mission_destination: "mars", reference_site: { body: "mars", id: "elysium_planitia", name: "Elysium Planitia (InSight)", matched_text: "Elysium" }, unresolved_sites: [], direction_options: [], analog_suggestions: analogDefaults, rationale: ["The text asks for a location on Earth."] } }));
-    render(<MissionObjective excluded={["thermal_conditions"]} />);
+    render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><MissionObjective excluded={["thermal_conditions"]} /></QueryClientProvider>);
     fireEvent.click(screen.getByRole("button", { name: "Suggest priorities" }));
     const task = await screen.findByTestId("task-review");
     expect(within(task).getByTestId("task-proposed")).toHaveTextContent("Analog site selection");
@@ -169,12 +171,12 @@ describe("MissionObjective task reading", () => {
     expect(s.analogWeights).toEqual({ slope_regional_median_deg: 30, roughness_regional_m: 30, terrain_morphology: 25, mineralogy_tags: 10, precipitation_mm_day: 5 });
     expect(s.recommendedAnalogWeights).toEqual(s.analogWeights);
     expect(s.weights.thermal_conditions).toBe(0); // landing weights still applied
-    expect(screen.getByTestId("applied-task")).toHaveTextContent("Analog site selection · looking on Earth · mission to Mars · reference Elysium Planitia (InSight) (Mars)");
+    expect(s.missionType).toBe("rover_field_test"); // Earth uses its explicit task profile rather than the Mars landing model.
   });
 
   it("keeps Apply disabled on an ambiguous reading until a direction is chosen, and never guesses an unresolved site", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ ...mission.interpret, task_interpretation: { task: "ambiguous", focus_body: null, mission_destination: "mars", reference_site: null, unresolved_sites: [{ matched_text: "the crater", options: [{ body: "mars", id: "gale_crater", name: "Gale Crater (Bradbury Landing)", matched_text: "gale" }, { body: "earth", id: "haughton_crater", name: "Haughton impact structure", matched_text: "haughton" }] }], direction_options: [{ task: "analog_site_selection", focus_body: "earth", label: "Find Earth sites like a Mars site", description: "Pick a Mars reference." }, { task: "analog_site_selection", focus_body: "mars", label: "Find Mars sites like an Earth site", description: "Pick an Earth reference." }], analog_suggestions: analogDefaults, rationale: [] } }));
-    render(<MissionObjective excluded={["thermal_conditions"]} />);
+    render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><MissionObjective excluded={["thermal_conditions"]} /></QueryClientProvider>);
     fireEvent.click(screen.getByRole("button", { name: "Suggest priorities" }));
     const task = await screen.findByTestId("task-review");
     expect(within(task).getByTestId("task-proposed")).toHaveTextContent("Ambiguous");

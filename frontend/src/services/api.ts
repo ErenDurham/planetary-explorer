@@ -1,4 +1,5 @@
 import type { AstroRequest, AstroResponse, AnalogRankRequest, AnalogRankResponse, ComparisonCatalog, SiteImagery, SensitivityRequest, SensitivityResponse } from "@/types";
+import type { MissionAssessmentRequest, MissionAssessmentResponse } from "@/types";
 // Typed fetch wrapper for the Planetary Explorer backend.
 //
 // Every non-2xx response from the API is `{ error: { code, message, details } }`
@@ -103,6 +104,7 @@ function post<T>(path: string, body: unknown): Promise<T> {
 
 export const api = {
   astroChat: (body: AstroRequest) => post<AstroResponse>("/astro/chat", body),
+  assessMission: (body: MissionAssessmentRequest, signal?: AbortSignal) => request<MissionAssessmentResponse>("/missions/evaluate", {method:"POST",body:JSON.stringify(body),signal}),
   comparisonCatalog: () => request<ComparisonCatalog>("/comparison/catalog"),
   imagery: (siteId: string) => request<SiteImagery>(`/sites/${encodeURIComponent(siteId)}/imagery`),
   sensitivity: (body: SensitivityRequest, signal?: AbortSignal) => request<SensitivityResponse>("/scoring/sensitivity", { method: "POST", body: JSON.stringify(body), signal }),
