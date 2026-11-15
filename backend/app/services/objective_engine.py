@@ -42,6 +42,7 @@ from datetime import datetime, timezone
 
 from app.models import EarthWeightSuggestion, EvidenceCitation, InterpretRequest, InterpretResponse, WeightSuggestion
 from app.services import analog_check, evidence, llm_client
+from app.services.partial_json import parse_partial
 from app.config.settings import get_settings
 from app.services.scoring_engine import load_spec
 from app.services.task_interpreter import aliases as site_aliases
@@ -281,7 +282,7 @@ def validate_proposal(proposed: dict, current: dict[str, int], excluded: list[st
     if sum(v for k, v in cleaned.items() if k not in excluded) <= 0:
         raise ValueError("every available criterion would be 0; at least one must be positive to rank sites")
     out = [WeightSuggestion(criterion_id=cid, label=labels[cid], weight=cleaned[cid], previous_weight=current.get(cid, 0),
-                            reason=(reasons or {}).get(cid) or ("Unchanged: the objective did not mention this factor." if cleaned[cid] == current.get(cid) else "Set from the objective."),
+                            reason=(reasons or {}).get(cid) or (GUESS_REASON if cleaned[cid] == current.get(cid) else "Set from the objective."),
                             data_available=cid not in excluded) for cid in labels]
     return out, notes
 
@@ -384,7 +385,7 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
     note = ("Confidence describes how clearly the text matched the rule lexicon; it says nothing about how suitable any site is. "
             "Rule-based reading: lexicon matches plus emphasis, exclusion and 'X over Y' cues. It does not understand general language.")
     if not rationale:
-        rationale.append("No supported priority terms matched; current weights are kept as a starting point for you to adjust.")
+        rationale.append("The mission does not name a priority directly, so the app made a best guess: the standard starting weights. Adjust them if needed.")
     profile = mission_profile(text)
     # The research shown here explains why each factor matters for this kind
     # of mission; the weights themselves came from the lexicon above.
@@ -449,9 +450,28 @@ def build_user_message(req: InterpretRequest) -> str:
             + "\n\n## Mission objective (UNTRUSTED TEXT)\n<<<OBJECTIVE\n" + obj + "\nOBJECTIVE>>>\n\nReturn the JSON object now.")
 
 
-def _call_llm(system: str, user: str, schema: dict) -> str:
-    """Seam replaced in tests."""
-    return llm_client.call_json(system, user, schema)
+GUESS_REASON = "Best guess: kept at its starting weight, because the mission does not point either way."
+EARTH_GUESS_REASON = "Best guess: follows the Mars priority for this factor."
+
+
+def _complete(part: object, ids: list[str]) -> bool:
+    return isinstance(part, dict) and all(i in part for i in ids)
+
+
+def good_enough(text: str) -> bool:
+    """A usable (not necessarily perfect) reading: Mars weights with their
+    reasons, and Earth weights, for every factor."""
+    data = parse_partial(text)
+    ids = [c["criterion_id"] for c in _criteria()]
+    return _complete(data.get("weights"), ids) and _complete(data.get("reasons"), ids) and _complete(data.get("earth_weights"), ids)
+
+
+def _call_llm(system: str, user: str, schema: dict) -> str | tuple[str, bool]:
+    """Seam replaced in tests. Returns the model text and whether it is complete.
+    After INTERPRET_READY_S the model stops once both planets' priorities are
+    usable; otherwise it runs to INTERPRET_LIMIT_S and the text so far is used."""
+    s = get_settings()
+    return llm_client.call_json_within(system, user, schema, ready_s=s.interpret_ready_s, limit_s=s.interpret_limit_s, ready=good_enough)
 
 
 _NUM = re.compile(r"\d+(?:\.\d+)?")
@@ -525,12 +545,31 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
         return out
     current = _current(req)
     try:
-        raw = _call_llm(system_prompt(), build_user_message(req), _schema())
-        data = json.loads(raw)
+        answer = _call_llm(system_prompt(), build_user_message(req), _schema())
+        raw, complete = answer if isinstance(answer, tuple) else (answer, True)
+        data = json.loads(raw) if complete else parse_partial(raw)
         notes: list[str] = []
+        ids = [c["criterion_id"] for c in _criteria()]
         reasons = _clean_reasons(data.get("reasons") or {}, notes)
         cited = _cited(data.get("evidence") or {}, notes)
-        proposed = dict(data.get("weights") or {})
+        proposed = {k: v for k, v in dict(data.get("weights") or {}).items()}
+        if not complete:
+            # Stopped at the time limit: keep everything the model finished and
+            # fill each missing factor with a guess from the keyword reading.
+            if not proposed and not data.get("earth_weights"):
+                raise RuntimeError("the model gave no priorities before the time limit")
+            guess = {s_.criterion_id: s_ for s_ in rule_based(req).suggestions}
+            missing = [cid for cid in ids if cid not in proposed]
+            for cid in missing:
+                proposed[cid] = guess[cid].weight
+                reasons.setdefault(cid, guess[cid].reason)
+            for cid in ids:
+                if cid not in reasons:
+                    reasons[cid] = "Best guess from the mission text."
+            notes.append("The language model was stopped once the Mars and Earth priorities were ready, to keep the wait short."
+                         if good_enough(raw) else
+                         "The language model was stopped at the time limit"
+                         + (f"; {len(missing)} Mars factor(s) were estimated from the mission's keywords." if missing else "; its Mars priorities were complete."))
         for cid in explicit_exclusions(req):
             if proposed.get(cid):
                 notes.append(f"{cid} set to 0: the objective explicitly excludes it.")
@@ -543,9 +582,20 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
         # same factors, same research: Earth shows the findings cited for Mars (fewer tokens to generate)
         earth_cited = cited
         earth_proposed = dict(data.get("earth_weights") or {})
+        earth_reasons = _clean_reasons(data.get("earth_reasons") or {}, notes)
+        if not complete:
+            mars_final = {s.criterion_id: s.weight for s in suggestions}
+            earth_missing = [cid for cid in ids if cid not in earth_proposed]
+            for cid in earth_missing:
+                earth_proposed[cid] = mars_final[cid]
+                earth_reasons.setdefault(cid, EARTH_GUESS_REASON)
+            for cid in ids:
+                earth_reasons.setdefault(cid, "Best guess from the mission text.")
+            if earth_missing:
+                notes.append(f"{len(earth_missing)} Earth factor(s) were estimated from the Mars priorities.")
         for cid in explicit_exclusions(req):
             earth_proposed[cid] = 0
-        earth = _earth_suggestions(earth_proposed, _clean_reasons(data.get("earth_reasons") or {}, notes), earth_cited, req.excluded_criteria,
+        earth = _earth_suggestions(earth_proposed, earth_reasons, earth_cited, req.excluded_criteria,
                                    {s.criterion_id: s.weight for s in suggestions})
         profile = data.get("mission_profile") if data.get("mission_profile") in MISSION_PROFILES else mission_profile(req.objective)
         allowed = {s.weight for s in suggestions} | {s.previous_weight for s in suggestions}
@@ -576,6 +626,9 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
         llm_client.record_error(e)
         out = rule_based(req)
         out.validation_notes.append(f"Language model interpretation unavailable or invalid ({type(e).__name__}); rule-based reading used instead.")
+        # Not cached: submitting the same mission again gives the model a fresh
+        # try instead of replaying this failure instantly.
+        return out
     _cache[key] = out
     return out
 
