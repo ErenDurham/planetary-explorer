@@ -1,0 +1,239 @@
+{
+  "request": {
+    "body": "mars",
+    "site_id": "jezero_crater",
+    "objective": "terrain_survey",
+    "start": {
+      "lat": 18.4447,
+      "lon_east": 77.4508
+    },
+    "waypoints": [
+      {
+        "lat": 18.65,
+        "lon_east": 77.65
+      }
+    ],
+    "target_ids": [],
+    "user_targets": [],
+    "optimization": "balanced",
+    "client_request_id": "ui-42",
+    "rover": {
+      "profile_id": null,
+      "mass_kg": 100,
+      "max_slope_deg": 15,
+      "nominal_speed_m_s": 0.05,
+      "battery_capacity_wh": 10000,
+      "drive_hours_per_sol": 4
+    }
+  },
+  "response": {
+    "plan_id": "f2d332f21594ae0bf5ce94e0",
+    "client_request_id": "ui-42",
+    "body": "mars",
+    "site_id": "jezero_crater",
+    "status": "ok",
+    "data_status": "limited",
+    "objective": "terrain_survey",
+    "route": [
+      {
+        "segment_id": "leg-1",
+        "from": {
+          "lat": 18.46875,
+          "lon_east": 77.46875
+        },
+        "to": {
+          "lat": 18.65625,
+          "lon_east": 77.65625
+        },
+        "polyline": [
+          {
+            "lat": 18.46875,
+            "lon_east": 77.46875
+          },
+          {
+            "lat": 18.53125,
+            "lon_east": 77.53125
+          },
+          {
+            "lat": 18.59375,
+            "lon_east": 77.59375
+          },
+          {
+            "lat": 18.65625,
+            "lon_east": 77.65625
+          }
+        ],
+        "distance_m": 15313.337973917027,
+        "risk": "low",
+        "max_slope_deg": 1.3762954249923363,
+        "note": "Slope-only proxy; all other hazards unknown.",
+        "elevations_m": [
+          -2568.0,
+          -2556.0,
+          -2526.0,
+          -2501.0
+        ],
+        "edge_slopes_deg": [
+          0.13467259008713578,
+          0.3367365026896574,
+          0.2806634742924475
+        ],
+        "energy_wh": 4699.992078611396,
+        "elevation_gain_m": 67.0,
+        "elevation_loss_m": 0.0
+      }
+    ],
+    "metrics": {
+      "total_distance_m": 15313.337973917027,
+      "energy_wh": 4699.992078611396,
+      "elevation_gain_m": 67.0,
+      "elevation_loss_m": 0.0,
+      "slope_mean_deg": 0.2506824260134172,
+      "slope_max_deg": 1.3762954249923363,
+      "slope_p95_deg": 0.3367365026896574,
+      "traverse_time_hours": 85.07500814367822,
+      "driving_sols": 22.0,
+      "targets_reached": [],
+      "targets_unreached": []
+    },
+    "feasibility": {
+      "verdict": "undetermined",
+      "summary": "Regional grid constraints pass; operational feasibility remains undetermined.",
+      "reasons": [
+        "No high-resolution hazard, traction or environmental validation."
+      ]
+    },
+    "warnings": [
+      {
+        "severity": "warning",
+        "message": "Regional DEM route only; operational rover feasibility and fine-scale hazards remain unknown.",
+        "segment_id": null
+      },
+      {
+        "severity": "info",
+        "message": "Stops snapped to grid centers; maximum offset 1747 m. Inspect stops for requested and snapped coordinates.",
+        "segment_id": null
+      }
+    ],
+    "interpretation": {
+      "text": "Characterize terrain along user-selected regional transects; no automated survey completeness is inferred.",
+      "generated_by": "rule_based",
+      "model": null
+    },
+    "assumptions": [
+      "8-neighbor A* within the region grid; missing cells and slopes above the requested limit are blocked.",
+      "Inputs snap to containing DEM cell centers. No interpolated fine-scale route or connector is invented.",
+      "Energy = (mass*g*Crr*horizontal distance + mass*g*positive elevation gain)/efficiency/3600 + hotel W*drive hours.",
+      "Example rover parameters are assumptions, not a calibrated vehicle. No descent regeneration, solar recharge or stop-operation energy.",
+      "Slope risk is a heuristic slope/limit ratio, not probability or overall mission risk.",
+      "All ordered stops are attempted; path optimization never reorders or assigns scientific value to targets."
+    ],
+    "limitations": [
+      "Regional orbital topography cannot resolve rover-scale rocks, wheel traction, cliffs or safe passages.",
+      "MOLA bins without laser shots were interpolated by the data producer; no shot-count layer is installed.",
+      "No illumination, thermal, communications, regolith-bearing, radiation or sampling model is applied.",
+      "Catalog region coordinates are starting references, not verified rover deployment or sampling locations."
+    ],
+    "datasets": [
+      {
+        "name": "MOLA MEGDR 16 ppd (MEGT90N000EB)",
+        "source": "NASA PDS / MOLA Science Team",
+        "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+        "license": "NASA PDS public data; cite MOLA Science Team",
+        "resolution_m": 3704.4613373579646,
+        "note": "Median topography, including producer-interpolated cells. Regional resolution only.",
+        "sha256": "d18d9b9ab8c5516d02e157dd2cde0f1d0d160c21940e953ba22391269a545e7b",
+        "vertical_datum": "GMM3 areoid (mgm1025), degree/order 50; IAU2000"
+      }
+    ],
+    "terrain": {
+      "body": "mars",
+      "site_id": "jezero_crater",
+      "start": {
+        "lat": 18.4447,
+        "lon_east": 77.45080000000002
+      },
+      "dem": {
+        "available": true,
+        "dataset": {
+          "name": "MOLA MEGDR 16 ppd (MEGT90N000EB)",
+          "source": "NASA PDS / MOLA Science Team",
+          "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
+          "license": "NASA PDS public data; cite MOLA Science Team",
+          "resolution_m": 3704.4613373579646,
+          "note": "Median topography, including producer-interpolated cells. Regional resolution only.",
+          "sha256": "d18d9b9ab8c5516d02e157dd2cde0f1d0d160c21940e953ba22391269a545e7b",
+          "vertical_datum": "GMM3 areoid (mgm1025), degree/order 50; IAU2000"
+        },
+        "note": "Regional route grid; inputs snap to cell centers. No high-resolution hazard layer.",
+        "rows": 16,
+        "columns": 16,
+        "valid_fraction": 1.0,
+        "resolution_lat_deg": 0.0625,
+        "resolution_lon_deg": 0.0625,
+        "cell_width_m": 3514.9469088994883,
+        "cell_height_m": 3704.4613373579646,
+        "longitude_convention": "east_-180_180",
+        "crs": "IAU2000 planetocentric Mars; MOLA 3396 km sphere"
+      },
+      "research_targets": [],
+      "routing_bounds": {
+        "west": 76.9375,
+        "east": 77.9375,
+        "south": 17.9375,
+        "north": 18.9375
+      },
+      "notes": [
+        "Regional orbital topography cannot resolve rover-scale rocks, wheel traction, cliffs or safe passages.",
+        "MOLA bins without laser shots were interpolated by the data producer; no shot-count layer is installed.",
+        "No illumination, thermal, communications, regolith-bearing, radiation or sampling model is applied.",
+        "Catalog region coordinates are starting references, not verified rover deployment or sampling locations."
+      ],
+      "start_source_ids": [
+        "nasa_m2020_landing_site"
+      ]
+    },
+    "constraints": {
+      "profile_id": null,
+      "max_slope_deg": 15.0,
+      "nominal_speed_m_s": 0.05,
+      "battery_capacity_wh": 10000.0,
+      "drive_hours_per_sol": 4.0,
+      "mass_kg": 100.0,
+      "rolling_resistance": 0.08,
+      "drive_efficiency": 0.3,
+      "hotel_power_w": 50.0
+    },
+    "stops": [
+      {
+        "stop_id": "start",
+        "requested": {
+          "lat": 18.4447,
+          "lon_east": 77.45080000000002
+        },
+        "snapped": {
+          "lat": 18.46875,
+          "lon_east": 77.46875
+        },
+        "offset_m": 1746.5569794524192,
+        "visited": true
+      },
+      {
+        "stop_id": "waypoint-1",
+        "requested": {
+          "lat": 18.65,
+          "lon_east": 77.64999999999998
+        },
+        "snapped": {
+          "lat": 18.65625,
+          "lon_east": 77.65625
+        },
+        "offset_m": 510.31609630636177,
+        "visited": true
+      }
+    ],
+    "visited_targets": [],
+    "engine_version": "expedition-v1",
+    "computed_at": "2026-11-15T03:47:40.473485+00:00"
+  }
+}
