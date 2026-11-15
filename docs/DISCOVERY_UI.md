@@ -1,14 +1,28 @@
-# Discover Earth regions: UI integration
+# Find Earth Analogs: UI integration
 
-The **Discover** tab is the discovery-v1 interface (`frontend/src/features/discovery/`), built
-against the backend-owned contract in [`DISCOVERY_CONTRACT.md`](../DISCOVERY_CONTRACT.md). It is
-deliberately separate from the **Established analogs** (the curated Earth sites ranked in Explore):
-its own run-scoped store, its own two-feature terrain index, and no write to the curated selection.
+**Explore** has two modes, joined by one segmented control at the top of the page:
+
+- **Browse Regions**: the featured Mars and Earth regions, including the established analogs
+  (the existing globe, candidate list and detail panel).
+- **Find Earth Analogs**: the discovery-v1 interface (`frontend/src/features/discovery/`), built
+  against the backend-owned contract in [`DISCOVERY_CONTRACT.md`](../DISCOVERY_CONTRACT.md).
+
+There is no separate Discover tab. Find Earth Analogs keeps its own run-scoped store, its own
+two-feature terrain index, and never writes to the curated selection. It is reached from the switch,
+from a Mars region's detail panel ("Find Earth analogs", enabled for the service's reference region),
+from the Earth analog bar in Browse Regions, and from the Research page's candidate panel.
 
 ## Workflow
 
-Load capabilities → choose an installed survey → **Rank surveyed regions** → inspect a candidate's
-evidence → adjust the two terrain weights (the server re-ranks the fixed pool) → export.
+Explore → Find Earth Analogs → (ranking of the installed survey starts on its own) → inspect a
+candidate → **Research this candidate** (Research Prospects, with the reference region kept as the
+selected Mars site) → Method & Data for weights, formula, screening audit, sources and export.
+
+The page opens with what a reader needs in five seconds: the reference region, the area of Earth
+that was actually searched (label, bounds, approximate size, "Earth was not searched globally"),
+what was compared, and that the results are candidates needing validation. Four headline numbers
+(locations evaluated, candidates presented, footprint size, analysis resolution) are read from the
+rank response and omitted when the service does not provide them.
 
 Surveys are preprocessed offline from cached Copernicus GLO-90 and MOLA terrain and installed as
 immutable artifacts. The UI says so and never animates a live search. Ranking is a server-side
@@ -24,18 +38,21 @@ diversification rule.
 | `store/useDiscoveryStore.ts` | Run id, weight shares, top_k, map/globe view, per-run `ranked` flag and selected candidate |
 | `components/` | `SurveyPicker`, `SurveyMap` (schematic SVG: boundary, exact sampling centres, server footprints, established catalog sites in view), `DiscoveryGlobe` (candidate centres on the existing Earth globe), `SurveyFunnel` (counts, exclusion reasons, grid/footprint spec, dataset versions, source period), `WeightControls`, `CandidateList`, `CandidateDetail`, `ExportPanel` |
 
-Navigation: a **Discover** tab in `TopNav`, routing in `App.tsx`, a cue on the Explore page's Earth
-analog bar (“These are the established analogs · Discover Earth regions beyond them”), and a
-`Tab` union entry in the store. The Astro assistant is hidden on the Discover tab and reports the
-nearest contract tab for its context.
+Navigation: `exploreMode` (`browse` | `find_analogs`) in the app store with `openFindAnalogs()`,
+`ExploreModeSwitch` rendered by both Explore experiences, routing in `App.tsx`, `FindAnalogsEntry`
+in the Mars detail panel, and the cue on the Earth analog bar. The Astro assistant is hidden while
+Find Earth Analogs is shown.
 
 ## What is shown and what is not
 
 - Every number is the service's: similarity index, distance, factor contributions, terrain-valid
   fraction, counts. The map draws server coordinates only and carries no imagery.
-- Each result is labelled **Proposed terrain analog candidate; field validation required.**
-- Catalog relationship (outside/within the versioned buffer, nearest listed site, review status) is
-  shown as a catalog fact and explicitly not as scientific novelty.
+- Each result is labelled **Proposed terrain analog candidate; field validation required.** Each card
+  explains its index in a sentence ("Terrain similarity: 68.5/100. This reflects how closely … under
+  the selected weighting … It is not a probability of scientific suitability."), says why the terrain
+  reads as similar and where it differs, lists what was not compared, and carries the research status.
+- Catalog relationship is worded plainly ("Not near a location in our current reference catalog …
+  The catalog is incomplete, so this is not a claim of novelty"), never as novelty.
 - Climate and land cover are context, not scored; geology is reported as not assessed; absent context
   is listed under “Missing evidence”, never filled in.
 - Unavailable service, no installed survey, zero eligible regions, a listed run whose artifacts are

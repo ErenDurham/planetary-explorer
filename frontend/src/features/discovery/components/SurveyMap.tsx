@@ -54,13 +54,13 @@ export function SurveyMap({ run, survey, candidates, selectedId, onSelect, estab
           {known.map(s => { const q = project(frame, { lon: s.lonEast, lat: s.lat }); return <g key={`k-${s.id}`} data-testid="established-site"><path d={`M${q.x - 6} ${q.y}H${q.x + 6}M${q.x} ${q.y - 6}V${q.y + 6}`} stroke="#9aa5b4" strokeWidth={2} /><title>{`Established analog (catalog): ${s.name}`}</title></g>; })}
         </svg>
       </div>
-      <div className="pointer-events-none absolute left-3 top-3 rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg-muted">Schematic map · server coordinates · no imagery</div>
+      <div className="pointer-events-none absolute left-3 top-3 rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg-muted">Only the dashed area was searched · schematic, no imagery</div>
       <div className="pointer-events-none absolute bottom-3 left-3 space-y-1">
         <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg" aria-label="Map legend">
-          <li className="flex items-center gap-1.5"><span className="inline-block h-3 w-5 border border-dashed border-info" aria-hidden />Surveyed boundary</li>
-          <li className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-fg" aria-hidden />Sampling centre</li>
-          <li className="flex items-center gap-1.5"><span className="inline-block h-3 w-5 rounded-sm bg-[#f0862a]/40 ring-1 ring-[#f0862a]" aria-hidden />Candidate footprint (rank colour)</li>
-          {known.length > 0 && <li className="flex items-center gap-1.5"><span aria-hidden className="text-fg-muted">+</span>Established analog</li>}
+          <li className="flex items-center gap-1.5"><span className="inline-block h-3 w-5 border border-dashed border-info" aria-hidden />Area searched</li>
+          <li className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-fg" aria-hidden />Locations evaluated{centres.length ? ` (${centres.length})` : ""}</li>
+          <li className="flex items-center gap-1.5"><span className="inline-block h-3 w-5 rounded-sm bg-[#f0862a]/40 ring-1 ring-[#f0862a]" aria-hidden />Candidates shown{n ? ` (${n})` : ""}, coloured by rank</li>
+          <li className="flex items-center gap-1.5"><span aria-hidden className="text-fg-muted">+</span>Established analog{known.length ? ` (${known.length} in view)` : " (none in view)"}</li>
         </ul>
         <div className="rounded bg-black/70 px-2 py-1 text-[11px] text-white" aria-label={`Scale bar: ${barKm} km`}><div className="h-1.5 border-x-2 border-b-2 border-white" style={{ width: `${Math.round(barKm * kmPx)}px` }} aria-hidden /><div className="num mt-0.5">{barKm} km</div></div>
       </div>

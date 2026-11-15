@@ -7,7 +7,6 @@ const TABS: Array<{ id: Tab; label: string; hint: string }> = [
   { id: "analyze", label: "Analyze", hint: "Rankings and cross-site charts" },
   { id: "compare", label: "Compare", hint: "Compare the selected Earth and Mars locations" },
   { id: "research", label: "Research", hint: "Study ideas, supporting evidence and further reading" },
-  { id: "discover", label: "Discover", hint: "Discover Earth regions beyond the established analogs: rank an offline terrain survey against Jezero" },
 ];
 
 export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t: Tab) => void; right?: React.ReactNode }) {

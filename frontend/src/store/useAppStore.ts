@@ -15,7 +15,9 @@ import { setShare, toShares } from "@/lib/allocation";
 import { ANALOG_FEATURE_IDS, otherBody, toAnalogShares, type Body } from "@/lib/analogFeatures";
 import type { EvidenceCitation, HardConstraint, MissionKind } from "@/types";
 
-export type Tab = "mission" | "explore" | "analyze" | "compare" | "research" | "discover";
+export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
+/** The two ways to explore: browse the featured regions, or find candidate Earth analogs for a reference region. */
+export type ExploreMode = "browse" | "find_analogs";
 export type { Body };
 
 /** What the user is doing: screening Mars landing candidates, or picking an
@@ -162,6 +164,11 @@ export interface AppState {
   selectionRevision: number;
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
+  /** Which Explore experience is shown. Browse is the default; Find Earth Analogs is the discovery survey. */
+  exploreMode: ExploreMode;
+  setExploreMode: (mode: ExploreMode) => void;
+  /** Jump to Explore in Find Earth Analogs mode (from a region's detail, the Research page or an objective). */
+  openFindAnalogs: () => void;
 
   selectedSiteId: string | null;
   selectSite: (id: string | null) => void;
@@ -337,6 +344,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   setComparison: (patch) => set(s => ({ comparison: { ...s.comparison, ...patch } })),
   activeTab: "explore",
   setActiveTab: (tab) => set({ activeTab: tab }),
+  exploreMode: "browse",
+  setExploreMode: (exploreMode) => set({ exploreMode }),
+  openFindAnalogs: () => set({ activeTab: "explore", exploreMode: "find_analogs" }),
 
   selectedSiteId: null,
   selectSite: (id) => get().selectLocation("mars", id),

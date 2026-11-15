@@ -39,7 +39,8 @@ describe("candidate deep research",()=>{
  it("offers a discovery handoff when no candidate is selected",()=>{
   useCandidateResearchTarget.setState({target:null});mount();
   fireEvent.click(screen.getByRole("button",{name:"Choose a discovery candidate"}));
-  expect(useAppStore.getState().activeTab).toBe("discover");
+  expect(useAppStore.getState().activeTab).toBe("explore");
+  expect(useAppStore.getState().exploreMode).toBe("find_analogs");
  });
  it("tags missing and in-progress status clearly",()=>{
   const v=render(<ResearchStatusBadge status={undefined}/>);expect(screen.getByText("Unresearched")).toBeInTheDocument();
