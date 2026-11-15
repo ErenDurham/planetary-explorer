@@ -19,6 +19,7 @@ import { CompareAtlasHeader, AtlasPairSelectors as PairSelectors } from "@/compo
 import { AnalogPreferencesSlot } from "@/components/compare/AnalogPreferencesSlot";
 import { SimilarityCard } from "@/components/compare/SimilarityCard";
 import { PairMetricsTable } from "@/components/compare/PairMetricsTable";
+import { PairConditionsTable } from "@/components/compare/PairConditionsTable";
 import { PlanetaryContext } from "@/components/compare/PlanetaryContext";
 import { PairStudies } from "@/components/compare/PairStudies";
 import { ProvenanceDisclosures } from "@/components/compare/ProvenanceDisclosures";
@@ -171,6 +172,10 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
 
         <AtlasSection number="03" title="Compare the measurements" description="Raw values stay in their original units. Unavailable measurements remain explicit.">
         <PairMetricsTable columns={columns} candidate={pair.candidate} rankExcluded={pair.rank.data?.excluded_features ?? []} />
+        </AtlasSection>
+
+        <AtlasSection number="03b" title="Reported conditions" description="What the cited literature reports for each location, side by side. Text only; not part of the index.">
+        <PairConditionsTable columns={columns} />
         </AtlasSection>
 
         <AtlasSection number="04" title="Take the research further">

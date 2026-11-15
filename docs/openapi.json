@@ -32,7 +32,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -110,7 +110,7 @@
                 }
               }
             },
-            "description": "Unprocessable Content"
+            "description": "Unprocessable Entity"
           },
           "500": {
             "content": {
@@ -179,7 +179,7 @@
                 }
               }
             },
-            "description": "Unprocessable Content"
+            "description": "Unprocessable Entity"
           },
           "500": {
             "content": {
@@ -231,7 +231,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -299,7 +299,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -367,7 +367,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -435,7 +435,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -504,7 +504,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -573,7 +573,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -642,7 +642,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -710,7 +710,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -915,7 +915,7 @@
             }
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -1013,6 +1013,451 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ComparisonCatalog"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/expedition/capabilities": {
+      "get": {
+        "tags": [
+          "expedition"
+        ],
+        "summary": "Get Capabilities",
+        "operationId": "get_capabilities_api_v1_expedition_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceCapabilities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/expedition/terrain": {
+      "get": {
+        "tags": [
+          "expedition"
+        ],
+        "summary": "Get Terrain",
+        "operationId": "get_terrain_api_v1_expedition_terrain_get",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "enum": [
+                "mars",
+                "moon",
+                "earth"
+              ],
+              "type": "string",
+              "title": "Body"
+            }
+          },
+          {
+            "name": "site_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Site Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerrainContext"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/expedition/plan": {
+      "post": {
+        "tags": [
+          "expedition"
+        ],
+        "summary": "Post Plan",
+        "operationId": "post_plan_api_v1_expedition_plan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/capabilities": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Capabilities",
+        "operationId": "capabilities_api_v1_discovery_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryCapabilities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/rank": {
+      "post": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Rank",
+        "operationId": "rank_api_v1_discovery_rank_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoveryRankRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryRankResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Detail",
+        "operationId": "detail_api_v1_discovery_runs__run_id__candidates__candidate_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryCandidateDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/runs/{run_id}/export": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Export",
+        "operationId": "export_api_v1_discovery_runs__run_id__export_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryExport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}/research": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Research Dossier",
+        "operationId": "research_dossier_api_v1_discovery_runs__run_id__candidates__candidate_id__research_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          },
+          {
+            "name": "question",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 1000,
+              "default": "",
+              "title": "Question"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchDossier"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Save Research",
+        "operationId": "save_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResearchUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}/research/export": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Export Research",
+        "operationId": "export_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_export_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchBrief"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -1898,6 +2343,35 @@
         ],
         "title": "BodyReference"
       },
+      "Bounds": {
+        "properties": {
+          "west": {
+            "type": "number",
+            "title": "West"
+          },
+          "east": {
+            "type": "number",
+            "title": "East"
+          },
+          "south": {
+            "type": "number",
+            "title": "South"
+          },
+          "north": {
+            "type": "number",
+            "title": "North"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "west",
+          "east",
+          "south",
+          "north"
+        ],
+        "title": "Bounds"
+      },
       "Citation": {
         "properties": {
           "citation_id": {
@@ -2025,6 +2499,67 @@
             },
             "type": "array",
             "title": "Source Ids"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Base candidate",
+                  "Resource site",
+                  "To evaluate",
+                  "Instrument testing",
+                  "Context only"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          },
+          "coordinates_approximate": {
+            "type": "boolean",
+            "title": "Coordinates Approximate",
+            "default": false
+          },
+          "paired_location_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paired Location Id",
+            "description": "The workbook's paired location on the other body"
+          },
+          "why_they_match": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why They Match"
+          },
+          "reported_conditions": {
+            "items": {
+              "$ref": "#/components/schemas/ReportedCondition"
+            },
+            "type": "array",
+            "title": "Reported Conditions",
+            "description": "Literature-reported condition texts (workbook); not measurements"
+          },
+          "condition_sources": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/WorkbookSource"
+            },
+            "type": "object",
+            "title": "Condition Sources"
           }
         },
         "type": "object",
@@ -2309,6 +2844,1132 @@
         ],
         "title": "DirectionOption"
       },
+      "DiscoveryAuditRow": {
+        "properties": {
+          "candidate": {
+            "$ref": "#/components/schemas/DiscoveryCandidate"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiscoveryProfile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "screening_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Screening Reasons"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "candidate",
+          "profile",
+          "screening_reasons"
+        ],
+        "title": "DiscoveryAuditRow"
+      },
+      "DiscoveryBounds": {
+        "properties": {
+          "west": {
+            "type": "number",
+            "title": "West"
+          },
+          "south": {
+            "type": "number",
+            "title": "South"
+          },
+          "east": {
+            "type": "number",
+            "title": "East"
+          },
+          "north": {
+            "type": "number",
+            "title": "North"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "west",
+          "south",
+          "east",
+          "north"
+        ],
+        "title": "DiscoveryBounds"
+      },
+      "DiscoveryCandidate": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "footprint_geojson": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Footprint Geojson"
+          },
+          "research_status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Research Status",
+            "default": "unresearched"
+          },
+          "raw_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Rank"
+          },
+          "display_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Rank"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "similarity_index": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity Index"
+          },
+          "feature_distances": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryFeatureDistance"
+            },
+            "type": "array",
+            "title": "Feature Distances"
+          },
+          "terrain_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Terrain Valid Fraction"
+          },
+          "novelty": {
+            "$ref": "#/components/schemas/DiscoveryNovelty"
+          },
+          "context": {
+            "$ref": "#/components/schemas/DiscoveryContext"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "lat",
+          "lon_east",
+          "footprint_geojson",
+          "terrain_valid_fraction",
+          "novelty",
+          "sources",
+          "limitations"
+        ],
+        "title": "DiscoveryCandidate"
+      },
+      "DiscoveryCandidateDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "footprint_geojson": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Footprint Geojson"
+          },
+          "research_status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Research Status",
+            "default": "unresearched"
+          },
+          "raw_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Rank"
+          },
+          "display_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Rank"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "similarity_index": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity Index"
+          },
+          "feature_distances": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryFeatureDistance"
+            },
+            "type": "array",
+            "title": "Feature Distances"
+          },
+          "terrain_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Terrain Valid Fraction"
+          },
+          "novelty": {
+            "$ref": "#/components/schemas/DiscoveryNovelty"
+          },
+          "context": {
+            "$ref": "#/components/schemas/DiscoveryContext"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiscoveryProfile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "screening_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Screening Reasons"
+          },
+          "source_manifest": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Source Manifest"
+          },
+          "proposed_field_validation": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Proposed Field Validation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "lat",
+          "lon_east",
+          "footprint_geojson",
+          "terrain_valid_fraction",
+          "novelty",
+          "sources",
+          "limitations",
+          "profile",
+          "screening_reasons",
+          "source_manifest",
+          "proposed_field_validation"
+        ],
+        "title": "DiscoveryCandidateDetail"
+      },
+      "DiscoveryCapabilities": {
+        "properties": {
+          "engine_version": {
+            "type": "string",
+            "const": "discovery-v1",
+            "title": "Engine Version",
+            "default": "discovery-v1"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "unavailable"
+            ],
+            "title": "State"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/DiscoveryReference"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryRunSummary"
+            },
+            "type": "array",
+            "title": "Runs"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryCriterion"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "default_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Default Weights"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "state",
+          "runs",
+          "criteria",
+          "default_weights",
+          "limitations"
+        ],
+        "title": "DiscoveryCapabilities"
+      },
+      "DiscoveryContext": {
+        "properties": {
+          "climate": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Climate"
+          },
+          "land_cover": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Land Cover"
+          },
+          "geology_status": {
+            "type": "string",
+            "const": "not_assessed",
+            "title": "Geology Status",
+            "default": "not_assessed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DiscoveryContext"
+      },
+      "DiscoveryCriterion": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "scale": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Scale"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "feature_id",
+          "label",
+          "unit",
+          "scale"
+        ],
+        "title": "DiscoveryCriterion"
+      },
+      "DiscoveryExport": {
+        "properties": {
+          "manifest": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Manifest"
+          },
+          "specification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Specification"
+          },
+          "survey": {
+            "$ref": "#/components/schemas/DiscoverySurvey"
+          },
+          "reference_profile": {
+            "$ref": "#/components/schemas/DiscoveryProfile"
+          },
+          "audit_rows": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryAuditRow"
+            },
+            "type": "array",
+            "title": "Audit Rows"
+          },
+          "exclusions": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Exclusions"
+          },
+          "provenance": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverySource"
+            },
+            "type": "array",
+            "title": "Provenance"
+          },
+          "validation": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Validation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "manifest",
+          "specification",
+          "survey",
+          "reference_profile",
+          "audit_rows",
+          "exclusions",
+          "provenance",
+          "validation"
+        ],
+        "title": "DiscoveryExport"
+      },
+      "DiscoveryFeatureDistance": {
+        "properties": {
+          "feature_id": {
+            "type": "string",
+            "title": "Feature Id"
+          },
+          "earth_value": {
+            "type": "number",
+            "title": "Earth Value"
+          },
+          "mars_value": {
+            "type": "number",
+            "title": "Mars Value"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "scale": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Scale"
+          },
+          "normalized_weight": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Normalized Weight"
+          },
+          "distance": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Distance"
+          },
+          "contribution": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Contribution"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "feature_id",
+          "earth_value",
+          "mars_value",
+          "unit",
+          "scale",
+          "normalized_weight",
+          "distance",
+          "contribution"
+        ],
+        "title": "DiscoveryFeatureDistance"
+      },
+      "DiscoveryNovelty": {
+        "properties": {
+          "catalog_version": {
+            "type": "string",
+            "title": "Catalog Version"
+          },
+          "nearest_known_site_id": {
+            "type": "string",
+            "title": "Nearest Known Site Id"
+          },
+          "nearest_known_site_distance_km": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Nearest Known Site Distance Km"
+          },
+          "buffer_rule": {
+            "type": "string",
+            "title": "Buffer Rule"
+          },
+          "outside_catalog_buffer": {
+            "type": "boolean",
+            "title": "Outside Catalog Buffer"
+          },
+          "review_status": {
+            "type": "string",
+            "enum": [
+              "not_reviewed",
+              "desktop_reviewed"
+            ],
+            "title": "Review Status",
+            "default": "not_reviewed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "catalog_version",
+          "nearest_known_site_id",
+          "nearest_known_site_distance_km",
+          "buffer_rule",
+          "outside_catalog_buffer"
+        ],
+        "title": "DiscoveryNovelty"
+      },
+      "DiscoveryProfile": {
+        "properties": {
+          "measurements": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TerrainMeasurement"
+            },
+            "type": "object",
+            "title": "Measurements"
+          },
+          "grid": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grid"
+          },
+          "terrain_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Terrain Valid Fraction"
+          },
+          "gradient_valid_fraction": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Gradient Valid Fraction"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "measurements",
+          "grid",
+          "terrain_valid_fraction",
+          "gradient_valid_fraction"
+        ],
+        "title": "DiscoveryProfile"
+      },
+      "DiscoveryRankRequest": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "title": "Run Id"
+          },
+          "reference_id": {
+            "type": "string",
+            "const": "jezero_crater",
+            "title": "Reference Id",
+            "default": "jezero_crater"
+          },
+          "weights": {
+            "$ref": "#/components/schemas/DiscoveryWeights"
+          },
+          "top_k": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Top K",
+            "default": 5
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id"
+        ],
+        "title": "DiscoveryRankRequest"
+      },
+      "DiscoveryRankResponse": {
+        "properties": {
+          "engine_version": {
+            "type": "string",
+            "const": "discovery-v1",
+            "title": "Engine Version",
+            "default": "discovery-v1"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/DiscoveryReference"
+          },
+          "survey": {
+            "$ref": "#/components/schemas/DiscoverySurvey"
+          },
+          "basis_features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Basis Features"
+          },
+          "effective_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Effective Weights"
+          },
+          "eligible_pool_count": {
+            "type": "integer",
+            "title": "Eligible Pool Count"
+          },
+          "returned_count": {
+            "type": "integer",
+            "title": "Returned Count"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryCandidate"
+            },
+            "type": "array",
+            "title": "Candidates"
+          },
+          "client_request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Request Id"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "reference",
+          "survey",
+          "basis_features",
+          "effective_weights",
+          "eligible_pool_count",
+          "returned_count",
+          "candidates",
+          "limitations"
+        ],
+        "title": "DiscoveryRankResponse"
+      },
+      "DiscoveryReference": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "const": "mars",
+            "title": "Body",
+            "default": "mars"
+          },
+          "id": {
+            "type": "string",
+            "const": "jezero_crater",
+            "title": "Id",
+            "default": "jezero_crater"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": "Jezero Crater"
+          },
+          "lat": {
+            "type": "number",
+            "title": "Lat",
+            "default": 18.4447
+          },
+          "lon_east": {
+            "type": "number",
+            "title": "Lon East",
+            "default": 77.4508
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DiscoveryReference"
+      },
+      "DiscoveryRunSummary": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "bounds": {
+            "$ref": "#/components/schemas/DiscoveryBounds"
+          },
+          "total_sampled": {
+            "type": "integer",
+            "title": "Total Sampled"
+          },
+          "eligible_count": {
+            "type": "integer",
+            "title": "Eligible Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "label",
+          "created_at",
+          "bounds",
+          "total_sampled",
+          "eligible_count"
+        ],
+        "title": "DiscoveryRunSummary"
+      },
+      "DiscoverySource": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "license": {
+            "type": "string",
+            "title": "License"
+          },
+          "retrieved_at": {
+            "type": "string",
+            "title": "Retrieved At"
+          },
+          "observation_period": {
+            "type": "string",
+            "title": "Observation Period"
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sha256"
+          },
+          "etag": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Etag"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source_id",
+          "title",
+          "institution",
+          "url",
+          "license",
+          "retrieved_at",
+          "observation_period"
+        ],
+        "title": "DiscoverySource"
+      },
+      "DiscoverySurvey": {
+        "properties": {
+          "bounds": {
+            "$ref": "#/components/schemas/DiscoveryBounds"
+          },
+          "generated_count": {
+            "type": "integer",
+            "title": "Generated Count"
+          },
+          "terrain_valid_count": {
+            "type": "integer",
+            "title": "Terrain Valid Count"
+          },
+          "eligible_count": {
+            "type": "integer",
+            "title": "Eligible Count"
+          },
+          "exclusion_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Exclusion Counts"
+          },
+          "sampling_centres": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Sampling Centres"
+          },
+          "grid_specification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grid Specification"
+          },
+          "footprint_specification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Footprint Specification"
+          },
+          "dataset_versions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Dataset Versions"
+          },
+          "spec_version": {
+            "type": "string",
+            "title": "Spec Version"
+          },
+          "diversification": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Diversification"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "bounds",
+          "generated_count",
+          "terrain_valid_count",
+          "eligible_count",
+          "exclusion_counts",
+          "sampling_centres",
+          "grid_specification",
+          "footprint_specification",
+          "dataset_versions",
+          "spec_version",
+          "diversification"
+        ],
+        "title": "DiscoverySurvey"
+      },
+      "DiscoveryWeights": {
+        "properties": {
+          "slope_regional_median_deg": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Slope Regional Median Deg",
+            "default": 50
+          },
+          "roughness_regional_m": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Roughness Regional M",
+            "default": 50
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DiscoveryWeights"
+      },
+      "EarthAnalogNote": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "analog": {
+            "type": "string",
+            "title": "Analog"
+          },
+          "where": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Where"
+          },
+          "matches": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Matches"
+          },
+          "does_not_match": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Does Not Match"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lon_east": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lon East"
+          },
+          "coordinates_approximate": {
+            "type": "boolean",
+            "title": "Coordinates Approximate",
+            "default": true
+          },
+          "workbook_source_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workbook Source Text",
+            "description": "The workbook's citation as written; may name sources outside the approved list"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "analog"
+        ],
+        "title": "EarthAnalogNote",
+        "description": "An additional Earth analog the workbook lists for a Mars site (not a ranked candidate)."
+      },
       "EarthCandidate": {
         "properties": {
           "id": {
@@ -2368,6 +4029,70 @@
             },
             "type": "array",
             "title": "Sources"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Base candidate",
+                  "Resource site",
+                  "To evaluate",
+                  "Instrument testing",
+                  "Context only"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role",
+            "description": "Role of the Mars site this location is paired with"
+          },
+          "coordinates_approximate": {
+            "type": "boolean",
+            "title": "Coordinates Approximate",
+            "description": "The workbook marks these coordinates as approximate",
+            "default": false
+          },
+          "paired_mars_site_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paired Mars Site Id",
+            "description": "The Mars site the workbook pairs with this location"
+          },
+          "why_they_match": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why They Match",
+            "description": "The workbook author's reason for the pairing"
+          },
+          "reported_conditions": {
+            "items": {
+              "$ref": "#/components/schemas/ReportedCondition"
+            },
+            "type": "array",
+            "title": "Reported Conditions",
+            "description": "Literature-reported condition texts; separate from measured profiles"
+          },
+          "condition_sources": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/WorkbookSource"
+            },
+            "type": "object",
+            "title": "Condition Sources"
           }
         },
         "type": "object",
@@ -3163,6 +4888,39 @@
         ],
         "title": "FactorScore"
       },
+      "Feasibility": {
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "feasible",
+              "marginal",
+              "infeasible",
+              "undetermined"
+            ],
+            "title": "Verdict"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "verdict",
+          "summary",
+          "reasons"
+        ],
+        "title": "Feasibility"
+      },
       "FeatureDistance": {
         "properties": {
           "feature_id": {
@@ -3308,6 +5066,29 @@
           "method"
         ],
         "title": "FeatureDistance"
+      },
+      "GeoPoint": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 360.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lat",
+          "lon_east"
+        ],
+        "title": "GeoPoint"
       },
       "GeographicFootprint": {
         "properties": {
@@ -4242,6 +6023,37 @@
         ],
         "title": "InterpretResponse"
       },
+      "Interpretation": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "generated_by": {
+            "type": "string",
+            "const": "rule_based",
+            "title": "Generated By",
+            "default": "rule_based"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "Interpretation"
+      },
       "LocationRef": {
         "properties": {
           "body": {
@@ -4786,6 +6598,400 @@
         "type": "object",
         "title": "MissionRequirements"
       },
+      "PlanMetrics": {
+        "properties": {
+          "total_distance_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Distance M"
+          },
+          "energy_wh": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Energy Wh"
+          },
+          "elevation_gain_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elevation Gain M"
+          },
+          "elevation_loss_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elevation Loss M"
+          },
+          "slope_mean_deg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slope Mean Deg"
+          },
+          "slope_max_deg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slope Max Deg"
+          },
+          "slope_p95_deg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slope P95 Deg"
+          },
+          "traverse_time_hours": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Traverse Time Hours"
+          },
+          "driving_sols": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Driving Sols"
+          },
+          "targets_reached": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Targets Reached"
+          },
+          "targets_unreached": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Targets Unreached"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "PlanMetrics"
+      },
+      "PlanRequest": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "moon",
+              "earth"
+            ],
+            "title": "Body"
+          },
+          "site_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Site Id"
+          },
+          "objective": {
+            "type": "string",
+            "enum": [
+              "terrain_survey",
+              "geological_sampling",
+              "research_traverse"
+            ],
+            "title": "Objective"
+          },
+          "start": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "waypoints": {
+            "items": {
+              "$ref": "#/components/schemas/GeoPoint"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Waypoints"
+          },
+          "target_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Target Ids"
+          },
+          "user_targets": {
+            "items": {
+              "$ref": "#/components/schemas/UserTarget"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "User Targets"
+          },
+          "rover": {
+            "$ref": "#/components/schemas/RoverParameters"
+          },
+          "optimization": {
+            "type": "string",
+            "enum": [
+              "shortest_distance",
+              "lowest_energy",
+              "lowest_risk",
+              "balanced"
+            ],
+            "title": "Optimization",
+            "default": "balanced"
+          },
+          "client_request_id": {
+            "type": "string",
+            "maxLength": 150,
+            "title": "Client Request Id",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "body",
+          "site_id",
+          "objective",
+          "start"
+        ],
+        "title": "PlanRequest"
+      },
+      "PlanResponse": {
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "client_request_id": {
+            "type": "string",
+            "title": "Client Request Id"
+          },
+          "body": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "moon",
+              "earth"
+            ],
+            "title": "Body"
+          },
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "partial",
+              "infeasible"
+            ],
+            "title": "Status"
+          },
+          "data_status": {
+            "type": "string",
+            "enum": [
+              "limited",
+              "unavailable"
+            ],
+            "title": "Data Status"
+          },
+          "objective": {
+            "type": "string",
+            "enum": [
+              "terrain_survey",
+              "geological_sampling",
+              "research_traverse"
+            ],
+            "title": "Objective"
+          },
+          "route": {
+            "items": {
+              "$ref": "#/components/schemas/RouteSegment"
+            },
+            "type": "array",
+            "title": "Route"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/PlanMetrics"
+          },
+          "feasibility": {
+            "$ref": "#/components/schemas/Feasibility"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/PlanWarning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "interpretation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Interpretation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          },
+          "datasets": {
+            "items": {
+              "$ref": "#/components/schemas/TerrainDataset"
+            },
+            "type": "array",
+            "title": "Datasets"
+          },
+          "terrain": {
+            "$ref": "#/components/schemas/TerrainContext"
+          },
+          "constraints": {
+            "$ref": "#/components/schemas/RoverParameters"
+          },
+          "stops": {
+            "items": {
+              "$ref": "#/components/schemas/SnappedStop"
+            },
+            "type": "array",
+            "title": "Stops"
+          },
+          "visited_targets": {
+            "items": {
+              "$ref": "#/components/schemas/VisitedTarget"
+            },
+            "type": "array",
+            "title": "Visited Targets"
+          },
+          "engine_version": {
+            "type": "string",
+            "title": "Engine Version"
+          },
+          "computed_at": {
+            "type": "string",
+            "title": "Computed At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "plan_id",
+          "client_request_id",
+          "body",
+          "site_id",
+          "status",
+          "data_status",
+          "objective",
+          "route",
+          "metrics",
+          "feasibility",
+          "warnings",
+          "assumptions",
+          "limitations",
+          "datasets",
+          "terrain",
+          "constraints",
+          "stops",
+          "visited_targets",
+          "engine_version",
+          "computed_at"
+        ],
+        "title": "PlanResponse"
+      },
+      "PlanWarning": {
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": [
+              "info",
+              "warning",
+              "critical"
+            ],
+            "title": "Severity"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "segment_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Segment Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "severity",
+          "message"
+        ],
+        "title": "PlanWarning"
+      },
       "Provenance": {
         "properties": {
           "source_id": {
@@ -5105,6 +7311,268 @@
         ],
         "title": "RankedCandidate"
       },
+      "Region": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "moon",
+              "earth"
+            ],
+            "title": "Body"
+          },
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "terrain_available": {
+            "type": "boolean",
+            "title": "Terrain Available"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "body",
+          "site_id",
+          "name",
+          "terrain_available",
+          "note"
+        ],
+        "title": "Region"
+      },
+      "ReportedCondition": {
+        "properties": {
+          "feature": {
+            "type": "string",
+            "enum": [
+              "terrain",
+              "mineralogy",
+              "elevation",
+              "thermal",
+              "solar",
+              "wind",
+              "water_ice"
+            ],
+            "title": "Feature"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "cited_not_verified",
+              "citation_only",
+              "not_found_in_sources",
+              "excluded_source"
+            ],
+            "title": "Status"
+          },
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Ids"
+          },
+          "evidence_source_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence Source Id",
+            "description": "Source whose sentence states the text (status verified)"
+          },
+          "evidence_quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence Quote"
+          },
+          "provenance": {
+            "type": "string",
+            "title": "Provenance",
+            "default": "literature-reported (workbook author)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature",
+          "label",
+          "status"
+        ],
+        "title": "ReportedCondition",
+        "description": "A literature-reported condition text compiled by the workbook author.\nDescriptive text only: never parsed into numbers and never scored. `text`\nis null when the workbook found nothing (`not_found_in_sources`) or when its\nonly source is not on the approved list (`excluded_source`)."
+      },
+      "ResearchBrief": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "research-brief-v1",
+            "title": "Schema Version",
+            "default": "research-brief-v1"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "markdown": {
+            "type": "string",
+            "title": "Markdown"
+          },
+          "record": {
+            "$ref": "#/components/schemas/ResearchRecord"
+          },
+          "discovery": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Discovery"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "candidate_id",
+          "filename",
+          "markdown",
+          "record",
+          "discovery",
+          "limitations"
+        ],
+        "title": "ResearchBrief"
+      },
+      "ResearchDossier": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/DiscoveryCandidateDetail"
+          },
+          "record": {
+            "$ref": "#/components/schemas/ResearchRecord"
+          },
+          "research_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Research Questions"
+          },
+          "search_tasks": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchSearchTask"
+            },
+            "type": "array",
+            "title": "Search Tasks"
+          },
+          "research_brief": {
+            "type": "string",
+            "title": "Research Brief"
+          },
+          "background_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceChunk"
+            },
+            "type": "array",
+            "title": "Background Evidence"
+          },
+          "retrieval_status": {
+            "type": "string",
+            "enum": [
+              "background_available",
+              "unavailable"
+            ],
+            "title": "Retrieval Status"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "candidate_id",
+          "candidate",
+          "record",
+          "research_questions",
+          "search_tasks",
+          "research_brief",
+          "background_evidence",
+          "retrieval_status",
+          "limitations"
+        ],
+        "title": "ResearchDossier"
+      },
       "ResearchExplanation": {
         "properties": {
           "site_id": {
@@ -5202,6 +7670,425 @@
           "generated_at"
         ],
         "title": "ResearchExplanation"
+      },
+      "ResearchFinding": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "minLength": 3,
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 2048,
+            "title": "Url"
+          },
+          "finding": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 20,
+            "title": "Finding"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "candidate_specific",
+              "regional_background",
+              "contradictory"
+            ],
+            "title": "Scope"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "url",
+          "finding",
+          "scope"
+        ],
+        "title": "ResearchFinding"
+      },
+      "ResearchRecord": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Status",
+            "default": "unresearched"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 12000,
+            "title": "Notes",
+            "default": ""
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchFinding"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Findings"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "candidate_id"
+        ],
+        "title": "ResearchRecord"
+      },
+      "ResearchSearchTask": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "label",
+          "query",
+          "url"
+        ],
+        "title": "ResearchSearchTask"
+      },
+      "ResearchTarget": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 360.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "target_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Target Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "priority": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lat",
+          "lon_east",
+          "target_id",
+          "name",
+          "kind"
+        ],
+        "title": "ResearchTarget"
+      },
+      "ResearchUpdate": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "unresearched",
+              "in_progress",
+              "literature_reviewed"
+            ],
+            "title": "Status",
+            "default": "unresearched"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 12000,
+            "title": "Notes",
+            "default": ""
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchFinding"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Findings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ResearchUpdate"
+      },
+      "RouteSegment": {
+        "properties": {
+          "segment_id": {
+            "type": "string",
+            "title": "Segment Id"
+          },
+          "from": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "to": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "polyline": {
+            "items": {
+              "$ref": "#/components/schemas/GeoPoint"
+            },
+            "type": "array",
+            "title": "Polyline"
+          },
+          "distance_m": {
+            "type": "number",
+            "title": "Distance M"
+          },
+          "risk": {
+            "type": "string",
+            "enum": [
+              "low",
+              "moderate",
+              "high",
+              "unknown"
+            ],
+            "title": "Risk"
+          },
+          "max_slope_deg": {
+            "type": "number",
+            "title": "Max Slope Deg"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "elevations_m": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Elevations M"
+          },
+          "edge_slopes_deg": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Edge Slopes Deg"
+          },
+          "energy_wh": {
+            "type": "number",
+            "title": "Energy Wh"
+          },
+          "elevation_gain_m": {
+            "type": "number",
+            "title": "Elevation Gain M"
+          },
+          "elevation_loss_m": {
+            "type": "number",
+            "title": "Elevation Loss M"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "segment_id",
+          "from",
+          "to",
+          "polyline",
+          "distance_m",
+          "risk",
+          "max_slope_deg",
+          "elevations_m",
+          "edge_slopes_deg",
+          "energy_wh",
+          "elevation_gain_m",
+          "elevation_loss_m"
+        ],
+        "title": "RouteSegment"
+      },
+      "RoverParameters": {
+        "properties": {
+          "profile_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Id"
+          },
+          "max_slope_deg": {
+            "type": "number",
+            "maximum": 45.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Max Slope Deg",
+            "default": 15
+          },
+          "nominal_speed_m_s": {
+            "type": "number",
+            "maximum": 10.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Nominal Speed M S",
+            "default": 0.05
+          },
+          "battery_capacity_wh": {
+            "type": "number",
+            "maximum": 1000000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Battery Capacity Wh",
+            "default": 10000
+          },
+          "drive_hours_per_sol": {
+            "type": "number",
+            "maximum": 24.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Drive Hours Per Sol",
+            "default": 4
+          },
+          "mass_kg": {
+            "type": "number",
+            "maximum": 100000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Mass Kg",
+            "default": 100
+          },
+          "rolling_resistance": {
+            "type": "number",
+            "maximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Rolling Resistance",
+            "default": 0.08
+          },
+          "drive_efficiency": {
+            "type": "number",
+            "maximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Drive Efficiency",
+            "default": 0.3
+          },
+          "hotel_power_w": {
+            "type": "number",
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Hotel Power W",
+            "default": 50
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RoverParameters"
+      },
+      "RoverProfile": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/RoverParameters"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile_id",
+          "label",
+          "description",
+          "parameters"
+        ],
+        "title": "RoverProfile"
       },
       "ScenarioSiteOutcome": {
         "properties": {
@@ -5723,6 +8610,84 @@
         ],
         "title": "SensitivitySweep"
       },
+      "ServiceCapabilities": {
+        "properties": {
+          "engine_version": {
+            "type": "string",
+            "title": "Engine Version"
+          },
+          "bodies": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "mars",
+                "moon",
+                "earth"
+              ]
+            },
+            "type": "array",
+            "title": "Bodies"
+          },
+          "objectives": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "terrain_survey",
+                "geological_sampling",
+                "research_traverse"
+              ]
+            },
+            "type": "array",
+            "title": "Objectives"
+          },
+          "optimization_preferences": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "shortest_distance",
+                "lowest_energy",
+                "lowest_risk",
+                "balanced"
+              ]
+            },
+            "type": "array",
+            "title": "Optimization Preferences"
+          },
+          "rover_profiles": {
+            "items": {
+              "$ref": "#/components/schemas/RoverProfile"
+            },
+            "type": "array",
+            "title": "Rover Profiles"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/Region"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "engine_version",
+          "bodies",
+          "objectives",
+          "optimization_preferences",
+          "rover_profiles",
+          "regions",
+          "notes"
+        ],
+        "title": "ServiceCapabilities"
+      },
       "ServiceStatus": {
         "properties": {
           "data": {
@@ -5830,6 +8795,79 @@
             "type": "array",
             "title": "Coordinate Sources",
             "description": "source_ids for the coordinates"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Base candidate",
+                  "Resource site",
+                  "To evaluate",
+                  "Instrument testing",
+                  "Context only"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role",
+            "description": "How the workbook author classes the site; organises the site lists, never scored"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes",
+            "description": "The workbook author's note on the site"
+          },
+          "coordinates_approximate": {
+            "type": "boolean",
+            "title": "Coordinates Approximate",
+            "description": "The workbook marks these coordinates as approximate",
+            "default": false
+          },
+          "paired_earth_site_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paired Earth Site Id",
+            "description": "The Earth location the workbook pairs with this site"
+          },
+          "reported_conditions": {
+            "items": {
+              "$ref": "#/components/schemas/ReportedCondition"
+            },
+            "type": "array",
+            "title": "Reported Conditions",
+            "description": "Literature-reported condition texts; separate from measured profiles"
+          },
+          "earth_analogs": {
+            "items": {
+              "$ref": "#/components/schemas/EarthAnalogNote"
+            },
+            "type": "array",
+            "title": "Earth Analogs",
+            "description": "Further Earth analogs the workbook lists for this site"
+          },
+          "condition_sources": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/WorkbookSource"
+            },
+            "type": "object",
+            "title": "Condition Sources",
+            "description": "Every source cited by reported_conditions"
           }
         },
         "type": "object",
@@ -5994,6 +9032,50 @@
           "profile"
         ],
         "title": "SiteWithProfile"
+      },
+      "SnappedStop": {
+        "properties": {
+          "stop_id": {
+            "type": "string",
+            "title": "Stop Id"
+          },
+          "requested": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "snapped": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GeoPoint"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "offset_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offset M"
+          },
+          "visited": {
+            "type": "boolean",
+            "title": "Visited",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "stop_id",
+          "requested"
+        ],
+        "title": "SnappedStop"
       },
       "SourceDigest": {
         "properties": {
@@ -6342,6 +9424,305 @@
         "title": "TaskInterpretation",
         "description": "What the objective asks for, separately from the landing-priority weights.\n`focus_body` is where the user is looking for a location; `mission_destination`\nis where the mission flies (a Mars mission can use Earth test sites)."
       },
+      "TerrainContext": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "enum": [
+              "mars",
+              "moon",
+              "earth"
+            ],
+            "title": "Body"
+          },
+          "site_id": {
+            "type": "string",
+            "title": "Site Id"
+          },
+          "start": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "dem": {
+            "$ref": "#/components/schemas/TerrainCoverage"
+          },
+          "research_targets": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchTarget"
+            },
+            "type": "array",
+            "title": "Research Targets"
+          },
+          "routing_bounds": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Bounds"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          },
+          "start_source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Start Source Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "body",
+          "site_id",
+          "start",
+          "dem"
+        ],
+        "title": "TerrainContext"
+      },
+      "TerrainCoverage": {
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "dataset": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TerrainDataset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rows"
+          },
+          "columns": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Columns"
+          },
+          "valid_fraction": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Fraction"
+          },
+          "resolution_lat_deg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution Lat Deg"
+          },
+          "resolution_lon_deg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution Lon Deg"
+          },
+          "cell_width_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cell Width M"
+          },
+          "cell_height_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cell Height M"
+          },
+          "longitude_convention": {
+            "type": "string",
+            "title": "Longitude Convention",
+            "default": "east_-180_180"
+          },
+          "crs": {
+            "type": "string",
+            "title": "Crs",
+            "default": "planetocentric body-fixed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "available"
+        ],
+        "title": "TerrainCoverage"
+      },
+      "TerrainDataset": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License"
+          },
+          "resolution_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution M"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sha256"
+          },
+          "vertical_datum": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vertical Datum"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "source"
+        ],
+        "title": "TerrainDataset"
+      },
+      "TerrainMeasurement": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "deg",
+              "m"
+            ],
+            "title": "Unit"
+          },
+          "measurement_type": {
+            "type": "string",
+            "const": "derived",
+            "title": "Measurement Type",
+            "default": "derived"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "unit"
+        ],
+        "title": "TerrainMeasurement"
+      },
       "Turn": {
         "properties": {
           "role": {
@@ -6365,6 +9746,43 @@
           "content"
         ],
         "title": "Turn"
+      },
+      "UserTarget": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lon_east": {
+            "type": "number",
+            "maximum": 360.0,
+            "minimum": -180.0,
+            "title": "Lon East"
+          },
+          "target_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Target Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lat",
+          "lon_east",
+          "target_id",
+          "name"
+        ],
+        "title": "UserTarget"
       },
       "ValidationError": {
         "properties": {
@@ -6405,6 +9823,39 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "VisitedTarget": {
+        "properties": {
+          "target_id": {
+            "type": "string",
+            "title": "Target Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "coordinate_status": {
+            "type": "string",
+            "enum": [
+              "user_defined",
+              "verified"
+            ],
+            "title": "Coordinate Status"
+          },
+          "visited": {
+            "type": "boolean",
+            "title": "Visited"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target_id",
+          "name",
+          "coordinate_status",
+          "visited"
+        ],
+        "title": "VisitedTarget"
       },
       "WeightSuggestion": {
         "properties": {
@@ -6456,6 +9907,68 @@
           "data_available"
         ],
         "title": "WeightSuggestion"
+      },
+      "WorkbookSource": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "doi",
+              "agency",
+              "approved_exception"
+            ],
+            "title": "Kind"
+          },
+          "cite": {
+            "type": "string",
+            "title": "Cite"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "restriction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Restriction",
+            "description": "Owner condition on how the source may be used"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id",
+          "kind",
+          "cite",
+          "title",
+          "url"
+        ],
+        "title": "WorkbookSource",
+        "description": "A source the owner approved for the workbook's condition texts."
       }
     }
   }

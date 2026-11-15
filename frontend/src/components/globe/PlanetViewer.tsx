@@ -13,7 +13,7 @@ import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
 import { token } from "@/lib/theme";
-import { GlobeLegend } from "./GlobeLegend";
+import { GlobeLegend, type RoleLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
 import type { RankPalette } from "@/lib/rankColor";
@@ -40,6 +40,8 @@ export interface PlanetViewerProps {
   /** Analog mode: names the reference in the legend, e.g. "Earth matches to Elysium Planitia (InSight)". */
   legendHeading?: string;
   rankedCount?: number | null;
+  /** Workbook site-role filter shown in the legend. */
+  roles?: RoleLegend;
   /** Extra scene content drawn on the surface (SurfaceOverlays); the viewer gives it no meaning. */
   overlays?: ReactNode;
   /** Camera distance, as a multiple of the radius, that selecting a marker flies to. 1.65 frames a region; ~1.08 frames a 60 km footprint. */
@@ -133,7 +135,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         {statusLine && <div className="sr-only">{statusLine}</div>}
       </div>
       <div ref={legendRef} data-testid="globe-legend" className="pointer-events-none absolute left-3" style={{bottom:legendBottom}}>
-        <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />
+        <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} roles={props.roles} />
       </div>
     </div>
   );

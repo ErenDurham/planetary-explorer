@@ -35,6 +35,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from app.models import AnalogWeightSuggestion, DirectionOption, SiteCandidate, SiteReference, TaskInterpretation
+from app.services.site_aliases import EARTH as EARTH_ALIASES, MARS as MARS_ALIASES
 
 DATA = Path(__file__).resolve().parents[2] / "data"
 
@@ -58,19 +59,13 @@ ANALOG_DEFAULTS = {"slope_regional_median_deg": 25, "roughness_regional_m": 25, 
 def aliases() -> list[tuple[str, SiteReference]]:
     """(lowercase alias, reference) sorted longest alias first."""
     out: list[tuple[str, SiteReference]] = []
-    mars = json.loads((DATA / "mars" / "sites.json").read_text())["sites"]
-    earth = json.loads((DATA / "earth" / "candidates.json").read_text())["candidates"]
-    extra_mars = {"jezero_crater": ["jezero"], "gale_crater": ["gale", "bradbury landing", "mount sharp"], "elysium_planitia": ["elysium", "insight site", "insight landing site"],
-                  "oxia_planum": ["oxia"], "utopia_planitia": ["utopia", "viking 2 site"], "chryse_planitia": ["chryse", "viking 1 site"],
-                  "meridiani_planum": ["meridiani", "eagle crater", "opportunity site"], "gusev_crater": ["gusev", "columbia memorial station", "spirit site"]}
-    extra_earth = {"atacama_yungay": ["atacama", "yungay"], "mcmurdo_dry_valleys": ["dry valleys", "mcmurdo", "university valley", "antarctic dry valleys"],
-                   "haughton_crater": ["haughton", "devon island"], "death_valley": ["death valley"], "holuhraun_iceland": ["holuhraun", "iceland"],
-                   "mdrs_utah": ["mdrs", "mars desert research station", "hanksville", "san rafael swell", "utah"], "mauna_kea_summit": ["mauna kea", "hawaii", "hawai'i"]}
+    mars = json.loads((DATA / "mars" / "sites.json").read_text(encoding="utf-8"))["sites"]
+    earth = json.loads((DATA / "earth" / "candidates.json").read_text(encoding="utf-8"))["candidates"]
     for s in mars:
-        for a in [s["name"].lower()] + extra_mars.get(s["id"], []):
+        for a in [s["name"].lower()] + MARS_ALIASES.get(s["id"], []):
             out.append((a, SiteReference(body="mars", id=s["id"], name=s["name"], matched_text=a)))
     for c in earth:
-        for a in [c["name"].lower()] + extra_earth.get(c["id"], []):
+        for a in [c["name"].lower()] + EARTH_ALIASES.get(c["id"], []):
             out.append((a, SiteReference(body="earth", id=c["id"], name=c["name"], matched_text=a)))
     return sorted(out, key=lambda t: -len(t[0]))
 
