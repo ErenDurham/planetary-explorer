@@ -20,6 +20,8 @@ export interface PaneImagery {
   /** Why the side is unavailable, in plain words. */
   reason: string | null;
   refetch: () => void;
+  /** False when no imagery acquisition capability exists for this location. */
+  canRetry?: boolean;
 }
 
 function unavailableReason(error: unknown): string | null {

@@ -1,27 +1,8 @@
-import { afterEach, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { expect,it,vi } from "vitest";
+import { render,screen } from "@testing-library/react";
 import { CompareEntry } from "./CompareEntry";
-import { useRegionTarget } from "./store";
-import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
-import { detail,candidates } from "@/features/discovery/test/fixtures";
-const mocks=vi.hoisted(()=>({detail:vi.fn(),export:vi.fn(),capabilities:vi.fn(),comparisonCatalog:vi.fn()}));
-vi.mock("@/services/discoveryEngine",()=>({discoveryEngine:mocks}));
-vi.mock("@/services/api",()=>({api:mocks,isApiError:()=>false}));
-vi.mock("@/components/layout/CompareView",()=>({CompareView:()=> <div>Catalog imagery tools</div>}));
-afterEach(()=>{vi.clearAllMocks();useRegionTarget.setState(useRegionTarget.getInitialState(),true);useDiscoveryStore.setState(useDiscoveryStore.getInitialState(),true);});
-it("normal Compare lists found footprints, and selecting one never substitutes an established site",async()=>{
- const candidate=detail(candidates[0].id);
- mocks.capabilities.mockResolvedValue({runs:[{run_id:"pilot"}]});
- mocks.export.mockResolvedValue({reference_profile:candidate.profile,provenance:[],audit_rows:[{candidate,profile:candidate.profile,screening_reasons:[]}]});
- mocks.detail.mockResolvedValue(candidate);
- mocks.comparisonCatalog.mockResolvedValue({locations:[{id:"atacama_yungay",body:"earth",name:"Atacama",lat:0,lon_east:0,sources:{},measurements:[]}]});
- render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><CompareEntry sites={[]} selectedId={null}/></QueryClientProvider>);
- await screen.findByRole("option",{name:new RegExp(candidate.name+" · unvalidated")});
- expect(screen.queryByText("Catalog imagery tools")).toBeNull();
- expect(useRegionTarget.getState().target).toBeNull();
- fireEvent.change(screen.getByLabelText("Region to compare"),{target:{value:`found:${candidate.id}`}});
- expect(useRegionTarget.getState().target).toEqual({kind:"discovered",id:candidate.id,runId:"pilot"});
- await screen.findByRole("region",{name:"Region measurements"});
- expect(screen.getByLabelText("Selected region")).toHaveValue(`discovered:pilot:${candidate.id}`);
+vi.mock("@/components/layout/CompareView",()=>({CompareView:()=> <h1>Original comparative field atlas</h1>}));
+it("always renders the original comparison page rather than a replacement workspace",()=>{
+ render(<CompareEntry sites={[]} selectedId={null}/>);
+ expect(screen.getByRole("heading",{name:"Original comparative field atlas"})).toBeInTheDocument();
 });

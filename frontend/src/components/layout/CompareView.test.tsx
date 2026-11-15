@@ -1,3 +1,6 @@
+import { useRegionTarget } from "@/features/regions/store";
+import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
+import { detail as discoveryDetail, candidates as discoveredCandidates, exportPayload, capabilities, rankResponse } from "@/features/discovery/test/fixtures";
 // Compare: two linked Earth/Mars columns for one hand-selected pair. These
 // tests mock fetch per endpoint so each side's imagery can fail, lag or lack
 // georeferencing independently of the other.
@@ -55,7 +58,7 @@ function view(selectedId = "elysium_planitia") {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(<QueryClientProvider client={client}><CompareView sites={[]} selectedId={selectedId} /></QueryClientProvider>);
 }
-beforeEach(() => { useAppStore.setState(useAppStore.getInitialState()); useAppStore.setState({ comparison: { ...useAppStore.getState().comparison, earthId: "atacama_yungay" } }); });
+beforeEach(() => { useRegionTarget.setState(useRegionTarget.getInitialState(),true);useDiscoveryStore.setState(useDiscoveryStore.getInitialState(),true); useAppStore.setState(useAppStore.getInitialState()); useAppStore.setState({ comparison: { ...useAppStore.getState().comparison, earthId: "atacama_yungay" } }); });
 afterEach(() => vi.restoreAllMocks());
 
 describe("pair columns and the objective", () => {
@@ -207,4 +210,35 @@ describe("similarity for the exact pair", () => {
     expect(await screen.findByRole("button", { name: "Retry comparison" })).toBeInTheDocument();
     expect(screen.queryByRole("table")).toBeNull();
   });
+});
+
+
+it("uses the original field atlas and selectors for discovered footprints without curated scores or borrowed Earth imagery",async()=>{
+ const candidate=discoveryDetail(discoveredCandidates[0].id);
+ const spy=vi.spyOn(globalThis,"fetch").mockImplementation(async(input,init)=>{
+  const url=String(input);
+  if(url.endsWith("/comparison/catalog"))return json(catalog);
+  if(url.endsWith("/discovery/capabilities"))return json(capabilities);
+  if(url.endsWith("/export"))return json({...exportPayload,reference_profile:candidate.profile,audit_rows:[{candidate,profile:candidate.profile,screening_reasons:[]}]});
+  if(url.endsWith("/discovery/rank"))return json(rankResponse(JSON.parse(String(init?.body))));
+  if(url.endsWith("/sites/jezero_crater/imagery"))return json({site_id:"jezero_crater",body:"mars",entries:[],missing_views:["orbital","surface"],notes:[]});
+  return json({error:{code:"not_found",message:"Not installed"}},404);
+ });
+ useRegionTarget.getState().open({kind:"discovered",id:candidate.id,runId:capabilities.runs[0].run_id});
+ view();
+ expect(screen.getByRole("heading",{name:"Earth meets Mars."})).toBeInTheDocument();
+ const earth=await screen.findByLabelText("Earth location");
+ await waitFor(()=>expect(earth).toHaveValue(`discovered:${capabilities.runs[0].run_id}:${candidate.id}`));
+ expect(screen.getByRole("group",{name:"Found survey regions"})).toBeInTheDocument();
+ expect(screen.getByTestId("pane-earth")).toHaveTextContent("No verified orbital imagery or field photographs are installed for this survey footprint.");
+ expect(screen.getByTestId("pane-mars")).toHaveTextContent("Jezero Crater");
+ expect(screen.getByRole("region",{name:"Region measurements"})).toHaveTextContent("Detrended regional relief");
+ expect(screen.getByRole("button",{name:"Research this candidate"})).toBeInTheDocument();
+ expect(spy.mock.calls.some(([url])=>String(url).includes("/analogs/rank")||String(url).includes("/analogs/match")||String(url).includes("/sites/discovered:"))).toBe(false);
+ fireEvent.change(screen.getByLabelText("Mars location"),{target:{value:"elysium_planitia"}});
+ expect(screen.getByText("Discovery scoring supports the processed Jezero reference only. This pair is a measurement comparison.")).toBeInTheDocument();
+ expect(screen.getByText(/Different processing baselines/)).toBeInTheDocument();
+ fireEvent.change(earth,{target:{value:"atacama_yungay"}});
+ expect(useRegionTarget.getState().target).toEqual({kind:"catalog",id:"atacama_yungay"});
+ expect(screen.getByRole("heading",{name:"Earth meets Mars."})).toBeInTheDocument();
 });

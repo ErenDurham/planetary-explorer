@@ -1,3 +1,11 @@
+import { useAtlasDiscovery } from "@/features/regions/useAtlasDiscovery";
+import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
+import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
+import { useDiscoveryRank } from "@/features/discovery/hooks/useDiscoveryRank";
+import { RegionMeasurements } from "@/features/regions/RegionMeasurements";
+import { catalogRegion } from "@/features/regions/model";
+import { downloadJson } from "@/features/discovery/lib/download";
+import { StageButton } from "@/components/ui/StageButton";
 import { useRegionTarget } from "@/features/regions/store";
 // Compare: two linked location columns, Earth and Mars, for one hand-selected
 // pair. Order follows the applied objective (selection body first, reference
@@ -45,6 +53,9 @@ export function currentEntry(imagery: PaneImagery, view: PaneView, choice: strin
 
 export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; selectedId: string | null; onSelect?: (id: string) => void }) {
   const openRegion = useRegionTarget(s=>s.open);
+  const discovery=useAtlasDiscovery();
+  const discoveryStore=useDiscoveryStore();
+  const openResearch=useCandidateResearchTarget(s=>s.open);
   const q = useQuery({ queryKey: ["comparison-catalog"], queryFn: api.comparisonCatalog, staleTime: Infinity });
   const selectionBody = useAppStore(s => s.selectionBody);
   const appliedReference = useAppStore(s => s.appliedReference);
@@ -67,22 +78,45 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
 
   const data = q.data;
   const bodies = data?.bodies ?? [];
-  const earthLocs = useMemo(() => data?.locations.filter(l => l.body === "earth") ?? [], [data]);
-  const marsLocs = useMemo(() => data?.locations.filter(l => l.body === "mars") ?? [], [data]);
-  const earth = pick(earthLocs, selectedEarthId, appliedReference?.body === "earth" ? appliedReference.id : null, legacyEarthId);
-  const mars = pick(marsLocs, selectedMarsId, selectedId, appliedReference?.body === "mars" ? appliedReference.id : null);
+  const earthLocs = [...(data?.locations.filter(l=>l.body==="earth") ?? []),...discovery.regions.map(r=>r.location)];
+  const baseMarsLocs = useMemo(() => data?.locations.filter(l => l.body === "mars") ?? [], [data]);
+  const marsLocs = discovery.referenceLocation && !baseMarsLocs.some(l=>l.id==="jezero_crater") ? [...baseMarsLocs,discovery.referenceLocation] : baseMarsLocs;
+  const discoveredSelection=discovery.target?.kind==="discovered";
+  const selectedFound=discoveredSelection ? discovery.regions.find(r=>r.candidateId===discovery.target?.id) : undefined;
+  const earth = discoveredSelection ? selectedFound?.location ?? null : pick(earthLocs, discovery.target?.kind==="catalog" ? discovery.target.id : null, selectedEarthId, appliedReference?.body === "earth" ? appliedReference.id : null, legacyEarthId);
+  const catalogMars = pick(marsLocs, discovery.target?.kind==="catalog" ? discovery.target.id : null, discoveredSelection ? "jezero_crater" : null, selectedMarsId, selectedId, appliedReference?.body === "mars" ? appliedReference.id : null);
+  const [discoveryMarsId,setDiscoveryMarsId]=useState<string|null>(null);
+  const chosenMars=discoveredSelection ? (marsLocs.find(l=>l.id===(discoveryMarsId ?? "jezero_crater")) ?? null) : catalogMars;
+  const mars=discoveredSelection && chosenMars?.id==="jezero_crater" && discovery.referenceLocation ? discovery.referenceLocation : chosenMars;
+  const comparisonFocus=discoveredSelection ? "earth" : selectionBody;
+  const ranked=useDiscoveryRank(discovery.runId ?? null,discoveryStore.weights,discoveryStore.topK,discoveredSelection && mars?.id==="jezero_crater");
+  const foundRank=ranked.data?.candidates.find(c=>c.id===selectedFound?.candidateId);
   const byBody: Record<Body, { location: ComparisonLocation | null; locations: ComparisonLocation[] }> = { earth: { location: earth, locations: earthLocs }, mars: { location: mars, locations: marsLocs } };
   const setComparisonPair = useAppStore(s => s.setComparisonPair);
   useEffect(() => {
-    setComparisonPair({earthId: earth?.id ?? null, marsId: mars?.id ?? null});
-  }, [earth?.id, mars?.id, setComparisonPair]);
+    setComparisonPair({earthId: discoveredSelection ? null : earth?.id ?? null, marsId: mars?.id ?? null});
+  }, [earth?.id, mars?.id, discoveredSelection, setComparisonPair]);
   useEffect(() => () => setComparisonPair(null), [setComparisonPair]);
-  const columns = pairColumns(selectionBody, swapped).map(c => ({ ...c, ...byBody[c.body] })) as [PairColumnData, PairColumnData];
+  const columns = pairColumns(comparisonFocus, swapped).map(c => ({ ...c, ...byBody[c.body] })) as [PairColumnData, PairColumnData];
   const selectedCol = columns.find(c => c.role === "selected")!;
   const referenceCol = columns.find(c => c.role === "reference")!;
 
-  const pair = usePairMatch({ referenceBody: referenceCol.body, referenceId: referenceCol.location?.id ?? null, candidateId: selectedCol.location?.id ?? null, marsId: mars?.id ?? null, earthId: earth?.id ?? null });
-  const imagery = usePairImagery({ earth: earth?.id ?? null, mars: mars?.id ?? null });
+  const pair = usePairMatch({ enabled:!discoveredSelection, referenceBody: referenceCol.body, referenceId: referenceCol.location?.id ?? null, candidateId: selectedCol.location?.id ?? null, marsId: mars?.id ?? null, earthId: earth?.id ?? null });
+  const catalogImagery = usePairImagery({earth:discoveredSelection ? null : earth?.id ?? null,mars:mars?.id ?? null});
+  const imagery={...catalogImagery,earth:discoveredSelection ? {...catalogImagery.earth,id:earth?.id ?? null,status:"unavailable" as const,canRetry:false,reason:"No verified orbital imagery or field photographs are installed for this survey footprint.",refetch:()=>{}} : catalogImagery.earth};
+  const measuredReference=selectedFound && mars?.id==="jezero_crater" ? discovery.reference : mars ? catalogRegion(mars) : null;
+  const selectPairLocation=(body:Body,id:string)=>{
+    const found=discovery.regions.find(r=>r.location.id===id);
+    if(body==="earth" && found){openRegion({kind:"discovered",id:found.candidateId,runId:discovery.runId});if(discovery.runId){discoveryStore.setRun(discovery.runId);useDiscoveryStore.getState().selectCandidate(found.candidateId);}setDiscoveryMarsId(null);}
+    else if(body==="earth"){openRegion({kind:"catalog",id});selectLocation(body,id);}
+    else if(discoveredSelection){setDiscoveryMarsId(id);}
+    else {selectLocation(body,id);if(discovery.target?.kind==="catalog" && marsLocs.some(l=>l.id===discovery.target?.id))openRegion({kind:"catalog",id});}
+  };
+  const showPairOnGlobe=(body:Body,id:string)=>{
+    const found=discovery.regions.find(r=>r.location.id===id);
+    if(body==="earth" && found && discovery.runId){discoveryStore.setRun(discovery.runId);discoveryStore.selectCandidate(found.candidateId);useAppStore.getState().openFindAnalogs();}
+    else showOnGlobe(body,id);
+  };
 
   const paneLocation = (body: Body): PaneLocation | null => {
     const loc = byBody[body].location; if (!loc) return null;
@@ -130,12 +164,14 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
 
   return <AtlasSurface label="Earth and Mars pair comparison">
     <div className={atlasStyles.content}>
-      {earth && <button type="button" className="mb-3 text-sm text-info underline" onClick={()=>openRegion({kind:"catalog",id:earth.id})}>Compare shared region measurements</button>}
-      <CompareAtlasHeader focusBody={selectionBody} />
+      <CompareAtlasHeader focusBody={comparisonFocus} />
       {q.isPending && <Spinner label="Loading comparison locations" />}
       {q.error && <div className="mb-4"><ErrorNote error={q.error} context="comparison/catalog" /><button className="mt-3 text-sm text-copper-bright underline" onClick={() => q.refetch()}>Retry comparison</button></div>}
+      {discovery.artifact.isFetching && <p role="status" className="mb-3 text-sm text-fg-muted">Loading found survey regions…</p>}
+      {discovery.artifact.error && <ErrorNote error={discovery.artifact.error} context="found survey regions"/>}
+      {discovery.capabilities.error && <p className="mb-3 text-sm text-fg-muted">Found survey regions are unavailable. Established catalog regions remain available.</p>}
       {data && <div className="space-y-4">
-        <PairSelectors columns={columns} swapped={swapped} onSwap={() => setSwapped(s => !s)} onSelect={(body, id) => selectLocation(body, id)} onShowOnGlobe={(body, id) => showOnGlobe(body, id)} />
+        <PairSelectors columns={columns} swapped={swapped} onSwap={() => setSwapped(s => !s)} onSelect={selectPairLocation} onShowOnGlobe={showPairOnGlobe} />
 
         <AtlasSection number="01" title="Read the landscape" description="Orbital views show regional context. Field photos offer a view from the ground.">
         <section aria-label="Side-by-side visual field views" className={atlasStyles.imagery}>
@@ -162,29 +198,29 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
         <section aria-label="Reference context" className={atlasStyles.reference}>
           <p className="text-sm text-fg" data-testid="context-line">
             <span className="text-fg-muted">Reference:</span> <span className="font-medium">{referenceName}</span> on {BODY_NAME[referenceCol.body]}
-            <span className="text-fg-muted"> · analog preferences: </span><span className="num">{emphasisSummary(shares)}</span> <span className="text-fg-faint">({customised ? "customised" : recommendedAnalogWeights ? "objective's suggestion" : "spec defaults"})</span>
+            {!discoveredSelection && <><span className="text-fg-muted"> · analog preferences: </span><span className="num">{emphasisSummary(shares)}</span> <span className="text-fg-faint">({customised ? "customised" : recommendedAnalogWeights ? "objective's suggestion" : "spec defaults"})</span></>}
           </p>
           {appliedReference && appliedReference.id !== (byBody[appliedReference.body].location?.id ?? null) && <p className="mt-1 text-xs text-fg-muted">The applied objective named {appliedReference.name} on {BODY_NAME[appliedReference.body]}; the {BODY_NAME[appliedReference.body]} selector now shows {byBody[appliedReference.body].location?.name ?? "nothing"}. The objective itself is unchanged.</p>}
-          <details className="mt-2 text-sm"><summary className="cursor-pointer text-fg-muted">Adjust analog preferences</summary><div className="mt-3 max-w-2xl"><AnalogPreferencesSlot /></div></details>
+          {discoveredSelection ? <p className="mt-2 text-sm text-fg-muted">Discovery uses regional slope and relief on the survey's physical grid. Change terrain weights in Explore. Curated five-feature scores are separate. Mars imagery is catalog context; its dashed overlay shows the catalog footprint, not the discovery grid.</p> : <details className="mt-2 text-sm"><summary className="cursor-pointer text-fg-muted">Adjust analog preferences</summary><div className="mt-3 max-w-2xl"><AnalogPreferencesSlot /></div></details>}
         </section>
 
-        <AtlasSection number="02" title="Understand the match" description="A similarity index for this pair under your current analog preferences.">
-        <div className={atlasStyles.evidence}><SimilarityCard rank={pair.rank} candidate={pair.candidate} candidateBody={selectedCol.body} candidateName={selectedCol.location?.name ?? BODY_NAME[selectedCol.body]} referenceName={referenceName} /></div>
+        <AtlasSection number="02" title="Understand the match" description={discoveredSelection ? "Regional terrain similarity under the discovery weights." : "A similarity index for this pair under your current analog preferences."}>
+        {discoveredSelection ? <section className="rounded border border-line p-4" aria-label="Discovery terrain match"><h2 className="font-semibold">Terrain similarity to {mars?.name ?? "Mars reference"}</h2>{foundRank && mars?.id==="jezero_crater" ? <><p className="num mt-2 text-3xl text-copper-bright">{foundRank.similarity_index?.toFixed(1)} / 100</p><p className="mt-2 text-sm text-fg-muted">Two-feature discovery index · slope and detrended relief · not a probability.</p></> : <p className="mt-2 text-sm text-fg-muted">{mars?.id!=="jezero_crater" ? "Discovery scoring supports the processed Jezero reference only. This pair is a measurement comparison." : ranked.isFetching ? "Loading this candidate's terrain comparison…" : "This footprint is not in the current diversified ranking. Its measured profile remains available below."}</p>}{ranked.error && <ErrorNote error={ranked.error} context="discovery comparison"/>}</section> : <div className={atlasStyles.evidence}><SimilarityCard rank={pair.rank} candidate={pair.candidate} candidateBody={selectedCol.body} candidateName={selectedCol.location?.name ?? BODY_NAME[selectedCol.body]} referenceName={referenceName} /></div>}
         </AtlasSection>
 
         <AtlasSection number="03" title="Compare the measurements" description="Raw values stay in their original units. Unavailable measurements remain explicit.">
-        <PairMetricsTable columns={columns} candidate={pair.candidate} rankExcluded={pair.rank.data?.excluded_features ?? []} />
+        {discoveredSelection ? selectedFound ? <><RegionMeasurements atlas region={selectedFound.region} other={measuredReference ?? undefined}/>{measuredReference && selectedFound.region.baseline!==measuredReference.baseline && <p className="mt-2 text-sm text-warn">Different processing baselines: values are contextual; numerical differences and combined scores are unavailable.</p>}<button className="mt-3 text-info underline" onClick={()=>downloadJson("region-comparison.json",{selected:selectedFound.region,comparison:measuredReference,run_id:discovery.runId,ranking:foundRank ?? null})}>Download measured comparison</button></> : <p role="status">The selected survey footprint is loading or unavailable. No catalog region has been substituted.</p> : <PairMetricsTable columns={columns} candidate={pair.candidate} rankExcluded={pair.rank.data?.excluded_features ?? []} />}
         </AtlasSection>
 
         <AtlasSection number="04" title="Take the research further">
-        <div className={atlasStyles.evidence}><PairStudies pairMatch={pair.pairMatch} earthName={earth?.name ?? "the Earth location"} marsName={mars?.name ?? "the Mars site"} pending={pair.match.isPending} onOpenResearch={() => setActiveTab("research")} /></div>
+        {discoveredSelection ? <section className="rounded border border-line p-4"><p className="mb-3 text-sm text-fg-muted">Review prior studies, geology and contradictory evidence for this footprint. Terrain similarity does not establish a validated analog.</p><StageButton disabled={!selectedFound} onClick={()=>{if(discovery.runId && selectedFound){openResearch(discovery.runId,selectedFound.candidateId);setActiveTab("research");}}}>Research this candidate</StageButton></section> : <div className={atlasStyles.evidence}><PairStudies pairMatch={pair.pairMatch} earthName={earth?.name ?? "the Earth location"} marsName={mars?.name ?? "the Mars site"} pending={pair.match.isPending} onOpenResearch={() => setActiveTab("research")} /></div>}
         </AtlasSection>
         {pair.match.error && <ErrorNote error={pair.match.error} context="analogs/match" />}
 
         <AtlasSection number="05" title="Context and sources" description="Review planetary differences, data provenance, and limits before drawing conclusions.">
         <PlanetaryContext differences={pair.rank.data?.planetary_differences ?? pair.match.data?.planetary_differences} bodies={bodies} />
 
-        <ProvenanceDisclosures columns={columns} bodies={bodies} rank={pair.rank.data} pairMatch={pair.pairMatch} imagery={[imagery.earth.data, imagery.mars.data]} />
+        <ProvenanceDisclosures columns={columns} bodies={bodies} rank={pair.rank.data} pairMatch={pair.pairMatch} imagery={[imagery.earth.data, imagery.mars.data]} discovery={discoveredSelection} />
         </AtlasSection>
       </div>}
     </div>

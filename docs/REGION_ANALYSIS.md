@@ -72,3 +72,23 @@ This is software verification, not scientific or field validation.
 Regression coverage includes the actual App Advanced → Compare navigation and
 the no-selection chooser, not only the candidate-panel action. A real-data
 headless browser check exercised the same ordinary menu path.
+
+## Original Compare atlas restored
+
+Compare always renders the original `CompareView` / `CompareAtlasHeader` /
+`AtlasPairSelectors` / imagery panels and numbered field-note sections. Found
+footprints appear in the existing Earth selector under “Found survey regions.”
+`useAtlasDiscovery` and `atlasAdapter` supply measured survey data to that shared
+layout without adding discovered IDs to the curated catalog or scoring API.
+
+A found footprint uses its survey-processed Jezero reference for the discovery
+index and physical-grid deltas. Other Mars choices retain raw contextual
+measurements and explicitly suppress incompatible scores/differences. Verified
+Earth imagery is unavailable until an actual manifest is installed; no catalog
+photographs are borrowed. Mars imagery, column swap, image zoom, planetary
+context, sources and research navigation retain the original page components.
+
+The former simplified Compare replacement/chooser is no longer a route.
+Regression tests cover the original atlas with a selected discovered footprint,
+switching between found/catalog regions, missing imagery, disabling curated API
+scoring for found IDs, and choosing an unsupported discovery reference.

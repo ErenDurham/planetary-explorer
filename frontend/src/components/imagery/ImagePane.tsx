@@ -75,7 +75,7 @@ export function ImagePane({ roleLabel, location, imagery, view, sharedView, onOv
           <div role="status" className="flex h-[340px] flex-col items-start justify-center gap-2 rounded border border-dashed border-line bg-black/40 p-4 text-sm">
             <p className="font-medium text-fg">{BODY_NAME[body]} imagery unavailable for {location.name}</p>
             <p className="text-fg-muted">{imagery.reason}</p>
-            <button type="button" onClick={imagery.refetch} className="mt-1 rounded border border-line px-3 py-2 text-sm text-fg">Retry {BODY_NAME[body]} imagery</button>
+            {imagery.canRetry !== false && <button type="button" onClick={imagery.refetch} className="mt-1 rounded border border-line px-3 py-2 text-sm text-fg">Retry {BODY_NAME[body]} imagery</button>}
           </div>
         )}
         {location && imagery.status === "ready" && !entry && (
