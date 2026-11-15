@@ -29,7 +29,8 @@ def test_manifest_validates_and_covers_every_site_with_verified_fields():
     locations = _all_locations()
     assert {sid for sid in m.sites if m.sites[sid].body == "mars"} == {k for k, v in locations.items() if v["body"] == "mars"}
     for sid, site in m.sites.items():
-        assert site.entries, sid
+        # a site may lack imagery only when the manifest says why (e.g. a blank ice-sheet footprint)
+        assert site.entries or any("No usable orbital context" in n for n in site.notes), sid
         for e in site.entries:
             assert e.site_id == sid and e.source_page_url.startswith("https://") and e.credit and e.license
             assert e.coverage_evidence and e.relevance and e.verified_on
@@ -107,7 +108,10 @@ def test_earth_locations_have_imagery_records_with_body_and_licences():
         pytest.skip("Earth imagery not built into this manifest yet")
     for sid in earth_ids:
         site = m.sites[sid]
-        assert site.body == "earth" and site.entries, sid
+        assert site.body == "earth", sid
+        if not any(e.view == "orbital" for e in site.entries):   # blank ice-sheet / no-coverage footprints say so
+            assert any("No usable orbital context" in n for n in site.notes), sid
+            continue
         assert any(e.view == "orbital" and e.bounds is not None for e in site.entries), f"{sid} lacks a georeferenced orbital context"
         for e in site.entries:
             assert e.license and e.credit and e.source_page_url.startswith("https://")
@@ -115,11 +119,11 @@ def test_earth_locations_have_imagery_records_with_body_and_licences():
             if e.view == "surface":
                 assert e.image_type in ("surface_image", "surface_panorama") and e.relationship in ("exact_location", "candidate_region", "nearby_scene")
     # honesty: a site with no verifiable field photo says so
-    at = m.sites["atacama_yungay"]
+    at = m.sites["rio_tinto"]
     if not any(e.view == "surface" for e in at.entries):
         assert "surface" in at.missing_views and at.notes
 
 
 def test_mars_records_declare_body_mars():
     m = _manifest()
-    assert all(site.body == "mars" for sid, site in m.sites.items() if sid in {"jezero_crater", "gale_crater", "oxia_planum"})
+    assert all(site.body == "mars" for sid, site in m.sites.items() if sid in {"jezero_crater", "hebrus_valles", "oxia_planum"})

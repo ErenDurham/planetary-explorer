@@ -85,16 +85,6 @@
       "verified_from": "https://ntrs.nasa.gov/api/citations/20190029583"
     },
     {
-      "source_id": "graham2013_maunakea",
-      "cite": "Graham & Graff, 2013",
-      "title": "Rover-Based Instrumentation and Scientific Investigations During the 2012 Analog Field Test on Mauna Kea Volcano, Hawaii",
-      "venue": "Conference paper (NASA NTRS 20130009908)",
-      "year": 2013,
-      "kind": "nasa",
-      "url": "https://ntrs.nasa.gov/citations/20130009908",
-      "verified_from": "https://ntrs.nasa.gov/api/citations/20130009908"
-    },
-    {
       "source_id": "heldmann2015_dryvalleys",
       "cite": "Heldmann et al., 2015",
       "title": "Mars: Periglacial Morphology and Implications for Future Landing Sites",
@@ -113,36 +103,6 @@
       "kind": "nasa",
       "url": "https://ntrs.nasa.gov/citations/20220011941",
       "verified_from": "https://ntrs.nasa.gov/api/citations/20220011941"
-    },
-    {
-      "source_id": "bretzfelder2026_ibex",
-      "cite": "Bretzfelder et al., 2026",
-      "title": "The Ibex Dune Field of Death Valley National Park, California: Characterization and Assessment for Use as A Martian Analog",
-      "venue": "Aeolian Research (NASA NTRS 20260000452)",
-      "year": 2026,
-      "kind": "peer_reviewed",
-      "url": "https://ntrs.nasa.gov/citations/20260000452",
-      "verified_from": "https://ntrs.nasa.gov/api/citations/20260000452"
-    },
-    {
-      "source_id": "kobrick2018_mdrs",
-      "cite": "Kobrick & Agui, 2018",
-      "title": "Preparing for Planetary Surface Exploration by Measuring Habitat Dust Intrusion with Filter Tests During an Analogue Mars Mission",
-      "venue": "Conference paper (NASA NTRS 20190000931)",
-      "year": 2018,
-      "kind": "nasa",
-      "url": "https://ntrs.nasa.gov/citations/20190000931",
-      "verified_from": "https://ntrs.nasa.gov/api/citations/20190000931"
-    },
-    {
-      "source_id": "nasa_arads2019",
-      "cite": "NASA ARADS, 2019",
-      "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
-      "venue": "NASA Ames Research Center",
-      "year": 2019,
-      "kind": "nasa",
-      "url": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/",
-      "verified_from": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/ (page dated 2019-09-19)"
     }
   ],
   "evidence": [
@@ -567,23 +527,6 @@
       ]
     },
     {
-      "evidence_id": "analog_maunakea_rover",
-      "source_id": "graham2013_maunakea",
-      "criteria": [],
-      "constraints": [],
-      "sites": [
-        "mauna_kea_summit"
-      ],
-      "missions": [
-        "rover"
-      ],
-      "fact": "2012 Moon and Mars analog rover test on Mauna Kea: a three day traverse at ~11,500 feet.",
-      "quotes": [
-        "Rover-based 2012 Moon and Mars Analog Mission Activities (MMAMA) were recently completed on Mauna Kea Volcano, Hawaii.",
-        "The rover traverse and associated science investigations were conducted over a three day period on the southeast flank of the Mauna Kea Volcano, Hawaii. The test area was at an elevation of ~11,500 feet"
-      ]
-    },
-    {
       "evidence_id": "analog_dryvalleys_ice",
       "source_id": "heldmann2015_dryvalleys",
       "criteria": [],
@@ -606,7 +549,6 @@
       "criteria": [],
       "constraints": [],
       "sites": [
-        "atacama_yungay",
         "mcmurdo_dry_valleys"
       ],
       "missions": [
@@ -616,57 +558,6 @@
       "quotes": [
         "Desert ecosystems are a key repository for important Mars analog habitats",
         "the hyperarid Atacama Desert and Dry Valleys of Antarctica, the driest and coldest limits for life on Earth"
-      ]
-    },
-    {
-      "evidence_id": "analog_ibex_dunes",
-      "source_id": "bretzfelder2026_ibex",
-      "criteria": [],
-      "constraints": [],
-      "sites": [
-        "death_valley"
-      ],
-      "missions": [
-        "any"
-      ],
-      "fact": "Death Valley's Ibex Dune Field, in the driest place in North America, has bedforms comparable to many areas on the Martian surface.",
-      "quotes": [
-        "is the driest place in North America",
-        "This area hosts a variety of bedforms of different scales in close proximity, comparable to many areas on the Martian surface"
-      ]
-    },
-    {
-      "evidence_id": "analog_mdrs_dust",
-      "source_id": "kobrick2018_mdrs",
-      "criteria": [],
-      "constraints": [],
-      "sites": [
-        "mdrs_utah"
-      ],
-      "missions": [
-        "human"
-      ],
-      "fact": "NASA Glenn measured habitat dust intrusion with analog Crew 188 at the Mars Desert Research Station, Utah.",
-      "quotes": [
-        "collaborated with Crew 188 at the Mars Desert Research Station (MDRS) in Utah"
-      ]
-    },
-    {
-      "evidence_id": "analog_atacama_drill",
-      "source_id": "nasa_arads2019",
-      "criteria": [],
-      "constraints": [],
-      "sites": [
-        "atacama_yungay"
-      ],
-      "missions": [
-        "rover"
-      ],
-      "fact": "NASA's K-REX2 rover tested a life-detection drill reaching two meters (6.5 feet) in the Atacama, one month each year from 2016 to 2019.",
-      "quotes": [
-        "Each year from 2016 to 2019, the ARADS team, led by Brian Glass of NASA’s Ames Research Center, in California’s Silicon Valley, is spending one month working in the heart of the Atacama.",
-        "Called K-REX2, it is equipped with a drill capable of reaching two meters (6.5 feet) down through salt, rock layers and parched soil to retrieve a sample for analysis.",
-        "NASA is Testing a Drill to Search for Life on Mars"
       ]
     }
   ]

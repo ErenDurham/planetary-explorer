@@ -283,23 +283,12 @@ def load_geo_aliases() -> tuple[dict[str, list[str]], dict[str, str]]:
     and candidate files, plus hand-written aliases for names the pages use."""
     sites = json.loads((DATA / "mars" / "sites.json").read_text(encoding="utf-8"))
     cands = json.loads((DATA / "earth" / "candidates.json").read_text(encoding="utf-8"))
-    extra = {
-        "jezero_crater": ["Jezero"],
-        "gale_crater": ["Gale Crater", "Gale crater", "Mount Sharp", "Aeolis Mons", "Bradbury Landing"],
-        "elysium_planitia": ["Elysium Planitia", "Elysium"],
-        "oxia_planum": ["Oxia Planum", "Oxia"],
-        "utopia_planitia": ["Utopia Planitia", "Utopia"],
-        "chryse_planitia": ["Chryse Planitia", "Chryse"],
-        "meridiani_planum": ["Meridiani Planum", "Meridiani", "Terra Meridiani"],
-        "gusev_crater": ["Gusev Crater", "Gusev crater", "Gusev", "Ma'adim Vallis"],
-        "atacama_yungay": ["Atacama", "Yungay"],
-        "mcmurdo_dry_valleys": ["Dry Valleys", "McMurdo", "University Valley"],
-        "haughton_crater": ["Haughton", "Devon Island"],
-        "death_valley": ["Death Valley"],
-        "holuhraun_iceland": ["Holuhraun", "Bardarbunga", "Bárðarbunga"],
-        "mdrs_utah": ["Mars Desert Research Station", "MDRS", "San Rafael Swell", "Hanksville"],
-        "mauna_kea_summit": ["Mauna Kea", "Maunakea"],
-    }
+    from app.services.site_aliases import EARTH, MARS
+    # Alias matching below is case-sensitive for short names, so use the names as written in pages.
+    extra = {k: [a.title() if len(a) <= 5 else a for a in v] for k, v in {**MARS, **EARTH}.items()}
+    extra["jezero_crater"] = ["Jezero"]
+    extra["amazonis_arcadia_ap8"] = ["AP-8", "AP8", "Amazonis Planitia", "Arcadia Planitia"]
+    extra["planum_boreum"] = ["Planum Boreum", "north polar layered deposits", "NPLD", "north polar ice cap"]
     aliases: dict[str, list[str]] = {}
     regions: dict[str, str] = {}
     for s in sites["sites"]:
@@ -600,6 +589,9 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
             "char_count": len(text),
             "text": text,
         }
+    # A Crossref record is cited by its DOI link (what a reader can open), not the API URL it was read from.
+    if doc.get("kind") == "crossref" and doc["url"].startswith("https://api.crossref.org/works/"):
+        doc["url"] = "https://doi.org/" + doc["url"].removeprefix("https://api.crossref.org/works/")
     # Chunk the PROSE only: paragraphs that are navigation labels, captions,
     # credits or fact-sheet metadata are dropped first (shared filter), so a
     # chunk is never a run of page chrome. Offsets below index the filtered

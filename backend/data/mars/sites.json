@@ -93,16 +93,6 @@
       "year": 2017,
       "kind": "usgs"
     },
-    "levy2010_protonilus_gullies": {
-      "source_id": "levy2010_protonilus_gullies",
-      "title": "Identification of gully debris flow deposits in Protonilus Mensae, Mars",
-      "institution": "Earth and Planetary Science Letters",
-      "url": "https://doi.org/10.1016/j.epsl.2009.08.002",
-      "access_method": "publication",
-      "cite": "Levy, Head et al., 2010",
-      "year": 2010,
-      "kind": "peer_reviewed"
-    },
     "lit_jezero_mineralogy": {
       "source_id": "lit_jezero_mineralogy",
       "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
@@ -584,8 +574,7 @@
         "soare2022_protonilus_cycling"
       ],
       "literature_sources": [
-        "soare2022_protonilus_cycling",
-        "levy2010_protonilus_gullies"
+        "soare2022_protonilus_cycling"
       ]
     },
     {
@@ -685,7 +674,7 @@
       ],
       "role": "Instrument testing",
       "notes": "Not a base; good for instrument-test matches",
-      "coordinates_approximate": true,
+      "coordinates_approximate": false,
       "paired_earth_site_id": "lake_salda"
     },
     {

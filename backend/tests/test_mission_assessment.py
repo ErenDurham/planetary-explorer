@@ -55,11 +55,11 @@ def test_invalid_requirements_and_weights_rejected(kwargs):
 
 def test_base_planning_has_no_fabricated_score(client):
     data=client.post("/api/v1/missions/evaluate",json={"body":"earth","mission_type":"base_planning"}).json()
-    assert len(data["results"])==7
+    assert len(data["results"])==17
     assert all(s["score"] is None and s["rank"] is None and s["status"]=="not_supported" for s in data["results"])
     assert data["results"][0]["evidence_gaps"]
 
-@pytest.mark.parametrize("body,count",[("earth",7),("mars",8)])
+@pytest.mark.parametrize("body,count",[("earth",17),("mars",17)])
 def test_live_profiles_score_both_bodies_and_echo_request(client,body,count):
     data=client.post("/api/v1/missions/evaluate",json={"body":body,"mission_type":"rover_field_test","client_request_id":"test"}).json()
     assert len(data["results"])==count

@@ -85,6 +85,57 @@ def read_dem(lat: float, lon: float, half: float) -> tuple[np.ndarray, float, fl
     return grid, float(px_x), float(px_y)
 
 
+POLAR_BIN_M = 90.0
+
+
+def read_dem_polar(lat: float, half: float) -> tuple[np.ndarray, float, str]:
+    """Footprint centred on a geographic pole, where a lat/lon square collapses.
+
+    Reads the 0.25 deg cap from every 1-degree tile of the polar tile row (360
+    windowed COG reads), reprojects each pixel centre to an azimuthal
+    equidistant plane centred on the pole (r = angular distance x metres per
+    degree), and bins the elevations into a regular POLAR_BIN_M grid. The
+    returned grid is the square inscribed in the cap, so every cell holds DEM
+    pixels and no gap is filled. Returns (grid, cell size m, description)."""
+    sign = -1 if lat < 0 else 1
+    deg_m = 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
+    radius_m = half * deg_m
+    side = radius_m * math.sqrt(2)                       # inscribed square
+    n = int(side // POLAR_BIN_M)
+    lat_row = f"{'S' if sign < 0 else 'N'}{90 if sign < 0 else 89:02d}"
+    sums, counts = np.zeros(n * n), np.zeros(n * n)
+
+    def tile(lo: int):
+        lon_tag = f"{'E' if lo >= 0 else 'W'}{abs(lo):03d}"
+        with rasterio.open(COP.format(lat=lat_row, lon=lon_tag)) as ds:
+            south, north = (-90.0, -90.0 + half) if sign < 0 else (90.0 - half, 90.0)
+            w = from_bounds(lo, max(south, ds.bounds.bottom), lo + 1, min(north, ds.bounds.top), ds.transform)
+            arr = ds.read(1, window=w).astype(float)
+            if ds.nodata is not None:
+                arr[arr == ds.nodata] = np.nan
+            return arr, ds.window_transform(w)
+
+    # 360 sequential HTTPS range reads (~0.7 s each); skipping GDAL's directory
+    # listing on open is what keeps each one fast
+    with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif"):
+        tiles = [tile(lo) for lo in range(-180, 180)]
+    for arr, t in tiles:
+        rows, cols = np.indices(arr.shape)
+        plon = t.c + (cols + 0.5) * t.a
+        plat = t.f + (rows + 0.5) * t.e
+        r = (90.0 - sign * plat) * deg_m
+        x, y = r * np.cos(np.radians(plon)), r * np.sin(np.radians(plon))
+        ix = np.floor((x + side / 2) / POLAR_BIN_M).astype(int)
+        iy = np.floor((side / 2 - y) / POLAR_BIN_M).astype(int)
+        ok = (ix >= 0) & (ix < n) & (iy >= 0) & (iy < n) & np.isfinite(arr)
+        np.add.at(sums, iy[ok] * n + ix[ok], arr[ok])
+        np.add.at(counts, iy[ok] * n + ix[ok], 1)
+    grid = np.where(counts > 0, sums / np.maximum(counts, 1), np.nan).reshape(n, n)
+    desc = (f"Polar cap: the {2 * half:.1f} deg square collapses at the pole, so the DEM cap of radius {half} deg was reprojected to an "
+            f"azimuthal equidistant plane and binned at {POLAR_BIN_M:.0f} m; statistics use the {side / 1000:.1f} km square inscribed in the cap")
+    return grid, POLAR_BIN_M, desc
+
+
 def power_climate(lat: float, lon: float) -> dict:
     with urllib.request.urlopen(POWER.format(lat=lat, lon=lon), timeout=60) as r:
         d = json.load(r)
@@ -119,13 +170,17 @@ def build(c: dict, sources: dict, now: str) -> dict:
     # geographic South Pole) gets those measurements MISSING with the reason, never estimated.
     dem_error = power_error = None
     try:
-        grid, px_x_deg, px_y_deg = read_dem(lat, lon, HALF_WIDTH_DEG)
+        if abs(lat) + HALF_WIDTH_DEG > 90:
+            grid, cell_m, fp["description"] = read_dem_polar(lat, HALF_WIDTH_DEG)
+            pix_m_lat = pix_m_lon = cell_m
+        else:
+            grid, px_x_deg, px_y_deg = read_dem(lat, lon, HALF_WIDTH_DEG)
+            deg_m = 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
+            pix_m_lat = px_y_deg * deg_m
+            pix_m_lon = px_x_deg * deg_m * math.cos(math.radians(lat))
         nan_frac = float(np.isnan(grid).mean())
         if nan_frac > 0:
             grid = np.where(np.isnan(grid), np.nanmedian(grid), grid)
-        deg_m = 2 * math.pi * EARTH_RADIUS_KM * 1000 / 360
-        pix_m_lat = px_y_deg * deg_m
-        pix_m_lon = px_x_deg * deg_m * math.cos(math.radians(lat))
         fine = terrain_stats(grid, pix_m_lon, pix_m_lat)
         # Separate block factors per axis so the harmonised cell is ~3.7 km in BOTH directions
         # (~40 x 90 m cells N-S at any latitude; fewer E-W where the tile's longitude spacing is coarser).
