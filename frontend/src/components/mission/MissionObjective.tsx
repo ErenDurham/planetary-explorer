@@ -1,22 +1,17 @@
-// Mission Design chat box. Until a mission is saved it is the only thing on
-// the tab: the heading, a one-line prompt and a text box. Enter (Shift+Enter
-// for a new line) or Save hands the text to the parent, which has the language
-// model interpret it against the research registry and applies the result to
-// the sliders. The saved text then sits under the heading with an Edit Mission
-// button that reopens the box. Everything is centred. When the language model
-// did not run, one plain line says so: the weights then come from keyword
-// matching, not from research. The applied task reading (Earth-Mars release:
-// task, body, destination, reference) is shown under the saved text.
-//
-// The built-in objective (lib/defaultObjective.ts) is previewed in the empty
-// box as its placeholder. Tab, or the "Use suggested mission" button, puts it
-// in the box so it can be read and edited; Enter or Save then submits it like
-// any other text. Tab is only intercepted while the box is empty, so keyboard
-// navigation out of a box with text in it is unchanged.
+// The Mission Design composer: one objective box as the instrument of the
+// page. Before anything is applied it carries a two-sentence account of what
+// the user will get and three example objectives that fill the box (each one
+// a task the app actually supports). Enter, or the Apply button, hands the
+// text to the parent, which has the backend read it and applies the result.
+// Afterwards the applied objective sits in a quiet card with its task reading
+// and an Edit Mission button; editing shows the text as a draft, clearly not
+// applied until it is, so the sliders and the next step always belong to the
+// applied objective. Loading and the no-model fallback are said in plain
+// words. Shift+Enter is a new line; Escape cancels an edit.
 import { ContourArtwork } from "@/components/atlas/AtlasSurface";
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
-import { Pencil, TriangleAlert } from "lucide-react";
+import { Check, Pencil, TriangleAlert } from "lucide-react";
 import { ShootingStar } from "@/components/mission/SpaceDecor";
 import { useAppStore } from "@/store/useAppStore";
 import { BODY_NAME } from "@/lib/analogFeatures";
@@ -24,14 +19,21 @@ import type { Task } from "@/store/useAppStore";
 
 const TASK_LABEL: Record<Task, string> = { landing_screening: "Mars landing screening", analog_site_selection: "Analog site selection" };
 
-const SUGGESTION = DEFAULT_MISSION_OBJECTIVE;
+/** Three objectives the app can act on, one per supported workflow. Clicking one fills the box; nothing is applied until the user applies it. */
+export const EXAMPLE_OBJECTIVES: Array<{ id: string; label: string; hint: string; text: string }> = [
+  { id: "discovery", label: "New Earth terrain resembling Jezero", hint: "the installed discovery pilot", text: DEFAULT_MISSION_OBJECTIVE },
+  { id: "analogs", label: "Best established analog for Jezero", hint: "the curated Earth analogs", text: "Which established Earth analog best matches Jezero Crater's regional terrain for a rover field rehearsal? Rank the curated analog sites and explain each match with cited evidence." },
+  { id: "landing", label: "Mars landing screening", hint: "the catalogued Mars sites", text: "Screen the catalogued Mars sites for a solar-powered lander: favour gentle regional slopes and low relief, then reliable sunlight, and explain the trade-offs." },
+];
+
+const PLACEHOLDER = "Describe your mission in a sentence or two, or start from an example below.";
 
 interface Props {
-  /** True once a mission has been saved from this box. */
+  /** True once a mission has been applied from this box. */
   submitted: boolean;
-  /** The saved mission text shown under the heading. */
+  /** The applied mission text shown in the card. */
   missionText: string;
-  /** True while the saved text is being interpreted. */
+  /** True while the text is being read. */
   pending: boolean;
   /** False until the scoring defaults have loaded. */
   canSave: boolean;
@@ -50,9 +52,9 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
   const [draft, setDraft] = useState("");
   const [editing, setEditing] = useState(false);
   const box = useRef<HTMLTextAreaElement>(null);
-  const empty = draft.trim() === "";
   const composing = !submitted || editing;
   const draftDiffers = editing && draft.trim() !== missionText;
+  const baseline = (submitted ? missionText : appliedObjective).trim();
 
   const cancelEdit = () => { setEditing(false); setDraftDirty(false); };
   const save = () => {
@@ -64,74 +66,95 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
     onSave(text);
   };
   const onSubmit = (e: FormEvent) => { e.preventDefault(); save(); };
-  /** Put the suggested mission in the box, ready to read, edit or save. */
-  const useSuggestion = () => {
-    setDraft(SUGGESTION);
-    setDraftDirty(SUGGESTION.trim() !== (submitted ? missionText : appliedObjective).trim());
+  const fill = (text: string) => {
+    setDraft(text);
+    setDraftDirty(text.trim() !== baseline);
     requestAnimationFrame(() => { const el = box.current; if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } });
   };
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); save(); }
-    else if (e.key === "Tab" && !e.shiftKey && empty) { e.preventDefault(); useSuggestion(); }
     else if (e.key === "Escape" && editing) { e.preventDefault(); cancelEdit(); }
   };
   const startEdit = () => { setDraft(missionText); setEditing(true); };
   // landing priorities only: the other mission types are keyword-based by design
   const noModel = missionType === "landing" && submitted && !pending && !composing && appliedSource !== null && appliedSource !== "llm";
+  const applyLabel = pending ? "Reading your mission…" : editing ? "Apply changes" : "Apply objective";
 
   return (
-    <div data-pane="mission-objective" data-composing={composing} className={`mx-auto w-full px-4 text-center transition-[max-width,padding] duration-500 ease-out ${submitted ? "max-w-3xl pb-5 pt-6" : "max-w-2xl pb-8 pt-[16vh]"}`}>
+    <div data-pane="mission-objective" data-composing={composing} className={`mx-auto w-full px-4 text-center transition-[max-width,padding] duration-500 ease-out ${submitted ? "max-w-3xl pb-5 pt-6" : "max-w-2xl pb-8 pt-[12vh]"}`}>
       <ContourArtwork />
+      <p className="eyebrow">Step 1 of 3</p>
       <h2 className={`font-semibold tracking-tight text-fg transition-[font-size] duration-500 ${submitted ? "text-3xl" : "text-4xl"}`}>Mission Design</h2>
-      {!submitted && <p className="mt-2 text-base text-fg-muted">Tell us what your mission is</p>}
+      {!submitted && (
+        <p className="mission-lede" data-testid="mission-lede">
+          Describe the mission in a sentence or two. The app reads it, proposes scoring priorities you can adjust, and sends you to the right view: new Earth terrain resembling Jezero Crater through the installed discovery pilot, the established analogs, or Mars landing screening.
+        </p>
+      )}
 
       {composing ? (
-        <form onSubmit={onSubmit} className="mt-4">
+        <form onSubmit={onSubmit} className="mt-5" aria-busy={pending}>
           <label htmlFor="mission-objective" className="sr-only">Your mission objective</label>
           <textarea
             id="mission-objective"
             ref={box}
             maxLength={500}
-            rows={5}
+            rows={4}
             value={draft}
-            onChange={(e) => { setDraft(e.target.value); setDraftDirty(e.target.value.trim() !== (submitted ? missionText : appliedObjective).trim()); }}
+            disabled={pending}
+            onChange={(e) => { setDraft(e.target.value); setDraftDirty(e.target.value.trim() !== baseline); }}
             onKeyDown={onKeyDown}
-            placeholder={SUGGESTION}
-            aria-describedby={empty ? "mission-suggestion-hint" : undefined}
+            placeholder={PLACEHOLDER}
+            aria-describedby="mission-objective-keys"
             autoFocus={editing}
             className="w-full resize-none rounded-xl border border-line-strong bg-bg px-4 py-3 text-left text-base text-fg placeholder:text-fg-faint"
           />
-          {empty && (
-            <p id="mission-suggestion-hint" className="mt-2 text-sm text-fg-muted" data-testid="mission-suggestion-hint">
-              The grey text is a suggested mission. Press <kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-xs text-fg">Tab</kbd> or <button type="button" onClick={useSuggestion} className="text-copper-bright underline underline-offset-2">use it</button>, then <kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-xs text-fg">Enter</kbd> to save. Or write your own.
-            </p>
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-fg-muted">
+            <span id="mission-objective-keys"><kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-[11px] text-fg">Enter</kbd> applies · <kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-[11px] text-fg">Shift+Enter</kbd> for a new line</span>
+            <span className="num" aria-live="polite">{draft.length} / 500</span>
+          </div>
+          {!editing && (
+            <div className="mission-examples mt-4" role="group" aria-label="Example objectives">
+              <p className="mb-2 text-xs uppercase tracking-wide text-fg-faint">Start from an example</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {EXAMPLE_OBJECTIVES.map(ex => (
+                  <button key={ex.id} type="button" onClick={() => fill(ex.text)} disabled={pending} title={ex.text} aria-pressed={draft === ex.text}>
+                    {ex.label}<span className="ml-1.5 text-fg-faint">· {ex.hint}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
-          <div className="mt-3 flex items-center justify-center gap-2">
+          {editing && draftDiffers && <p className="mx-auto mt-3 inline-flex items-center gap-2 rounded-full border border-warn/50 bg-warn/10 px-3 py-1 text-xs text-warn" data-testid="draft-badge">Draft · not applied until you apply it</p>}
+          <div className="mt-4 flex items-center justify-center gap-2">
             {editing && <button type="button" onClick={cancelEdit} className="rounded-lg border border-line px-4 py-2 text-sm text-fg-muted hover:text-fg">Cancel</button>}
-            <button type="submit" disabled={!draft.trim() || !canSave || pending} className="rounded-lg border border-copper bg-copper/10 px-5 py-2 text-sm font-semibold text-copper-bright disabled:opacity-40">
-              Save
+            <button type="submit" disabled={!draft.trim() || !canSave || pending} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-copper bg-copper px-6 py-2.5 text-sm font-semibold text-white hover:bg-copper-bright disabled:opacity-40" data-testid="apply-objective">
+              {pending && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />}{applyLabel}
             </button>
           </div>
+          {!canSave && <p className="mt-2 text-xs text-fg-faint" role="status">Loading the scoring defaults before an objective can be applied…</p>}
         </form>
       ) : (
         <div className="mission-text-enter">
-          <p className="mx-auto mt-2 max-w-2xl whitespace-pre-wrap break-words text-base text-fg" data-testid="mission-text">{missionText}</p>
-          {appliedTask && !pending && (
-            <p className="mx-auto mt-1.5 max-w-2xl text-sm text-fg-muted" data-testid="applied-task">
-              Applied task: {TASK_LABEL[appliedTask]}
-              {appliedFocusBody && <> · looking on {BODY_NAME[appliedFocusBody]}</>}
-              {appliedDestination && <> · mission to {BODY_NAME[appliedDestination]}</>}
-              {appliedReference && <> · reference {appliedReference.name} ({BODY_NAME[appliedReference.body]})</>}
-            </p>
-          )}
-          <div className="mt-3 flex flex-col items-center gap-2">
-            <button type="button" onClick={startEdit} disabled={pending} className="inline-flex items-center gap-1.5 rounded-lg border border-copper bg-copper/10 px-4 py-2 text-sm font-semibold text-copper-bright disabled:opacity-40">
-              <Pencil className="h-4 w-4" aria-hidden /> Edit Mission
-            </button>
+          <div className="mission-applied" data-testid="mission-applied">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-ok/50 bg-ok/10 px-2.5 py-0.5 text-xs font-medium text-ok"><Check className="h-3.5 w-3.5" aria-hidden />Applied objective</span>
+              <button type="button" onClick={startEdit} disabled={pending} className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong px-3 py-1.5 text-sm text-fg hover:border-copper disabled:opacity-40">
+                <Pencil className="h-4 w-4" aria-hidden /> Edit Mission
+              </button>
+            </div>
+            <p className="mt-3 whitespace-pre-wrap break-words text-base leading-relaxed text-fg" data-testid="mission-text">{missionText}</p>
+            {appliedTask && !pending && (
+              <p className="mt-2 text-sm text-fg-muted" data-testid="applied-task">
+                Applied task: {TASK_LABEL[appliedTask]}
+                {appliedFocusBody && <> · looking on {BODY_NAME[appliedFocusBody]}</>}
+                {appliedDestination && <> · mission to {BODY_NAME[appliedDestination]}</>}
+                {appliedReference && <> · reference {appliedReference.name} ({BODY_NAME[appliedReference.body]})</>}
+              </p>
+            )}
             {pending && (
               <div className="mt-4 flex w-full items-center justify-center gap-2.5 text-xl font-medium text-fg" role="status" data-testid="mission-loading">
                 <ShootingStar />
-                <p>Considering the rocket science...</p>
+                <p>Reading your mission…</p>
               </div>
             )}
           </div>

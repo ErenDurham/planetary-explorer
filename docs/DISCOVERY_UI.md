@@ -14,19 +14,38 @@ from the Earth analog bar in Browse Regions, and from the Research page's candid
 
 ## The journey (as of 2026-11-15)
 
-Explore opens on **Find Earth Analogs** for the supported Jezero pilot; no mission design or
-weight editing is needed first. The stage heading is "Find Earth terrain resembling Jezero." with a
-one-sentence scope line bound to the run and the response (footprints sampled, area and size,
-reference, the two features compared, results shown; "a bounded pilot, not a global search").
-Browse Regions is the labelled secondary mode for the established analogs and mission scoring.
-The first result is selected once when the first ranking arrives, never over an explicit or cleared
-selection and never again on re-ranking (`useDiscoveryStore.autoSelectFirst`).
+A fresh session opens on **Mission Design**, the first of three primary panes (Mission Design →
+Explore → Research, with Analyze and Compare behind **Advanced**). The pane is one composer: a
+two-sentence account of what the app does with the objective, the objective box as the instrument
+of the page, and three example objectives that fill the box, one per supported workflow (new Earth
+terrain resembling Jezero through the discovery pilot, the established analogs, Mars landing
+screening). Nothing is applied until **Apply objective**; the button says "Reading your mission…"
+while the backend reads it, and an unapplied edit is marked "Draft · not applied until you apply it".
 
-The primary navigation is **Explore** and **Research**; Mission Design, Analyze and Compare are
-behind an **Advanced** menu in `TopNav` (which also names whichever of them is open), and Compare
-stays contextual in Explore. On phones the discovery workspace orders the stage header, the
-candidate list, then the evidence panel, with the globe or map behind a **Show map** toggle; the
-whole journey works with keyboard alone (list rows are buttons; the globe is never required).
+Once applied, `MissionNextStep` (`lib/missionRoute.ts`) names the one Explore action the reading
+supports and its limits in the same breath: a new-regions objective around Jezero leads to **Explore
+candidates** (Find Earth Analogs, "a bounded set of surveyed Earth footprints … not a global search");
+a new-regions objective around any other reference says plainly that discovery exists only for
+Jezero and routes to the established analogs; a landing objective routes to the Mars sites; a reading
+with no task asks the user to choose a supported workflow rather than guessing. Jezero's discovery
+results are never shown for an objective that did not ask for them. The scoring priorities and the
+Earth/Mars mission focus sit under a **Scoring priorities and mission focus** disclosure. Returning to
+Mission Design and re-applying keeps research notes and the discovery selection; the next-step card
+is disabled while a draft edit is unapplied, so Explore never opens on priorities that belong to an
+older objective. There is no first-run modal.
+
+Explore then opens on the routed mode. In **Find Earth Analogs** the stage heading is "Find Earth
+terrain resembling Jezero." with a one-sentence scope line bound to the run and the response
+(footprints sampled, area and size, reference, the two features compared, results shown; "a bounded
+pilot, not a global search"), and a line tying it to the applied objective. Browse Regions is the
+labelled secondary mode for the established analogs and mission scoring. The first result is
+selected once when the first ranking arrives, never over an explicit or cleared selection and never
+again on re-ranking (`useDiscoveryStore.autoSelectFirst`).
+
+`TopNav` numbers the three primary steps and names whichever Advanced tool is open; Compare stays
+contextual in Explore. On phones the discovery workspace orders the stage header, the candidate
+list, then the evidence panel, with the globe or map behind a **Show map** toggle; the whole journey
+works with keyboard alone (list rows are buttons; the globe is never required).
 
 Research (`CandidateResearchPanel`) opens with **Back to this candidate in Explore** and the
 ranking context the candidate arrived with (rank of returned count, index, weights, from this
@@ -44,11 +63,15 @@ listed separately, open questions, sources, background passages labelled as such
 Unsaved edits are included and the file is marked DRAFT. The JSON audit export is unchanged;
 neither path calls save.
 
-Screenshots: `docs/screenshots/discovery-journey-{explore,research,phone,pages-restored}.jpg`
+Screenshots: `docs/screenshots/mission-{design,applied,unsupported,phone}.jpg`, `globe-{earth,mars}.jpg` and
+`docs/screenshots/discovery-journey-{explore,research,phone,pages-restored}.jpg`
 (the last one is the GitHub Pages build after a reload, with saved notes restored from browser
 storage). `features/discovery/journey.test.tsx` covers default results → selection → research →
 save → return with status → export, re-ranking with an explicit selection, a draft surviving the
 round trip, a listed survey whose artifacts are missing, a failed save, and the Advanced menu.
+`components/mission/MissionObjective.test.tsx` and `App.test.tsx` cover the fresh session opening on
+Mission Design, a supported objective leading to Explore candidates, the honest route for an
+unsupported reference, the choose-a-task case, and a return to edit keeping research notes.
 
 ## Layout
 

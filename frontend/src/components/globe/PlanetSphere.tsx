@@ -15,10 +15,11 @@ export function PlanetSphere({ config, meshRef }: { config: PlanetConfig; meshRe
   }, [texture]);
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[config.radius, 96, 64]} />
-      <meshStandardMaterial map={texture} roughness={0.95} metalness={0}
-        emissive={config.id === "earth" ? "#193b60" : "#000000"}
-        emissiveIntensity={config.id === "earth" ? 0.45 : 0} />
+      <sphereGeometry args={[config.radius, 128, 96]} />
+      {/* lit by the hemisphere + key light; a faint emissive lift keeps the night side readable without flattening the day side */}
+      <meshStandardMaterial map={texture} roughness={config.id === "earth" ? 0.82 : 0.96} metalness={0}
+        emissive={config.id === "earth" ? "#0e2440" : "#1a0d08"}
+        emissiveIntensity={config.id === "earth" ? 0.35 : 0.2} />
     </mesh>
   );
 }

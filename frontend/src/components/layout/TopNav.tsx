@@ -1,19 +1,19 @@
-// Primary navigation is the discovery journey: Explore, then Research. The
-// mission-design and analysis tools stay fully available behind an Advanced
-// disclosure (Mission Design, Analyze, Compare), which also shows which of
-// them is open. Compare additionally stays contextual inside Explore ("Compare
-// selected pair"). Arrow keys move focus along the visible buttons; Enter or
-// Space activates.
+// Primary navigation is the journey in order: Mission Design, Explore,
+// Research. The analysis tools stay fully available behind an Advanced
+// disclosure (Analyze, Compare), which also shows which of them is open.
+// Compare additionally stays contextual inside Explore ("Compare selected
+// pair"). Arrow keys move focus along the visible buttons; Enter or Space
+// activates; Escape closes the menu.
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Orbit } from "lucide-react";
 import { type Tab } from "@/store/useAppStore";
 
-const PRIMARY: Array<{ id: Tab; label: string; hint: string }> = [
-  { id: "explore", label: "Explore", hint: "Find Earth terrain resembling Jezero, or browse the established regions" },
-  { id: "research", label: "Research", hint: "Notebook, checklist, brief and background evidence for a candidate" },
+const PRIMARY: Array<{ id: Tab; label: string; hint: string; step: number }> = [
+  { id: "mission", label: "Mission Design", hint: "Describe the mission; the app reads it and proposes priorities", step: 1 },
+  { id: "explore", label: "Explore", hint: "Find Earth terrain resembling Jezero, or browse the established regions and Mars sites", step: 2 },
+  { id: "research", label: "Research", hint: "Notebook, checklist, brief and background evidence for a candidate", step: 3 },
 ];
 const ADVANCED: Array<{ id: Tab; label: string; hint: string }> = [
-  { id: "mission", label: "Mission Design", hint: "Mission objective, priorities and recommendation" },
   { id: "analyze", label: "Analyze", hint: "Rankings and cross-site charts" },
   { id: "compare", label: "Compare", hint: "Compare the selected Earth and Mars locations" },
 ];
@@ -48,14 +48,16 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
       </div>
       <nav aria-label="Primary" className="flex flex-wrap items-center justify-center gap-1 justify-self-center">
         {PRIMARY.map((t) => (
-          <button key={t.id} type="button" onClick={() => onChange(t.id)} onKeyDown={roving} aria-current={active === t.id ? "page" : undefined} title={t.hint} className={tabClass(active === t.id)}>{t.label}</button>
+          <button key={t.id} type="button" onClick={() => onChange(t.id)} onKeyDown={roving} aria-current={active === t.id ? "page" : undefined} title={t.hint} className={`inline-flex items-center gap-1.5 ${tabClass(active === t.id)}`}>
+            <span aria-hidden className={`num inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] ${active === t.id ? "border-copper-bright/60 text-copper-bright" : "border-line-strong text-fg-faint"}`}>{t.step}</span>{t.label}
+          </button>
         ))}
         <div ref={menu} className="relative">
-          <button data-gate-allow type="button" onClick={() => setOpen(o => !o)} onKeyDown={roving} aria-expanded={open} aria-haspopup="menu" aria-controls="advanced-tools" title="Mission Design, Analyze and Compare" className={`inline-flex items-center gap-1 ${tabClass(!!advancedActive)}`} data-testid="advanced-nav">
+          <button type="button" onClick={() => setOpen(o => !o)} onKeyDown={roving} aria-expanded={open} aria-haspopup="menu" aria-controls="advanced-tools" title="Analyze and Compare" className={`inline-flex items-center gap-1 ${tabClass(!!advancedActive)}`} data-testid="advanced-nav">
             Advanced{advancedActive ? <span className="text-fg-faint"> · </span> : null}{advancedActive ? <span>{advancedActive.label}</span> : null}<ChevronDown className={`h-3.5 w-3.5 ${open ? "rotate-180" : ""}`} aria-hidden />
           </button>
-          <div data-gate-allow id="advanced-tools" role="menu" aria-label="Advanced tools" hidden={!open} className="absolute left-1/2 top-full z-50 mt-1 w-56 -translate-x-1/2 rounded-lg border border-line bg-bg-elev p-1 shadow-lg">
-            <p className="px-2 py-1 text-[10.5px] uppercase tracking-wide text-fg-faint">Mission tools</p>
+          <div id="advanced-tools" role="menu" aria-label="Advanced tools" hidden={!open} className="absolute left-1/2 top-full z-50 mt-1 w-56 -translate-x-1/2 rounded-lg border border-line bg-bg-elev p-1 shadow-lg">
+            <p className="px-2 py-1 text-[10.5px] uppercase tracking-wide text-fg-faint">Analysis tools</p>
             {ADVANCED.map(t => (
               <button key={t.id} type="button" role="menuitem" onClick={() => { onChange(t.id); setOpen(false); }} onKeyDown={roving} aria-current={active === t.id ? "page" : undefined} title={t.hint} className={`block w-full rounded px-2 py-1.5 text-left text-xs ${active === t.id ? "bg-copper/15 text-copper-bright" : "text-fg hover:bg-bg-elev-2"}`}>
                 {t.label}<span className="block text-[10.5px] text-fg-faint">{t.hint}</span>

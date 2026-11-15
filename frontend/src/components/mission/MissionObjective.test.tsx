@@ -13,6 +13,10 @@ import { DEFAULT_OBJECTIVE, roverSharesFrom, useAppStore } from "@/store/useAppS
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
 import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 import { InfoTip } from "@/components/ui/InfoTip";
+import { setDiscoveryService } from "@/features/discovery/adapter";
+import { connectedService, deadService } from "@/features/discovery/test/fixtures";
+import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
+import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
 import type { DefaultMissionResponse, EvaluateResponse, EvidenceCitation } from "@/types";
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -73,29 +77,28 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("Mission Design chat box", () => {
-  it("previews the built-in mission, fills it on Tab and submits it on Enter", async () => {
+  it("offers three example objectives that fill the box, and applies one on Enter", async () => {
     mockInterpret();
     renderTab();
     const box = screen.getByLabelText("Your mission objective");
     expect(box).toHaveValue("");
-    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
-    // Tab in the empty box adopts the preview, with the hint gone and Save enabled
-    fireEvent.keyDown(box, { key: "Tab" });
+    expect(screen.getByRole("button", { name: /Apply objective/ })).toBeDisabled();
+    const examples = screen.getByRole("group", { name: "Example objectives" });
+    expect(within(examples).getAllByRole("button").map(b => b.textContent)).toEqual([
+      expect.stringContaining("New Earth terrain resembling Jezero"), expect.stringContaining("Best established analog for Jezero"), expect.stringContaining("Mars landing screening"),
+    ]);
+    fireEvent.click(within(examples).getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     expect(box).toHaveValue(DEFAULT_MISSION_OBJECTIVE);
-    expect(screen.queryByTestId("mission-suggestion-hint")).toBeNull();
-    expect(screen.getByRole("button", { name: "Save" })).toBeEnabled();
-    // Tab with text present is ordinary focus movement, not a second fill
+    expect(screen.getByRole("button", { name: /Apply objective/ })).toBeEnabled();
+    // an example is a draft like any other: the user can still rewrite it
     fireEvent.change(box, { target: { value: "My own words" } });
-    fireEvent.keyDown(box, { key: "Tab" });
     expect(box).toHaveValue("My own words");
-    // back to empty: the "use it" button does the same as Tab, then Enter submits the suggestion
-    fireEvent.change(box, { target: { value: "" } });
-    fireEvent.click(screen.getByRole("button", { name: "use it" }));
-    expect(box).toHaveValue(DEFAULT_MISSION_OBJECTIVE);
+    fireEvent.click(within(examples).getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     fireEvent.keyDown(box, { key: "Enter" });
     await screen.findByTestId("mission-text");
     expect(interpretCalls[0].objective).toBe(DEFAULT_MISSION_OBJECTIVE);
     expect(screen.getByTestId("mission-text")).toHaveTextContent(/new candidate Earth regions beyond established analog sites/);
+    expect(screen.getByTestId("mission-applied")).toHaveTextContent(/Applied objective/);
   });
 
   it("opens on the chat box alone, then Enter interprets, applies and brings in the sliders and pie", async () => {
@@ -103,11 +106,11 @@ describe("Mission Design chat box", () => {
     const { container } = renderTab();
 
     expect(screen.getByRole("heading", { name: "Mission Design" })).toBeInTheDocument();
-    expect(screen.getByText("Tell us what your mission is")).toBeInTheDocument();
+    expect(screen.getByTestId("mission-lede")).toHaveTextContent(/Describe the mission in a sentence or two/);
     const box = screen.getByLabelText("Your mission objective");
     expect(box).toHaveValue("");
-    expect(box).toHaveAttribute("placeholder", DEFAULT_MISSION_OBJECTIVE);
-    expect(screen.getByTestId("mission-suggestion-hint")).toHaveTextContent(/Press Tab or use it, then Enter to save/);
+    expect(box).toHaveAttribute("placeholder", expect.stringMatching(/Describe your mission/));
+    expect(screen.queryByTestId("mission-next-step")).toBeNull();
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
     expect(screen.queryByText("Priority distribution")).toBeNull();
     expect(screen.queryByRole("button", { name: /Edit Mission/ })).toBeNull();
@@ -125,7 +128,7 @@ describe("Mission Design chat box", () => {
     expect(screen.getByTestId("mission-text")).toHaveTextContent(TEXT);
     expect(screen.getByRole("button", { name: /Edit Mission/ })).toBeInTheDocument();
     expect(screen.queryByLabelText("Your mission objective")).toBeNull();
-    expect(screen.queryByText("Tell us what your mission is")).toBeNull();
+    expect(screen.queryByTestId("mission-lede")).toBeNull();
 
     // applied straight to the store as shares, with the model's provenance and its research
     const s = useAppStore.getState();
@@ -164,7 +167,7 @@ describe("Mission Design chat box", () => {
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new TypeError("Failed to fetch"));
     renderTab();
     fireEvent.change(screen.getByLabelText("Your mission objective"), { target: { value: TEXT } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /Apply objective|Apply changes/ }));
     await screen.findByLabelText("Low slopes share of priorities");
     expect(screen.getByTestId("no-model-notice")).toHaveTextContent("Uh oh! Either our model is not available, or we could not understand your mission. Please try again!");
     expect(screen.queryByText(/Offline rule-based suggestion/)).toBeNull();
@@ -191,7 +194,7 @@ describe("Mission Design chat box", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Edit Mission/ }));
     fireEvent.change(screen.getByLabelText("Your mission objective"), { target: { value: "Smooth terrain for a rover" } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /Apply objective|Apply changes/ }));
     expect(screen.getByTestId("mission-text")).toHaveTextContent("Smooth terrain for a rover");
     await waitFor(() => expect(interpretCalls).toHaveLength(2));
     expect(interpretCalls[1].objective).toBe("Smooth terrain for a rover");
@@ -457,14 +460,14 @@ describe("Mission Design: one reading, two planets", () => {
     expect(within(dialog).queryByTestId("why-hard-constraints")).toBeNull();
   });
 
-  it("shows 'Considering the rocket science...' while the model reads the mission", async () => {
+  it("says it is reading the mission while the model reads it", async () => {
     let release!: (r: Response) => void;
     vi.spyOn(globalThis, "fetch").mockImplementation(() => new Promise<Response>((resolve) => { release = resolve; }));
     renderTab();
     const box = screen.getByLabelText("Your mission objective");
     fireEvent.change(box, { target: { value: TEXT } });
     fireEvent.keyDown(box, { key: "Enter" });
-    const text = await screen.findByText("Considering the rocket science...");
+    const text = await screen.findByText("Reading your mission…");
     const loading = screen.getByTestId("mission-loading");
     expect(loading).toHaveClass("text-xl", "justify-center", "items-center");
     // a star circling like a spinner, to the left of the text and sized to it (em-based)
@@ -474,7 +477,7 @@ describe("Mission Design: one reading, two planets", () => {
     expect(loading.querySelector(".animate-spin")).toBeNull();
     release(json(EARTH_BODY));
     await screen.findByLabelText("Low slopes share of priorities");
-    expect(screen.queryByText("Considering the rocket science...")).toBeNull();
+    expect(screen.queryByText("Reading your mission…")).toBeNull();
   });
 });
 
@@ -505,24 +508,20 @@ describe("Mission Design decoration", () => {
 });
 
 describe("Mission Design default objective", () => {
-  it("shows the default objective as the example and fills it in when Tab is pressed in the empty box", async () => {
+  it("offers the default objective as the first example and applies it from the box", async () => {
     mockInterpret();
     renderTab();
     expect(DEFAULT_OBJECTIVE).toBe(useAppStore.getInitialState().missionObjective);   // one source for both
     const box = screen.getByLabelText("Your mission objective");
     expect(box).toHaveValue("");
-    expect(box).toHaveAttribute("placeholder", DEFAULT_OBJECTIVE);
-    expect(box).toHaveAccessibleDescription(/Press Tab or use it , then Enter to save/);   // main's visible hint
-    fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveAccessibleDescription(/Enter applies/);
+    fireEvent.click(screen.getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     expect(box).toHaveValue(DEFAULT_OBJECTIVE);
-    // with text in the box, Tab is left alone (it moves focus as usual)
-    fireEvent.change(box, { target: { value: "Something of my own" } });
-    fireEvent.keyDown(box, { key: "Tab" });
-    expect(box).toHaveValue("Something of my own");
+    // Tab is ordinary focus movement, never a fill
     fireEvent.change(box, { target: { value: "" } });
-    fireEvent.keyDown(box, { key: "Tab", shiftKey: true });          // Shift+Tab never fills
-    expect(box).toHaveValue("");
     fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveValue("");
+    fireEvent.click(screen.getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     fireEvent.keyDown(box, { key: "Enter" });
     await screen.findByLabelText("Low slopes share of priorities");
     expect(useAppStore.getState().appliedObjective).toBe(DEFAULT_OBJECTIVE);
@@ -593,5 +592,72 @@ describe("Mission Design: Earth <-> Mars cross-reference", () => {
     await saveMission();
     fireEvent.click(screen.getByRole("button", { name: "Why these priorities?" }));
     expect(within(screen.getByRole("dialog")).getByTestId("why-analog")).toHaveTextContent("No research from the last 15 years on this site in the evidence registry.");
+  });
+});
+
+describe("Mission Design next step", () => {
+  beforeEach(() => { useAppStore.setState({ viewedBody: "mars", followObjective: true, selectedMarsId: null, selectedSiteId: null, selectedEarthId: null, missionDestination: "mars", task: "landing_screening", appliedTask: null, activeTab: "mission", exploreMode: "browse" }); });
+  afterEach(() => { setDiscoveryService(deadService); });
+
+  it("a supported new-region Jezero objective leads to Explore candidates, which opens Find Earth Analogs", async () => {
+    setDiscoveryService(connectedService());
+    mockInterpret({ ...mission.interpret, task_interpretation: { task: "analog_site_selection", focus_body: "earth", mission_destination: "mars", reference_site: { body: "mars", id: "jezero_crater", name: "Jezero Crater", matched_text: "Jezero" }, unresolved_sites: [], direction_options: [], analog_suggestions: [], rationale: [] } });
+    renderTab();
+    const box = screen.getByLabelText("Your mission objective");
+    fireEvent.change(box, { target: { value: DEFAULT_MISSION_OBJECTIVE } });
+    fireEvent.keyDown(box, { key: "Enter" });
+    const next = await screen.findByTestId("mission-next-step");
+    await waitFor(() => expect(next).toHaveAttribute("data-route", "discovery"));
+    expect(next).toHaveTextContent(/bounded set of surveyed Earth footprints.*Jezero Crater.*not a global search/);
+    expect(screen.queryByTestId("mission-unsupported")).toBeNull();
+    fireEvent.click(within(next).getByRole("button", { name: /Explore candidates/ }));
+    expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "find_analogs" });
+  });
+
+  it("an objective that asks for new regions around another reference is routed honestly to the established analogs", async () => {
+    setDiscoveryService(connectedService());
+    mockInterpret({ ...mission.interpret, task_interpretation: { task: "analog_site_selection", focus_body: "earth", mission_destination: "mars", reference_site: { body: "mars", id: "elysium_planitia", name: "Elysium Planitia (InSight)", matched_text: "Elysium" }, unresolved_sites: [], direction_options: [], analog_suggestions: [], rationale: [] } });
+    const onExplore = vi.fn();
+    render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}><LeftSidebar defaults={defaults} defaultsError={null} evaluation={evaluation} evaluationError={null} onExploreMission={onExplore} exploreReady /></QueryClientProvider>);
+    const box = screen.getByLabelText("Your mission objective");
+    fireEvent.change(box, { target: { value: "Discover new Earth regions resembling Elysium Planitia" } });
+    fireEvent.keyDown(box, { key: "Enter" });
+    const next = await screen.findByTestId("mission-next-step");
+    expect(next).toHaveAttribute("data-route", "established_analogs");
+    expect(screen.getByTestId("mission-unsupported")).toHaveTextContent(/only exists for Jezero Crater; it cannot find new regions for Elysium Planitia/);
+    fireEvent.click(within(next).getByRole("button", { name: /Explore established analogs/ }));
+    expect(onExplore).toHaveBeenCalledTimes(1);
+    expect(useAppStore.getState().exploreMode).toBe("browse");
+  });
+
+  it("a reading with no task asks the user to choose a supported workflow instead of guessing", async () => {
+    mockInterpret({ ...mission.interpret, task_interpretation: undefined });
+    renderTab();
+    await saveMission("Something about rocks and dust");
+    const next = screen.getByTestId("mission-next-step");
+    expect(next).toHaveAttribute("data-route", "choose");
+    expect(next).toHaveTextContent(/does not guess/);
+    expect(within(next).getByRole("button", { name: "Mars landing screening" })).toBeInTheDocument();
+    expect(within(next).getByRole("button", { name: "Established Earth analogs" })).toBeInTheDocument();
+    // no survey is reachable in this test, so the discovery choice is disabled rather than shown as if it worked
+    expect(within(next).getByRole("button", { name: "New Earth terrain resembling Jezero" })).toBeDisabled();
+  });
+
+  it("returning to edit the objective keeps research notes and the discovery selection", async () => {
+    mockInterpret();
+    useCandidateResearchTarget.setState({ target: { runId: "run-1", candidateId: "c-1" }, drafts: { "run-1:c-1": { status: "in_progress", notes: "Keep me across a mission edit.", findings: [], checked: [], baseUpdatedAt: null } } });
+    useDiscoveryStore.setState({ runId: "run-1", runs: { "run-1": { ranked: true, selectedCandidateId: "c-1", autoSelected: true } } });
+    renderTab();
+    await saveMission();
+    fireEvent.click(screen.getByRole("button", { name: /Edit Mission/ }));
+    expect(screen.queryByTestId("draft-badge")).toBeNull();
+    fireEvent.change(screen.getByLabelText("Your mission objective"), { target: { value: "Prioritise landing safety over sunlight; ignore solar. Also avoid dust." } });
+    expect(screen.getByTestId("draft-badge")).toHaveTextContent(/Draft · not applied/);
+    expect(screen.getByTestId("mission-next-step")).toHaveTextContent(/Apply your edited objective first/);
+    fireEvent.click(screen.getByRole("button", { name: /Apply changes/ }));
+    await waitFor(() => expect(interpretCalls).toHaveLength(2));
+    await screen.findByTestId("mission-text");
+    expect(useCandidateResearchTarget.getState().drafts["run-1:c-1"].notes).toBe("Keep me across a mission edit.");
+    expect(useDiscoveryStore.getState().runs["run-1"].selectedCandidateId).toBe("c-1");
   });
 });

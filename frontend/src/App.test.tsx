@@ -3,7 +3,7 @@
 // Exercises the store, the TanStack hooks, the debounced evaluate call with its
 // client_request_id, and the three-column layout.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import fixture from "@/test/fixtures/api_examples.json";
 import { useAppStore } from "@/store/useAppStore";
@@ -58,12 +58,12 @@ async function renderApp() {
       <App />
     </QueryClientProvider>,
   );
-  openAdvanced("Mission Design");
+  fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
   // the tab opens on the chat box; saving a mission brings in the sliders.
   // No priority keyword matches this text, so the seeded shares are kept.
   const box = screen.getByLabelText("Your mission objective");
   fireEvent.change(box, { target: { value: "We want to land on Mars to establish a Research Base." } });
-  await waitFor(() => expect(screen.getByRole("button", { name: "Save" })).toBeEnabled(), { timeout: 2000 });
+  await waitFor(() => expect(screen.getByRole("button", { name: /Apply objective|Apply changes/ })).toBeEnabled(), { timeout: 2000 });
   fireEvent.keyDown(box, { key: "Enter" });
   return view;
 }
@@ -102,23 +102,28 @@ describe("App", () => {
 
   it("hands off the applied mission to its intended planet and blocks unapplied edits", async () => {
     await renderApp();
-    const start = await screen.findByRole("button", { name: "Head to explore mission →" });
+    // this fixture's reading carries no task, so the next step asks the user to choose a supported workflow rather than guessing
+    const next = await screen.findByTestId("mission-next-step");
+    expect(next).toHaveAttribute("data-route", "choose");
+    expect(next).toHaveTextContent(/does not guess/);
+    const start = within(next).getByRole("button", { name: "Mars landing screening" });
     await waitFor(() => expect(start).toBeEnabled());
     useAppStore.setState({viewedBody:"earth"});
     fireEvent.click(start);
     expect(useAppStore.getState()).toMatchObject({activeTab: "explore", exploreMode: "browse",viewedBody:"mars",exploreStage:"mission",selectedMarsId:fixture.evaluate.results[0].site_id});
-    openAdvanced("Mission Design");
+    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
     fireEvent.click(screen.getByRole("button", {name:/Edit Mission/}));
     fireEvent.change(screen.getByLabelText("Your mission objective"), {target:{value:"An unapplied objective"}});
-    expect(screen.getByRole("button", {name:"Head to explore mission →"})).toBeDisabled();
+    expect(within(screen.getByTestId("mission-next-step")).getByRole("button", { name: "Mars landing screening" })).toBeDisabled();
+    expect(screen.getByTestId("mission-next-step")).toHaveTextContent(/Apply your edited objective first/);
   });
 
   it("keeps the Mission Design tab to the chat box alone until a mission is saved", () => {
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
-    openAdvanced("Mission Design");
+    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
     expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Head to explore mission →" })).toBeNull();
+    expect(screen.queryByTestId("mission-next-step")).toBeNull();
     expect(document.querySelector("div.absolute.inset-0.z-\\[60\\]")).toHaveClass("hidden"); // Astro overlay
   });
 
@@ -153,17 +158,26 @@ describe("App", () => {
     expect(await screen.findByRole("heading", {name:"Mission suitability"})).toBeInTheDocument();
   });
 
-  it("opens directly in discovery without requiring mission design and keeps advanced tools reachable", async () => {
+  it("a fresh session opens on Mission Design, with Explore and Research one click away and nothing intercepting them", async () => {
     useAppStore.setState(useAppStore.getInitialState(), true);
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
-    expect(useAppStore.getState().activeTab).toBe("explore");
-    expect(useAppStore.getState().exploreMode).toBe("find_analogs");
-    fireEvent.click(screen.getByRole("button", {name:"Research"}));
-    expect(screen.queryByTestId("mission-gate")).toBeNull();
-    openAdvanced("Mission Design");
     expect(useAppStore.getState().activeTab).toBe("mission");
-    expect(screen.queryByTestId("mission-gate")).toBeNull();
+    const nav = screen.getByRole("navigation", { name: "Primary" });
+    expect(within(nav).getAllByRole("button").map((b: HTMLElement) => b.textContent)).toEqual(["Mission Design", "Explore", "Research", expect.stringContaining("Advanced")].map(x => typeof x === "string" ? expect.stringContaining(x) : x));
+    expect(within(nav).getByRole("button", { name: "Mission Design" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
+    expect(screen.getByTestId("mission-lede")).toHaveTextContent(/installed discovery pilot/);
+    // Explore still opens on the discovery pilot, without any gate dialog
+    fireEvent.click(within(nav).getByRole("button", { name: "Explore" }));
+    expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "find_analogs" });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(within(nav).getByRole("button", { name: "Research" }));
+    expect(useAppStore.getState().activeTab).toBe("research");
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(within(nav).getByRole("button", { name: "Mission Design" }));
+    expect(useAppStore.getState().activeTab).toBe("mission");
+    expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
   });
 
   it("never asks once a mission is designed", async () => {
