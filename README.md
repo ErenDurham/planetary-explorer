@@ -48,13 +48,28 @@ analog similarity. The Moon is deferred: its catalogue data is isolated and unus
 
 ## Find Earth analogs
 
-Under **Explore → Find Earth Analogs**, the app ranks an offline, preprocessed Earth terrain survey (`discovery-v1`: Copernicus GLO-90
-footprints on 4 km cells against MOLA at Jezero) and shows the surveyed boundary, the exact sampling
-coverage, screening counts, each candidate's real footprint, its slope and relief against Jezero, factor
-contributions, data sources, its relationship to the versioned known-analog catalog, missing evidence and
-proposed field validation. Every result is labelled *Proposed terrain analog candidate; field validation
-required*, kept apart from the established analogs and their five-feature scores, and nothing is scanned
-live. Browse Regions, the other Explore mode, keeps the featured regions and the established analogs.
+Under **Explore → Find Unresearched Analogs**, the app ranks an offline, preprocessed Earth terrain survey
+(`discovery-v2`: Copernicus GLO-90 footprints on 4 km cells plus NASA POWER climatology, against MOLA at
+Jezero). The shipped survey covers **sixteen one-degree regions on five continents**, chosen for the Mars
+process or surface each is known to express — desert pavement on the Tademaït, yardangs in the Dasht-e Lut,
+evaporite playa in the Qaidam, megadunes at Badain Jaran, lava tubes at Harrat Khaybar, relict drainage in
+the Ennedi — and deliberately away from Antarctica, the Atacama proper, Iceland and Hawaii. Each region's
+hypothesis was written down before any terrain was processed or any score seen.
+
+Candidates are scored on **six measured features across three dimensions** — terrain and landform
+(median slope, steep-tail slope, detrended relief, elevation range), illumination (distance from the
+equator) and water (mean precipitation) — and each dimension is also scored on its own, so the app can say
+a region is an excellent aridity analog and only a fair terrain one. Dimensions with no measured Mars
+counterpart in this release (air temperature, wind, surface shortwave) are reported beside every candidate
+as differences and never enter the index; neither does top-of-atmosphere insolation, which is measured on
+both bodies but differs by about 2.2× no matter which Earth site you pick.
+
+The page shows each searched region's outline (never a single box drawn around them all), the exact
+sampling coverage, screening counts, each candidate's real footprint and factor contributions, data
+sources, its relationship to the versioned known-analog catalog, missing evidence and proposed field
+validation. Every result is labelled *Proposed terrain analog candidate; field validation required*, kept
+apart from the established analogs and their five-feature scores, and nothing is scanned live. Browse
+Regions, the other Explore mode, keeps the featured regions and the established analogs.
 See [docs/DISCOVERY_UI.md](docs/DISCOVERY_UI.md) and [DISCOVERY_CONTRACT.md](DISCOVERY_CONTRACT.md).
 
 | Ranked survey | Candidate evidence |
