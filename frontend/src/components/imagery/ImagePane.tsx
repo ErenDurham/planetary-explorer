@@ -6,9 +6,8 @@
 // (view "surface"); orbital entries carry a footprint and scale bar only when
 // the manifest gives bounds.
 import { useId, useState } from "react";
-import { Maximize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { ErrorNote } from "@/components/ui/ErrorNote";
-import { ImageSelector } from "@/components/imagery/ImageSelector";
 import { ExpandDialog } from "@/components/imagery/ExpandDialog";
 import { ZoomControls, ZoomableImage, type GeoContext } from "@/components/imagery/ZoomableImage";
 import { BODY_COLOR } from "@/components/imagery/assetUrl";
@@ -47,6 +46,8 @@ export function ImagePane({ roleLabel, location, imagery, view, sharedView, onOv
   const body = location?.body ?? imagery.body;
   const entries = entriesFor(imagery.data, view);
   const entry = entries.find(e => e.entry_id === entryId) ?? entries[0] ?? null;
+  const index = entry ? entries.indexOf(entry) : -1;
+  const go = (step: number) => { const next = entries[(index + step + entries.length) % entries.length]; if (next) onEntryChange(next.entry_id); };
   const otherView: PaneView = view === "orbital" ? "surface" : "orbital";
   const otherCount = entriesFor(imagery.data, otherView).length;
   const geo: GeoContext | null = location ? { body: location.body, lat: location.lat, lonEast: location.lonEast, halfWidthDeg: location.halfWidthDeg } : null;
@@ -87,7 +88,7 @@ export function ImagePane({ roleLabel, location, imagery, view, sharedView, onOv
         )}
         {location && imagery.status === "ready" && entry && (
           <>
-            <ImageSelector id={`${uid}-entry`} label={`${VIEW_LABEL[view]} for ${location.name}`} entries={entries} value={entry.entry_id} onChange={onEntryChange} />
+            <p className="text-xs text-fg" data-testid="compare-image-title">{coverageKind(entry) === "regional" ? "Regional · " : "Exact site · "}{entry.title}{entries.length > 1 && <span className="num ml-2 text-fg-muted">{index + 1} of {entries.length}</span>}</p>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <ZoomControls zoom={zoom} onZoom={onZoomChange} idPrefix={uid} />
               <div className="flex items-center gap-2">
@@ -96,7 +97,13 @@ export function ImagePane({ roleLabel, location, imagery, view, sharedView, onOv
               </div>
             </div>
             {linkNote && <p className="text-[11px] text-fg-muted">{linkNote}</p>}
-            <ZoomableImage key={`${location.id}:${entry.entry_id}`} entry={entry} geo={geo} zoom={zoom} onZoom={onZoomChange} onFitHeight={onFitHeight} ariaLabel={`${VIEW_LABEL[view]} of ${location.name}`} />
+            <div className="relative">
+              <ZoomableImage key={`${location.id}:${entry.entry_id}`} entry={entry} geo={geo} zoom={zoom} onZoom={onZoomChange} onFitHeight={onFitHeight} ariaLabel={`${VIEW_LABEL[view]} of ${location.name}`} />
+              {entries.length > 1 && <>
+                <button type="button" onClick={() => go(-1)} aria-label={`Previous ${VIEW_LABEL[view].toLowerCase()} image for ${location.name}`} className="absolute left-2 top-1/2 z-[3] -translate-y-1/2 rounded-full border border-line-strong bg-bg/85 p-2 text-fg shadow-lg backdrop-blur-sm hover:border-copper hover:text-copper-bright"><ChevronLeft className="h-5 w-5" aria-hidden /></button>
+                <button type="button" onClick={() => go(1)} aria-label={`Next ${VIEW_LABEL[view].toLowerCase()} image for ${location.name}`} className="absolute right-2 top-1/2 z-[3] -translate-y-1/2 rounded-full border border-line-strong bg-bg/85 p-2 text-fg shadow-lg backdrop-blur-sm hover:border-copper hover:text-copper-bright"><ChevronRight className="h-5 w-5" aria-hidden /></button>
+              </>}
+            </div>
             <p className="text-xs text-fg-muted">
               <span className="text-fg">{location.name}</span> · {VIEW_LABEL[view]} · <span className={coverageKind(entry) === "regional" ? "text-warn" : "text-ok"}>{coverageKind(entry) === "regional" ? "Regional context" : "Exact-site imagery"}</span> · Credit: {entry.credit}
             </p>

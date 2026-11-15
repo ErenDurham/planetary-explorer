@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { NOT_RANKED_COLOR, rankColor, rankPosition, type RankPalette } from "@/lib/rankColor";
 import type { Shares } from "@/lib/allocation";
-import { PROPOSED_LABEL, noveltyRelation } from "../lib/copy";
+import { noveltyRelation } from "../lib/copy";
 import { formatPoint } from "../lib/geo";
 import { ResearchStatusBadge } from "./ResearchStatusBadge";
 import { WeightControls } from "./WeightControls";
@@ -42,7 +42,6 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
           <h2 id="candidate-list" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-muted">Candidates · {candidates ? n : "—"}</h2>
           {pending ? <span role="status" className="text-[10.5px] text-copper-bright">Re-ranking…</span> : candidates && evaluated != null ? <span className="num text-[10.5px] text-fg-faint">{n} of {evaluated} evaluated</span> : null}
         </div>
-        <p className="mt-1 text-[10.5px] leading-snug text-fg-faint">{PROPOSED_LABEL}</p>
         {error ? <div className="mt-3">{error}</div>
           : !candidates ? <div className="mt-3">{status}</div>
           : n === 0 ? <p className="mt-3 rounded-lg border border-dashed border-line px-3 py-2 text-xs text-fg-muted">No footprint in this survey passed screening, so there is nothing to rank. The survey coverage section in the panel lists why each sampled footprint was excluded.</p>

@@ -118,7 +118,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
 
   const caption = !ready ? null : store.view === "map"
     ? <>The dashed box is the only area searched. Dots are the footprint centres that were evaluated; coloured squares are the candidates shown, each a {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprint around its centre. Crosses mark established analogs from the curated catalog when any fall in view.</>
-    : <>The dashed ring is the only area searched; the small dots are the {evaluated ?? ""} footprint centres evaluated; the coloured outlines are the candidates' {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprints, with a marker at each centre, coloured by rank. Click a footprint or its marker to select it; selecting flies the camera in to it.</>;
+    : null;
 
   const facts = ready ? (
     <>

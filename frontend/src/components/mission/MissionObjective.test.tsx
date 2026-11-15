@@ -279,7 +279,7 @@ describe("Mission Design popups", () => {
     expect(within(screen.getByRole("dialog")).getByTestId("why-no-llm")).toHaveTextContent("Language model unavailable: weights come from keyword matching.");
   });
 
-  it("a slider's info box closes as soon as the mouse leaves it; other info tips are unchanged", async () => {
+  it("every info box closes as soon as the mouse leaves it, without a second click", async () => {
     mockInterpret();
     renderTab();
     await saveMission();
@@ -293,8 +293,17 @@ describe("Mission Design popups", () => {
     render(<InfoTip label="Plain tip">text</InfoTip>);
     const plain = screen.getByLabelText("Plain tip").closest("details")!;
     fireEvent.click(screen.getByLabelText("Plain tip"));
-    fireEvent.mouseLeave(plain);
     expect(plain.open).toBe(true);
+    fireEvent.mouseLeave(plain);
+    expect(plain.open).toBe(false);
+
+    // the "?" variant also opens on hover
+    render(<InfoTip variant="help" label="Help tip">help</InfoTip>);
+    const help = screen.getByLabelText("Help tip").closest("details")!;
+    fireEvent.mouseEnter(help);
+    expect(help.open).toBe(true);
+    fireEvent.mouseLeave(help);
+    expect(help.open).toBe(false);
   });
 });
 

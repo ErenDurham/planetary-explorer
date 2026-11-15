@@ -12,6 +12,7 @@ import { formatNumber, formatPercent } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 import type { AnalogRankResponse, RankedCandidate } from "@/types";
 import type { UseQueryResult } from "@tanstack/react-query";
+import { InfoTip } from "@/components/ui/InfoTip";
 
 export function SimilarityCard({ rank, candidate, candidateBody, candidateName, referenceName }: { rank: UseQueryResult<AnalogRankResponse>; candidate: RankedCandidate | undefined; candidateBody: Body; candidateName: string; referenceName: string }) {
   const palette = useAppStore(s => s.rankPalette);
@@ -53,7 +54,7 @@ export function SimilarityCard({ rank, candidate, candidateBody, candidateName, 
         </div>
       )}
       {data && candidate && (candidate.shared_characteristics?.length ?? 0) + (candidate.important_differences?.length ?? 0) === 0 && <EmptyNote>No characteristic statements were returned for this pair.</EmptyNote>}
-      <p className="mt-3 text-[11px] text-fg-faint">{RANK_LEGEND_SENTENCE} {data?.tie_rule}</p>
+      <p className="mt-3 flex items-center gap-1 text-[11px] text-fg-faint">{RANK_LEGEND_SENTENCE}{data?.tie_rule && <InfoTip variant="help" label="How ties are ranked">{data.tie_rule}</InfoTip>}</p>
     </section>
   );
 }

@@ -21,7 +21,6 @@ export function MissionAssessmentList({data,pending,error,selectedId,onSelect}:{
  return <CandidatePanel title="Ranked candidates"
   subtitle={`${data ? humanize(data.body) + " · " : ""}${data?.profile_label ?? "Task-specific mission fit"} · task-fit index 0–100, not a probability.`}
   actions={pending ? <Spinner label="Scoring" /> : undefined} controls={<>
-  <p className="mb-3 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
   {!!error && <ErrorNote error={error}/>}
   {data?.warnings.length ? <ul className="mb-2 space-y-1" aria-label="Scoring warnings">{data.warnings.map((w,i)=><li key={i} className="rounded border border-warn/40 bg-warn/10 px-2 py-1 text-[11px] leading-snug text-warn">{w}</li>)}</ul> : null}
   {data?.results.length && data.results.every(r=>r.score===null) ? <button type="button" onClick={()=>open("mission")} className="mb-3 text-xs text-copper-bright underline">Review mission requirements</button> : null}

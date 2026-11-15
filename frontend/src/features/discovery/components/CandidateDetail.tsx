@@ -11,14 +11,14 @@
 // research dossier is fetched lazily for the last section. Every number is the
 // server's, and absent context is reported as absent rather than guessed.
 import { useQuery } from "@tanstack/react-query";
-import { ExternalLink, FlaskConical } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { BulletList, EmptyNote, Section } from "@/components/ui/Section";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { formatValueWithUnit } from "@/lib/format";
 import { useAppStore } from "@/store/useAppStore";
 import { discoveryEngine } from "@/services/discoveryEngine";
-import { PROPOSED_LABEL, SEPARATE_SCORES_NOTE, formatKm, missingFactors, noveltyRelation, reviewStatusLabel, similarityExplanation, similarityReasons } from "../lib/copy";
+import { SEPARATE_SCORES_NOTE, formatKm, missingFactors, noveltyRelation, reviewStatusLabel, similarityExplanation, similarityReasons } from "../lib/copy";
 import { formatPoint } from "../lib/geo";
 import { KeyValues } from "./SurveyFunnel";
 import { ResearchStatusBadge } from "./ResearchStatusBadge";
@@ -79,14 +79,13 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
     <article aria-label={`Candidate evidence: ${candidate.name}`} className="text-sm">
       {/* A. identity and status */}
       <div className="border-b border-line px-4 py-3">
-        <p className="rounded-lg border border-info/40 bg-info/10 px-3 py-2 text-xs font-semibold text-info"><FlaskConical className="mr-1 inline h-3.5 w-3.5" aria-hidden />{PROPOSED_LABEL}</p>
-        <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="eyebrow">Rank {candidate.display_rank ?? "—"}{returnedCount ? ` of ${returnedCount}` : ""}{candidate.raw_rank != null && candidate.raw_rank !== candidate.display_rank ? ` · raw rank ${candidate.raw_rank} before spacing` : ""}</p>
             <h2 className="num mt-1 text-xl font-semibold tracking-tight text-fg">{formatPoint(candidate.lat, candidate.lon_east)}</h2>
             <p className="text-xs text-fg-muted">{candidate.name}{footprintM ? ` · ${Math.round(footprintM / 1000)} km footprint centre` : ""}</p>
           </div>
-          <div className="text-right"><p className="num text-3xl text-copper-bright">{candidate.similarity_index != null ? candidate.similarity_index.toFixed(1) : "—"}<span className="ml-1 text-sm text-fg-muted">/ 100</span></p><p className="text-[10.5px] text-fg-faint">two-feature terrain index · not a probability</p></div>
+          <div className="text-right"><p className="num text-3xl text-copper-bright">{candidate.similarity_index != null ? candidate.similarity_index.toFixed(1) : "—"}<span className="ml-1 text-sm text-fg-muted">/ 100</span></p></div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
           <ResearchStatusBadge status={candidate.research_status} />

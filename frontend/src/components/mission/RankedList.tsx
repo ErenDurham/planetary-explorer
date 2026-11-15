@@ -29,7 +29,6 @@ export function RankedList({ results, selectedId, onSelect, isPending, warnings 
       subtitle="Mars · relative suitability index 0–100 under the current priorities. Not a probability."
       actions={isPending ? <Spinner label="Scoring" /> : undefined}
       controls={<>
-      <p className="mb-3 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
       {warnings && warnings.some(w => !w.includes("thermal_conditions")) && (
         <ul className="mb-2 space-y-1" aria-label="Scoring warnings">
           {warnings.filter(w => !w.includes("thermal_conditions")).map((w, i) => (
@@ -92,7 +91,6 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
       subtitle={referenceName ? <>{bodyName} · Analog match against <span className="text-fg">{referenceName}</span> · match % is a similarity index, not a probability.</> : `Pick a reference on the other body to rank ${bodyName} candidates.`}
       actions={isPending ? <Spinner label="Ranking" /> : undefined}
       controls={<>
-      <p className="mb-3 text-xs text-fg-muted">↑ ↓ browse · Enter or Space select · Home / End first or last</p>
       {onFilterChange && candidates && candidates.length > 0 && (
         <label className="mb-2 block text-xs text-fg-muted">
           <span className="sr-only">Filter candidates by name</span>

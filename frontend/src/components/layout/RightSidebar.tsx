@@ -7,7 +7,7 @@ import { ErrorNote } from "@/components/ui/ErrorNote";
 import { Badge } from "@/components/ui/Badge";
 import { EnvironmentalProfilePanel } from "@/components/sites/EnvironmentalProfilePanel";
 import { SourcesList } from "@/components/sites/SourcesList";
-import { SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
+import { FullScoringCalculation, SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
 import { useSiteProfile } from "@/hooks/useSites";
 import { formatLatLon, formatNumber, humanize } from "@/lib/format";
 import { AnalogMatchPanel, EarthLocationPanel } from "@/components/sites/LocationPanels";
@@ -114,19 +114,21 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
           <div>
             {analogPanel}
             {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />}
-            <Section title="Research potential" subtitle="Turn this site's characteristics into questions to investigate.">
+            <FindAnalogsEntry siteId={q.data.site.id} siteName={q.data.site.name} />
+            <Section title="Risks and limitations">
+              <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
+              <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>
+            </Section>
+            {/* reference material last: the full calculation, research ideas, every measurement and source */}
+            {!analog && <FullScoringCalculation result={result} />}
+            <Section title="Research potential">
               <button type="button" onClick={() => openResearch("research")} className="w-full rounded-lg border border-info/50 bg-info/10 p-3 text-left text-sm font-semibold text-info">Explore study ideas and supporting evidence →</button>
             </Section>
-            <FindAnalogsEntry siteId={q.data.site.id} siteName={q.data.site.name} />
             <details className="m-4 rounded-lg border border-line">
               <summary className="cursor-pointer p-3 text-sm text-fg">All environmental measurements and sources</summary>
               <EnvironmentalProfilePanel profile={q.data.profile} />
               <SourcesList sources={q.data.profile.sources} />
             </details>
-            <Section title="Risks and limitations" subtitle="Scope and evidence gaps to review before relying on this ranking">
-              <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
-              <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>
-            </Section>
           </div>
         </>
       ) : null}

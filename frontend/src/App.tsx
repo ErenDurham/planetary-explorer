@@ -17,7 +17,8 @@ import { StatusBanner } from "@/components/layout/StatusBanner";
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
 import type { OverlayBounds } from "@/lib/overlay";
 import { AstroPanel } from "@/components/astro/AstroPanel";
-import { SitePanelShell } from "@/components/layout/SitePanelShell";
+import { COLLAPSED_SITE_WIDTH, SitePanelShell } from "@/components/layout/SitePanelShell";
+import { MissionGate } from "@/components/layout/MissionGate";
 import { RightSidebar } from "@/components/layout/RightSidebar";
 import { AnalyzeView } from "@/components/layout/AnalyzeView";
 import { ResearchView } from "@/components/layout/ResearchView";
@@ -40,7 +41,12 @@ import type { AnalogRankResponse } from "@/types";
 
 export default function App() {
   const candidateResearchTarget = useCandidateResearchTarget(s => s.target);
-  const [sitePanelWidth,setSitePanelWidth]=useState(380);
+  // Explore's site pane starts collapsed; selecting a site opens it (see the effect below)
+  const [sitePanelWidth,setSitePanelWidth]=useState(COLLAPSED_SITE_WIDTH);
+  const openPanelWidth=useRef(380);
+  // Find Earth Analogs keeps its own pane, open by default as before
+  const [discoveryPanelWidth,setDiscoveryPanelWidth]=useState(380);
+  const [gateOpen,setGateOpen]=useState(false);
   const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
   const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
   const updateAstroBounds=useCallback((bounds:OverlayBounds)=>setAstroBounds(previous=>previous && previous.left===bounds.left && previous.right===bounds.right && previous.top===bounds.top && previous.bottom===bounds.bottom ? previous : bounds),[]);
@@ -87,9 +93,29 @@ export default function App() {
   const missionSelectedId = missionBody === "earth" ? selectedEarthId : selectedMarsId;
   const missionLocation = earth.data?.locations.find(l => l.body === missionBody && l.id === missionSelectedId);
   const selectedId = selectedIdFor({ selectedEarthId, selectedMarsId }, viewedBody);
+  // The site pane follows the selection: open (at its last open width) while a
+  // site is selected, collapsed while nothing is. The user can still toggle it.
+  useEffect(() => { if (sitePanelWidth !== COLLAPSED_SITE_WIDTH) openPanelWidth.current = sitePanelWidth; }, [sitePanelWidth]);
+  useEffect(() => { setSitePanelWidth(selectedId ? openPanelWidth.current : COLLAPSED_SITE_WIDTH); }, [selectedId]);
+  // Until a mission is designed, any click outside Mission Design opens the
+  // "enter a mission design first" prompt instead of acting (the globe keeps rotating).
+  const gated = !missionDesigned && activeTab !== "mission";
+  const gate = (e: React.SyntheticEvent) => {
+    if (!gated) return;
+    if ((e.target as Element | null)?.closest?.("[data-gate-allow]")) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setGateOpen(true);
+  };
+  const closeGate = useCallback(() => setGateOpen(false), []);
   const referenceId = referenceIdFor({ viewedBody, selectedEarthId, selectedMarsId });
   const refBody = otherBody(viewedBody);
-  const config = PLANET_CONFIGS[viewedBody];
+  // Until the startup reading of the default objective (an Earth task) has been
+  // applied, the first screen shows the rotating Earth, without markers, rather
+  // than the store's initial Mars state.
+  const seeded = useAppStore((s) => Object.keys(s.defaultWeights).length > 0);
+  const welcome = !missionDesigned && !seeded;
+  const config = PLANET_CONFIGS[welcome ? "earth" : viewedBody];
 
   const rank = useAnalogRank(viewedBody, referenceId, analogWeights, analog && activeTab === "explore");
   // placeholderData keeps the previous response while a new one loads; only
@@ -200,7 +226,7 @@ export default function App() {
         overlayBounds={activeTab === "explore" ? astroBounds : null}
         onOverlayMaxHeightChange={setExploreOverlayMaxHeight}
         config={config}
-        markers={markers}
+        markers={welcome ? [] : markers}
         selectedId={selectedId}
         focusToken={focusToken}
         onSelect={onSelectVisible}
@@ -210,7 +236,7 @@ export default function App() {
         resetToken={cameraResetToken}
         onRequestReset={requestCameraReset}
         statusLine={statusLine}
-        mode={taskMissionView ? assessment.data?.results.some(r=>r.score!=null)?"mission":"browse" : earthMission ? "browse" : analog ? "analog" : "landing"}
+        mode={welcome ? "browse" : taskMissionView ? assessment.data?.results.some(r=>r.score!=null)?"mission":"browse" : earthMission ? "browse" : analog ? "analog" : "landing"}
         palette={rankPalette}
         onPaletteChange={setRankPalette}
         legendHeading={legendHeading}
@@ -245,7 +271,7 @@ export default function App() {
 
   useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
   const centre = findAnalogs
-    ? <DiscoveryView panelWidth={sitePanelWidth} onPanelWidthChange={setSitePanelWidth} />
+    ? <DiscoveryView panelWidth={discoveryPanelWidth} onPanelWidthChange={setDiscoveryPanelWidth} />
     : activeTab === "explore"
     ? <ExploreView key={exploreRevision} initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
@@ -310,7 +336,7 @@ export default function App() {
   const mobileSelected = taskCandidates ? missionSelectedId : exploreAnalog ? selectedId : selectedMarsId;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col" onPointerDownCapture={gate} onClickCapture={gate}>
       <div className="absolute left-4 top-0 z-50 flex gap-2">
         <a className="sr-only rounded bg-bg-elev p-3 text-sm focus:not-sr-only" href="#workspace">Skip to workspace</a>
       </div>
@@ -359,6 +385,7 @@ export default function App() {
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
         <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
+      {gateOpen && gated && <MissionGate onGo={() => { setGateOpen(false); setActiveTab("mission"); }} onClose={closeGate} />}
     </div>
   );
 }

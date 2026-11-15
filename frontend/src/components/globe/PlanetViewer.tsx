@@ -135,9 +135,6 @@ export function PlanetViewer(props: PlanetViewerProps) {
       <div ref={legendRef} data-testid="globe-legend" className="pointer-events-none absolute left-3" style={{bottom:legendBottom}}>
         <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />
       </div>
-      <div className="pointer-events-none absolute bottom-3 right-3 text-[10.5px] text-fg-faint">
-        <span className="hidden xl:inline">Focus globe: arrows orbit · + / − zoom · F focus · R reset</span><span className="xl:hidden">Tab to globe for keyboard controls</span>
-      </div>
     </div>
   );
 }

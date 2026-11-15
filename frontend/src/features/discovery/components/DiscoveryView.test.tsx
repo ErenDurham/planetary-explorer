@@ -88,7 +88,7 @@ describe("DiscoveryView", () => {
     expect(row2).toHaveAttribute("aria-pressed", "true");
     const card = await screen.findByRole("article", { name: /Candidate evidence: Footprint c_31_75_m2_25/ });
     expect(within(panel).getByRole("article", { name: /Candidate evidence/ })).toBe(card);
-    expect(card).toHaveTextContent("Proposed terrain analog candidate; field validation required.");
+    expect(card).not.toHaveTextContent("Proposed terrain analog candidate");   // removed as fluff
     expect(card).toHaveTextContent("61.4");
     expect(card).toHaveTextContent(/Terrain similarity: 61\.4\/100\. This reflects how closely the region's measured slope and relief match Jezero Crater under the selected weighting \(slope 50%, relief 50%\)\. It is not a probability/);
     expect(card).toHaveTextContent(/Regional (slope|relief) is close: .* at Jezero Crater/);

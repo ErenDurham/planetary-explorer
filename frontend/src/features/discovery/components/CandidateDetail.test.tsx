@@ -30,7 +30,7 @@ describe("CandidateDetail", () => {
     // A. identity and status
     expect(card).toHaveTextContent(/Rank 2 of 3/);
     expect(card).toHaveTextContent(/31\.750°N, 2\.250°W/);
-    expect(card).toHaveTextContent("Proposed terrain analog candidate; field validation required.");
+    expect(card).not.toHaveTextContent("Proposed terrain analog candidate");   // removed as fluff
     expect(card).toHaveTextContent(/terrain data 99\.0% complete/);
     // B. the match: index, weights sentence, reasons, and a factor table whose shares add to the whole
     const match = within(card).getByRole("region", { name: "Match to Jezero Crater" });

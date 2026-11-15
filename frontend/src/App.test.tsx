@@ -3,14 +3,14 @@
 // Exercises the store, the TanStack hooks, the debounced evaluate call with its
 // client_request_id, and the three-column layout.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { act, render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import fixture from "@/test/fixtures/api_examples.json";
 import { useAppStore } from "@/store/useAppStore";
 
 vi.mock("@/components/globe/PlanetViewer", () => ({
-  PlanetViewer: (props: { markers: Array<{ id: string }>; statusLine?: string }) => (
-    <div data-testid="globe-stub">
+  PlanetViewer: (props: { markers: Array<{ id: string }>; statusLine?: string; config: { id: string }; autoRotate: boolean }) => (
+    <div data-testid="globe-stub" data-planet={props.config.id} data-rotating={String(props.autoRotate)}>
       globe: {props.markers.length} markers · {props.statusLine}
     </div>
   ),
@@ -144,5 +144,57 @@ describe("App", () => {
     expect(useAppStore.getState().selectedSiteId).toBe(selectedSite);
     fireEvent.click(screen.getByRole("button", {name:"Explore"}));
     expect(await screen.findByRole("heading", {name:"Mission suitability"})).toBeInTheDocument();
+  });
+
+  it("opens on Explore and, until a mission is designed, any click asks for a Mission Design first", async () => {
+    useAppStore.setState(useAppStore.getInitialState(), true);   // a real first open
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
+    expect(useAppStore.getState().activeTab).toBe("explore");
+    // the first screen is the rotating Earth, before the startup reading has returned
+    expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-planet", "earth");
+    expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-rotating", "true");
+    expect(screen.getByRole("button", { name: "Expand site panel" })).toBeInTheDocument();   // site pane collapsed
+    expect(screen.queryByRole("dialog")).toBeNull();          // nothing pops up until the user clicks
+    fireEvent.click(screen.getByRole("button", { name: "Analyze" }));
+    const gate = screen.getByRole("dialog", { name: "Try Entering a Mission Design before getting started!" });
+    expect(useAppStore.getState().activeTab).toBe("explore");  // the click did not act
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Compare" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));   // the X closes it too
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(useAppStore.getState().activeTab).toBe("explore");
+    fireEvent.pointerDown(screen.getByTestId("globe-stub"));
+    expect(screen.getByTestId("mission-gate")).toBeInTheDocument();
+    expect(gate).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Go to Mission Design" }));
+    expect(useAppStore.getState().activeTab).toBe("mission");
+    expect(screen.queryByRole("dialog")).toBeNull();
+    // the Mission Design tab itself is never blocked
+    useAppStore.setState({ activeTab: "explore" });
+    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
+    expect(useAppStore.getState().activeTab).toBe("mission");
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("never asks once a mission is designed", async () => {
+    useAppStore.setState({ missionDesigned: true });
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Analyze" }));
+    expect(useAppStore.getState().activeTab).toBe("analyze");
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("keeps the Explore site pane collapsed until a site is selected, and collapses it again when nothing is", async () => {
+    useAppStore.setState({ missionDesigned: true, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars" });
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
+    expect(screen.getByRole("button", { name: "Expand site panel" })).toHaveAttribute("aria-expanded", "false");
+    act(() => useAppStore.getState().selectLocation("mars", "chryse_planitia"));
+    expect(await screen.findByRole("button", { name: "Collapse site panel" })).toHaveAttribute("aria-expanded", "true");
+    act(() => useAppStore.getState().selectLocation("mars", null));
+    expect(await screen.findByRole("button", { name: "Expand site panel" })).toBeInTheDocument();
   });
 });

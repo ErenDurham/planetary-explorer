@@ -32,6 +32,7 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
               e.preventDefault(); buttons[next]?.focus();
             }}
             aria-current={active === t.id ? "page" : undefined}
+            data-gate-allow={t.id === "mission" ? "" : undefined}
             title={t.hint}
             className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${active === t.id ? "bg-copper/15 text-copper-bright" : "text-fg-muted hover:bg-bg-elev-2 hover:text-fg"}`}
           >

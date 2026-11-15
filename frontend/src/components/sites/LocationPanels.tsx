@@ -11,6 +11,7 @@
 // feature basis and anything dropped pool-wide. Numbers come from the backend
 // response only.
 import { MapPin } from "lucide-react";
+import { InfoTip } from "@/components/ui/InfoTip";
 import { Section, EmptyNote, BulletList } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import { MeasurementValue } from "@/components/sites/MeasurementValue";
@@ -23,14 +24,13 @@ import type { AnalogRankResponse, ComparisonLocation, RankedCandidate } from "@/
 export function EarthLocationPanel({ location }: { location: ComparisonLocation }) {
   return (
     <>
-      <Section title="Earth location">
+      <Section title="Earth location" actions={<InfoTip variant="help" label="About Earth locations">Earth locations carry no landing suitability index; the Mars landing model is not applied to them.</InfoTip>}>
         <h2 className="text-base font-medium leading-tight text-fg">{location.name}</h2>
         <p className="mt-0.5 flex items-center gap-1 text-xs text-fg-muted">
           <MapPin className="h-3 w-3" aria-hidden /> {location.region} · <span className="num">{formatLatLon(location.lat, location.lon_east)}</span>
         </p>
         {location.coverage && <p className="num mt-0.5 text-[10.5px] text-fg-faint">{location.coverage}</p>}
         <p className="mt-1.5 text-xs leading-relaxed text-fg-muted">{location.description}</p>
-        <p className="mt-2 text-[10.5px] text-fg-faint">Earth locations carry no landing suitability index; the Mars landing model is not applied to them.</p>
       </Section>
       <details className="m-4 rounded-lg border border-line">
         <summary className="cursor-pointer p-3 text-sm text-fg">All environmental measurements and sources</summary>
@@ -72,7 +72,7 @@ export function AnalogMatchPanel({ candidate, response, palette, referenceName }
   const unranked = candidate.rank == null;
   const colour = unranked ? NOT_RANKED_COLOR : rankColor(candidate.rank_color_position, palette);
   return (
-    <Section title="Analog match" subtitle={<>Against <span className="text-fg">{referenceName}</span> ({BODY_NAME[response.reference.body]}). Similarity is a weighted feature distance, not scientific equivalence.</>}>
+    <Section title="Analog match" actions={response.tie_rule ? <InfoTip variant="help" label="How ties are ranked">{response.tie_rule}</InfoTip> : undefined} subtitle={<>Against <span className="text-fg">{referenceName}</span> ({BODY_NAME[response.reference.body]}). Similarity is a weighted feature distance, not scientific equivalence.</>}>
       <div className="flex items-center gap-3">
         <span className="num inline-flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold" style={unranked ? { borderColor: colour ?? undefined, borderStyle: "dashed", color: colour ?? undefined } : { backgroundColor: colour ?? undefined, borderColor: "#fff", color: "#fff", textShadow: "0 0 2px #000" }} aria-hidden>{candidate.rank ?? "–"}</span>
         <div className="text-xs text-fg">
@@ -95,7 +95,6 @@ export function AnalogMatchPanel({ candidate, response, palette, referenceName }
       {response.excluded_features.filter((e) => !/weight is 0/.test(e.reason)).length > 0 && (
         <p className="mt-2 text-[10.5px] text-fg-faint">Dropped pool-wide: {response.excluded_features.filter((e) => !/weight is 0/.test(e.reason)).map((e) => `${e.label} (${e.reason})`).join("; ")}</p>
       )}
-      <p className="mt-2 text-[10.5px] text-fg-faint">{response.tie_rule}</p>
     </Section>
   );
 }

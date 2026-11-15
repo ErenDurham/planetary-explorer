@@ -5,7 +5,6 @@
 // value so nothing here can invent one.
 import type { ReactNode } from "react";
 import { Globe2, Map as MapIcon } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
 import { ExploreModeSwitch } from "./ExploreModeSwitch";
 import type { DiscoveryMapView } from "../store/useDiscoveryStore";
 
@@ -26,7 +25,6 @@ export function DiscoveryStage({ badge, title, lede, stats, facts, view, onView,
   caption?: ReactNode;
   children: ReactNode;
 }) {
-  const setActiveTab = useAppStore(s => s.setActiveTab);
   return (
     <div className="flex h-full min-h-0 flex-col">
       <nav aria-label="Explore views" className="shrink-0 border-b border-line bg-bg-elev px-3 py-3">
@@ -43,7 +41,6 @@ export function DiscoveryStage({ badge, title, lede, stats, facts, view, onView,
             ))}
           </div>
           {mobile}
-          <button type="button" onClick={() => setActiveTab("mission")} className="ml-auto text-xs text-fg-muted underline underline-offset-4">Edit mission</button>
         </div>
       </nav>
       {(facts || caption) && <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="survey-context">{facts}{caption && <p className="mt-1 text-[10.5px] leading-relaxed text-fg-faint">{caption}</p>}</div>}

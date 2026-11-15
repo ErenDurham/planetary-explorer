@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { InfoTip } from "@/components/ui/InfoTip";
 import { NOT_RANKED_COLOR, RANK_LEGEND_SENTENCE, rankGradient, type RankPalette } from "@/lib/rankColor";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerMode } from "./MarkerData";
@@ -29,9 +30,12 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
   {
     return (
       <div className="pointer-events-auto w-[260px] max-w-full rounded border border-line bg-bg-elev/90 px-3 py-2 text-[10.5px] leading-relaxed text-fg-muted backdrop-blur-sm" data-testid={mode === "analog" ? "analog-legend" : mode === "mission" ? "mission-legend" : "landing-legend"}>
-        <button type="button" onClick={() => setExpanded(value => !value)} aria-expanded={expanded} aria-controls={detailsId} className="mb-1 flex min-h-6 w-full items-center justify-between gap-3 rounded text-left font-semibold uppercase tracking-wide text-fg-muted hover:text-fg">
-          <span>{title}</span><ChevronDown aria-hidden className={`h-4 w-4 shrink-0 ${expanded ? "rotate-180" : ""}`} />
-        </button>
+        <div className="mb-1 flex items-center gap-1">
+          <button type="button" onClick={() => setExpanded(value => !value)} aria-expanded={expanded} aria-controls={detailsId} className="flex min-h-6 min-w-0 flex-1 items-center justify-between gap-3 rounded text-left font-semibold uppercase tracking-wide text-fg-muted hover:text-fg">
+            <span>{title}</span><ChevronDown aria-hidden className={`h-4 w-4 shrink-0 ${expanded ? "rotate-180" : ""}`} />
+          </button>
+          {mode !== "analog" && <InfoTip label="About the mission suitability rank">Colour shows relative mission rank, not safety or confidence.</InfoTip>}
+        </div>
         <div data-rank-scale className="h-2 w-full rounded-full" style={{ background: rankGradient(palette) }} role="img" aria-label={`${title}: ${palette === "single_hue" ? "light to dark" : "red to violet"}, strongest to weakest`} />
         <div id={detailsId} hidden={!expanded}>
         {heading && <div className="mt-2 text-fg">{heading}</div>}
@@ -39,7 +43,7 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
           <span>1 · Strongest</span>
           <span className="text-right">{rankedCount && rankedCount > 1 ? `${rankedCount} · ` : ""}Weakest</span>
         </div>
-        <p className="mt-1 leading-snug">{mode === "analog" ? RANK_LEGEND_SENTENCE : "Colour shows relative mission rank, not safety or confidence."}</p>
+        {mode === "analog" && <p className="mt-1 leading-snug">{RANK_LEGEND_SENTENCE}</p>}
         <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="inline-flex items-center gap-1">
             <span className="inline-block h-2.5 w-2.5 rounded-full border-2 border-dashed" style={{ borderColor: NOT_RANKED_COLOR }} aria-hidden /> Not ranked
@@ -48,7 +52,7 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
         {onPaletteChange && (
           <label className="mt-2 flex cursor-pointer items-start gap-2 text-fg-muted">
             <input type="checkbox" checked={palette === "single_hue"} onChange={(e) => onPaletteChange(e.target.checked ? "single_hue" : "roygbiv")} className="mt-0.5 h-3 w-3 shrink-0 accent-copper-bright" />
-            <span>Single-hue palette <span className="text-fg-faint">· light to dark</span></span>
+            <span>Color Blind Mode</span>
           </label>
         )}
         {credit}

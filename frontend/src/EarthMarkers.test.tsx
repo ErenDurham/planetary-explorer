@@ -48,7 +48,7 @@ function rankResponse(body: Record<string, unknown>) {
 beforeEach(() => {
   useAppStore.setState(useAppStore.getInitialState(), true);
   rankCalls = [];
-  useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars", mapMode: "landing_suitability", followObjective: true, activeTab: "explore", suggestedSelection: null });
+  useAppStore.setState({ missionObjective: "Find a safe landing site with reliable solar energy.", missionType: "landing", task: "landing_screening", selectionBody: "mars", missionFocusOverride: null, weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars", mapMode: "landing_suitability", followObjective: true, activeTab: "explore", suggestedSelection: null, missionDesigned: true });   // past the first-run Mission Design prompt
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const url = String(input);
     if (url.endsWith("/api/v1/health")) return json({ status: "ok", version: "0.1.0", profile_version: "v1", scoring_spec_version: "landing-v1.0", services: { data: "ok", retrieval: "unavailable", llm: "unconfigured" } });
