@@ -53,7 +53,9 @@ class AstroDraft(BaseModel):
     focus: Literal[
         "ranking", "evidence_gaps", "analogs", "next_steps", "mission", "clarify"
     ]
+    explanation: str | None = Field(default=None, min_length=1, max_length=1600)
     fact_ids: list[str] = Field(max_length=5)
+    evidence_ids: list[str] | None = Field(default=None, max_length=2)
     evidence: list[EvidenceQuote] = Field(max_length=4)
     action_ids: list[str] = Field(max_length=3)
 
@@ -61,7 +63,8 @@ class AstroDraft(BaseModel):
 class AstroResponse(BaseModel):
     answer: str
     context_label: str
-    generated_by: Literal["llm", "deterministic_fallback"]
+    generated_by: Literal["llm", "deterministic_fallback", "local"]
+    fallback_reason: Literal["not_configured", "rate_limit", "provider_error", "validation_error"] | None = None
     facts: list[str]
     evidence: list[EvidenceQuote]
     citations: list[Citation]

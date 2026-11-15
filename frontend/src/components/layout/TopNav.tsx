@@ -1,5 +1,5 @@
 import { Orbit } from "lucide-react";
-import { effectiveMapMode, useAppStore, type Tab } from "@/store/useAppStore";
+import { type Tab } from "@/store/useAppStore";
 
 const TABS: Array<{ id: Tab; label: string; hint: string }> = [
   { id: "mission", label: "Mission Design", hint: "Mission objective, priorities and recommendation" },
@@ -11,10 +11,6 @@ const TABS: Array<{ id: Tab; label: string; hint: string }> = [
 ];
 
 export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t: Tab) => void; right?: React.ReactNode }) {
-  const viewedBody = useAppStore((s) => s.viewedBody);
-  const mapMode = useAppStore((s) => s.mapMode);
-  const analog = effectiveMapMode({ viewedBody, mapMode }) === "analog_match";
-  const subtitle = active === "discover" ? "Earth · proposed terrain analog candidates · discovery-v1" : active === "compare" ? "Earth · Mars · analog pair" : active === "explore" && analog ? `${viewedBody === "earth" ? "Earth" : "Mars"} · analog matching · v1` : "Mission planning · Earth & Mars";
   return (
     <header className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-bg-elev px-4 py-2 sm:h-12 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:py-0">
       <div className="flex min-w-0 items-center gap-3">
@@ -22,7 +18,6 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
           <Orbit className="h-4 w-4 text-copper-bright" aria-hidden />
           Planetary Explorer
         </span>
-        <span className="hidden min-w-0 truncate text-[10.5px] uppercase tracking-[0.14em] text-fg-faint xl:inline">{subtitle}</span>
       </div>
       <nav aria-label="Primary" className="flex flex-wrap items-center justify-center gap-1 justify-self-center">
         {TABS.map((t) => (

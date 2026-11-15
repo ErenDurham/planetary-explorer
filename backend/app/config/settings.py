@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     # A local model on CPU is slow, so by default it only reads the mission
     # objective (comma-separated: interpret, guidance, astro).
     ollama_features: str = "interpret"
+    groq_api_key: str = ""
     embedding_backend: str = "local"
     vector_index_dir: Path = BACKEND_DIR / "data" / "index"
 

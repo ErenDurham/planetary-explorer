@@ -59,10 +59,11 @@ export function ExplanationPanel({ siteId, mission }: { siteId: string | null; m
           type="button"
           onClick={() => void q.refetch()}
           disabled={q.isFetching}
-          className="inline-flex items-center gap-1 rounded border border-copper/60 bg-copper/10 px-2 py-1 text-[10.5px] text-copper-bright hover:bg-copper/20 disabled:opacity-50"
+          title={data?.generated_by === "llm" ? "Regenerate research with AI" : "Refresh research; rule-based results are used when AI is unavailable"}
+          className="inline-flex shrink-0 items-center gap-1 rounded border border-copper/60 bg-copper/10 px-2 py-1 text-[10.5px] text-copper-bright hover:bg-copper/20 disabled:opacity-50"
           aria-label={previous ? "Refresh the explanation for the current objective and priorities" : "Explain this site under the current priorities"}
         >
-          {q.isFetching ? <RefreshCw className="h-3 w-3 animate-spin" aria-hidden /> : <Sparkles className="h-3 w-3" aria-hidden />}
+          {data?.generated_by === "llm" && !q.isFetching ? <Sparkles className="h-3 w-3 shrink-0" aria-hidden /> : <RefreshCw className={`h-3 w-3 shrink-0 ${q.isFetching ? "animate-spin" : ""}`} aria-hidden />}
           Refresh
         </button>
       }

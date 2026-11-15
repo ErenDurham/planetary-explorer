@@ -128,6 +128,21 @@ export default function App() {
     });
   }, [viewedBody, analog, sites.data, evaluation.data, earth.sites, rankData, rankPalette, referenceId, earthMission, taskMissionView, assessment.data, earth.data]);
 
+  // A deliberate trip to analogs opens the top match only if that body has no
+  // selection. Consume the request once so clearing a site stays cleared.
+  const analogEntry = useRef({ revision: -1, pending: false });
+  useEffect(() => {
+    if (analogEntry.current.revision !== exploreRevision) {
+      analogEntry.current = { revision: exploreRevision, pending: analog && activeTab === "explore" };
+    }
+    if (activeTab !== "explore" || !analog) { analogEntry.current.pending = false; return; }
+    if (!analogEntry.current.pending || !rankData || !referenceId) return;
+    analogEntry.current.pending = false;
+    if (selectedId) return;
+    const top = rankData.candidates.find(c => c.rank === 1);
+    if (top) selectLocation(viewedBody, top.location.id);
+  }, [exploreRevision, activeTab, analog, rankData, referenceId, selectedId, viewedBody, selectLocation]);
+
   // One-time best-match hint: only when a reference (a known selected site on
   // the other body) exists and the visible body has no selection yet. Shown as
   // "Suggested reference"; never applied to the selection.

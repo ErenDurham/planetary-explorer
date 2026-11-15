@@ -160,3 +160,24 @@ input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
 .eyebrow { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-fg-faint); }
 @keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .rise-in { animation: rise-in .45s ease-out both; }
+
+/* Keep native select behavior, with consistent readable controls in the dark UI. */
+select {
+  color-scheme: dark;
+  appearance: none;
+  max-width: 100%;
+  min-width: 0;
+  padding-right: 2rem;
+  text-overflow: ellipsis;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239aa5b4' stroke-width='1.5'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right .65rem center;
+  background-repeat: no-repeat;
+}
+select:not(:disabled) { cursor: pointer; }
+select:disabled { cursor: not-allowed; opacity: .5; }
+select option { color: var(--color-fg); background-color: var(--color-bg-elev); }
+select option:disabled { color: var(--color-fg-faint); }
+summary { overflow-wrap: anywhere; }
+@media (forced-colors: active) {
+  select { appearance: auto; background-image: none; }
+}

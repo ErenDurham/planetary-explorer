@@ -26,3 +26,13 @@ Regenerate the contract docs after changing a model:
 ```bash
 python scripts/export_contracts.py && (cd ../frontend && npm run gen:types)
 ```
+
+### Free AI setup (Groq)
+
+Create a key at https://console.groq.com/keys and keep the account on the **Free** plan.
+In the repo-root `.env`, set `LLM_PROVIDER=groq`, `LLM_MODEL=openai/gpt-oss-120b`,
+and `GROQ_API_KEY=<your key>`. Restart the backend after saving.
+This uses the existing HTTP client; no optional AI SDK is required for Groq.
+Free quotas apply. Missing keys, quota errors, and invalid responses use the
+labelled deterministic fallback; the app never automatically calls a paid provider.
+Scientific scores and citations remain validated by the backend.

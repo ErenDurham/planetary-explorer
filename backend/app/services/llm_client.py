@@ -40,6 +40,12 @@ OLLAMA_NUM_CTX = 8192
 OLLAMA_WARMUP_TIMEOUT_S = 600.0
 
 
+class ProviderUnavailable(RuntimeError):
+    def __init__(self, status_code: int):
+        self.status_code = status_code
+        super().__init__(f"Groq request failed (HTTP {status_code}); using rule-based guidance")
+
+
 def provider() -> str:
     return get_settings().llm_provider.strip().lower()
 
@@ -49,6 +55,8 @@ def enabled(feature: str | None = None) -> bool:
     ("interpret", "guidance"). Anthropic needs a key; Ollama needs nothing but
     is limited to the features listed in OLLAMA_FEATURES."""
     s = get_settings()
+    if provider() == "groq":
+        return bool(s.groq_api_key)
     if provider() == "anthropic":
         return bool(s.anthropic_api_key)
     if provider() == "ollama":
@@ -175,8 +183,17 @@ def warm_ollama(system: str, user: str) -> None:
 def call_json(system: str, user: str, schema: dict, max_tokens: int = MIN_MAX_TOKENS) -> str:
     """Returns the model's text for a JSON-schema constrained request. Raises on
     any failure (import, auth, network, refusal, truncation, empty)."""
+    global _last_error
+    if provider() == "groq":
+        text = _call_groq(get_settings(), system, user, schema, min(max_tokens, 2300))
+        _last_error = None
+        return text
     if provider() == "ollama":
-        return _call_ollama(system, user, schema, max_tokens)
+        text = _call_ollama(system, user, schema, max_tokens)
+        _last_error = None
+        return text
+    if provider() != "anthropic":
+        raise RuntimeError("No supported AI provider configured")
     import anthropic  # lazy: optional dependency from requirements-ai.txt
 
     s = get_settings()
@@ -205,4 +222,46 @@ def call_json(system: str, user: str, schema: dict, max_tokens: int = MIN_MAX_TO
     text = "".join(getattr(b, "text", "") for b in resp.content if getattr(b, "type", "") == "text")
     if not text.strip():
         raise RuntimeError("model returned no text")
+    _last_error = None
+    return text
+
+
+def _strict_schema(value):
+    if isinstance(value, list):
+        return [_strict_schema(child) for child in value]
+    if not isinstance(value, dict):
+        return value
+    result = {key: _strict_schema(child) for key, child in value.items() if key != "default"}
+    if result.get("type") == "object":
+        result["additionalProperties"] = False
+        result["required"] = list(result.get("properties", {}))
+    return result
+
+
+def _call_groq(settings, system: str, user: str, schema: dict, max_tokens: int) -> str:
+    import httpx
+
+    if not settings.groq_api_key:
+        raise RuntimeError("Groq API key is not configured")
+    response = httpx.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers={"Authorization": f"Bearer {settings.groq_api_key}"},
+        json={
+            "model": settings.llm_model,
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+            "max_completion_tokens": max_tokens,
+            "reasoning_effort": "low",
+            "response_format": {"type": "json_schema", "json_schema": {
+                "name": "planetary_response", "strict": True, "schema": _strict_schema(schema),
+            }},
+        },
+        timeout=30.0,
+    )
+    if response.is_error:
+        # Do not log headers, keys or provider response bodies. No paid-provider fallback.
+        raise ProviderUnavailable(response.status_code)
+    choice = response.json()["choices"][0]
+    text = choice["message"].get("content")
+    if choice.get("finish_reason") != "stop" or not isinstance(text, str) or not text.strip():
+        raise RuntimeError("Groq returned an incomplete or empty response")
     return text

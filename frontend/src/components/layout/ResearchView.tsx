@@ -26,7 +26,7 @@ export function ResearchView({ sites, selectedId, onSelect, mission }: { sites: 
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div><h1 className="text-xl font-semibold text-fg">Research</h1><p className="mt-1 text-sm text-fg-muted">{planning ? "Planning an expedition for the selected site." : "Investigate what a site could help us learn."}</p></div>
-          <div className="flex items-center gap-2"><label htmlFor="research-site" className="text-sm text-fg-muted">Mars site</label><select id="research-site" value={selectedId ?? ""} onChange={e => onSelect(e.target.value)} className="max-w-full rounded-lg border border-line-strong bg-bg p-3 text-sm text-fg"><option value="" disabled>Select a site…</option>{sites?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></div>
+          <div className="flex w-full min-w-0 flex-col gap-1.5 sm:w-80"><label htmlFor="research-site" className="text-xs font-medium text-fg-muted">Mars site</label><select id="research-site" value={selectedId ?? ""} onChange={e => onSelect(e.target.value)} className="w-full min-w-0 rounded-lg border border-line-strong bg-bg px-3 py-2.5 text-sm text-fg" disabled={!sites?.length}><option value="" disabled>Select a site…</option>{sites?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></div>
         </div>
         <div className="mt-3">{modeControls}</div>
       </div>

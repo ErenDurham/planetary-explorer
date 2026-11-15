@@ -171,9 +171,6 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
   const rotation = useRef(new Quaternion());
   const memory = useRef(new Map<string, CameraMemory>());
   const lastBody = useRef(bodyId);
-  // set when a body switch just restored the camera, so the selection-flight
-  // effect below does not immediately override the restored orbit
-  const switched = useRef(false);
   useEffect(() => () => { if (idleTimer.current) window.clearTimeout(idleTimer.current); }, []);
 
   useEffect(() => {
@@ -186,7 +183,6 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
     camera.position.copy(saved?.position ?? DEFAULT_CAMERA);
     c.target.copy(saved?.target ?? new Vector3(0, 0, 0));
     c.update();
-    switched.current = true;
   }, [bodyId, camera]);
 
   useEffect(() => {
@@ -199,7 +195,6 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
   }, [resetToken, camera]);
 
   useEffect(() => {
-    if (switched.current) { switched.current = false; return; }
     if (!selectedId) { flight.current = null; return; }
     if (lat === undefined || lonEast === undefined || !ref.current) return;
     const target = latLonToVector3(lat, lonEast, 1).normalize();
@@ -213,7 +208,7 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
     } else {
       flight.current = { start, turn: new Quaternion().setFromUnitVectors(start, target), distance: camera.position.length(), elapsed: 0 };
     }
-  }, [selectedId, lat, lonEast, focusToken, radius, camera]);
+  }, [bodyId, selectedId, lat, lonEast, focusToken, radius, camera]);
 
   useEffect(() => {
     if (!navigation.id || !ref.current) return;

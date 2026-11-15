@@ -100,6 +100,10 @@ def test_model_selects_server_facts_without_rewriting_them(client, monkeypatch):
     def model(system, user, schema, **kw):
         payload = json.loads(user)
         handle, excerpt = next(iter(payload["excerpts"].items()))
+        properties = schema["$defs"]["EvidenceQuote"]["properties"]
+        assert handle in schema["properties"]["evidence_ids"]["items"]["enum"]
+        assert handle in properties["citation_id"]["enum"]
+        assert all(len(text) <= 700 for text in payload["excerpts"].values())
         return json.dumps(
             {
                 "focus": "ranking",
@@ -264,3 +268,88 @@ def test_base_planning_chat_keeps_scores_unavailable(client, monkeypatch):
     ).json()
     assert any("not_supported" in f for f in data["facts"])
     assert all("Landing index" not in f for f in data["facts"])
+
+
+def test_claude_schema_describes_locally_enforced_list_limits():
+    from app.services.astro_engine import output_schema
+    properties = output_schema()["properties"]
+    for field, limit in [("fact_ids", 5), ("evidence", 4), ("action_ids", 3)]:
+        assert f"at most {limit} items" in properties[field]["description"]
+
+
+def test_model_can_explain_supported_factors_in_plain_language(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
+    monkeypatch.setattr(llm_client, "call_json", lambda *a, **kw: json.dumps({
+        "focus": "ranking", "explanation": "This ranking reflects your current mission priorities. Missing measurements cannot establish site safety.",
+        "fact_ids": ["F1"], "evidence": [], "action_ids": [],
+    }))
+    data = client.post("/api/v1/astro/chat", json=request()).json()
+    assert data["generated_by"] == "llm"
+    assert data["answer"].startswith("This ranking reflects")
+    assert "Here are the computed factors" not in data["answer"]
+
+
+def test_explanation_rejects_invented_numbers(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
+    monkeypatch.setattr(llm_client, "call_json", lambda *a, **kw: json.dumps({
+        "focus": "ranking", "explanation": "The temperature is 987654 degrees.",
+        "fact_ids": ["F1"], "evidence": [], "action_ids": [],
+    }))
+    data = client.post("/api/v1/astro/chat", json=request()).json()
+    assert data["generated_by"] == "deterministic_fallback"
+    assert "987654" not in data["answer"]
+
+
+def test_explanation_allows_rounding_but_not_new_measurements(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
+    def model(system, user, schema, **kwargs):
+        payload = json.loads(user)
+        import re
+        fact_id, fact = next((k,v) for k,v in payload["facts"].items() if "Landing index:" in v)
+        score = float(re.search(r"Landing index: ([0-9.]+)", fact).group(1))
+        return json.dumps({"focus":"ranking", "explanation":f"The current index is {score:.1f}, reflecting these priorities rather than safety.", "fact_ids":[fact_id], "evidence":[], "action_ids":[]})
+    monkeypatch.setattr(llm_client, "call_json", model)
+    data=client.post("/api/v1/astro/chat", json=request()).json()
+    assert data["generated_by"] == "llm"
+
+
+def test_greeting_is_instant_and_does_not_spend_free_quota(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "call_json", lambda *a, **kw: pytest.fail("A greeting should not call the provider"))
+    data = client.post("/api/v1/astro/chat", json=request(question="Hi")).json()
+    assert data["generated_by"] == "local"
+    assert "Hello" in data["answer"]
+    assert data["fallback_reason"] is None
+
+
+def test_location_overview_fallback_answers_the_question_without_repeating_name(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: False)
+    data = client.post("/api/v1/astro/chat", json=request(question="Tell me a little about this location?")).json()
+    assert "ancient" in data["answer"].lower() or "crater" in data["answer"].lower()
+    assert data["answer"].count("Jezero") <= 1
+    assert "contribution:" not in data["answer"]
+    assert data["fallback_reason"] == "not_configured"
+
+
+def test_overview_sends_small_context_and_keeps_geographic_grounding(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
+    def model(system, user, schema, **kwargs):
+        payload = json.loads(user)
+        assert len(payload["facts"]) <= 6
+        assert "allowed_actions" not in payload
+        assert any("Selected location:" in fact for fact in payload["facts"].values())
+        return json.dumps({"focus":"evidence_gaps", "explanation":"This crater preserves evidence of an ancient lake and delta.", "fact_ids":[], "evidence_ids":[], "evidence":[], "action_ids":[]})
+    monkeypatch.setattr(llm_client, "call_json", model)
+    data=client.post("/api/v1/astro/chat", json=request(question="Tell me about this location")).json()
+    assert data["generated_by"] == "llm"
+
+
+def test_free_quota_failure_is_specific_and_summary_stays_readable(client, monkeypatch):
+    monkeypatch.setattr(llm_client, "enabled", lambda feature=None: True)
+    def limited(*args, **kwargs):
+        raise llm_client.ProviderUnavailable(429)
+    monkeypatch.setattr(llm_client, "call_json", limited)
+    data = client.post("/api/v1/astro/chat", json=request(question="Tell me about this site")).json()
+    assert data["generated_by"] == "deterministic_fallback"
+    assert data["fallback_reason"] == "rate_limit"
+    assert "contribution:" not in data["answer"]
+    assert data["answer"].count("Jezero") <= 1

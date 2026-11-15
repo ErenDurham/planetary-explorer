@@ -302,7 +302,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     return { activeTab: "explore", exploreStage: stage, viewedBody: body, followObjective: stage === "mission",
       mapMode: stage === "mission" ? missionViewMode(s.selectionBody,s.missionType) : "analog_match",
       ...(id ? s.selectionBody === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id } : {}),
-      exploreRevision: s.exploreRevision + 1, selectionRevision: s.selectionRevision + 1, cameraResetToken: s.cameraResetToken + 1, autoRotate: false };
+      exploreRevision: s.exploreRevision + 1, selectionRevision: s.selectionRevision + 1, autoRotate: false };
   }),
   missionObjective: DEFAULT_MISSION_OBJECTIVE,
   appliedObjective: "",

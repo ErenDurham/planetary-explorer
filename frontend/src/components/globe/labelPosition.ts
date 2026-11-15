@@ -8,14 +8,13 @@ export function labelPosition(
 ): number[] {
   projected.setFromMatrixPosition(object.matrixWorld).project(camera);
   const marginX = Math.min(140, size.width / 2);
+  const anchorX = ((projected.x + 1) * size.width) / 2;
+  const anchorY = ((1 - projected.y) * size.height) / 2;
+  // Html is centered on this point. Leave room for the card's lower edge,
+  // the marker and the pointer; flip below near the top of the canvas.
+  const cardCenterY = anchorY < 112 ? anchorY + 72 : anchorY - 72;
   return [
-    Math.max(
-      marginX,
-      Math.min(size.width - marginX, ((projected.x + 1) * size.width) / 2),
-    ),
-    Math.max(
-      55,
-      Math.min(size.height - 55, ((1 - projected.y) * size.height) / 2),
-    ),
+    Math.max(marginX, Math.min(size.width - marginX, anchorX)),
+    Math.max(48, Math.min(size.height - 48, cardCenterY)),
   ];
 }
