@@ -184,7 +184,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
             overview={<DiscoverySurveyPanel reference={reference} activeRun={activeRun} criteria={criteria} limitations={rank.data?.limitations ?? capabilities?.limitations ?? []} ranking={rank.data} sources={sources} refImage={refImage} refImageStatus={refImagery.status} />}
           >
             {selected && rank.data && (
-              <CandidateDetail flush candidate={selected} detail={detail.data} detailPending={detail.isPending && detail.fetchStatus !== "idle"} detailError={detail.error} onRetry={() => void detail.refetch()} criteria={criteria} reference={rank.data.reference} established={earth.sites} onCompareKnown={id => openEstablished(id)} onResearch={openResearch} effectiveWeights={rank.data.effective_weights} />
+              <CandidateDetail candidate={selected} detail={detail.data} detailPending={detail.isPending && detail.fetchStatus !== "idle"} detailError={detail.error} onRetry={() => void detail.refetch()} criteria={criteria} reference={rank.data.reference} established={earth.sites} onCompareKnown={id => openEstablished(id)} onResearch={openResearch} effectiveWeights={rank.data.effective_weights} returnedCount={rank.data.returned_count} survey={survey ?? null} />
             )}
           </DiscoveryPanel>
         </SitePanelShell>
