@@ -20,7 +20,7 @@ describe("discovery weights", () => {
   });
   it("never words a catalog relationship as scientific novelty", () => {
     const n = noveltyRelation({ catalog_version: "v1", nearest_known_site_id: "x", nearest_known_site_distance_km: 300, buffer_rule: "100 km centre buffer", outside_catalog_buffer: true, review_status: "not_reviewed" });
-    expect(n.sentence).toMatch(/not a claim of novelty/);
+    expect(n.sentence).toMatch(/this does not prove the site is new/);
     expect(n.sentence).not.toMatch(/unknown to science|validated|safe|accessible/i);
   });
 });

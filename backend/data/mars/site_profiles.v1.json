@@ -2314,7 +2314,7 @@
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Not reported at the Viking 2 site in the cited sources; SHARAD subsurface ice is reported for western Utopia Planitia (Stuurman et al., 2016), outside this footprint.",
+          "value": "The cited sources do not report ice at the Viking 2 site. SHARAD found subsurface ice in western Utopia Planitia (Stuurman et al., 2016), which is outside this footprint.",
           "unit": null,
           "source_id": "cooke2011_utopia",
           "measurement_type": "literature",

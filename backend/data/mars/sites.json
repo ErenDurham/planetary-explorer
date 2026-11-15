@@ -193,7 +193,7 @@
       "lat": 18.4447,
       "lon_east": 77.4508,
       "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
-      "description": "Impact crater whose floor holds water-altered igneous rocks below a sedimentary delta; its fan deposits carry Mg-rich carbonate, olivine and Fe/Mg-smectite. Perseverance landing site.",
+      "description": "An impact crater. Its floor has water-altered igneous rocks below a sedimentary delta. Its fan deposits contain Mg-rich carbonate, olivine and Fe/Mg-smectite. It is the Perseverance landing site.",
       "tags_terrain": [
         "impact_crater",
         "crater_floor",
@@ -227,7 +227,7 @@
       "lat": -4.5895,
       "lon_east": 137.4417,
       "heritage": "NASA Mars Science Laboratory Curiosity landing site (2012)",
-      "description": "Impact crater with ancient lake deposits at Yellowknife Bay and a hematite-bearing ridge (Vera Rubin ridge) on the slope of Mount Sharp. Curiosity landing site.",
+      "description": "An impact crater with ancient lake deposits at Yellowknife Bay. A hematite-bearing ridge (Vera Rubin ridge) sits on the slope of Mount Sharp. It is the Curiosity landing site.",
       "tags_terrain": [
         "impact_crater",
         "paleolake_basin"
@@ -258,7 +258,7 @@
       "lat": 4.5024,
       "lon_east": 135.6234,
       "heritage": "NASA InSight landing site (2018)",
-      "description": "Smooth plains of impact-fragmented regolith over basaltic lava flows. InSight landing site.",
+      "description": "Smooth plains of impact-broken regolith over basaltic lava flows. It is the InSight landing site.",
       "tags_terrain": [
         "smooth_plains",
         "lava_plain"
@@ -286,7 +286,7 @@
       "lat": 18.275,
       "lon_east": -24.632,
       "heritage": "ESA ExoMars Rosalind Franklin rover selected landing site",
-      "description": "Low-relief terrain of hydrous clay-bearing bedrock with a later fluviodeltaic system. ESA's selected landing site for the Rosalind Franklin rover.",
+      "description": "Low-relief terrain of hydrous, clay-bearing bedrock. A river delta system formed later. ESA selected it as the landing site for the Rosalind Franklin rover.",
       "tags_terrain": [
         "smooth_plains",
         "delta"
@@ -313,13 +313,13 @@
       "lat": 47.67,
       "lon_east": 134.28,
       "heritage": "NASA Viking 2 landing site (1976)",
-      "description": "Lowland basin with giant polygonal terrain; Viking 2 imaged a rocky surface at its landing site. No recent source on the composition at the Viking 2 site was found, so no mineral labels are given.",
+      "description": "A lowland basin with giant polygonal terrain. Viking 2 imaged a rocky surface at its landing site. No recent source on the minerals at the Viking 2 site was found, so no mineral labels are given.",
       "tags_terrain": [
         "polygonal_terrain",
         "rocky_surface"
       ],
       "tags_mineralogy": [],
-      "water_ice_evidence": "Not reported at the Viking 2 site in the cited sources; SHARAD subsurface ice is reported for western Utopia Planitia (Stuurman et al., 2016), outside this footprint.",
+      "water_ice_evidence": "The cited sources do not report ice at the Viking 2 site. SHARAD found subsurface ice in western Utopia Planitia (Stuurman et al., 2016), which is outside this footprint.",
       "coordinate_sources": [
         "nasa_viking"
       ],
@@ -339,7 +339,7 @@
       "lat": 22.27,
       "lon_east": -47.95,
       "heritage": "NASA Viking 1 landing site (1976)",
-      "description": "Northern plains near the terminus of the Maja Valles flood channel; Viking 1 imaged a boulder-strewn surface here.",
+      "description": "Northern plains near the end of the Maja Valles flood channel. Viking 1 imaged a boulder-strewn surface here.",
       "tags_terrain": [
         "outflow_channel_deposits",
         "rocky_surface",
@@ -367,7 +367,7 @@
       "lat": -1.9462,
       "lon_east": -5.5266,
       "heritage": "NASA MER Opportunity landing site (2004)",
-      "description": "Plains with extensive layered deposits, some rich in hematite; the layered sulfate deposits of the Burns formation derive from a basaltic precursor. Opportunity landing site.",
+      "description": "Plains with large layered deposits. Some are rich in hematite. The layered sulfate deposits of the Burns formation formed from basaltic material. It is the Opportunity landing site.",
       "tags_terrain": [
         "layered_deposits",
         "smooth_plains"
@@ -398,7 +398,7 @@
       "lat": -14.5684,
       "lon_east": 175.4726,
       "heritage": "NASA MER Spirit landing site (2004)",
-      "description": "Impact crater and possible former lake; basalts analysed by Spirit, with Mg-Fe carbonate outcrops and opaline silica in the Columbia Hills. Spirit landing site.",
+      "description": "An impact crater and possible former lake. Spirit analysed basalts here. The Columbia Hills have Mg-Fe carbonate outcrops and opaline silica. It is the Spirit landing site.",
       "tags_terrain": [
         "impact_crater",
         "paleolake_basin",

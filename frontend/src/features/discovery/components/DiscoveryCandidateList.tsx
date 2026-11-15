@@ -44,7 +44,7 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
         </div>
         {error ? <div className="mt-3">{error}</div>
           : !candidates ? <div className="mt-3">{status}</div>
-          : n === 0 ? <p className="mt-3 rounded-lg border border-dashed border-line px-3 py-2 text-xs text-fg-muted">No footprint in this survey passed screening, so there is nothing to rank. The survey coverage section in the panel lists why each sampled footprint was excluded.</p>
+          : n === 0 ? <p className="mt-3 rounded-lg border border-dashed border-line px-3 py-2 text-xs text-fg-muted">No footprint in this survey passed screening, so there is nothing to rank. The survey coverage section in the panel lists why each footprint was left out.</p>
           : (
             <ol className="mt-3 space-y-1.5" aria-label="Ranked proposed candidates">
               {candidates.map(c => {

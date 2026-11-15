@@ -206,7 +206,7 @@ def test_no_selection_offers_mission_level_candidates(client, monkeypatch):
         ),
     ).json()
     assert data["generated_by"] == "deterministic_fallback"
-    assert any("Leading Mars candidate:" in f for f in data["facts"])
+    assert any("The top Mars site is" in f for f in data["facts"])
     assert any(a["tab"] == "explore" and a["body"] == "mars" for a in data["actions"])
     assert "Select an Earth or Mars location to ground" not in data["answer"]
 

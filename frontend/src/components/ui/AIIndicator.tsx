@@ -11,7 +11,7 @@ export function AIIndicator({
     <span
       role={iconOnly ? "img" : undefined}
       aria-label={iconOnly ? label : undefined}
-      title="Uses Claude when configured; falls back to rule-based guidance when unavailable."
+      title="Uses the language model when it is set up. Otherwise it uses rule-based guidance."
       className="inline-flex shrink-0 items-center gap-1 rounded border border-copper/25 px-1.5 py-0.5 text-[10px] font-medium text-copper-bright"
     >
       <Sparkles className="h-3 w-3" aria-hidden />

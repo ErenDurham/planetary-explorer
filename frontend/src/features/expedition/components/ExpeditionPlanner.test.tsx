@@ -156,7 +156,7 @@ describe("Expedition Planner", () => {
     const metrics = within(planner).getByTestId("metrics-panel");
     expect(metrics).toHaveTextContent(/once the expedition service is connected/);
     expect(metrics).not.toHaveTextContent(/\d/);
-    expect(within(planner).getByText(/Rover profiles are defined by the expedition service/)).toBeInTheDocument();
+    expect(within(planner).getByText(/Rover profiles come from the expedition service/)).toBeInTheDocument();
     expect(within(planner).getByText(/research targets and routing terrain are unavailable/)).toBeInTheDocument();
   });
 });

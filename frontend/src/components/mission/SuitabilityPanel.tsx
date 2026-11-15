@@ -11,8 +11,8 @@ import type { SuitabilityResult } from "@/types";
 export function SuitabilityPanel({ result, isPending, totalRanked }: { result: SuitabilityResult | undefined; scoringSpecVersion?: string; isPending?: boolean; totalRanked?: number }) {
   if (!result) {
     return (
-      <Section title="Mission suitability" subtitle="Relative index under the current mission priorities">
-        {isPending ? <Spinner label="Scoring" /> : <EmptyNote>Select a site to see its suitability under the current priorities.</EmptyNote>}
+      <Section title="Mission suitability" subtitle="A relative score for the current mission priorities">
+        {isPending ? <Spinner label="Scoring" /> : <EmptyNote>Select a site to see its score for the current priorities.</EmptyNote>}
       </Section>
     );
   }
@@ -73,7 +73,7 @@ export function SuitabilityPanel({ result, isPending, totalRanked }: { result: S
         <FactorBreakdownChart factors={result.factor_scores} />
       </Section>
       <Section title="Favorable">
-        <BulletList items={result.favorable} tone="ok" empty="Nothing scored favourably under these priorities." />
+        <BulletList items={result.favorable} tone="ok" empty="No factor scored well for these priorities." />
       </Section>
     </>
   );
@@ -84,7 +84,7 @@ export function FullScoringCalculation({ result }: { result: SuitabilityResult |
   if (!result) return null;
   return (
         <details className="m-4 rounded-lg border border-line-strong"><summary className="cursor-pointer p-3 text-sm text-fg">Full scoring calculation</summary>
-        <Section title="Factor breakdown" subtitle="Weighted contributions sum to the index">
+        <Section title="Factor breakdown" subtitle="The weighted contributions add up to the score">
           <div className="mt-2 overflow-x-auto">
             <table className="w-full text-left text-[11px]">
               <thead className="text-[10px] uppercase tracking-wide text-fg-faint">

@@ -82,7 +82,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         else if (key === "f") setFocusRequest(n => n + 1);
         else setNavigation(n => ({ id: n.id + 1, action: key }));
       }}>
-      <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit {body}. Plus and minus zoom. F focuses the selected site. Escape clears the current selection. Click empty globe space to deselect. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km; {markers.length} candidate {markers.length === 1 ? "location is" : "locations are"} marked at their real coordinates.</p>
+      <p id="globe-keyboard-help" className="sr-only">The arrow keys rotate {body}. Plus and minus zoom. F focuses on the selected site. Escape clears the selection. Clicking empty space on the globe also clears it. R resets the camera. Tab moves out of the globe. Enter or Space selects a site from the list. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km. {markers.length} {markers.length === 1 ? "site is" : "sites are"} marked at their real coordinates.</p>
       <Canvas
         camera={{ position: DEFAULT_CAMERA.toArray(), fov: 42, near: 0.02, far: 100 }}
         dpr={[1, 2]}

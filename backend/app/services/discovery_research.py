@@ -34,7 +34,7 @@ def get_record(run_id, candidate_id):
         if (record.run_id,record.candidate_id)!=(run_id,candidate_id):raise ValueError("notebook identity mismatch")
         return record
     except (OSError,ValueError) as exc:
-        raise engine.DiscoveryUnavailable("Candidate research notebook could not be read; its review status is unavailable.") from exc
+        raise engine.DiscoveryUnavailable("The research notebook for this candidate could not be read. Its review status is not available.") from exc
 
 
 def save_record(run_id,candidate_id,update: ResearchUpdate):
@@ -50,7 +50,7 @@ def save_record(run_id,candidate_id,update: ResearchUpdate):
             temp.write_text(record.model_dump_json(indent=2)+"\n")
             os.replace(temp,p)
         except OSError as exc:
-            raise engine.DiscoveryUnavailable("Research could not be saved. Keep your draft and retry or export a copy.") from exc
+            raise engine.DiscoveryUnavailable("The research could not be saved. Keep your draft, then try again or export a copy.") from exc
         finally:
             try:
                 temp.unlink(missing_ok=True)
@@ -76,11 +76,11 @@ def dossier(run_id,candidate_id,question=""):
     searches += [{"label":"NASA technical literature","query":query,"url":"https://ntrs.nasa.gov/search?"+urlencode({"q":query})},
                  {"label":"Scholarly literature","query":query,"url":"https://scholar.google.com/scholar?"+urlencode({"q":query})}]
     questions=[
-        "Has this footprint or the surrounding region already been used or proposed as a planetary analog? Record the search scope and prior work, including contradictory results.",
-        "Which mapped geological units and materials occur across the full 60 km footprint? Regional terrain similarity does not establish a geological match.",
-        "Do independent imagery and land-cover observations support or weaken a terrain-mapping rehearsal here? Distinguish centre samples from full-footprint coverage.",
-        "What specific mapping experiment could test transfer to Jezero, and what would count as a failed analogy?",
-        "Which permissions, access restrictions and high-resolution hazards must be checked before field work?",
+        "Has this footprint or the region around it already been used or proposed as a planetary analog? Record the search scope and prior work, including results that disagree.",
+        "Which mapped geological units and materials occur across the full 60 km footprint? Similar regional terrain does not mean a geological match.",
+        "Do independent images and land-cover data support a terrain-mapping rehearsal here, or argue against it? Keep samples at the centre separate from coverage of the full footprint.",
+        "What mapping experiment could test whether the method transfers to Jezero? What result would show that the analogy fails?",
+        "Which permissions, access limits and small-scale hazards must be checked before field work?",
     ]
     measured=candidate.profile.measurements if candidate.profile else {}
     brief=(f"Investigate proposed Earth terrain analog {candidate.name} ({location}), survey {run_id}, relative to Jezero Crater on Mars.\n"
@@ -92,10 +92,10 @@ def dossier(run_id,candidate_id,question=""):
     return ResearchDossier(run_id=run_id,candidate_id=candidate_id,candidate=candidate,record=record,
         research_questions=questions,search_tasks=searches,research_brief=brief,background_evidence=passages,
         retrieval_status="background_available" if passages else "unavailable",
-        limitations=["Retrieved passages come from the existing local library; this is not a live web or exhaustive literature search.",
-            "Library passages are background only unless an analyst establishes relevance to the candidate footprint.",
-            "Saved findings and review status are analyst supplied, not automatically verified. Literature review never means field validation.",
-            "Existing desktop land-cover samples do not constitute a candidate literature review."])
+        limitations=["The passages come from the local library. This is not a live web search or a full literature search.",
+            "Library passages are background only, unless an analyst shows that they apply to this footprint.",
+            "Saved findings and the review status are entered by the analyst. They are not checked automatically. A literature review never means field validation.",
+            "The existing desktop land-cover samples do not count as a literature review."])
 
 
 def export_brief(run_id, candidate_id):
@@ -111,10 +111,10 @@ def export_brief(run_id, candidate_id):
         provenance=run.provenance, validation=run.validation).model_dump(mode="json")
     discovery["validation"].pop("candidate_research", None)
     limitations = [
-        "Findings and citations are analyst supplied and have not been automatically verified.",
-        "Catalog absence is not proof of scientific novelty; literature review is not field validation.",
-        "This export contains survey specifications, not the current UI ranking or custom weights.",
-        "Only saved notebook content is included; unsaved browser drafts are excluded.",
+        "Findings and citations are entered by the analyst. They have not been checked automatically.",
+        "Not being in the catalog does not prove the site is new to science. A literature review is not field validation.",
+        "This export has the survey settings. It does not have the current ranking or custom weights from the app.",
+        "Only saved notebook content is included. Unsaved browser drafts are left out.",
     ]
     lines = ["# Candidate research brief", "",
         f"Candidate: {candidate.name} ({candidate_id})",
@@ -132,7 +132,7 @@ def export_brief(run_id, candidate_id):
         "## Limitations", "", *limitations, *candidate.limitations, "",
         "## Reproducible measured data and survey context", "",
         "The JSON below preserves units, source provenance, coverage, exclusions and processing settings.",
-        "It does not represent a current custom ranking.", "", "```json",
+        "It does not show a current custom ranking.", "", "```json",
         json.dumps({"candidate": candidate.model_dump(mode="json"), "discovery": discovery}, indent=2, sort_keys=True),
         "```", ""])
     return ResearchBrief(run_id=run_id, candidate_id=candidate_id,

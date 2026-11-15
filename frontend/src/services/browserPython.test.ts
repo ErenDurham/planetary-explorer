@@ -29,7 +29,7 @@ it("rejects pending and future requests when the running worker crashes", async 
 it("reports storage failure instead of confirming durable research save", async () => {
   const {browserRequest} = await runtime();
   const pending = browserRequest("/discovery/runs/run/candidates/candidate/research", {method:"POST"});
-  const result = expect(pending).rejects.toThrow("Browser storage is unavailable");
+  const result = expect(pending).rejects.toThrow("Browser storage is not available");
   FakeWorker.current.emit({type:"ready"});
   await Promise.resolve();
   vi.spyOn(Storage.prototype,"setItem").mockImplementation(() => {throw new Error("quota");});

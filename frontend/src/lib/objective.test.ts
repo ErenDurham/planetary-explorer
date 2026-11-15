@@ -12,11 +12,11 @@ describe("mission objective suggestions", () => {
   it("discloses unsupported science goals rather than inventing score factors", () => {
     const plan = recommendObjective("Search for subsurface ice near a permanent base", defaults, []);
     expect(plan.weights).toEqual(defaults);
-    expect(plan.notes.join(" ")).toContain("outside the current landing model");
+    expect(plan.notes.join(" ")).toContain("The landing model does not cover these needs");
   });
   it("does not reverse the user's intent when exclusions are present", () => {
     const plan = recommendObjective("Ignore solar energy and prefer mobility", defaults, []);
     expect(plan.weights).toEqual(defaults);
-    expect(plan.notes.join(" ")).toContain("cannot interpret those reliably");
+    expect(plan.notes.join(" ")).toContain("Simple keyword rules cannot read these reliably");
   });
 });

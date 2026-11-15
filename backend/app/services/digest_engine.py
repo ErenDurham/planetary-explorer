@@ -67,14 +67,14 @@ TOPIC_WORDS = {
 }
 PURPOSE_RULES: list[tuple[re.Pattern, str, str]] = [
     (re.compile(r"(?i)pds|megdr|mola|dataset|data record|aareadme|catalog|copernicus|power|registry", re.I), "Dataset documentation",
-     "Describes the dataset and its caveats, not this site specifically; it cannot validate a site's score."),
+     "Describes the dataset and its limits. It is not about this site, and it cannot validate a site's score."),
     (re.compile(r"(?i)journal|crossref|doi|agu|aaas|elsevier|wiley|science \(|peer-reviewed", re.I), "Peer-reviewed record",
-     "Bibliographic record and abstract only; the full paper was not retrieved, so detailed results are not available here."),
+     "Only the citation and abstract are available. The full paper was not retrieved, so detailed results are not shown here."),
     (re.compile(r"(?i)analog|arads|haughton|mars institute|mdrs|desert research|hmp", re.I), "Analog programme",
-     "Documents an Earth field programme; it does not show that results transfer to this Mars site."),
+     "Describes an Earth field programme. It does not show that results transfer to this Mars site."),
     (re.compile(r"(?i)nomenclature|gazetteer|usgs", re.I), "Nomenclature / geography", "Naming and location reference only."),
     (re.compile(r"(?i)nasa science|mission|rover|lander|perseverance|curiosity|insight|viking|opportunity|spirit|exomars|esa", re.I), "Mission context",
-     "Mission overview text documents landing context and history; it does not validate the model's quantitative score."),
+     "The mission overview describes the landing context and history. It does not validate the model's score."),
 ]
 
 
@@ -87,7 +87,7 @@ def purpose_for(title: str, institution: str, url: str) -> tuple[str, str]:
     for pat, label, limitation in PURPOSE_RULES:
         if pat.search(blob):
             return label, limitation
-    return "Reference page", "General reference; relevance to this site is indirect."
+    return "Reference page", "General reference. It is only indirectly related to this site."
 
 
 def group_by_source(evidence: list[EvidenceChunk]) -> list[list[EvidenceChunk]]:
@@ -135,8 +135,8 @@ def extractive_digest(group: list[EvidenceChunk], site: Site, result: Suitabilit
     obj_hits = sorted(_objective_terms(objective) & content_tokens(" ".join(picked))) if picked and objective else []
     if not picked:
         level = "insufficient"
-        what = "Insufficient relevant evidence in the retrieved passages: no sentence addresses this site or the current priorities."
-        why = "Retrieved for lexical similarity only; nothing in it can be used to support a claim about this site."
+        what = "The passages do not have enough relevant evidence. No sentence is about this site or the current priorities."
+        why = "This was found only because of similar words. Nothing in it supports a claim about this site."
     else:
         level = "supports" if len(site_hits) >= 2 or (site_hits and obj_hits) else "context"
         what = _trim(picked[0], 260)
@@ -148,7 +148,7 @@ def extractive_digest(group: list[EvidenceChunk], site: Site, result: Suitabilit
         elif obj_hits:
             why = "Background only: it touches the objective (" + ", ".join(obj_hits[:3]) + ") but does not name this site."
         else:
-            why = "Provides background for the topic rather than evidence about this site."
+            why = "Gives background on the topic. It is not evidence about this site."
     return SourceDigest(document_id=first.document_id, title=first.title, institution=first.institution, url=first.url, publication_date=first.publication_date,
                         purpose_label=label, chunk_ids=[e.chunk_id for e in group], citation_ids=[citation_by_chunk[e.chunk_id] for e in group if e.chunk_id in citation_by_chunk],
                         what_it_tells_us=what, why_it_matters=why, limitation=limitation, support_level=level, generated_by="extractive")
@@ -231,11 +231,11 @@ def build_study_cards(site: Site, profile: EnvironmentalProfile, result: Suitabi
     if slope is not None and rough is not None and terrain_chunks:
         cards.append(StudyCard(
             kind="proposed_study", title=f"Does the regional terrain statistic predict landing-scale hazards at {site.name}?",
-            research_question=f"Do the ~3.7 km MOLA slope and relief values that rank {site.name} here (median slope {slope:g} deg, detrended relief {rough:g} m) correspond to metre-scale slopes and rock hazards inside a realistic landing ellipse?",
-            method="Sample HiRISE/CTX-derived digital terrain models at 1-5 m baselines over the footprint, count rocks from HiRISE images, and compare the distributions with the regional MOLA statistics used by this tool.",
-            why_here=f"{site.name} has a complete regional terrain profile and retrieved documentation of the topographic data and its sampling caveats, so the comparison can be made without new orbital data.",
+            research_question=f"Do the ~3.7 km MOLA slope and relief values used to rank {site.name} (median slope {slope:g} deg, detrended relief {rough:g} m) match the metre-scale slopes and rock hazards inside a realistic landing ellipse?",
+            method="Sample HiRISE/CTX digital terrain models at 1-5 m baselines over the footprint. Count rocks in HiRISE images. Compare these results with the regional MOLA values used by this tool.",
+            why_here=f"{site.name} has a complete regional terrain profile. The retrieved documents describe the topographic data and its limits. So the comparison can be made without new orbital data.",
             motivating_citation_ids=[by_chunk[e.chunk_id] for e in terrain_chunks[:3] if e.chunk_id in by_chunk],
-            cannot_infer="Regional statistics cannot resolve lander-scale hazards, and the suitability score is a screening index; neither establishes that a landing would be safe.",
+            cannot_infer="Regional values cannot show lander-scale hazards. The suitability score is a screening index. Neither shows that a landing would be safe.",
         ))
 
     # 2. Aqueous / composition study: needs cited composition tags and a passage mentioning them.
@@ -245,27 +245,27 @@ def build_study_cards(site: Site, profile: EnvironmentalProfile, result: Suitabi
         tag_words = ", ".join(t.replace("_", " ") for t in aq_tags[:4])
         cards.append(StudyCard(
             kind="proposed_study", title=f"Record of past water at {site.name}: {tag_words}",
-            research_question=f"What depositional or alteration history produced the {tag_words} reported for {site.name}, and how well are those materials preserved for in-situ or returned-sample analysis?",
-            method="Targeted orbital spectroscopy (CRISM) over the footprint to map the cited units, then in-situ or returned-sample mineralogy and organic chemistry on the mapped outcrops.",
-            why_here=f"The cited literature for {site.name} documents these materials, and the retrieved passages describe their setting, so the hypotheses are specific rather than generic.",
+            research_question=f"What deposition or alteration history produced the {tag_words} reported at {site.name}? How well are these materials preserved for in-situ or returned-sample analysis?",
+            method="Use targeted orbital spectroscopy (CRISM) over the footprint to map the cited units. Then do in-situ or returned-sample mineralogy and organic chemistry on the mapped outcrops.",
+            why_here=f"The cited literature for {site.name} documents these materials. The retrieved passages describe their setting. So the hypotheses are specific, not generic.",
             motivating_citation_ids=[by_chunk[e.chunk_id] for e in aq_chunks[:3] if e.chunk_id in by_chunk],
-            cannot_infer="Composition tags are literature-derived labels, not spectral measurements made by this tool, and they have no bearing on the landing suitability score.",
+            cannot_infer="Mineral labels come from the literature. They are not spectral measurements made by this tool. They do not affect the landing suitability score.",
         ))
 
     # 3. Analog transfer: only an analog whose SHARED characteristics are terrain (the thing a field trial would use).
     if analogs:
         for a in analogs:
-            shared_terrain = [s for s in a.shared_characteristics if s.lower().startswith("terrain morphology") or "slope" in s.lower() or "relief" in s.lower()]
+            shared_terrain = [s for s in a.shared_characteristics if s.lower().startswith("shared landforms") or "slope" in s.lower() or "relief" in s.lower()]
             if not shared_terrain:
                 continue
             analog_chunks = _chunks_about(evidence, {a.earth_candidate.name.split(" - ")[0].lower().split(" (")[0]} | {w.lower() for w in a.earth_candidate.region.split()[:1]})
             cards.append(StudyCard(
                 kind="proposed_study", title=f"Field rehearsal at {a.earth_candidate.name} on terrain it shares with {site.name}",
-                research_question=f"Do traverse-planning and terrain-mapping methods exercised at {a.earth_candidate.name} transfer to the {site.name} landforms they share?",
-                method="Run instrumented traverses and terrain mapping on the matched landforms at the Earth site, measure where predicted and observed trafficability diverge, then test the method on orbital data for the Mars footprint.",
-                why_here="Shared at the harmonised ~3.7 km baseline: " + "; ".join(shared_terrain[:2]) + ".",
+                research_question=f"Do traverse-planning and terrain-mapping methods tested at {a.earth_candidate.name} work on the landforms it shares with {site.name}?",
+                method="Run instrumented traverses and terrain mapping on the matched landforms at the Earth site. Measure where the predicted and observed trafficability differ. Then test the method on orbital data for the Mars footprint.",
+                why_here="Shared on the matched ~3.7 km baseline: " + "; ".join(shared_terrain[:2]) + ".",
                 motivating_citation_ids=[by_chunk[e.chunk_id] for e in analog_chunks[:2] if e.chunk_id in by_chunk],
-                cannot_infer=f"The similarity index ({a.similarity}) is a heuristic; Earth gravity, atmosphere and radiation differ, and no transfer has been demonstrated.",
+                cannot_infer=f"The similarity index ({a.similarity}) is a rough measure. Earth gravity, atmosphere and radiation are different. It has not been shown that results transfer.",
                 analog_candidate_id=a.earth_candidate.id,
             ))
             break
@@ -273,8 +273,8 @@ def build_study_cards(site: Site, profile: EnvironmentalProfile, result: Suitabi
     cards = cards[:MAX_CARDS]
     gap = None
     if not cards:
-        gap = ("No study can be motivated from the retrieved passages and measurements: no passage addresses this site's terrain data or cited materials, "
-               "and no Earth analog shares terrain characteristics with it. The gap is in the corpus, not in the site.")
+        gap = ("The passages and measurements do not suggest a study. No passage is about this site's terrain or cited materials. "
+               "No Earth analog shares terrain features with it. The gap is in the document library, not in the site.")
     return cards, gap
 
 

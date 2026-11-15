@@ -26,7 +26,7 @@ export function RankedList({ results, selectedId, onSelect, isPending, warnings 
   return (
     <CandidatePanel
       title="Ranked candidates"
-      subtitle="Mars · relative suitability index 0–100 under the current priorities. Not a probability."
+      subtitle="Mars sites, scored 0–100 for the current priorities. The score is a relative index, not a probability."
       actions={isPending ? <Spinner label="Scoring" /> : undefined}
       controls={<>
       {warnings && warnings.some(w => !w.includes("thermal_conditions")) && (
@@ -88,13 +88,13 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
   return (
     <CandidatePanel
       title="Ranked candidates"
-      subtitle={referenceName ? <>{bodyName} · Analog match against <span className="text-fg">{referenceName}</span> · match % is a similarity index, not a probability.</> : `Pick a reference on the other body to rank ${bodyName} candidates.`}
+      subtitle={referenceName ? <>{bodyName} sites, matched against <span className="text-fg">{referenceName}</span>. Match % is a similarity index, not a probability.</> : `Pick a site on the other planet to rank ${bodyName} sites against.`}
       actions={isPending ? <Spinner label="Ranking" /> : undefined}
       controls={<>
       {onFilterChange && candidates && candidates.length > 0 && (
         <label className="mb-2 block text-xs text-fg-muted">
           <span className="sr-only">Filter candidates by name</span>
-          <input type="search" value={filter} onChange={(e) => onFilterChange(e.target.value)} placeholder="Filter by name (colours stay fixed)" className="w-full rounded border border-line-strong bg-bg px-2 py-1 text-xs text-fg" />
+          <input type="search" value={filter} onChange={(e) => onFilterChange(e.target.value)} placeholder="Filter by name. Colours do not change." className="w-full rounded border border-line-strong bg-bg px-2 py-1 text-xs text-fg" />
         </label>
       )}
       {error && <p role="alert" className="mb-2 rounded border border-danger/40 bg-danger/10 px-2 py-1 text-[11px] text-danger">Ranking failed: {error.message}</p>}
@@ -117,7 +117,7 @@ export function AnalogRankedList({ candidates, bodyName, referenceName, selected
                   color={colour ?? undefined} selected={selected} scoreSuffix="%" accessibleLabel={label}
                   status={unranked ? "not ranked" : c.location.id === suggestedId ? "suggested" : "match"}
                   tone={unranked ? "neutral" : "info"}
-                  detail={unranked ? c.unrankable_reason ?? "Not ranked" : `Match rank ${c.rank} of ${ranked}; similarity index, not suitability${c.location.id === suggestedId ? "; suggested reference" : ""}`}
+                  detail={unranked ? c.unrankable_reason ?? "Not ranked" : `Match rank ${c.rank} of ${ranked}. This is similarity, not suitability.${c.location.id === suggestedId ? " Suggested reference." : ""}`}
                   onSelect={() => onSelect(c.location.id)} />
               </li>
             );

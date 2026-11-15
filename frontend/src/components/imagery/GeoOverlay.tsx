@@ -16,7 +16,7 @@ export function GeoOverlay({ bounds, body, lat, lonEast, halfWidthDeg, renderedH
       {box && (
         <div
           role="img"
-          aria-label={`Analysis footprint, ±${halfWidthDeg}° square around the selected coordinate${box.clipped ? ", extends beyond this image" : ""}`}
+          aria-label={`Analysis footprint, ±${halfWidthDeg}° square around the selected coordinate${box.clipped ? ". It extends beyond this image" : ""}`}
           data-testid="footprint-outline"
           className="absolute border-2 border-dashed border-ok/90 shadow-[0_0_0_1px_rgba(0,0,0,.6)]"
           style={{ left: `${box.leftPct}%`, top: `${box.topPct}%`, width: `${box.widthPct}%`, height: `${box.heightPct}%` }}

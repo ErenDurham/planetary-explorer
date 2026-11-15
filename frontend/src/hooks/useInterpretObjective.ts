@@ -76,10 +76,10 @@ export function interpretOffline(
       weight,
       previous_weight: previous,
       reason: isExcluded
-        ? "No measurements for this factor; forced to 0."
+        ? "This factor has no measurements, so it is set to 0."
         : weight === previous
-          ? "Unchanged: no keyword rule matched this factor."
-          : "Keyword rule matched the objective text.",
+          ? "No keyword rule matched this factor, so it did not change."
+          : "A keyword rule matched the objective text.",
       data_available: !isExcluded,
     };
   });
@@ -96,7 +96,7 @@ export function interpretOffline(
     clarifying_questions: [],
     confidence: "low",
     confidence_note:
-      "Confidence describes how clearly the text matched the offline keyword rules; it says nothing about how suitable any site is. This reading was made in the browser because the backend could not be reached.",
+      "Confidence shows how clearly the text matched the offline keyword rules. It says nothing about how suitable a site is. The backend could not be reached, so this reading was made in the browser.",
     validation_notes: excluded.length ? [`Excluded criteria forced to 0: ${excluded.join(", ")}.`] : [],
     mission_profile: "other",
     earth_suggestions: [],
@@ -201,7 +201,7 @@ export function applicationFromInterpretation(
   const notes = [
     ...(r.rationale ?? []),
     ...(r.unsupported_needs ?? []).map((n) => `Cannot be scored by this model: ${n}`),
-    ...(editedByUser ? ["You edited the proposed shares before applying them."] : []),
+    ...(editedByUser ? ["You edited the suggested shares before saving them."] : []),
   ];
   // This exact built-in preset has a known direction even without the backend.
   // Do not guess task semantics for arbitrary user text.

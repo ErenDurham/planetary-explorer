@@ -17,12 +17,12 @@ from app.models.discovery import (
 FEATURES = {"slope_regional_median_deg": ("Regional median slope", "deg", 1.5),
             "roughness_regional_m": ("Detrended regional relief", "m", 100.0)}
 LIMITATIONS = [
-    "Proposed regional terrain analog candidates; field validation required.",
-    "Similarity is a two-feature heuristic index, not confidence or a probability; do not compare with curated five-feature scores.",
-    "4 km cells and 60 km footprints do not resolve rover hazards, trafficability, geology or landing safety.",
-    "Outside a catalog buffer does not mean unknown to science or accessible; catalog coverage is incomplete.",
-    "Copernicus is a surface model including vegetation and infrastructure; MOLA includes interpolated bins.",
-    "Earth atmosphere, gravity, radiation, biology and weather differ from Mars. No transfer has been validated.",
+    "These are proposed regional terrain analogs. They still need field validation.",
+    "Similarity is a rough two-feature index. It is not a confidence level or a probability. Do not compare it with the five-feature analog scores.",
+    "4 km cells and 60 km footprints cannot show rover hazards, trafficability, geology or landing safety.",
+    "Being outside a catalog buffer does not mean the site is unknown to science or easy to reach. The catalog is incomplete.",
+    "Copernicus is a surface model, so it includes vegetation and buildings. MOLA includes interpolated bins.",
+    "Earth's atmosphere, gravity, radiation, biology and weather are different from Mars. No transfer of results has been validated.",
 ]
 
 
@@ -49,7 +49,7 @@ def load_run(run_id: str) -> tuple[DiscoveryRunArtifact, dict]:
     directory = root() / run_id
     if not directory.is_dir():
         if not root().exists() or not any(p.is_dir() and not p.name.startswith(".") for p in root().iterdir()):
-            raise DiscoveryUnavailable("No discovery artifacts installed; run the offline builder.")
+            raise DiscoveryUnavailable("No discovery survey is installed. Run the offline builder.")
         raise KeyError(run_id)
     try:
         raw = (directory / "run.json").read_bytes()
@@ -176,8 +176,8 @@ def detail(run_id, candidate_id):
     return DiscoveryCandidateDetail(**candidate.model_dump(), profile=row.profile,
         screening_reasons=row.screening_reasons, source_manifest=row.candidate.sources,
         proposed_field_validation=["Check land access, permissions and local hazards before any field visit.",
-            "Survey terrain at metre scale and compare with regional orbital statistics.",
-            "Measure geology/materials and test the proposed mapping procedure; transfer to Mars remains unvalidated."])
+            "Survey the terrain at metre scale, and compare it with the regional orbital values.",
+            "Measure the geology and materials, and test the proposed mapping method. Transfer to Mars is still not validated."])
 
 
 def export(run_id):

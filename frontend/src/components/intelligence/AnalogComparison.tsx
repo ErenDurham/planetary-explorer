@@ -31,12 +31,12 @@ const ANALOG_FEATURES: Array<{ feature_id: string; label: string; default_weight
 ];
 
 const ANALOG_GUIDE: Record<string, {label: string; effect: string}> = {
-  slope_regional_median_deg: { label: "Similar slopes", effect: "Favours Earth terrain with a similar regional slope. Useful for broad mobility studies." },
-  roughness_regional_m: { label: "Similar terrain relief", effect: "Favours a similar amount of regional unevenness after removing the broad tilt." },
-  terrain_morphology: { label: "Similar landforms", effect: "Matches literature tags such as crater floors or smooth plains. Tags are not detailed terrain maps." },
-  mineralogy_tags: { label: "Similar materials", effect: "Matches documented composition tags. Useful for choosing a geology analogue; this is not a spectral match." },
-  precipitation_mm_day: { label: "Similar dryness", effect: "Favours lower rainfall closer to Mars. Earth rainfall alone cannot reproduce Martian conditions." },
-  insolation_toa_annual_mean_wm2: { label: "Similar sunlight above the atmosphere", effect: "Off by default. Compares modelled annual sunlight, not surface lighting or panel output. Raising it includes this feature in the match." },
+  slope_regional_median_deg: { label: "Similar slopes", effect: "Favours Earth terrain with a similar regional slope. This is useful for broad mobility studies." },
+  roughness_regional_m: { label: "Similar terrain relief", effect: "Favours a similar amount of regional unevenness, after the broad tilt is removed." },
+  terrain_morphology: { label: "Similar landforms", effect: "Matches literature labels such as crater floors or smooth plains. The labels are not detailed terrain maps." },
+  mineralogy_tags: { label: "Similar materials", effect: "Matches mineral labels from the literature. This is useful for choosing a geology analog. It is not a spectral match." },
+  precipitation_mm_day: { label: "Similar dryness", effect: "Favours low rainfall, which is closer to Mars. Low rainfall alone cannot reproduce Martian conditions." },
+  insolation_toa_annual_mean_wm2: { label: "Similar sunlight above the atmosphere", effect: "This is off by default. It compares modelled yearly sunlight, not surface lighting or panel output. Raising it adds this feature to the match." },
 };
 
 export function AnalogComparison({ site, sources }: { site: Site | null; sources?: Record<string, Provenance> }) {
@@ -54,7 +54,7 @@ export function AnalogComparison({ site, sources }: { site: Site | null; sources
   if (!site) {
     return (
       <Section title="Earth analog comparison">
-        <EmptyNote>Select a Mars site on the globe or in the ranked list to find Earth analogs.</EmptyNote>
+        <EmptyNote>Select a Mars site on the globe or in the list to find Earth analogs.</EmptyNote>
       </Section>
     );
   }
@@ -100,14 +100,14 @@ export function AnalogComparison({ site, sources }: { site: Site | null; sources
         <summary className="cursor-pointer p-3 text-sm font-semibold text-fg">Adjust comparison priorities {analogWeights ? "· customised" : "· defaults"}</summary>
         <Section
           title="What should match on Earth?"
-          subtitle="These controls reorder Earth analogs only. They do not change the Mars landing ranking or the measurements."
+          subtitle="These controls only reorder the Earth analogs. They do not change the Mars landing ranking or the measurements."
           actions={
             <button type="button" onClick={resetAnalogWeights} disabled={!analogWeights} className="inline-flex items-center gap-1 rounded border border-line px-2 py-1 text-[10.5px] text-fg-muted hover:text-fg disabled:opacity-40" aria-label="Reset analog weights to spec defaults">
               <RotateCcw className="h-3 w-3" aria-hidden /> Defaults
             </button>
           }
         >
-          <p className="mb-3 text-xs text-fg-muted">Keep the defaults for a broad comparison. Adjust them when planning a specific field experiment. Percentages show the relative emphasis; a larger distance bar means a worse match.</p>
+          <p className="mb-3 text-xs text-fg-muted">Keep the defaults for a broad comparison. Adjust them when you plan a specific field experiment. The percentages show the relative weight. A longer distance bar means a worse match.</p>
           <ul className="space-y-4">
             {ANALOG_FEATURES.map((f) => {
               const w = analogWeights?.[f.feature_id] ?? f.default_weight;
@@ -130,11 +130,11 @@ export function AnalogComparison({ site, sources }: { site: Site | null; sources
             })}
           </ul>
           {effectiveTotal === 0 && <p role="alert" className="mt-3 text-sm text-warn">Choose at least one feature to compare.</p>}
-          {changedFeature && <p role="status" className="mt-4 rounded-lg border border-info/50 bg-info/10 p-3 text-sm text-fg">More emphasis on {ANALOG_GUIDE[changedFeature].label.toLowerCase()} rewards Earth locations closer on that feature. Other features have less relative influence. The Earth ranking updates above; Mars landing scores stay unchanged.</p>}
+          {changedFeature && <p role="status" className="mt-4 rounded-lg border border-info/50 bg-info/10 p-3 text-sm text-fg">More emphasis on {ANALOG_GUIDE[changedFeature].label.toLowerCase()} favours Earth sites that are closer on that feature. The other features get less weight. The Earth ranking above updates. The Mars landing scores do not change.</p>}
         </Section>
         </details>
 
-        <Section title="Planetary differences" subtitle="Never compared; always disclosed">
+        <Section title="Planetary differences" subtitle="Always shown, never compared">
           <BulletList items={q.data?.planetary_differences} tone="warn" />
         </Section>
       </div>
@@ -180,7 +180,7 @@ function AnalogDetail({ match, marsSite, sources }: { match: AnalogMatch; marsSi
         )}
       </Section>
 
-      <Section title="Feature distances" subtitle="Comparable features enter D; non-comparable ones are listed, not scored">
+      <Section title="Feature distances" subtitle="Comparable features are used in D. The others are listed but not scored.">
         <AnalogFactorChart distances={match.feature_distances} />
         <div className="mt-2 overflow-x-auto">
           <table className="w-full text-left text-[11px]">
@@ -202,7 +202,7 @@ function AnalogDetail({ match, marsSite, sources }: { match: AnalogMatch; marsSi
           </table>
           {nonComparable.length > 0 && (
             <>
-              <h4 className="mt-3 mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-warn">Non-comparable (excluded from D)</h4>
+              <h4 className="mt-3 mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-warn">Not comparable (left out of D)</h4>
               <table className="w-full text-left text-[11px]">
                 <tbody className="divide-y divide-line/70">
                   {nonComparable.map((d) => (
@@ -217,18 +217,18 @@ function AnalogDetail({ match, marsSite, sources }: { match: AnalogMatch; marsSi
 
       <div className="grid gap-0 md:grid-cols-2">
         <Section title="Shared characteristics">
-          <BulletList items={match.shared_characteristics} tone="ok" empty="No features close at the harmonised scale." />
+          <BulletList items={match.shared_characteristics} tone="ok" empty="No feature is close at the matched scale." />
         </Section>
         <Section title="Important differences">
-          <BulletList items={match.important_differences} tone="danger" empty="No large differences among comparable features." />
+          <BulletList items={match.important_differences} tone="danger" empty="No large difference among the compared features." />
         </Section>
       </div>
-      <Section title="Non-comparable variables" subtitle="Planetary differences that no Earth site can match">
+      <Section title="Non-comparable variables" subtitle="Differences between the planets that no Earth site can match">
         <BulletList items={match.noncomparable_variables} tone="warn" />
       </Section>
-      <Section title="Documented analog use" subtitle="Historical programmes recorded for this Earth site; not proposals">
+      <Section title="Documented analog use" subtitle="Past programmes recorded at this Earth site. These are not proposals.">
         {documented.length === 0 ? (
-          <EmptyNote>No documented analog campaigns recorded for this site.</EmptyNote>
+          <EmptyNote>No analog campaigns are recorded for this site.</EmptyNote>
         ) : (
           <ul className="space-y-1.5" aria-label="Documented analog programmes">
             {documented.map((u) => (
@@ -240,9 +240,9 @@ function AnalogDetail({ match, marsSite, sources }: { match: AnalogMatch; marsSi
           </ul>
         )}
       </Section>
-      <Section title="Proposed studies (hypotheses)" subtitle="Motivated by the matched characteristics · similarity is a heuristic index, not a validated transfer">
+      <Section title="Proposed studies (hypotheses)" subtitle="Based on the matched features. Similarity is a rough index. It does not prove that results transfer.">
         {proposed.length === 0 ? (
-          <EmptyNote>The matched characteristics do not motivate a study for this pairing.</EmptyNote>
+          <EmptyNote>The matched features do not suggest a study for this pair.</EmptyNote>
         ) : (
           <ol className="space-y-3" aria-label="Proposed studies">
             {proposed.map((s, i) => <StudyCardView key={`${s.title}-${i}`} study={s} analogName={c.name} similarityNote />)}

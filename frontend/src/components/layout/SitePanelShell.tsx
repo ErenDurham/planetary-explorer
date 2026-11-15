@@ -49,7 +49,7 @@ export function SitePanelShell({
         aria-valuemax={MAX_WIDTH}
         aria-valuenow={collapsed ? 0 : width}
         aria-valuetext={collapsed ? "Collapsed" : `${width} pixels wide`}
-        title="Drag right to collapse; drag left to expand"
+        title="Drag right to collapse. Drag left to expand."
         onPointerDown={(e) => {
           if (e.button !== 0) return;
           e.preventDefault();

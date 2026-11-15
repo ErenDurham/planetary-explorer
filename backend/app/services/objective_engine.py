@@ -72,23 +72,23 @@ CLAUSE_SPLIT = re.compile(r"[,;.!?]|\bbut\b|\bwhile\b|\balthough\b|\bhowever\b",
 # app CAN do about them instead; nothing here changes a weight.
 UNSUPPORTED: list[tuple[re.Pattern, str]] = [
     (re.compile(r"\b(ice|water|subsurface|aquifer|hydrat|brine|frost|glacier)\w*", re.I),
-     "Water or ice: the profile records water/ice evidence as cited qualitative text; it is not a scored criterion and these weights cannot optimise it."),
+     "Water or ice: the profile records water and ice evidence as cited text. It is not a scored factor, and these weights cannot optimise it."),
     (re.compile(r"\b(permanent|base|settlement|habitat|habitation|colony|outpost|long[- ]term|crew|astronaut|human)\w*", re.I),
-     "Permanent base or crewed habitation: Version 1 scores Mission Phase 1 (landing) only; base-establishment criteria are a roadmap item."),
+     "Permanent base or crewed habitation: Version 1 only scores Mission Phase 1 (landing). Factors for setting up a base are planned for later."),
     (re.compile(r"\b(moon|lunar|selen)\w*", re.I),
-     "The Moon: Version 1 holds Mars sites only; a lunar objective cannot be scored here."),
+     "The Moon: Version 1 only has Mars sites. A lunar objective cannot be scored here."),
     (re.compile(r"\b(radiation|cosmic|dose|shield)\w*", re.I),
-     "Radiation: no radiation measurement exists in the profiles; it is listed only as a disclosed planetary difference."),
+     "Radiation: the profiles have no radiation measurement. It is only listed as a difference between the planets."),
     (re.compile(r"\b(dust storm|storms?|wind|weather|pressure)\b", re.I),
-     "Atmospheric conditions: wind, dust and pressure are recorded as missing in Version 1 profiles."),
+     "Atmospheric conditions: wind, dust and pressure are missing from the Version 1 profiles."),
     (re.compile(r"\b(life|biosignature|habitab|organic|astrobiolog|biolog)\w*", re.I),
-     "Habitability or biosignatures: a science goal the landing model does not score; use the evidence digests and Earth analogs for it."),
+     "Habitability or biosignatures: the landing model does not score this science goal. Use the evidence digests and Earth analogs for it."),
     (re.compile(r"\b(mineral|geolog|clay|carbonate|sulfate|sample|samples|return)\w*", re.I),
-     "Mineralogy, geology or sampling: composition is cited qualitative data, not a scored criterion."),
+     "Mineralogy, geology or sampling: mineral data is cited text. It is not a scored factor."),
     (re.compile(r"\b(communicat|relay|comms|line of sight|earth contact)\w*", re.I),
-     "Communications: not represented in the data."),
+     "Communications: this is not in the data."),
     (re.compile(r"\b(resource|isru|regolith extraction|mining|propellant)\w*", re.I),
-     "In-situ resources: Phase 3 in the roadmap; nothing in the landing model scores them."),
+     "In-situ resources: these are planned for Phase 3. The landing model does not score them."),
 ]
 
 # Mission type, read from the text; it selects which research applies.
@@ -125,7 +125,7 @@ def mission_profile(text: str) -> str:
 
 
 THERMAL_WORDS = re.compile(r"\b(thermal|temperature|temperatures|warm\w*|cold\w*|heat\w*)\b", re.I)
-THERMAL_UNAVAILABLE = "Temperature: the objective asks for it, but no site carries a measured surface temperature, so the thermal factor stays at 0."
+THERMAL_UNAVAILABLE = "Temperature: the objective asks for it, but no site has a measured surface temperature. The thermal factor stays at 0."
 
 
 def _thermal_note(text: str, excluded: list[str]) -> str | None:
@@ -259,29 +259,29 @@ def validate_proposal(proposed: dict, current: dict[str, int], excluded: list[st
     cleaned: dict[str, int] = dict(current)
     for cid, w in (proposed or {}).items():
         if cid not in labels:
-            notes.append(f"Ignored proposed weight for unknown criterion '{cid}'; the scoring model has no such factor.")
+            notes.append(f"The weight for unknown factor '{cid}' was ignored. The scoring model has no such factor.")
             continue
         try:
             wv = float(w)
         except (TypeError, ValueError):
-            notes.append(f"Ignored non-numeric weight for {cid}.")
+            notes.append(f"A non-numeric weight for {cid} was ignored.")
             continue
         if wv != wv:  # NaN
-            notes.append(f"Ignored non-finite weight for {cid}.")
+            notes.append(f"A non-finite weight for {cid} was ignored.")
             continue
         clamped = int(round(max(0.0, min(100.0, wv))))
         if clamped != wv:
-            notes.append(f"Clamped {labels[cid]} to {clamped} (weights are integers 0-100).")
+            notes.append(f"{labels[cid]} was limited to {clamped}. Weights are integers from 0 to 100.")
         cleaned[cid] = clamped
     for cid in excluded:
         if cid in cleaned and cleaned[cid] != 0:
-            notes.append(f"{labels[cid]} set to 0: no site carries the measurement, so it cannot influence any score.")
+            notes.append(f"{labels[cid]} is set to 0. No site has this measurement, so it cannot affect any score.")
         if cid in cleaned:
             cleaned[cid] = 0
     if sum(v for k, v in cleaned.items() if k not in excluded) <= 0:
-        raise ValueError("every available criterion would be 0; at least one must be positive to rank sites")
+        raise ValueError("every available factor would be 0. At least one must be positive to rank sites")
     out = [WeightSuggestion(criterion_id=cid, label=labels[cid], weight=cleaned[cid], previous_weight=current.get(cid, 0),
-                            reason=(reasons or {}).get(cid) or ("Unchanged: the objective did not mention this factor." if cleaned[cid] == current.get(cid) else "Set from the objective."),
+                            reason=(reasons or {}).get(cid) or ("Unchanged, because the objective did not mention this factor." if cleaned[cid] == current.get(cid) else "Set from the objective."),
                             data_available=cid not in excluded) for cid in labels]
     return out, notes
 
@@ -337,9 +337,9 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
             if cue and ms[0][0] < cue.start() < ms[1][0]:
                 a, b = ms[0][1], ms[1][1]
                 propose(a, 75, f'"{ms[0][2]}" is ranked above "{ms[1][2]}" in the objective, so it is raised.', True)
-                propose(b, 15, f'"{ms[1][2]}" is ranked below "{ms[0][2]}" in the objective, so it is lowered but kept active.', True)
+                propose(b, 15, f'"{ms[1][2]}" is ranked below "{ms[0][2]}" in the objective, so it is lowered but kept.', True)
                 tradeoffs.append(f"{labels[a]} over {labels[b]} (from: \"{clause}\").")
-                rationale.append(f"Read \"{clause}\" as a trade-off: {labels[a]} up, {labels[b]} down.")
+                rationale.append(f"\"{clause}\" is read as a trade-off: {labels[a]} up, {labels[b]} down.")
                 continue
         zero = ZERO_CUES.search(low)
         down = DOWN_CUES.search(low)
@@ -347,14 +347,14 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
         for pos, cid, phrase in ms:
             if zero and zero.start() <= pos + len(phrase) + 2:
                 propose(cid, 0, f'"{zero.group(0)} ... {phrase}" reads as an exclusion, so this factor is set to 0.', True)
-                tradeoffs.append(f"{labels[cid]} excluded (\"{zero.group(0)} {phrase}\").")
+                tradeoffs.append(f"{labels[cid]} left out (\"{zero.group(0)} {phrase}\").")
             elif down and down.start() <= pos + len(phrase) + 2:
-                propose(cid, 15, f'"{down.group(0)} ... {phrase}" reads as de-emphasis, so this factor is lowered to a minor weight.', True)
-                tradeoffs.append(f"{labels[cid]} de-emphasised (\"{down.group(0)} {phrase}\").")
+                propose(cid, 15, f'"{down.group(0)} ... {phrase}" reads as less important, so this factor gets a small weight.', True)
+                tradeoffs.append(f"{labels[cid]} given less weight (\"{down.group(0)} {phrase}\").")
             elif up:
                 propose(cid, 80, f'"{up.group(0)} ... {phrase}" reads as emphasis, so this factor is raised.', True)
             else:
-                propose(cid, 60, f'"{phrase}" is mentioned without an emphasis cue, so this factor is raised moderately.', False)
+                propose(cid, 60, f'"{phrase}" is mentioned without stress, so this factor is raised a little.', False)
         rationale.append(f"Clause \"{clause}\": " + ", ".join(f"{labels[c]} -> {proposed[c]}" for _, c, _ in ms) + ".")
 
     unsupported = [msg for pat, msg in UNSUPPORTED if pat.search(text)]
@@ -362,18 +362,18 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
         unsupported.append(THERMAL_UNAVAILABLE)
     questions: list[str] = []
     if not proposed:
-        questions.append("Which of these matters most for this mission: gentle slopes, low elevation for descent, smooth terrain for mobility, or sunlight for power?")
+        questions.append("Which of these matters most for this mission: gentle slopes, low elevation for descent, smooth terrain for driving, or sunlight for power?")
     for cid in sorted(contradictions):
-        questions.append(f"The objective both emphasises and excludes {labels[cid]}; which reading should apply?")
+        questions.append(f"The objective both stresses and excludes {labels[cid]}. Which reading should apply?")
     if proposed and not any(v > 0 for k, v in proposed.items() if k not in req.excluded_criteria) and all(current.get(k, 0) == 0 for k in current if k not in proposed):
-        questions.append("Every scorable factor would be excluded; which one should stay active?")
+        questions.append("Every scorable factor would be left out. Which one should stay?")
 
     try:
         suggestions, notes = validate_proposal(proposed, current, req.excluded_criteria, reasons)
     except ValueError as e:
         # Keep the current weights rather than silently turning everything off.
         suggestions, notes = validate_proposal({}, current, req.excluded_criteria, reasons)
-        notes.append(f"Proposal rejected ({e}); current weights kept.")
+        notes.append(f"The suggestion was rejected ({e}). The current weights are kept.")
 
     if contradictions or not proposed:
         confidence = "low"
@@ -381,10 +381,10 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
         confidence = "high"
     else:
         confidence = "medium"
-    note = ("Confidence describes how clearly the text matched the rule lexicon; it says nothing about how suitable any site is. "
-            "Rule-based reading: lexicon matches plus emphasis, exclusion and 'X over Y' cues. It does not understand general language.")
+    note = ("Confidence shows how clearly the text matched the keyword rules. It says nothing about how suitable a site is. "
+            "The rule-based reading uses keywords and phrases for emphasis, exclusion and 'X over Y'. It does not understand general language.")
     if not rationale:
-        rationale.append("No supported priority terms matched; current weights are kept as a starting point for you to adjust.")
+        rationale.append("No priority keywords were found. The current weights are kept for you to adjust.")
     profile = mission_profile(text)
     # The research shown here explains why each factor matters for this kind
     # of mission; the weights themselves came from the lexicon above.
@@ -470,7 +470,7 @@ def _cited(raw: dict, notes: list[str]) -> dict[str, list[EvidenceCitation]]:
                 dropped += 1
         out[cid] = [evidence.citation(e) for e in keep[: evidence.MAX_PER_CRITERION]]
     if dropped:
-        notes.append(f"{dropped} citation(s) removed: not a registry finding for that factor.")
+        notes.append(f"{dropped} citation(s) were removed because they are not registry findings for that factor.")
     return out
 
 
@@ -494,7 +494,7 @@ def _clean_reasons(raw: dict, notes: list[str]) -> dict[str, str]:
         if text:
             out[cid] = text
     if dropped:
-        notes.append(f"{dropped} reason(s) removed because they stated numbers; numbers come only from the cited research.")
+        notes.append(f"{dropped} reason(s) were removed because they stated numbers. Numbers only come from the cited research.")
     return out
 
 
@@ -533,8 +533,8 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
         proposed = dict(data.get("weights") or {})
         for cid in explicit_exclusions(req):
             if proposed.get(cid):
-                notes.append(f"{cid} set to 0: the objective explicitly excludes it.")
-                reasons[cid] = "The objective explicitly excludes this factor."
+                notes.append(f"{cid} is set to 0 because the objective says to leave it out.")
+                reasons[cid] = "The objective says to leave this factor out."
             proposed[cid] = 0
         suggestions, vnotes = validate_proposal(proposed, current, req.excluded_criteria, reasons)
         notes = vnotes + notes
@@ -553,7 +553,7 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
         tradeoffs, d2 = _strip_unbacked_numbers([str(x) for x in data.get("tradeoffs") or []][:3], allowed)
         unsupported, d3 = _strip_unbacked_numbers([str(x) for x in data.get("unsupported_needs") or []][:6], allowed)
         if d1 + d2 + d3:
-            notes.append(f"{d1 + d2 + d3} model sentence(s) removed because they stated numbers that are not weights.")
+            notes.append(f"{d1 + d2 + d3} model sentence(s) were removed because they stated numbers that are not weights.")
         # The rule reader's out-of-scope detector runs regardless, so a need the
         # model glossed over is still disclosed.
         for pat, msg in UNSUPPORTED:
@@ -566,7 +566,7 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
         out = InterpretResponse(objective=req.objective.strip(), objective_hash=objective_hash(req.objective), generated_by="llm", model=llm_client.model_name(),
                                 suggestions=suggestions, earth_suggestions=earth, rationale=rationale, tradeoffs=tradeoffs, unsupported_needs=unsupported,
                                 clarifying_questions=[str(q) for q in data.get("clarifying_questions") or []][:2], confidence=conf,
-                                confidence_note="Confidence describes how clearly the language model could map the text onto the five criteria; it is not a judgement of any site. Weights were validated deterministically (ids, 0-100, data availability, positive total).",
+                                confidence_note="Confidence shows how clearly the language model could map the text onto the five factors. It does not judge any site. The weights were checked by fixed rules (ids, 0-100, data availability and a positive total).",
                                 validation_notes=notes, mission_profile=profile, constraint_evidence=evidence.for_constraints(),
                                 evidence_version=evidence.version(), scoring_spec_version=load_spec()["version"],
                                 task_interpretation=ti,
@@ -575,7 +575,7 @@ def interpret(req: InterpretRequest) -> InterpretResponse:
     except Exception as e:  # noqa: BLE001 - any model/parse/validation failure degrades to the rule reader
         llm_client.record_error(e)
         out = rule_based(req)
-        out.validation_notes.append(f"Language model interpretation unavailable or invalid ({type(e).__name__}); rule-based reading used instead.")
+        out.validation_notes.append(f"The language model reading was not available or not valid ({type(e).__name__}). The rule-based reading was used instead.")
     _cache[key] = out
     return out
 

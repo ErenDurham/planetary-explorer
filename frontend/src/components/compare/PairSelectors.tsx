@@ -35,7 +35,7 @@ export function PairSelectors({ columns, swapped, onSwap, onSelect, onShowOnGlob
         </div>
       ))}
       <div className="flex items-center justify-center md:order-2">
-        <button type="button" onClick={onSwap} aria-pressed={swapped} aria-label="Swap display order of the two columns" title="Swap display order only; the objective and roles do not change" className="inline-flex items-center gap-1 rounded border border-line px-2.5 py-2 text-xs text-fg-muted hover:text-fg">
+        <button type="button" onClick={onSwap} aria-pressed={swapped} aria-label="Swap display order of the two columns" title="This only swaps the display order. The objective and roles do not change." className="inline-flex items-center gap-1 rounded border border-line px-2.5 py-2 text-xs text-fg-muted hover:text-fg">
           <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden /> <span className="md:sr-only">Swap display order</span>
         </button>
       </div>

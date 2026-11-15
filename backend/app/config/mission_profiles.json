@@ -2,46 +2,46 @@
   "version": "mission-screening-v1.0",
   "research": {
     "label": "Research target alignment",
-    "method": "For each configured criterion, q = number of requested tags documented at the site / number of unique requested tags. Index = 100 × weighted mean q.",
+    "method": "For each factor, q = (number of requested labels found at the site) / (number of requested labels). Index = 100 × the weighted mean of q.",
     "criteria": [
       {"id": "materials", "label": "Target materials", "feature": "mineralogy_tags", "targets": "material_targets", "weight": 60},
       {"id": "landforms", "label": "Target landforms", "feature": "terrain_morphology", "targets": "landform_targets", "weight": 40}
     ],
     "assumptions": [
-      "This index measures alignment with the user's stated geological targets, not scientific value, discovery likelihood or sample accessibility.",
-      "Tags are qualitative literature descriptions over the recorded region; an unreported target is not proof of physical absence.",
-      "Materials and landforms may overlap conceptually; their weights are user preferences, not independent probabilities."
+      "This index measures how well a site matches your geological targets. It does not measure scientific value, the chance of a discovery or access to samples.",
+      "The labels are qualitative descriptions from the literature for the recorded region. A target that is not reported may still be present.",
+      "Materials and landforms can overlap in meaning. Their weights are your preferences. They are not independent probabilities."
     ]
   },
   "rover_field_test": {
     "label": "Regional rover test fit",
-    "method": "q = max(0, 1 − |measured regional value − user target| / user tolerance). Index = 100 × weighted mean q.",
+    "method": "q = max(0, 1 − |measured regional value − your target| / your tolerance). Index = 100 × the weighted mean of q.",
     "criteria": [
       {"id": "slope", "label": "Target regional slope", "feature": "slope_regional_median_deg", "target": "slope_target_deg", "tolerance": "slope_tolerance_deg", "unit": "deg", "weight": 50},
       {"id": "relief", "label": "Target regional relief", "feature": "roughness_regional_m", "target": "relief_target_m", "tolerance": "relief_tolerance_m", "unit": "m", "weight": 50}
     ],
     "assumptions": [
-      "Target 1 degree with tolerance 5 degrees and target relief 100 m with tolerance 300 m are editable example preferences, not validated rover operating limits.",
-      "Both terrain metrics use roughly 3.7 km cells. They cannot resolve rocks, metre-scale slopes, trafficability or wheel–soil interactions.",
-      "The index measures regional environment fit for planning a test, not vehicle performance or safety."
+      "The targets of 1 degree (tolerance 5 degrees) and 100 m relief (tolerance 300 m) are example values that you can edit. They are not validated rover limits.",
+      "Both terrain values use cells of about 3.7 km. They cannot show rocks, metre-scale slopes, trafficability or how wheels interact with the soil.",
+      "The index measures how well the regional environment fits a planned test. It does not measure vehicle performance or safety."
     ],
     "analog_reference": {
       "label": "Similarity to {mars_name} (Mars)",
-      "method": "Similarity = 100 / (1 + D), where D is the weighted mean of per-feature distances between each Earth site and {mars_name}: regional slope and relief (scaled differences at the same ~3.7 km baseline), landforms and minerals (Jaccard distance of literature tags) and dryness (precipitation difference). This is the same calculation as Explore's analog ranking (spec {analog_version}). Each factor's points show how much of the 100 it cost.",
+      "method": "Similarity = 100 / (1 + D). D is the weighted mean of the distances between each Earth site and {mars_name} for each feature. Slope and relief use scaled differences on the same ~3.7 km baseline. Landforms and minerals use the Jaccard distance of the literature labels. Dryness uses the precipitation difference. This is the same calculation as the analog ranking in Explore (spec {analog_version}). Each factor's points show how much of the 100 it cost.",
       "assumptions": [
         "The Mars site is the one paired with your mission in Mission Design.",
-        "Slope and relief together keep the analog spec's terrain share; the Earth Low slopes and Less rugged ground sliders only set the split between them. Landforms, minerals and dryness keep the analog spec weights.",
-        "Elevation and sunlight are not compared: elevations use different datums on the two planets, and Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet).",
-        "Terrain metrics use roughly 3.7 km cells on both planets; they cannot resolve rocks, metre-scale slopes or trafficability. Landform and mineral tags are literature labels, not spectral measurements.",
-        "The index is a heuristic similarity, not a probability or a validated test-site rating."
+        "Slope and relief together keep the terrain share from the analog spec. The Earth Low slopes and Less rugged ground sliders only set how it is split between them. Landforms, minerals and dryness keep their analog spec weights.",
+        "Elevation and sunlight are not compared. The two planets use different elevation datums, and Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet).",
+        "Terrain values use cells of about 3.7 km on both planets. They cannot show rocks, metre-scale slopes or trafficability. Landform and mineral labels come from the literature. They are not spectral measurements.",
+        "The index is a rough measure of similarity. It is not a probability or a validated rating of a test site."
       ]
     }
   },
   "base_planning": {
     "label": "Base-planning evidence review",
-    "method": "No aggregate score: essential infrastructure, resource and hazard evidence is not available.",
+    "method": "There is no overall score. Evidence on infrastructure, resources and hazards is not available.",
     "criteria": [],
-    "assumptions": ["Terrain profiles alone cannot establish base viability."],
+    "assumptions": ["Terrain profiles alone cannot show whether a base is viable."],
     "evidence_gaps": ["Reliable water/resource quantities and extraction feasibility", "Seasonal surface power and energy-storage requirements", "Local thermal extremes and radiation", "Geotechnical bearing capacity and landing-scale hazards", "Access, permissions, logistics and infrastructure"]
   }
 }

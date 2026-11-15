@@ -37,7 +37,7 @@ export function ProvenancePopover({ measurement, source }: { measurement: Enviro
         </dl>
       ) : (
         <p className="text-fg-muted">
-          {measurement.source_id ? "The referenced source is not available in this profile." : "No source is recorded for this measurement."}
+          {measurement.source_id ? "The source is not listed in this profile." : "This measurement has no recorded source."}
         </p>
       )}
       {measurement.notes && <p className="mt-2 border-t border-line pt-1.5 text-fg-muted">{measurement.notes}</p>}

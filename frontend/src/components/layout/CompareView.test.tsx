@@ -141,17 +141,17 @@ describe("side-by-side panes", () => {
     const earthPane = screen.getByTestId("pane-earth");
     await within(earthPane).findByRole("img", { name: /haughton_orbital title/ });
     expect(within(earthPane).queryByTestId("geo-overlay")).toBeNull();
-    expect(within(earthPane).getByTestId("no-georef")).toHaveTextContent("No georeferencing for this image");
+    expect(within(earthPane).getByTestId("no-georef")).toHaveTextContent("This image is not georeferenced");
   });
   it("enables Match scale only when both panes show georeferenced orbital entries", async () => {
     mockApi();
     view();
     await within(await screen.findByTestId("pane-earth")).findByRole("img", { name: /atacama_gibs title/ });
-    const link = screen.getByRole("checkbox", { name: /Match scale/ });
+    const link = screen.getByRole("checkbox", { name: /Match the scale/ });
     expect(link).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "Field photos" }));
-    expect(screen.getByRole("checkbox", { name: /Match scale/ })).toBeDisabled();
-    expect(screen.getByText(/Field photographs have no map scale/)).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: /Match the scale/ })).toBeDisabled();
+    expect(screen.getByText(/Field photos have no map scale/)).toBeInTheDocument();
     // the Earth side has no field photos: an explicit per-side state with a way back to orbital imagery
     const earthPane = screen.getByTestId("pane-earth");
     expect(within(earthPane).getByText(/No field photographs for Atacama/)).toBeInTheDocument();
@@ -162,8 +162,8 @@ describe("side-by-side panes", () => {
     fireEvent.click(screen.getByRole("button", { name: "Orbital view" }));
     fireEvent.change(screen.getByLabelText("Earth location"), { target: { value: "haughton_crater" } });
     await within(screen.getByTestId("pane-earth")).findByRole("img", { name: /haughton_orbital title/ });
-    expect(screen.getByRole("checkbox", { name: /Match scale/ })).toBeDisabled();
-    expect(screen.getByText(/Both panes need georeferenced orbital imagery/)).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: /Match the scale/ })).toBeDisabled();
+    expect(screen.getByText(/Both panes need georeferenced orbital images/)).toBeInTheDocument();
   });
 });
 
@@ -187,19 +187,19 @@ describe("similarity for the exact pair", () => {
   it("keeps planetary context, caveats and documented-versus-proposed studies apart from the index", async () => {
     mockApi();
     view();
-    const context = await screen.findByRole("region", { name: /Planetary context, not part of the similarity index/ });
+    const context = await screen.findByRole("region", { name: /Planetary context. This is not part of the similarity score/ });
     expect(await within(context).findByText(/Gravity: Mars surface gravity/)).toBeInTheDocument();
     expect(context).toHaveTextContent(/Elevation datum/);
     const studies = await screen.findByRole("region", { name: "What this pair can help test" });
     expect(await within(studies).findAllByText("Documented")).not.toHaveLength(0);
-    expect(within(studies).getByText(/Terrestrial field use is not a completed Mars experiment/)).toBeInTheDocument();
+    expect(within(studies).getByText(/Field work on Earth is not a completed Mars experiment/)).toBeInTheDocument();
     fireEvent.click(within(studies).getByRole("button", { name: /Open Research for/ }));
     expect(useAppStore.getState().activeTab).toBe("research");
     expect(useAppStore.getState().selectedMarsId).toBeNull();
-    expect(screen.getByText(/2 m air-temperature climatology/)).toBeInTheDocument();
+    expect(screen.getByText(/2 m air temperatures/)).toBeInTheDocument();
     expect(screen.getByText(/cannot be subtracted/)).toBeInTheDocument();
-    expect(screen.getByText(/Top-of-atmosphere sunlight is not surface irradiance/)).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "Pair measurements" })).toHaveTextContent(/~3.7 km harmonised baseline/);
+    expect(screen.getByText(/Sunlight at the top of the atmosphere is not sunlight at the surface/)).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Pair measurements" })).toHaveTextContent(/~3.7 km matched baseline/);
   });
   it("shows a recoverable catalogue error without fabricating anything", async () => {
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("offline"));

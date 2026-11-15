@@ -111,8 +111,8 @@ function WhyContent({ factors, shares, suggested, reasons, evidence, source, uns
         <p className="mx-5 mt-4 flex gap-2 rounded border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-warn" role="status" data-testid="why-no-llm">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           {source === "offline_rule_based"
-            ? "Backend unreachable: weights come from keyword matching in the browser and no research was consulted."
-            : "Language model unavailable: weights come from keyword matching. The findings below are the research that applies to this mission type, not the basis of the weights."}
+            ? "The backend could not be reached. The weights come from keyword matching in the browser. No research was used."
+            : "The language model was not available. The weights come from keyword matching. The findings below apply to this mission type, but they were not used to set the weights."}
         </p>
       )}
 
@@ -156,7 +156,7 @@ function WhyContent({ factors, shares, suggested, reasons, evidence, source, uns
           })}
         </ul>
       </section>}
-      <p className="border-t border-line px-5 py-3 text-sm text-fg-faint">Sources: NASA technical reports and peer-reviewed papers. Hover a finding for the exact source text.</p>
+      <p className="border-t border-line px-5 py-3 text-sm text-fg-faint">Sources are NASA technical reports and peer-reviewed papers. Hover over a finding to see the exact source text.</p>
     </>
   );
 }

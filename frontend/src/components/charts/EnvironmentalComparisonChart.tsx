@@ -38,7 +38,7 @@ export function EnvironmentalComparisonChart({ profiles, featureId, onFeatureCha
   }, [profiles, metric]);
   const present = rows.filter((r) => r.value != null);
   const missing = rows.filter((r) => r.value == null);
-  if (!metric) return <p className="text-xs text-fg-faint">No numeric metrics to compare.</p>;
+  if (!metric) return <p className="text-xs text-fg-faint">There are no numeric values to compare.</p>;
   const unit = formatUnit(metric.unit);
 
   return (

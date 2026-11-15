@@ -27,7 +27,7 @@ def test_rule_reader_tradeoff_raises_x_and_lowers_y():
     w = _w(r)
     assert w["terrain_safety"] > 60 and 0 < w["solar_illumination"] <= 15
     assert r.tradeoffs and r.generated_by == "rule_based" and r.confidence == "high"
-    assert "Confidence describes" in r.confidence_note
+    assert "Confidence shows" in r.confidence_note
 
 
 def test_rule_reader_negation_sets_zero_and_is_not_a_contradiction():
@@ -39,7 +39,7 @@ def test_rule_reader_negation_sets_zero_and_is_not_a_contradiction():
 
 def test_rule_reader_real_contradiction_asks_a_question():
     r = oe.rule_based(InterpretRequest(objective="Maximise solar power. Ignore solar.", excluded_criteria=EXCL))
-    assert r.confidence == "low" and any("both emphasises and excludes" in q for q in r.clarifying_questions)
+    assert r.confidence == "low" and any("both stresses and excludes" in q for q in r.clarifying_questions)
 
 
 def test_rule_reader_unsupported_goals_are_disclosed_and_weights_untouched():
@@ -55,7 +55,7 @@ def test_rule_reader_unsupported_goals_are_disclosed_and_weights_untouched():
 def test_missing_thermal_data_forces_zero_and_says_so():
     r = oe.rule_based(InterpretRequest(objective="Pick the warmest site", excluded_criteria=EXCL))
     assert _w(r)["thermal_conditions"] == 0
-    assert any("no site carries a measured surface temperature" in u for u in r.unsupported_needs)
+    assert any("no site has a measured surface temperature" in u for u in r.unsupported_needs)
     assert next(s for s in r.suggestions if s.criterion_id == "thermal_conditions").data_available is False
 
 
@@ -64,7 +64,7 @@ def test_validate_proposal_rejects_unknown_ids_clamps_and_requires_positive_tota
     sugg, notes = oe.validate_proposal({"terrain_safety": 150, "radiation": 50, "solar_illumination": "x"}, current, EXCL)
     w = {s.criterion_id: s.weight for s in sugg}
     assert w["terrain_safety"] == 100 and w["thermal_conditions"] == 0 and "radiation" not in w
-    assert any("unknown criterion 'radiation'" in n for n in notes) and any("Clamped" in n for n in notes)
+    assert any("unknown factor 'radiation'" in n for n in notes) and any("was limited to" in n for n in notes)
     with pytest.raises(ValueError):
         oe.validate_proposal({k: 0 for k in current}, current, EXCL)
 
@@ -85,7 +85,7 @@ def test_llm_path_is_validated_and_numbers_in_rationale_are_guarded(monkeypatch)
     w = _w(r)
     assert r.generated_by == "llm" and r.model == "mock-model"
     assert w["terrain_safety"] == 90 and w["solar_illumination"] == 5 and w["thermal_conditions"] == 0 and "bogus" not in w
-    assert any("unknown criterion 'bogus'" in n for n in r.validation_notes)
+    assert any("unknown factor 'bogus'" in n for n in r.validation_notes)
     assert "Slopes above 12 deg are unsafe." not in r.rationale and any("stated numbers" in n for n in r.validation_notes)
     assert any("Temperature" in u for u in r.unsupported_needs)   # the rule detector still runs over the model's answer
     assert "<<<OBJECTIVE" in calls[0] and "UNTRUSTED" in calls[0]
@@ -102,7 +102,7 @@ def test_llm_failure_falls_back_to_rules(monkeypatch):
     monkeypatch.setattr(oe, "_call_llm", boom)
     r = oe.interpret(InterpretRequest(objective="maximise solar power", excluded_criteria=EXCL))
     assert r.generated_by == "rule_based" and _w(r)["solar_illumination"] == 80
-    assert any("rule-based reading used" in n for n in r.validation_notes)
+    assert any("rule-based reading was used" in n for n in r.validation_notes)
 
 
 def test_llm_all_zero_proposal_falls_back(monkeypatch):

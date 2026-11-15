@@ -44,8 +44,8 @@ describe("AnalogComparison research sections", () => {
     expect(screen.queryByRole("region", { name: "Research applications" })).toBeNull();
 
     const proposedSection = screen.getByRole("region", { name: "Proposed studies (hypotheses)" });
-    expect(proposedSection).toHaveTextContent("The matched characteristics do not motivate a study for this pairing.");
-    expect(proposedSection).toHaveTextContent(/similarity is a heuristic index/);
+    expect(proposedSection).toHaveTextContent("The matched features do not suggest a study for this pair.");
+    expect(proposedSection).toHaveTextContent(/Similarity is a rough index/);
 
     // a candidate that does carry proposals renders them as study cards
     const withStudies = match.matches.findIndex((m) => (m.proposed_studies ?? []).length > 0);
@@ -59,7 +59,7 @@ describe("AnalogComparison research sections", () => {
     expect(card).toHaveTextContent("What this cannot establish");
     expect(card).toHaveTextContent(study.cannot_infer);
     expect(card).toHaveTextContent(`Earth analog: ${candidate.earth_candidate.name}`);
-    expect(card).toHaveTextContent(/Analog similarity is a heuristic index/);
+    expect(card).toHaveTextContent(/Analog similarity is a rough index/);
     expect(card).not.toHaveTextContent("Documented campaign");
   });
 });

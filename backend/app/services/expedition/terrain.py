@@ -12,17 +12,17 @@ from app.services.comparison_catalog import comparison_catalog
 from .geo import distance_m
 
 LIMITS = [
-    "Regional orbital topography cannot resolve rover-scale rocks, wheel traction, cliffs or safe passages.",
-    "MOLA bins without laser shots were interpolated by the data producer; no shot-count layer is installed.",
-    "No illumination, thermal, communications, regolith-bearing, radiation or sampling model is applied.",
-    "Catalog region coordinates are starting references, not verified rover deployment or sampling locations.",
+    "Regional orbital topography cannot show rover-scale rocks, wheel traction, cliffs or safe paths.",
+    "MOLA bins without laser shots were interpolated by the data producer. No shot-count layer is installed.",
+    "No model is used for lighting, temperature, communications, regolith bearing strength, radiation or sampling.",
+    "The catalog coordinates are starting points. They are not verified rover or sampling locations.",
 ]
 EXPECTED_SHA = "d18d9b9ab8c5516d02e157dd2cde0f1d0d160c21940e953ba22391269a545e7b"
 DATASET = TerrainDataset(
     name="MOLA MEGDR 16 ppd (MEGT90N000EB)", source="NASA PDS / MOLA Science Team",
     url="https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg016/megt90n000eb.lbl",
     license="NASA PDS public data; cite MOLA Science Team", resolution_m=MARS_CELL_KM*1000,
-    note="Median topography, including producer-interpolated cells. Regional resolution only.",
+    note="Median topography, including cells interpolated by the data producer. Regional resolution only.",
     vertical_datum="GMM3 areoid (mgm1025), degree/order 50; IAU2000", sha256=EXPECTED_SHA)
 
 @dataclass
@@ -60,9 +60,9 @@ class TerrainGrid:
 def _raw(path: str, size: int, mtime_ns: int):
     p=Path(path)
     if size != 2880*5760*2:
-        raise ValueError("Installed MOLA binary has an invalid byte count.")
+        raise ValueError("The installed MOLA file has the wrong size.")
     if hashlib.sha256(p.read_bytes()).hexdigest()!=EXPECTED_SHA:
-        raise ValueError("Installed MOLA binary failed the known-product checksum.")
+        raise ValueError("The installed MOLA file failed the checksum.")
     return np.memmap(p,dtype=">i2",mode="r",shape=(2880,5760))
 
 def regions():
@@ -76,11 +76,11 @@ def load_terrain(body: str, site_id: str):
         dem=TerrainCoverage(available=False),notes=list(LIMITS),start_source_ids=loc.source_ids)
     if body!="mars":
         context.dem.note=("No usable LOLA elevation grid is installed for this lunar region." if body=="moon"
-                          else "Earth terrain routing is not supported by this expedition engine.")
+                          else "This expedition engine does not support routes on Earth.")
         return context,None
     path=get_settings().data_dir/"raw"/"megt90n000eb.img"
     if not path.exists():
-        context.dem.note="MOLA raw elevation grid is not installed; run backend/scripts/fetch_mola.py."
+        context.dem.note="The MOLA raw elevation grid is not installed. Run backend/scripts/fetch_mola.py."
         return context,None
     try:
         stat=path.stat()
@@ -102,7 +102,7 @@ def load_terrain(body: str, site_id: str):
     grid=TerrainGrid(z,lats,lons,bounds)
     context.routing_bounds=bounds
     context.dem=TerrainCoverage(available=bool(np.isfinite(z).any()),dataset=DATASET,
-        note="Regional route grid; inputs snap to cell centers. No high-resolution hazard layer.",
+        note="Regional route grid. Stops are moved to the cell centres. There is no high-resolution hazard layer.",
         rows=len(rows),columns=len(cols),valid_fraction=float(np.isfinite(z).mean()),
         resolution_lat_deg=1/MOLA_PPD,resolution_lon_deg=1/MOLA_PPD,
         cell_width_m=distance_m(grid.point((len(rows)//2,0)),grid.point((len(rows)//2,1)),body),

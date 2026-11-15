@@ -160,7 +160,7 @@ def test_existing_analog_engine_rejects_unit_mismatch():
     _,e=make_candidate("earth",{"roughness_regional_m":.1})
     e.get("roughness_regional_m").unit="km"
     result=feature_distance(f,m,e,50)
-    assert not result.comparable and "incompatible units" in result.note
+    assert not result.comparable and "units do not match" in result.note
     e.get("roughness_regional_m").unit="m"
     m.get("roughness_regional_m").unit=None
     assert not feature_distance(f,m,e,50).comparable

@@ -85,7 +85,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const cell = num(survey?.grid_specification?.cell_m);
   const stats: Array<{ n: number | string; label: string }> = [];
   if (evaluated != null) stats.push({ n: evaluated, label: "locations evaluated" });
-  if (presented != null) stats.push({ n: presented, label: "spatially separated candidates presented" });
+  if (presented != null) stats.push({ n: presented, label: "well-spaced candidates shown" });
   if (fpW && fpH) stats.push({ n: `${Math.round(fpW / 1000)} × ${Math.round(fpH / 1000)} km`, label: "comparison footprints" });
   if (cell) stats.push({ n: `${Math.round(cell / 1000)} km`, label: "terrain analysis resolution" });
 
@@ -98,7 +98,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
     : caps.kind === "unavailable" ? (
       <section className="m-4 rounded-2xl border border-warn/40 bg-warn/10 p-5 text-sm" role="status" data-testid="discovery-unavailable">
         <p className="font-semibold text-warn">No terrain survey is installed.</p>
-        <p className="mt-1 text-fg">{caps.reason} Nothing is simulated in its place: a survey is produced offline from cached terrain sources and installed as an immutable artifact, and until one is installed there are no candidates to show. The established analogs remain available under Browse Regions.</p>
+        <p className="mt-1 text-fg">{caps.reason} Nothing is simulated in its place. A survey is made offline from cached terrain data and installed as a fixed file. Until one is installed, there are no candidates to show. The established analogs are still available under Browse Regions.</p>
         {caps.capabilities && caps.capabilities.limitations.length > 0 && <ul className="mt-2 list-disc space-y-0.5 pl-5 text-xs text-fg-muted">{caps.capabilities.limitations.map((l, i) => <li key={i}>{l}</li>)}</ul>}
       </section>
     )
@@ -107,8 +107,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
 
   const rankError = rank.error
     ? isDiscoveryUnavailable(rank.error) ? <div role="status" className="rounded-lg border border-warn/40 bg-warn/10 p-3 text-xs text-warn">{rank.error.reason}</div>
-      : isDiscoveryNotFound(rank.error) ? <div role="alert" className="rounded-lg border border-warn/40 bg-warn/10 p-3 text-xs text-warn"><p className="font-semibold">This survey is listed but its artifacts could not be found.</p><p className="mt-1 text-fg">{rank.error.message}. Choose another survey or rebuild this one.</p></div>
-      : isDiscoveryRejected(rank.error) ? <div role="alert" className="rounded-lg border border-warn/40 bg-warn/10 p-3 text-xs text-warn"><p className="font-semibold">The service declined this ranking request.</p><p className="mt-1 text-fg">{rank.error.message}</p></div>
+      : isDiscoveryNotFound(rank.error) ? <div role="alert" className="rounded-lg border border-warn/40 bg-warn/10 p-3 text-xs text-warn"><p className="font-semibold">This survey is listed, but its files could not be found.</p><p className="mt-1 text-fg">{rank.error.message}. Choose another survey or rebuild this one.</p></div>
+      : isDiscoveryRejected(rank.error) ? <div role="alert" className="rounded-lg border border-warn/40 bg-warn/10 p-3 text-xs text-warn"><p className="font-semibold">The service rejected this ranking request.</p><p className="mt-1 text-fg">{rank.error.message}</p></div>
       : <ErrorNote error={rank.error} context="discovery/rank" />
     : null;
 
@@ -117,7 +117,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
     : <DiscoveryGlobe candidates={candidates ?? []} established={earth.sites} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} palette={palette} runLabel={activeRun!.label} focusToken={focusToken} bounds={activeRun!.bounds} survey={survey ?? null} />);
 
   const caption = !ready ? null : store.view === "map"
-    ? <>The dashed box is the only area searched. Dots are the footprint centres that were evaluated; coloured squares are the candidates shown, each a {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprint around its centre. Crosses mark established analogs from the curated catalog when any fall in view.</>
+    ? <>The dashed box is the only area searched. Dots are the footprint centres that were evaluated. Coloured squares are the candidates shown. Each is a {fpW ? `${Math.round(fpW / 1000)} km` : "60 km"} footprint around its centre. Crosses mark established analogs from the catalog when any are in view.</>
     : null;
 
   const facts = ready ? (
@@ -130,7 +130,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
         <span>Reference: <span className="text-fg">{reference!.name}</span> · Mars · <span className="num">{reference!.lat.toFixed(2)}°N, {reference!.lon_east.toFixed(2)}°E</span></span>
         <button type="button" onClick={() => openEstablished()} className="inline-flex items-center gap-0.5 text-info underline underline-offset-2">See the established analogs<ArrowUpRight className="h-3 w-3" aria-hidden /></button>
       </div>
-      {wantsDiscovery(objective) && <p className="mt-1 text-fg-faint">Your mission objective asks for new regions beyond the established analogs; this is where that search lives.</p>}
+      {wantsDiscovery(objective) && <p className="mt-1 text-fg-faint">Your mission objective asks for new regions beyond the established analogs. This is where that search happens.</p>}
     </>
   ) : null;
 
@@ -157,7 +157,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
         <DiscoveryStage
           badge={badge}
           title={`Find Earth regions with terrain similar to ${referenceName}`}
-          lede="Candidate locations identified through a regional terrain comparison. These are promising starting points for research, not confirmed planetary analogs."
+          lede="Candidate locations found with a regional terrain comparison. They are good starting points for research. They are not confirmed planetary analogs."
           stats={stats.length > 0 ? <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1" aria-label="Survey at a glance" data-testid="survey-stats">{stats.map(s => <li key={s.label}><span className="num text-base text-fg">{s.n}</span><span className="ml-1 text-[10.5px] text-fg-muted">{s.label}</span></li>)}</ul> : null}
           facts={facts}
           view={store.view}

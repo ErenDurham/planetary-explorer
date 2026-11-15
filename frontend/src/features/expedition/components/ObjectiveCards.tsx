@@ -11,7 +11,7 @@ export function ObjectiveCards({ value, onChoose }: { value: ObjectiveId | null;
     <div className="rise-in">
       <p className="eyebrow">Select mission objective</p>
       <h2 className="mt-2 text-2xl font-semibold tracking-tight text-fg">What should this expedition achieve?</h2>
-      <p className="mt-1 max-w-2xl text-sm text-fg-muted">The objective frames the route the service optimises for. You can change it later from the workspace.</p>
+      <p className="mt-1 max-w-2xl text-sm text-fg-muted">The objective sets what the service optimises the route for. You can change it later in the workspace.</p>
       <div className="mt-6 grid gap-4 md:grid-cols-3" role="radiogroup" aria-label="Mission objective">
         {OBJECTIVES.map((o, i) => {
           const Icon = ICON[o.id]; const a = ACCENT_CLASS[o.accent]; const on = value === o.id;

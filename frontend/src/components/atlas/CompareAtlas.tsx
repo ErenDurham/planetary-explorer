@@ -11,7 +11,7 @@ export function CompareAtlasHeader({ focusBody }: { focusBody: Body }) {
     <div className={styles.heroText}><p className={styles.eyebrow}>Planetary Explorer / Comparative field atlas</p>
       <h1>Earth meets Mars.</h1><p className={styles.lead}>Compare terrain, materials, and field context.</p>
     </div>
-    <div className={styles.focusNote}><span>Mission focus</span><strong>{BODY_NAME[focusBody]}</strong><p>Compare your selected site with a reference on the other world.</p></div>
+    <div className={styles.focusNote}><span>Mission focus</span><strong>{BODY_NAME[focusBody]}</strong><p>Compare your selected site with a site on the other planet.</p></div>
   </header>;
 }
 

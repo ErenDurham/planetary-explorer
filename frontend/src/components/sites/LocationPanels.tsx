@@ -24,7 +24,7 @@ import type { AnalogRankResponse, ComparisonLocation, RankedCandidate } from "@/
 export function EarthLocationPanel({ location }: { location: ComparisonLocation }) {
   return (
     <>
-      <Section title="Earth location" actions={<InfoTip variant="help" label="About Earth locations">Earth locations carry no landing suitability index; the Mars landing model is not applied to them.</InfoTip>}>
+      <Section title="Earth location" actions={<InfoTip variant="help" label="About Earth locations">Earth sites do not have a landing score. The Mars landing model is not used for them.</InfoTip>}>
         <h2 className="text-base font-medium leading-tight text-fg">{location.name}</h2>
         <p className="mt-0.5 flex items-center gap-1 text-xs text-fg-muted">
           <MapPin className="h-3 w-3" aria-hidden /> {location.region} · <span className="num">{formatLatLon(location.lat, location.lon_east)}</span>
@@ -58,7 +58,7 @@ export function AnalogMatchPanel({ candidate, response, palette, referenceName }
   if (!referenceName) {
     return (
       <Section title="Analog match">
-        <EmptyNote>Choose a reference on the other body to rank this location against it.</EmptyNote>
+        <EmptyNote>Choose a site on the other planet to rank this site against.</EmptyNote>
       </Section>
     );
   }
@@ -72,7 +72,7 @@ export function AnalogMatchPanel({ candidate, response, palette, referenceName }
   const unranked = candidate.rank == null;
   const colour = unranked ? NOT_RANKED_COLOR : rankColor(candidate.rank_color_position, palette);
   return (
-    <Section title="Analog match" actions={response.tie_rule ? <InfoTip variant="help" label="How ties are ranked">{response.tie_rule}</InfoTip> : undefined} subtitle={<>Against <span className="text-fg">{referenceName}</span> ({BODY_NAME[response.reference.body]}). Similarity is a weighted feature distance, not scientific equivalence.</>}>
+    <Section title="Analog match" actions={response.tie_rule ? <InfoTip variant="help" label="How ties are ranked">{response.tie_rule}</InfoTip> : undefined} subtitle={<>Against <span className="text-fg">{referenceName}</span> ({BODY_NAME[response.reference.body]}). Similarity is a weighted distance between features. It does not mean the sites are scientifically equivalent.</>}>
       <div className="flex items-center gap-3">
         <span className="num inline-flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold" style={unranked ? { borderColor: colour ?? undefined, borderStyle: "dashed", color: colour ?? undefined } : { backgroundColor: colour ?? undefined, borderColor: "#fff", color: "#fff", textShadow: "0 0 2px #000" }} aria-hidden>{candidate.rank ?? "–"}</span>
         <div className="text-xs text-fg">
@@ -93,7 +93,7 @@ export function AnalogMatchPanel({ candidate, response, palette, referenceName }
         {response.basis_features.map((f) => <Badge key={f} tone="neutral">{analogFeatureLabel(f)} {Math.round((response.effective_weights[f] ?? 0) * 100)}%</Badge>)}
       </div>
       {response.excluded_features.filter((e) => !/weight is 0/.test(e.reason)).length > 0 && (
-        <p className="mt-2 text-[10.5px] text-fg-faint">Dropped pool-wide: {response.excluded_features.filter((e) => !/weight is 0/.test(e.reason)).map((e) => `${e.label} (${e.reason})`).join("; ")}</p>
+        <p className="mt-2 text-[10.5px] text-fg-faint">Left out for every site: {response.excluded_features.filter((e) => !/weight is 0/.test(e.reason)).map((e) => `${e.label} (${e.reason})`).join("; ")}</p>
       )}
     </Section>
   );

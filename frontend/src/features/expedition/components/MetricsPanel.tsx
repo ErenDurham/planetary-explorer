@@ -32,12 +32,12 @@ export function MetricsPanel({ plan, planState, targets, runLabel, serviceConnec
       </header>
       <div className="space-y-3 px-4 py-3 text-sm">
         {planState.kind === "running" && <p role="status" aria-live="polite" className="flex items-center gap-2 text-xs text-copper-bright"><span className="h-2 w-2 animate-pulse rounded-full bg-copper-bright" aria-hidden />Waiting for the expedition service…</p>}
-        {planState.kind === "rejected" && <div role="alert" className="rounded border border-warn/40 bg-warn/10 p-2.5 text-xs text-warn"><p className="font-semibold">The service declined this request.</p><p className="mt-1">{planState.message}</p><p className="mt-1 text-[10.5px] opacity-80">code {planState.code}</p></div>}
+        {planState.kind === "rejected" && <div role="alert" className="rounded border border-warn/40 bg-warn/10 p-2.5 text-xs text-warn"><p className="font-semibold">The service rejected this request.</p><p className="mt-1">{planState.message}</p><p className="mt-1 text-[10.5px] opacity-80">code {planState.code}</p></div>}
         {planState.kind === "unavailable" && <div role="status" className="rounded border border-line-strong p-2.5 text-xs text-fg-muted">{planState.reason}</div>}
         {planState.kind === "error" && <ErrorNote error={planState.error} context="expedition/plan" />}
 
         {!plan && planState.kind !== "running" && (
-          <EmptyNote>{serviceConnected ? "No route has been calculated yet. Place waypoints and choose Calculate route; every metric here will come from the service's result." : "Metrics appear once the expedition service is connected and a route has been calculated."}</EmptyNote>
+          <EmptyNote>{serviceConnected ? "No route has been calculated yet. Place waypoints and choose Calculate route. Every value here will come from the service." : "Values appear once the expedition service is connected and a route is calculated."}</EmptyNote>
         )}
 
         {plan && (
@@ -53,7 +53,7 @@ export function MetricsPanel({ plan, planState, targets, runLabel, serviceConnec
             </dl>
             <div className="rounded-lg border border-line p-2.5">
               <p className="flex items-center gap-1.5 text-[10.5px] uppercase tracking-wide text-fg-faint"><Target className="h-3 w-3" aria-hidden />Research targets</p>
-              <p className="mt-0.5 text-[10.5px] text-fg-faint">Reached means the route entered the target's grid cell, not that a sample was collected.</p>
+              <p className="mt-0.5 text-[10.5px] text-fg-faint">"Reached" means the route entered the target's grid cell. It does not mean a sample was collected.</p>
               <p className="num mt-1 text-sm text-fg">{reached.length} reached{unreached.length ? ` · ${unreached.length} not reached` : ""}</p>
               {reached.length > 0 && <ul className="mt-1 flex flex-wrap gap-1">{reached.map(id => <li key={id}><Badge tone="info">{name(id)}</Badge></li>)}</ul>}
               {unreached.length > 0 && <ul className="mt-1 flex flex-wrap gap-1">{unreached.map(id => <li key={id}><Badge tone="warn">{name(id)} · not reached</Badge></li>)}</ul>}

@@ -104,7 +104,7 @@ describe("ExplanationPanel digests and study cards", () => {
 
     const esa = within(cards[1]);
     expect(esa.getByText("Insufficient evidence")).toBeInTheDocument();
-    expect(cards[1]).toHaveTextContent(/insufficient relevant evidence/);
+    expect(cards[1]).toHaveTextContent(/do not have enough relevant evidence/);
     expect(esa.getByText("Model digest")).toBeInTheDocument();
     expect(esa.queryByText("Extractive (no model)")).toBeNull();
 
@@ -129,7 +129,7 @@ describe("ExplanationPanel digests and study cards", () => {
     expect(cards[0]).toHaveTextContent("How to investigate");
     expect(within(cards[0]).getByRole("link", { name: "[C1]" })).toHaveAttribute("href", "https://example.test/m2020/");
     expect(cards[1]).toHaveTextContent("Documented campaign");
-    expect(cards[1]).toHaveTextContent("motivated by site data files, no passage cited");
+    expect(cards[1]).toHaveTextContent("based on the site data, with no passage cited");
     expect(cards[1]).toHaveTextContent("Earth analog: atacama_yungay");
     expect(screen.queryByText("COMPAT STRING SHOULD NOT RENDER")).toBeNull();
   });
@@ -143,7 +143,7 @@ describe("ExplanationPanel digests and study cards", () => {
 
     response = { ...base, research_studies: [], evidence_gap: null };
     renderPanel();
-    expect(await screen.findByText("No study can be motivated from the retrieved evidence for this site.")).toBeInTheDocument();
+    expect(await screen.findByText("The evidence found does not suggest a study for this site.")).toBeInTheDocument();
   });
 
   it("falls back to the extractive preview when an older response carries no digests", async () => {
@@ -162,7 +162,7 @@ describe("ExplanationPanel digests and study cards", () => {
     await screen.findByText("NASA chose Jezero for Perseverance.");
     expect(explainCalls).toHaveLength(1);
     useAppStore.setState({ appliedObjective: "Prioritise landing safety; ignore solar" });
-    expect(await screen.findByText(/Digest generated for a previous objective/)).toBeInTheDocument();
+    expect(await screen.findByText(/This was made for a previous objective/)).toBeInTheDocument();
     expect(screen.getByText("NASA chose Jezero for Perseverance.")).toBeInTheDocument();
     expect(explainCalls).toHaveLength(1); // not refetched on its own
     fireEvent.click(screen.getByRole("button", { name: /Refresh the explanation/ }));

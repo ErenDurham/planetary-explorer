@@ -2,10 +2,10 @@
   "version": "landing-v1.1",
   "mission_phase": "landing",
   "notes": [
-    "Scores are relative decision-support indices on 0-100, not probabilities and not a landing-safety certification.",
-    "Every threshold below is a DOCUMENTED ASSUMPTION chosen for regional screening at the ~3.7 km MOLA MEGDR 16 ppd baseline. None is an established universal landing requirement.",
-    "Suitability functions are piecewise-linear: q = 1 at or beyond `full` toward the preferred direction, q = 0 at or beyond `zero`, linear in between.",
-    "landing-v1.1 (2026-11-14): solar_illumination `full` knee moved from 185 to 178 W/m2 so that q = 1 is attainable (see that criterion's rationale). Default weights, every other knee and both default hard constraints are unchanged from landing-v1.0."
+    "Scores are relative indices from 0 to 100 that support decisions. They are not probabilities, and they do not certify landing safety.",
+    "Every threshold below is a documented assumption. Each was chosen for regional screening on the ~3.7 km MOLA MEGDR 16 ppd baseline. None is an established landing requirement.",
+    "Each factor uses a piecewise-linear function. q = 1 at or beyond `full` in the preferred direction. q = 0 at or beyond `zero`. Between the two, q changes linearly.",
+    "landing-v1.1 (2026-11-14): the solar_illumination `full` value moved from 185 to 178 W/m2, so that q = 1 can be reached (see that factor's rationale). The default weights, every other threshold and both default hard constraints are the same as in landing-v1.0."
   ],
   "criteria": [
     {
@@ -15,7 +15,7 @@
       "unit": "deg",
       "function": {"type": "piecewise_linear", "direction": "lower_is_better", "full": 2.0, "zero": 10.0},
       "default_weight": 35,
-      "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee and the 10 deg cut-off are screening assumptions at the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines: slopes <15 deg at 84 m and 2 m length scales for InSight (Golombek et al., 2017) and <30 deg at 2-5 m baselines for MSL (Golombek et al., 2012), which MEGDR 16 ppd slopes (~3.7 km baseline) cannot resolve."
+      "rationale": "Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
     },
     {
       "criterion_id": "elevation_suitability",
@@ -24,7 +24,7 @@
       "unit": "m",
       "function": {"type": "piecewise_linear", "direction": "lower_is_better", "full": -3000.0, "zero": 2000.0},
       "default_weight": 25,
-      "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Recent engineering limits: elevation <-1 km for MSL (Golombek et al., 2012) and <=-2.5 km for InSight (Golombek et al., 2017); for Perseverance, with new EDL capabilities, elevation and latitude limits no longer decided site viability (Grant et al., 2018). The -3000 m / +2000 m knees are a screening assumption spanning that range; +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). A real mission's limit depends on its EDL system."
+      "rationale": "Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
     },
     {
       "criterion_id": "surface_roughness",
@@ -33,7 +33,7 @@
       "unit": "m",
       "function": {"type": "piecewise_linear", "direction": "lower_is_better", "full": 20.0, "zero": 300.0},
       "default_weight": 20,
-      "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+      "rationale": "Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
     },
     {
       "criterion_id": "thermal_conditions",
@@ -42,7 +42,7 @@
       "unit": "degC",
       "function": {"type": "piecewise_linear", "direction": "higher_is_better", "full": -40.0, "zero": -100.0},
       "default_weight": 10,
-      "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+      "rationale": "Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
     },
     {
       "criterion_id": "solar_illumination",
@@ -51,7 +51,7 @@
       "unit": "W/m2",
       "function": {"type": "piecewise_linear", "direction": "higher_is_better", "full": 178.0, "zero": 80.0},
       "default_weight": 10,
-      "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+      "rationale": "Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
     }
   ],
   "default_hard_constraints": [
@@ -60,7 +60,7 @@
       "feature_id": "elevation_median_m",
       "operator": "<=",
       "threshold": 2000.0,
-      "rationale": "ASSUMPTION: footprints with median elevation above +2 km leave too little atmosphere for current EDL architectures. Historical mission limits were lower; this is a permissive screening bound.",
+      "rationale": "Assumption: footprints with a median elevation above +2 km leave too little atmosphere for current EDL systems. Past mission limits were lower. This is a generous screening limit.",
       "is_assumption": true
     },
     {
@@ -68,12 +68,12 @@
       "feature_id": "latitude_abs_deg",
       "operator": "<=",
       "threshold": 50.0,
-      "rationale": "ASSUMPTION: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions screened candidate zones to within 50 degrees of the equator for solar power and thermal reasons. Applied here as a documented default, not as a rule for robotic landers.",
+      "rationale": "Assumption: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions limited candidate zones to within 50 degrees of the equator, for solar power and thermal reasons. It is used here as a documented default. It is not a rule for robotic landers.",
       "is_assumption": true
     }
   ],
   "missing_data_policy": {
     "default": "common_feature_set",
-    "description": "A criterion whose feature is missing on ANY evaluated site is excluded for ALL sites, so every ranked score is built from the same feature set. Weights are renormalised over the remaining criteria. If fewer than two criteria remain, status is insufficient_data. Missing values are never replaced by zero or any imputed number."
+    "description": "If a factor is missing for any site, it is left out for all sites. This way, every ranked score uses the same set of factors. The weights are rescaled over the remaining factors. If fewer than two factors remain, the status is insufficient_data. Missing values are never replaced with zero or an estimated number."
   }
 }

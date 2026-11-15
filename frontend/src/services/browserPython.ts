@@ -23,7 +23,7 @@ function initialize():Promise<void>{
     worker.onmessage=event=>{
       const value=event.data;
       if(value.type==="progress"){update({phase:"loading",message:value.message});return;}
-      if(value.type==="ready"){update({phase:"ready",message:"Calculations run on this device. Research notes stay in this browser; export a copy to keep them."});resolve();return;}
+      if(value.type==="ready"){update({phase:"ready",message:"Calculations run on this device. Research notes stay in this browser. Export a copy to keep them."});resolve();return;}
       if(value.type==="error"){
         const error=new Error(value.message);
         if(value.id!=null){const request=waiting.get(value.id);request?.cleanup();request?.reject(error);waiting.delete(value.id);}
@@ -34,7 +34,7 @@ function initialize():Promise<void>{
       request.cleanup();waiting.delete(value.id);
       if(request.method==="POST"&&request.path.split("?")[0].endsWith("/research")&&value.status===200){
         try{const record=JSON.parse(value.body);const records=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");records[`${record.run_id}:${record.candidate_id}`]=record;localStorage.setItem(STORAGE_KEY,JSON.stringify(records));}
-        catch{request.reject(new Error("Browser storage is unavailable. Keep the notebook open and export your findings."));return;}
+        catch{request.reject(new Error("Browser storage is not available. Keep the notebook open and export your findings."));return;}
       }
       request.resolve(new Response(value.body,{status:value.status,headers:{"Content-Type":"application/json"}}));
     };

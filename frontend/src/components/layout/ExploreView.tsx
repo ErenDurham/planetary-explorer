@@ -93,10 +93,10 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
     </nav>
     {effective === "analog_match" ? <div className="shrink-0 border-b border-line px-3 py-2 text-xs" data-testid="analog-context">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-fg" aria-live="polite" data-testid="match-context-line">{analog?.referenceName ? `${BODY_NAME[viewedBody]} matches to ${analog.referenceName}` : "Choose the mission site you want to find analogs for."}</p>
+        <p className="text-fg" aria-live="polite" data-testid="match-context-line">{analog?.referenceName ? `${BODY_NAME[viewedBody]} matches to ${analog.referenceName}` : "Choose the mission site to find analogs for."}</p>
         <details className="relative"><summary className="cursor-pointer text-fg-muted underline underline-offset-4">Change reference</summary><label className="mt-2 block text-fg-muted">{BODY_NAME[otherBody(viewedBody)]} site<select value={analog?.referenceId ?? ""} onChange={e => e.target.value && analog?.onReferenceChange(e.target.value)} aria-label={`Reference location on ${BODY_NAME[otherBody(viewedBody)]}`} className="ml-2 max-w-full rounded border border-line-strong bg-bg px-2 py-1 text-xs text-fg"><option value="" disabled>Choose a site</option>{analog?.referenceOptions.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}</select></label></details>
       </div>
-      {discoveryCue && <p className="mt-2 flex flex-wrap items-center gap-x-2 text-fg-muted" data-testid="discovery-cue"><span>These are the <strong className="font-medium text-fg">established analogs</strong> (curated sites).</span><button type="button" onClick={openFindAnalogs} className="text-info underline underline-offset-4">Find candidate Earth analogs beyond them →</button>{wantsDiscovery(objectiveText) && <span className="text-fg-faint">Your objective asks for new regions.</span>}</p>}
+      {discoveryCue && <p className="mt-2 flex flex-wrap items-center gap-x-2 text-fg-muted" data-testid="discovery-cue"><span>These are the <strong className="font-medium text-fg">established analogs</strong>, a curated set of sites.</span><button type="button" onClick={openFindAnalogs} className="text-info underline underline-offset-4">Find new candidate Earth analogs →</button>{wantsDiscovery(objectiveText) && <span className="text-fg-faint">Your objective asks for new regions.</span>}</p>}
     </div> : null}
 
     <div className="relative min-h-0 flex-1"><div className="absolute right-3 top-3 z-10 rounded-lg border border-line/60 bg-bg/95 p-1.5" role="group" aria-label="Switch planet">
@@ -105,7 +105,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
         <span className="mt-1 font-medium text-fg">{BODY_NAME[destination]} <span aria-hidden className="text-fg-muted">↗</span></span>
         <span id="planet-destination" className="mt-0.5 text-[10px] text-fg-muted">{destinationLabel}</span>
       </button>
-    </div><div hidden={view !== "globe"} className="h-full">{view === "globe" && globe}</div><div hidden={view === "globe"} className="h-full">{site ? <SiteImages key={site.id} site={site} view={view === "surface" ? "surface" : "orbital"} enabled={view !== "globe"} /> : <div className="p-4"><EmptyNote>Select a candidate to see its imagery.</EmptyNote></div>}</div></div>
+    </div><div hidden={view !== "globe"} className="h-full">{view === "globe" && globe}</div><div hidden={view === "globe"} className="h-full">{site ? <SiteImages key={site.id} site={site} view={view === "surface" ? "surface" : "orbital"} enabled={view !== "globe"} /> : <div className="p-4"><EmptyNote>Select a site to see its images.</EmptyNote></div>}</div></div>
   </div>;
 }
 
@@ -122,7 +122,7 @@ function SiteImages({site,view,enabled}: {site: ImagerySubject; view: "orbital" 
   const go = (step: number) => { const next = entries[(index + step + entries.length) % entries.length]; if (!next) return; setChoices(c=>({...c,[view]:next.entry_id})); setZoom(1); setFailed(null); };
   if(q.isPending) return <div role="status" className="p-4 text-sm text-fg-muted">Loading site imagery…</div>;
   if(q.error) return <div className="p-4"><ErrorNote error={q.error} /><button className="mt-3 rounded border border-line p-3 text-sm" onClick={()=>void q.refetch()}>Retry imagery</button></div>;
-  if(!entry) return <div className="p-4"><h2 className="mb-3 text-base font-semibold">{site.name}</h2><EmptyNote>No verified {view} imagery is available for this site.</EmptyNote>{q.data?.notes?.map(n=><p key={n} className="mt-3 text-sm text-fg-muted">{n}</p>)}</div>;
+  if(!entry) return <div className="p-4"><h2 className="mb-3 text-base font-semibold">{site.name}</h2><EmptyNote>There is no verified {view} image for this site.</EmptyNote>{q.data?.notes?.map(n=><p key={n} className="mt-3 text-sm text-fg-muted">{n}</p>)}</div>;
   const bounds=entry.bounds;
   const contains=bounds && site.lon_east>=bounds.west && site.lon_east<=bounds.east && site.lat>=bounds.south && site.lat<=bounds.north;
   return <section aria-label={`${view} imagery for ${site.name}`} className="scroll-thin h-full overflow-y-auto p-4">
@@ -136,10 +136,10 @@ function SiteImages({site,view,enabled}: {site: ImagerySubject; view: "orbital" 
     </div>
     {failed !== entry.entry_id && loaded !== entry.entry_id && <p role="status" className="mb-2 text-xs text-fg-muted">Loading image…</p>}
     <div className="relative">
-    {failed === entry.entry_id ? <div role="alert" className="rounded-lg border border-line p-4 text-sm">Image could not be loaded.<button type="button" className="ml-3 text-info underline" onClick={()=>{setAttempt(n=>n+1);setFailed(null);}}>Retry image</button></div> : <div tabIndex={0} aria-label="Image area; arrow keys scroll" className="max-h-[52vh] overflow-auto rounded-lg border border-line bg-black">
+    {failed === entry.entry_id ? <div role="alert" className="rounded-lg border border-line p-4 text-sm">The image did not load.<button type="button" className="ml-3 text-info underline" onClick={()=>{setAttempt(n=>n+1);setFailed(null);}}>Retry image</button></div> : <div tabIndex={0} aria-label="Image area. Use the arrow keys to scroll." className="max-h-[52vh] overflow-auto rounded-lg border border-line bg-black">
       <div className="relative mx-auto" style={{width: entry.width_px && entry.height_px ? `min(${zoom*100}%, ${entry.width_px/entry.height_px*52*zoom}vh)` : `${zoom*100}%`}}>
         <img key={`${entry.entry_id}:${attempt}`} src={imageryAssetUrl(entry.entry_id,attempt)} alt={`${entry.title}. ${entry.relevance}`} className="block h-auto w-full" onLoad={()=>setLoaded(entry.entry_id)} onError={()=>setFailed(entry.entry_id)} />
-        {contains && bounds && <span title="Candidate coordinate (not a landing ellipse)" aria-label="Candidate coordinate" className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-copper shadow" style={{left:`${(site.lon_east-bounds.west)/(bounds.east-bounds.west)*100}%`,top:`${(bounds.north-site.lat)/(bounds.north-bounds.south)*100}%`}} />}
+        {contains && bounds && <span title="Site coordinate. This is not a landing ellipse." aria-label="Candidate coordinate" className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-copper shadow" style={{left:`${(site.lon_east-bounds.west)/(bounds.east-bounds.west)*100}%`,top:`${(bounds.north-site.lat)/(bounds.north-bounds.south)*100}%`}} />}
       </div>
     </div>}
     {entries.length > 1 && <>
@@ -148,8 +148,8 @@ function SiteImages({site,view,enabled}: {site: ImagerySubject; view: "orbital" 
     </>}
     </div>
     <p className="mt-3 text-sm text-fg">{entry.relevance}</p>
-    <p className="mt-2 text-xs text-fg-muted">{entry.relationship.replace(/_/g," ")} · {entry.spatial_resolution_m_per_px ? `${entry.spatial_resolution_m_per_px} m/pixel` : "Resolution not verified"} · {entry.acquisition_date ? `Acquired ${entry.acquisition_date}` : "No single verified acquisition date"}</p>
-    {contains && <p className="mt-1 text-xs text-fg-muted">The dot marks the candidate coordinate. It does not show the analysis footprint or a landing ellipse.</p>}
+    <p className="mt-2 text-xs text-fg-muted">{entry.relationship.replace(/_/g," ")} · {entry.spatial_resolution_m_per_px ? `${entry.spatial_resolution_m_per_px} m/pixel` : "Resolution not verified"} · {entry.acquisition_date ? `Acquired ${entry.acquisition_date}` : "No single verified date"}</p>
+    {contains && <p className="mt-1 text-xs text-fg-muted">The dot marks the site coordinate. It does not show the analysis footprint or a landing ellipse.</p>}
     <p className="mt-2 text-xs text-fg-muted">{entry.credit}</p>
     <a className="mt-2 inline-block text-sm text-info underline" href={entry.source_page_url} target="_blank" rel="noreferrer">Open original source ↗</a>
     <details className="mt-4 rounded-lg border border-line p-3 text-xs text-fg-muted"><summary className="cursor-pointer">Image coverage, processing and credits</summary><div className="mt-3 space-y-2">{[entry.coverage_evidence,entry.appearance_note,entry.resolution_note,entry.acquisition_note,entry.license].filter(Boolean).map((text,i)=><p key={i}>{text}</p>)}<p>Source: {entry.institution}. Verified {entry.verified_on}.</p></div></details>

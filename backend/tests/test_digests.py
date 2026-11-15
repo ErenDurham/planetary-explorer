@@ -51,7 +51,7 @@ def test_extractive_digest_picks_relevant_sentence_and_reports_insufficient(ctx)
     d0, d1 = digests
     assert d0.support_level in ("supports", "context") and "delta" in d0.what_it_tells_us.lower() and d0.generated_by == "extractive"
     assert d0.chunk_ids == ["a#1"] and d0.citation_ids == ["[C1]"]
-    assert d1.support_level == "insufficient" and "Insufficient relevant evidence" in d1.what_it_tells_us
+    assert d1.support_level == "insufficient" and "do not have enough relevant evidence" in d1.what_it_tells_us
     assert "Credit" not in d0.what_it_tells_us and "Explore" not in d0.what_it_tells_us
 
 
@@ -90,7 +90,7 @@ def test_study_cards_need_motivating_passages_and_relevant_analog(ctx):
     cards, gap = de.build_study_cards(site, prof, None, [mola, delta], analogs, cits, "land near the delta safely")
     assert gap is None and 1 <= len(cards) <= 3 and all(c.kind == "proposed_study" for c in cards)
     terrain = next(c for c in cards if "landing-scale" in c.title)
-    assert terrain.motivating_citation_ids == ["[C1]"] and "cannot resolve lander-scale" in terrain.cannot_infer
+    assert terrain.motivating_citation_ids == ["[C1]"] and "cannot show lander-scale" in terrain.cannot_infer
     aqueous = next(c for c in cards if "past water" in c.title)
     assert aqueous.motivating_citation_ids == ["[C2]"]
     analog_cards = [c for c in cards if c.analog_candidate_id]
@@ -99,7 +99,7 @@ def test_study_cards_need_motivating_passages_and_relevant_analog(ctx):
         assert any("Terrain morphology" in s or "slope" in s.lower() or "relief" in s.lower() for s in a.shared_characteristics)
     # with no passages at all, nothing is proposed and the gap is explicit
     none, gap2 = de.build_study_cards(site, prof, None, [], None, [], None)
-    assert none == [] and gap2 and "corpus" in gap2
+    assert none == [] and gap2 and "document library" in gap2
 
 
 def test_llm_card_rejected_for_unsupported_claim_or_documented_kind(ctx):
@@ -161,7 +161,7 @@ def test_analog_match_separates_documented_use_from_proposals(client):
     for m in body["matches"]:
         assert m["research_applications"] == m["documented_analog_use"]
         for s in m["proposed_studies"]:
-            assert s["kind"] == "proposed_study" and "not been demonstrated" in s["cannot_infer"] or "no Mars counterpart" in s["cannot_infer"]
+            assert s["kind"] == "proposed_study" and "not been shown" in s["cannot_infer"] or "no match on Mars" in s["cannot_infer"]
         if not m["shared_characteristics"]:
             assert m["proposed_studies"] == []
 

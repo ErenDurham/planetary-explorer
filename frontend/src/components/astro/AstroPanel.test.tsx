@@ -82,7 +82,7 @@ describe("Astro", () => {
     expect(screen.getByText("Inspect the regional evidence.")).toBeVisible();
     expect(screen.queryByRole("button", { name: "Open Research" })).toBeNull();
     expect(screen.queryByText("Computed context")).toBeNull();
-    expect(screen.getByText(/Using a site summary/)).toBeVisible();
+    expect(screen.getByText(/This reply uses a site summary/)).toBeVisible();
     expect(screen.queryByText("Mars · Jezero", { exact: true })).toBeNull();
     expect(useAppStore.getState().activeTab).toBe("explore");
   });

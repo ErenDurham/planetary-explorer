@@ -143,8 +143,8 @@ def test_an_explicit_exclusion_in_the_text_holds_whatever_the_model_proposes(mon
     r = oe.interpret(InterpretRequest(objective="Prioritise landing safety over sunlight; ignore solar", excluded_criteria=EXCL))
     by_id = {s.criterion_id: s for s in r.suggestions}
     assert r.generated_by == "llm" and by_id["solar_illumination"].weight == 0
-    assert by_id["solar_illumination"].reason == "The objective explicitly excludes this factor."
-    assert any("explicitly excludes" in n for n in r.validation_notes)
+    assert by_id["solar_illumination"].reason == "The objective says to leave this factor out."
+    assert any("says to leave it out" in n for n in r.validation_notes)
     assert by_id["terrain_safety"].weight == 40   # everything else is the model's
 
 

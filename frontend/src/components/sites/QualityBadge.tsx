@@ -2,12 +2,12 @@ import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import type { QualityFlag } from "@/types";
 
 const META: Record<QualityFlag, { label: string; tone: BadgeTone; title: string }> = {
-  good: { label: "good", tone: "ok", title: "Measured or derived at the stated resolution with documented uncertainty." },
-  regional_scale_only: { label: "regional", tone: "info", title: "Regional statistic (~3.7 km MOLA baseline); cannot resolve lander-scale hazards." },
-  qualitative: { label: "qualitative", tone: "neutral", title: "Categorical or descriptive, literature-sourced; not a numeric measurement." },
-  low_confidence: { label: "low confidence", tone: "warn", title: "Value carries large or unquantified uncertainty." },
-  demo_fixture: { label: "demo data", tone: "danger", title: "Development placeholder, not real data. Do not cite." },
-  missing: { label: "no data", tone: "neutral", title: "No measurement is available for this site in this profile version." },
+  good: { label: "good", tone: "ok", title: "Measured or derived at the stated resolution. The uncertainty is documented." },
+  regional_scale_only: { label: "regional", tone: "info", title: "Regional value on the ~3.7 km MOLA baseline. It cannot show lander-scale hazards." },
+  qualitative: { label: "qualitative", tone: "neutral", title: "A descriptive label from the literature. It is not a numeric measurement." },
+  low_confidence: { label: "low confidence", tone: "warn", title: "The value has a large or unknown uncertainty." },
+  demo_fixture: { label: "demo data", tone: "danger", title: "This is a development placeholder, not real data. Do not cite it." },
+  missing: { label: "no data", tone: "neutral", title: "This site has no measurement in this profile version." },
 };
 
 export function QualityBadge({ flag }: { flag: QualityFlag }) {

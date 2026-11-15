@@ -58,7 +58,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
       <aside ref={panel} aria-label="Location detail" className="scroll-thin flex h-auto flex-col overflow-visible lg:h-full lg:overflow-y-auto bg-bg-elev" data-body="earth">
         {!selectedId ? (
           <Section title="Earth location">
-            <EmptyNote>Click a marker on the globe or a row in the candidate list.</EmptyNote>
+            <EmptyNote>Click a marker on the globe or a site in the list.</EmptyNote>
           </Section>
         ) : earthLocation ? (
           <>
@@ -78,7 +78,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
     <aside ref={panel} aria-label="Site detail" className="scroll-thin flex h-auto flex-col overflow-visible lg:h-full lg:overflow-y-auto bg-bg-elev" data-body="mars">
       {!selectedId ? (
         <Section title="Site">
-          <EmptyNote>Click a marker on the globe or a row in the ranked list.</EmptyNote>
+          <EmptyNote>Click a marker on the globe or a site in the list.</EmptyNote>
         </Section>
       ) : q.isPending ? (
         <div className="p-4">
@@ -116,7 +116,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
             {!analog && <SuitabilityPanel result={result} scoringSpecVersion={evaluation?.scoring_spec_version} isPending={evaluationPending} totalRanked={ranked} />}
             <FindAnalogsEntry siteId={q.data.site.id} siteName={q.data.site.name} />
             <Section title="Risks and limitations">
-              <BulletList items={result?.risks} tone="danger" empty="No risk flags among the scored regional factors. Unmeasured hazards remain unknown." />
+              <BulletList items={result?.risks} tone="danger" empty="No risks were flagged among the scored factors. Hazards that are not measured are still unknown." />
               <div className="mt-3"><BulletList items={result?.limitations} tone="warn" /></div>
             </Section>
             {/* reference material last: the full calculation, research ideas, every measurement and source */}

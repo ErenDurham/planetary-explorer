@@ -35,7 +35,7 @@ export function SurveyMap({ run, survey, candidates, selectedId, onSelect, estab
   return (
     <div className={`relative overflow-hidden rounded-xl border border-line-strong bg-canvas ${className}`}>
       <div ref={ref} className="absolute inset-0" data-testid="survey-map-frame">
-        <svg width="100%" height="100%" viewBox={`0 0 ${size.w} ${size.h}`} role="img" aria-label={`Schematic map of survey ${run.label}: boundary, ${centres.length} sampling centres, ${n} candidate footprints and ${known.length} established catalog sites in view. No imagery.`}>
+        <svg width="100%" height="100%" viewBox={`0 0 ${size.w} ${size.h}`} role="img" aria-label={`Schematic map of survey ${run.label}: boundary, ${centres.length} sampling centres, ${n} candidate footprints and ${known.length} established catalog sites in view. There is no imagery.`}>
           <defs><pattern id="survey-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" style={{ stroke: "var(--color-line)" }} strokeWidth="1" /></pattern></defs>
           <rect width="100%" height="100%" fill="url(#survey-grid)" />
           {/* surveyed boundary */}

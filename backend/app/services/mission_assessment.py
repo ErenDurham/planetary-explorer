@@ -54,9 +54,9 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
             if unknown:
                 raise ValueError(f"Unknown {c['label'].lower()}: {', '.join(sorted(unknown))}")
     configured = [c for c in criteria if weights[c["id"]] > 0 and ("targets" not in c or requirements[c["targets"]])]
-    missing_targets = [f"Select {c['label'].lower()} to activate this priority." for c in criteria if weights[c['id']] > 0 and "targets" in c and not requirements[c['targets']]]
+    missing_targets = [f"Select {c['label'].lower()} to turn on this priority." for c in criteria if weights[c['id']] > 0 and "targets" in c and not requirements[c['targets']]]
     valid = [c for c in configured if pool and all(_available(p.get(c["feature"]) if p else None,c) for _,p in pool)]
-    excluded = [f"{c['label']} excluded for every site: missing, non-finite or incompatible data in the candidate pool." for c in configured if c not in valid]
+    excluded = [f"{c['label']} is left out for every site. Some sites have missing, non-finite or incompatible data." for c in configured if c not in valid]
     denominator = sum(weights[c["id"]] for c in configured)
     valid_weight = sum(weights[c["id"]] for c in valid)
     coverage = valid_weight / denominator if denominator else 0
@@ -72,18 +72,18 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
             if ok and "targets" in c:
                 targets = set(requirements[c["targets"]]); found = targets & set(m.value)
                 q = len(found)/len(targets)
-                note = f"{len(found)} of {len(targets)} requested tags documented: {', '.join(sorted(found)) or 'none'}. Unreported tags are not confirmed absent."
+                note = f"{len(found)} of {len(targets)} requested labels are documented: {', '.join(sorted(found)) or 'none'}. A label that is not reported may still be present."
             elif ok:
                 target, tolerance = requirements[c["target"]],requirements[c["tolerance"]]
                 q = piecewise_linear(abs(float(m.value)-target), "lower_is_better", 0, tolerance)
                 note = f"Target {target:g} {c['unit']}; tolerance {tolerance:g} {c['unit']}. Absolute difference {abs(float(m.value)-target):g} {c['unit']}."
             else:
-                note = "Weight is zero." if weights[c['id']] == 0 else "No targets selected." if c not in configured else "Excluded pool-wide: data missing or incompatible."
+                note = "The weight is zero." if weights[c['id']] == 0 else "No targets are selected." if c not in configured else "Left out for every site: data is missing or incompatible."
             generic_source = bool(ok and "targets" in c and m.source_id == "nasa_analogs_overview")
             if generic_source:
-                gap = f"{c['label']}: catalogue tags cite a general analog overview; verify site-specific support."
+                gap = f"{c['label']}: the catalogue labels cite a general analog overview. Check for a site-specific source."
                 provenance_gaps.append(gap)
-                note += " Site-specific provenance needs verification."
+                note += " The site-specific source needs to be checked."
             weight = weights[c['id']]/valid_weight if ok else None
             value = m.value if _available(m,c) else None
             factors.append(MissionFactor(criterion_id=c['id'],label=c['label'],feature_id=c['feature'],value=value,
@@ -151,7 +151,7 @@ def _evaluate_against_mars(req: MissionAssessmentRequest, spec) -> MissionAssess
             factors.append(MissionFactor(criterion_id=f.feature_id, label=f.label, feature_id=f.feature_id, value=f.earth_value, unit=f.unit,
                 q=None if f.distance is None else 1.0 / (1.0 + f.distance), normalized_weight=f.normalized_weight, contribution=-lost,
                 source=prof.sources.get(m.source_id) if prof and m and m.source_id else None, method="analog_feature_distance",
-                note=f"{f.note}. Cost {lost:.1f} of the 100 points.", quality=m.quality_flag if m else None))
+                note=f"{f.note}. This costs {lost:.1f} of the 100 points.", quality=m.quality_flag if m else None))
         results.append(MissionAssessmentResult(site_id=cand.location.id, site_name=cand.location.name, body="earth", score=score, rank=cand.rank,
             status="scored" if score is not None else "insufficient_data", coverage_fraction=cand.coverage_fraction, factors=factors,
             evidence_gaps=[f"{e.label}: {e.reason}" for e in ranked.excluded_features if e.reason != "weight is 0 for this ranking"]))

@@ -63,7 +63,7 @@ export function ConfigPanel({ workspace, service, terrain, onChange, onChooseObj
       <section aria-labelledby="cfg-rover">
         <div className="mb-2 flex items-center justify-between gap-2"><h3 id="cfg-rover" className="eyebrow">Rover configuration</h3>{profiles.length > 0 && rover && <button type="button" onClick={() => { const pr = profiles.find(x => x.profile_id === workspace.roverProfileId) ?? profiles[0]; onChange({ rover: { ...pr.parameters }, roverProfileId: pr.profile_id }); }} className="inline-flex items-center gap-1 text-[11px] text-fg-muted hover:text-fg"><RotateCcw className="h-3 w-3" aria-hidden />Profile defaults</button>}</div>
         {service.kind === "loading" && <p className="text-xs text-fg-muted" role="status">Loading rover profiles from the expedition service…</p>}
-        {service.kind !== "available" && service.kind !== "loading" && <EmptyNote>Rover profiles are defined by the expedition service, which is not connected. Inputs will appear once it is.</EmptyNote>}
+        {service.kind !== "available" && service.kind !== "loading" && <EmptyNote>Rover profiles come from the expedition service. The service is not connected. The inputs will appear once it is.</EmptyNote>}
         {caps && profiles.length === 0 && <EmptyNote>The connected service lists no rover profiles.</EmptyNote>}
         {profiles.length > 0 && (
           <label className="block text-xs text-fg-muted">Profile
@@ -78,11 +78,11 @@ export function ConfigPanel({ workspace, service, terrain, onChange, onChooseObj
             {profiles.find(x => x.profile_id === workspace.roverProfileId)?.description && <p className="text-[11px] text-fg-muted">{profiles.find(x => x.profile_id === workspace.roverProfileId)?.description}</p>}
             {ROVER_FIELDS.filter(f => f.group === "limits").map(f => <RoverField key={f.key} field={f} value={rover[f.key]} onChange={v => onChange({ rover: { ...rover, [f.key]: v }, roverProfileId: workspace.roverProfileId })} />)}
             <details className="rounded-lg border border-line px-2.5 py-2">
-              <summary className="cursor-pointer text-[11px] text-fg-muted">Engineering assumptions (editable, not measured rover values)</summary>
+              <summary className="cursor-pointer text-[11px] text-fg-muted">Engineering assumptions. You can edit these. They are not measured rover values.</summary>
               <div className="mt-2 space-y-2">{ROVER_FIELDS.filter(f => f.group === "assumptions").map(f => <RoverField key={f.key} field={f} value={rover[f.key]} onChange={v => onChange({ rover: { ...rover, [f.key]: v }, roverProfileId: workspace.roverProfileId })} />)}</div>
-              <p className="mt-2 text-[10.5px] text-fg-faint">Used by the service's energy model: (mass·g·Crr·distance + mass·g·climb) / efficiency, plus hotel power over drive time. No regenerative descent or solar recharge.</p>
+              <p className="mt-2 text-[10.5px] text-fg-faint">Used by the service's energy model: (mass·g·Crr·distance + mass·g·climb) / efficiency, plus hotel power over the drive time. It does not include regenerative descent or solar recharging.</p>
             </details>
-            <p className="text-[10.5px] text-fg-faint">Inputs to the shared simulation. The service applies its own physical model and may report that a value is outside what it supports.</p>
+            <p className="text-[10.5px] text-fg-faint">These are inputs to the shared simulation. The service uses its own physical model. It may report that a value is outside the range it supports.</p>
           </div>
         )}
       </section>
@@ -101,7 +101,7 @@ export function ConfigPanel({ workspace, service, terrain, onChange, onChooseObj
         {terrain.kind === "loading" && <p className="text-xs text-fg-muted" role="status">Loading research targets…</p>}
         {terrain.kind === "unavailable" && <EmptyNote>{terrain.reason}</EmptyNote>}
         {terrain.kind === "error" && <div className="rounded border border-danger/40 bg-danger/10 p-2 text-xs text-danger" role="alert">Research targets could not be loaded. <button type="button" className="underline" onClick={terrain.retry}>Retry</button></div>}
-        {terrain.kind === "ready" && targets.length === 0 && <EmptyNote>The service lists no research targets with coordinates for this region. Routes can still be planned between your waypoints.</EmptyNote>}
+        {terrain.kind === "ready" && targets.length === 0 && <EmptyNote>The service lists no research targets with coordinates for this region. You can still plan routes between your waypoints.</EmptyNote>}
         {targets.length > 0 && (
           <ul className="space-y-1" aria-label="Research targets">
             {targets.map(t => { const on = workspace.targetIds.includes(t.target_id); return (
@@ -127,7 +127,7 @@ export function ConfigPanel({ workspace, service, terrain, onChange, onChooseObj
         {!canCalculate && !running && blockers.length > 0 && (
           <ul id="calc-blockers" className="mt-2 space-y-1 text-[11px] text-fg-muted">{blockers.map(b => <li key={b} className="flex gap-1.5"><Badge tone="neutral">needs</Badge><span>{b}</span></li>)}</ul>
         )}
-        <p className="mt-2 pb-1 text-[10.5px] text-fg-faint">Distances, energy, slopes and feasibility are computed by the shared expedition service; nothing is estimated in the browser.</p>
+        <p className="mt-2 pb-1 text-[10.5px] text-fg-faint">The shared expedition service calculates the distances, energy, slopes and feasibility. Nothing is estimated in the browser.</p>
       </section>
     </div>
   );

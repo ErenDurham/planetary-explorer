@@ -34,7 +34,7 @@ export const SINGLE_HUE_STOPS: readonly string[] = ["#ffe6b8", "#f6c777", "#eaa4
 /** Neutral used for "Not ranked": hollow marker, patterned swatch. */
 export const NOT_RANKED_COLOR = "#8a919c";
 
-export const RANK_LEGEND_SENTENCE = "Colours encode relative match rank, not danger, safety, confidence or scientific equivalence.";
+export const RANK_LEGEND_SENTENCE = "Colours show the relative match rank. They do not show danger, safety, confidence or scientific equivalence.";
 
 function hexToRgb(hex: string): Rgb {
   const h = hex.replace("#", "");

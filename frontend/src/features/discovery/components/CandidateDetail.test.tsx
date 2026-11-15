@@ -44,7 +44,7 @@ describe("CandidateDetail", () => {
     // sorted by contribution: relief first (0.221 of 0.295 = 75%), slope second (25%)
     expect(rows[0]).toHaveTextContent(/Detrended regional relief.*150\.2 m.*194\.4 m.*50%.*75%/);
     expect(rows[1]).toHaveTextContent(/Regional median slope.*1\.3°.*1\.077°.*50%.*25%/);
-    expect(match).toHaveTextContent(/D = 0\.629 is the weighted sum of the contributions; index = 100 \/ \(1 \+ D\) = 61\.4/);
+    expect(match).toHaveTextContent(/D = 0\.629 is the weighted sum of the contributions\. The index is 100 \/ \(1 \+ D\) = 61\.4/);
     // C. how it was measured, from the detail profile and the survey specification
     const measured = within(card).getByRole("region", { name: "How it was measured" });
     expect(measured).toHaveTextContent(/Regional median slope1\.3° \(derived\)/);
@@ -55,15 +55,15 @@ describe("CandidateDetail", () => {
     // D. catalog relation, with the rule quoted
     const relation = within(card).getByRole("region", { name: "Relation to known analogs" });
     expect(relation).toHaveTextContent(/Not near a catalog location/);
-    expect(relation).toHaveTextContent(/not a claim of novelty/);
+    expect(relation).toHaveTextContent(/this does not prove the site is new/);
     expect(relation).toHaveTextContent(/Rule: 100 km centre buffer/);
-    expect(relation).toHaveTextContent(/atacama yungay \(8,120 km\) is in the versioned catalog but not among this app's featured Earth regions/);
+    expect(relation).toHaveTextContent(/atacama yungay \(8,120 km\)\. It is in the catalog, but it is not one of this app's featured Earth regions/);
     // E. what was not compared: absent context is absent
     const ctx = within(card).getByRole("region", { name: "What was not compared" });
     expect(ctx).toHaveTextContent(/ClimateNot available\./);
     expect(ctx).toHaveTextContent(/Land coverNot available\./);
     expect(ctx).toHaveTextContent(/Geology: not assessed/);
-    expect(ctx).toHaveTextContent(/Climate context: not available/);
+    expect(ctx).toHaveTextContent(/Climate: not available/);
     // F. sources grouped, dataset versions from the survey
     const sources = within(card).getByRole("region", { name: "Sources and provenance" });
     expect(sources).toHaveTextContent(/Copernicus GLO-90 DEM — ESA \/ Airbus/);
@@ -88,7 +88,7 @@ describe("CandidateDetail", () => {
     const ctx = within(card).getByRole("region", { name: "What was not compared" });
     expect(ctx).toHaveTextContent(/air temperature c21\.4/);
     expect(ctx).toHaveTextContent(/Single survey-centre context, not a candidate measurement or score input · 0\.5 x 0\.625 deg grid · at 31\.50°N, 2\.50°W/);
-    expect(ctx.textContent).not.toMatch(/Climate context: not available/);
+    expect(ctx.textContent).not.toMatch(/Climate: not available/);
   });
 
   it("reports what it has not got instead of inventing it", () => {

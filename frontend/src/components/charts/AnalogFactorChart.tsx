@@ -10,7 +10,7 @@ export function AnalogFactorChart({ distances }: { distances: FeatureDistance[] 
   const data = comparable.map((d) => ({ name: d.label.replace(/\s*\(.*\)\s*$/, ""), contribution: d.contribution ?? 0, distance: d.distance, weight: d.normalized_weight }));
   const total = data.reduce((a, d) => a + d.contribution, 0);
   return (
-    <figure aria-label="Analog similarity: per-feature contribution to distance">
+    <figure aria-label="Analog similarity: how much each feature adds to the distance">
       <div className="w-full" style={{ height: Math.max(110, data.length * 24 + 40) }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 10, left: 4 }}>

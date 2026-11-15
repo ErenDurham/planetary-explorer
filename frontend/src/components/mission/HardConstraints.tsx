@@ -6,7 +6,7 @@ import type { HardConstraint } from "@/types";
 
 export function HardConstraints({ constraints }: { constraints: HardConstraint[] }) {
   return (
-    <Section title="Hard constraints" subtitle="Sites failing any of these are ineligible and unranked">
+    <Section title="Hard constraints" subtitle="Sites that fail any of these are not eligible and are not ranked">
       <ul className="space-y-1.5">
         {constraints.map((c) => (
           <li key={c.constraint_id} className="flex items-start justify-between gap-2 text-xs">
@@ -17,7 +17,7 @@ export function HardConstraints({ constraints }: { constraints: HardConstraint[]
               </span>
             </div>
             <div className="flex items-center gap-1">
-              {c.is_assumption && <Badge tone="warn" title="Documented screening assumption, not an established requirement">assumption</Badge>}
+              {c.is_assumption && <Badge tone="warn" title="This is a documented screening assumption. It is not an established requirement">assumption</Badge>}
               <InfoTip label={`Rationale for ${c.constraint_id}`}>{c.rationale}</InfoTip>
             </div>
           </li>

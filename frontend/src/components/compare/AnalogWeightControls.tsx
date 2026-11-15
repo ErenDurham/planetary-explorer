@@ -15,8 +15,8 @@ export function AnalogWeightControls() {
   return (
     <div className="space-y-3">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-xs text-fg-muted">What should count as "similar" for this pair. These shares re-rank the analog pool and change the similarity index; they never change the selected pair, the objective, or the Mars landing ranking.</p>
-        <button type="button" onClick={resetAnalogWeights} disabled={!analogWeights} className="inline-flex shrink-0 items-center gap-1 rounded border border-line px-2 py-1 text-[10.5px] text-fg-muted hover:text-fg disabled:opacity-40" aria-label={recommended ? "Reset analog preferences to the applied objective's suggestion" : "Reset analog preferences to spec defaults"}>
+        <p className="text-xs text-fg-muted">What should count as "similar" for this pair. These shares re-rank the analog sites and change the similarity score. They do not change the selected pair, the objective or the Mars landing ranking.</p>
+        <button type="button" onClick={resetAnalogWeights} disabled={!analogWeights} className="inline-flex shrink-0 items-center gap-1 rounded border border-line px-2 py-1 text-[10.5px] text-fg-muted hover:text-fg disabled:opacity-40" aria-label={recommended ? "Reset the analog preferences to the suggestion for this objective" : "Reset the analog preferences to the defaults"}>
           <RotateCcw className="h-3 w-3" aria-hidden /> {recommended ? "Objective's suggestion" : "Defaults"}
         </button>
       </div>

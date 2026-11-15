@@ -3,8 +3,8 @@ import { formatLatLon, formatValueWithUnit } from "@/lib/format";
 import type { ComparisonLocation } from "@/types";
 
 export function MissionLocationList({locations,selectedId,onSelect,isPending}:{locations:ComparisonLocation[];selectedId:string|null;onSelect:(id:string)=>void;isPending:boolean}) {
-  return <Section title="Earth mission sites" subtitle="Browse available measurements. No overall suitability score.">
-    <p className="mb-3 text-xs leading-relaxed text-fg-muted">Select a site to inspect its profile, then find Mars analogs.</p>
+  return <Section title="Earth mission sites" subtitle="Browse the measurements. There is no overall score.">
+    <p className="mb-3 text-xs leading-relaxed text-fg-muted">Select a site to see its profile. Then find Mars analogs.</p>
     {isPending && <EmptyNote>Loading Earth sites…</EmptyNote>}
     <ol className="space-y-2" aria-label="Earth mission locations">{locations.map(location => {
       const values = ["slope_regional_median_deg", "roughness_regional_m"].map(fid => location.measurements.find(m => m.feature_id === fid && !m.is_missing));

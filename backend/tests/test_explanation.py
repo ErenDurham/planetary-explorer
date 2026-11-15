@@ -113,7 +113,7 @@ def test_invalid_citation_handles_are_stripped(ctx, llm_on, monkeypatch):
     assert out.generated_by == "llm"
     text = "\n".join(out.sections.favorable)
     assert "[C99]" not in text and "[C7]" not in text and "[C1]" in text
-    assert "2 unverifiable citation handles removed" in out.limitations
+    assert "2 citation handles that could not be checked were removed" in out.limitations
 
 
 def test_no_citations_adds_note(ctx, llm_on, monkeypatch):
@@ -122,7 +122,7 @@ def test_no_citations_adds_note(ctx, llm_on, monkeypatch):
     body = {k: [s.replace(" [C1]", "") for s in v] for k, v in body.items()}
     monkeypatch.setattr(ee, "_call_llm", lambda system, user: json.dumps(body))
     out = ee.explain(site, prof, result, evidence, None, None)
-    assert out.generated_by == "llm" and "No citations were produced; see supporting evidence." in out.limitations
+    assert out.generated_by == "llm" and "No citations were produced. See the supporting evidence." in out.limitations
 
 
 def test_numeric_guard_rejects_invented_number(ctx, llm_on, monkeypatch):
@@ -130,7 +130,7 @@ def test_numeric_guard_rejects_invented_number(ctx, llm_on, monkeypatch):
     monkeypatch.setattr(ee, "_call_llm", lambda system, user: _good_sections(result, " The crater is 123456.7 km wide."))
     out = ee.explain(site, prof, result, evidence, None, None)
     assert out.generated_by == "deterministic_fallback"
-    assert any("123456.7" in l and "numbers not present" in l for l in out.limitations)
+    assert any("123456.7" in l and "numbers that are not in the data" in l for l in out.limitations)
 
 
 def test_check_numbers_accepts_formatting_and_rounding():
@@ -147,7 +147,7 @@ def test_validate_citations_unit():
     allowed = ee.citations_for([EvidenceChunk(chunk_id="x#1", document_id="x", title="t", institution="i", url="https://e.test", excerpt="e")])
     cleaned, notes = ee.validate_citations(sec, allowed)
     assert cleaned.favorable == ["Good [C1] and bad."] and cleaned.risks == []
-    assert notes == ["2 unverifiable citation handles removed"]
+    assert notes == ["2 citation handles that could not be checked were removed"]
 
 
 def test_question_is_truncated_in_prompt(ctx):

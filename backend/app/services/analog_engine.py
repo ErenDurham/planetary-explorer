@@ -102,26 +102,26 @@ def feature_distance(fs: dict, mars_p: EnvironmentalProfile, earth_p: Environmen
         return FeatureDistance(comparable=False, distance=None, note=note, **base)
 
     if mv is None and ev is None:
-        return noncomp(f"{fid} is missing on both the Mars and the Earth side; not imputed, excluded from D")
+        return noncomp(f"{fid} is missing for both the Mars and the Earth site. It is not estimated, and it is left out of D")
     if mv is None:
-        return noncomp(f"{fid} is missing on the Mars side; not imputed, excluded from D")
+        return noncomp(f"{fid} is missing for the Mars site. It is not estimated, and it is left out of D")
     if ev is None:
-        return noncomp(f"{fid} is missing on the Earth side; not imputed, excluded from D")
+        return noncomp(f"{fid} is missing for the Earth site. It is not estimated, and it is left out of D")
 
     if fs["method"] == "scaled_absolute_difference":
         expected_unit = fs.get("unit")
         if mars_unit != expected_unit or earth_unit != expected_unit:
-            return noncomp(f"incompatible units (Mars {mars_unit}, Earth {earth_unit}, expected {expected_unit}); excluded from D")
+            return noncomp(f"The units do not match (Mars {mars_unit}, Earth {earth_unit}, expected {expected_unit}). It is left out of D")
         if not _is_finite_number(mv) or not _is_finite_number(ev):
-            return noncomp("value is not a finite number on at least one side; excluded from D")
+            return noncomp("The value is not a finite number for at least one site. It is left out of D")
         scale = fs.get("scale")
         if not _is_finite_number(scale) or scale <= 0:
-            return noncomp(f"spec scale for {fid} is not a positive number; excluded from D")
+            return noncomp(f"The spec scale for {fid} is not a positive number. It is left out of D")
         diff = abs(float(mv) - float(ev))
         d = diff / float(scale)
         verdict = "close" if d <= CLOSE_D else ("moderately different" if d <= DIFFERENT_D else "very different")
         if "3.7 km" in fs.get("label", ""):
-            verdict += " at the harmonised ~3.7 km baseline"
+            verdict += " on the matched ~3.7 km baseline"
         note = (f"Mars {_fmt(mv, unit)} vs Earth {_fmt(ev, unit)}: |difference| {_fmt(diff, unit)} / scale {_fmt(scale, unit)}"
                 f" = d {d:.2f} ({verdict})")
         return FeatureDistance(comparable=True, distance=d, note=note, **base)
@@ -129,7 +129,7 @@ def feature_distance(fs: dict, mars_p: EnvironmentalProfile, earth_p: Environmen
     if fs["method"] == "jaccard_distance":
         mt, et = _tags(mv), _tags(ev)
         if mt is None or et is None:
-            return noncomp("expected lists of tags on both sides; excluded from D")
+            return noncomp("Both sites need lists of labels. It is left out of D")
         shared, only_m, only_e = sorted(set(mt) & set(et)), sorted(set(mt) - set(et)), sorted(set(et) - set(mt))
         d = jaccard_distance(mt, et)
         union = len(set(mt) | set(et))
@@ -141,7 +141,7 @@ def feature_distance(fs: dict, mars_p: EnvironmentalProfile, earth_p: Environmen
         note += f"; Jaccard distance {d:.2f}"
         return FeatureDistance(comparable=True, distance=d, note=note, **base)
 
-    return noncomp(f"unknown method {fs['method']}; excluded from D")
+    return noncomp(f"Unknown method {fs['method']}. It is left out of D")
 
 
 def _applications(cand: EarthCandidate, shared_terrain: list[str], shared_minerals: list[str]) -> list[str]:
@@ -158,17 +158,17 @@ def _proposed_studies(mars_site: Site, cand: EarthCandidate, shared_terrain: lis
     sim = f"{similarity:g}" if similarity is not None else "n/a"
     if shared_terrain:
         cards.append({"kind": "proposed_study", "title": f"Terrain-mobility rehearsal on shared landforms ({_words(shared_terrain)})",
-                      "research_question": f"Do traverse-planning and hazard-mapping methods exercised on {_words(shared_terrain)} at {cand.name} transfer to the same landforms at {mars_site.name}?",
-                      "method": "Instrumented traverses and terrain mapping on the matched landforms at the Earth site; compare predicted and observed trafficability; re-run the mapping method on orbital data for the Mars footprint.",
-                      "why_here": f"{cand.name} shares these literature-tagged landforms with {mars_site.name}; the harmonised ~3.7 km terrain statistics show where regional slope or relief also agree.",
-                      "motivating_citation_ids": [], "cannot_infer": f"Similarity {sim} is a heuristic index over tags and regional statistics; Earth gravity, atmosphere and radiation differ, and transfer has not been demonstrated.",
+                      "research_question": f"Do traverse-planning and hazard-mapping methods tested on {_words(shared_terrain)} at {cand.name} work on the same landforms at {mars_site.name}?",
+                      "method": "Run instrumented traverses and terrain mapping on the matched landforms at the Earth site. Compare the predicted and observed trafficability. Then repeat the mapping method on orbital data for the Mars footprint.",
+                      "why_here": f"{cand.name} shares these landforms with {mars_site.name}, according to the literature. The matched ~3.7 km terrain values show where regional slope or relief also agree.",
+                      "motivating_citation_ids": [], "cannot_infer": f"Similarity {sim} is a rough index over labels and regional values. Earth gravity, atmosphere and radiation are different. It has not been shown that results transfer.",
                       "analog_candidate_id": cand.id})
     if shared_minerals:
         cards.append({"kind": "proposed_study", "title": f"Instrument and sample-handling tests on shared materials ({_words(shared_minerals)})",
-                      "research_question": f"Can instrument calibration and sample-handling procedures developed on {_words(shared_minerals)} at {cand.name} be validated before use on the materials reported at {mars_site.name}?",
-                      "method": "Field spectroscopy and sample preparation on the Earth materials; compare instrument response against laboratory reference measurements; document which procedures depend on Earth-only conditions.",
-                      "why_here": f"Both sites carry cited {_words(shared_minerals)}; the comparison targets materials, not landing suitability.",
-                      "motivating_citation_ids": [], "cannot_infer": "Composition tags are literature labels, not spectral matches; weathering, humidity and biology on Earth have no Mars counterpart.",
+                      "research_question": f"Can instrument calibration and sample handling, developed on {_words(shared_minerals)} at {cand.name}, be validated before use on the materials reported at {mars_site.name}?",
+                      "method": "Do field spectroscopy and sample preparation on the Earth materials. Compare the instrument response with laboratory reference measurements. Record which procedures depend on conditions found only on Earth.",
+                      "why_here": f"Both sites have cited {_words(shared_minerals)}. The comparison is about materials, not landing suitability.",
+                      "motivating_citation_ids": [], "cannot_infer": "Mineral labels come from the literature. They are not spectral matches. Weathering, humidity and biology on Earth have no match on Mars.",
                       "analog_candidate_id": cand.id})
     return cards[:2]
 
@@ -197,13 +197,13 @@ def match(mars_site: Site, mars_p: EnvironmentalProfile, cand: EarthCandidate, e
     shared: list[str] = []
     diffs: list[str] = []
     if shared_t:
-        shared.append(f"Terrain morphology shared: {_words(shared_t)}")
+        shared.append(f"Shared landforms: {_words(shared_t)}")
     elif mt and et:
-        diffs.append(f"Terrain morphology: no shared tags (Mars: {_words(mt)}; Earth: {_words(et)})")
+        diffs.append(f"No shared landforms. Mars: {_words(mt)}. Earth: {_words(et)}.")
     if shared_m:
-        shared.append(f"Composition shared: {_words(shared_m)}")
+        shared.append(f"Shared minerals: {_words(shared_m)}")
     elif mm and em:
-        diffs.append(f"Composition: no shared tags (Mars: {_words(mm)}; Earth: {_words(em)})")
+        diffs.append(f"No shared minerals. Mars: {_words(mm)}. Earth: {_words(em)}.")
     for f in comparable:
         if f.method != "scaled_absolute_difference" or f.distance is None:
             continue
@@ -217,15 +217,15 @@ def match(mars_site: Site, mars_p: EnvironmentalProfile, cand: EarthCandidate, e
 
     noncomp = [f"{f.label}: {f.note}" for f in fds if not f.comparable] + list(spec["noncomparable_disclosures"])
     limitations = [
-        "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
-        "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
-        "Composition and morphology tags are literature-derived categorical labels, not spectral measurements.",
+        "Similarity is a rough index (100 / (1 + D)) over the chosen features. It is not a validated probability.",
+        "Terrain values are compared on the same ~3.7 km baseline. Metre-scale landforms are not assessed.",
+        "Mineral and landform labels come from the literature. They are not spectral measurements.",
     ]
     if earth_p is None:
-        limitations.append("Earth candidate has no processed profile in this version; no feature could be compared and similarity is undefined."
-                           if not comparable else "Earth candidate has no processed profile; only features present on both sides were compared.")
+        limitations.append("The Earth site has no processed profile in this version. No feature could be compared, so there is no similarity."
+                           if not comparable else "The Earth site has no processed profile. Only features present for both sites were compared.")
     elif not comparable:
-        limitations.append("No feature with a positive weight is present on both sides; similarity is undefined rather than guessed.")
+        limitations.append("No feature with a positive weight is present for both sites. The similarity is left undefined instead of guessed.")
     citations = sorted(set(cand.sources) | set(mars_p.sources.keys()) | (set(earth_p.sources.keys()) if earth_p else set()))
     return AnalogMatch(mars_site_id=mars_site.id, earth_candidate=cand, similarity=None if sim is None else round(sim, 2), distance=None if D is None else round(D, 4), rank=None,
                        feature_distances=fds, shared_characteristics=shared, important_differences=diffs, noncomparable_variables=noncomp,
@@ -243,9 +243,9 @@ def match_all(mars_site: Site, mars_p: EnvironmentalProfile, candidates: list[tu
             if aw.feature_id in w:
                 w[aw.feature_id] = aw.weight
             else:
-                warnings.append(f"ignored unknown analog weight '{aw.feature_id}'")
+                warnings.append(f"Unknown analog weight '{aw.feature_id}' was ignored")
     if sum(w.values()) <= 0:
-        warnings.append("all analog weights are zero; similarity cannot be computed")
+        warnings.append("All analog weights are zero, so similarity cannot be calculated")
     matches = [match(mars_site, mars_p, c, p, w) for c, p in candidates]
     # Contributions retain full precision even though response distance/index are rounded.
     matches.sort(key=lambda m: (sum(f.contribution for f in m.feature_distances if f.contribution is not None)
@@ -258,5 +258,5 @@ def match_all(mars_site: Site, mars_p: EnvironmentalProfile, candidates: list[tu
         else:
             m.rank = None
             if sum(w.values()) > 0:
-                warnings.append(f"candidate '{m.earth_candidate.id}' has no comparable weighted feature with '{mars_site.id}'; similarity undefined")
+                warnings.append(f"Site '{m.earth_candidate.id}' has no weighted feature that can be compared with '{mars_site.id}'. There is no similarity.")
     return matches[: max(0, top_k)], warnings

@@ -157,7 +157,7 @@
         "lander",
         "rover"
       ],
-      "fact": "Slopes <2° over 1 km, <5° over 100 m and <15° over 5 m; steep slopes can spoof the radar altimeter.",
+      "fact": "MER required slopes <2° over 1 km, <5° over 100 m and <15° over 5 m. Steep slopes can confuse the radar altimeter.",
       "quotes": [
         "Steep slopes can spoof the radar altimeter and cause premature or late firing of the solid rockets and airbag inflation.",
         "As a result, surface slopes should be <2° over 1 km; <5° over 100 m, and <15° over 5 m."
@@ -174,7 +174,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "Slopes <30° at 2-5 m baselines for rover stability at touchdown.",
+      "fact": "MSL required slopes <30° at 2-5 m baselines. This kept the rover stable at touchdown.",
       "quotes": [
         "(4) slopes of <30° at baselines of 2-5 m for rover stability at touchdown"
       ],
@@ -190,7 +190,7 @@
       "missions": [
         "lander"
       ],
-      "fact": "Slopes <15° at 84 m and 2 m length scales for radar tracking and touchdown stability.",
+      "fact": "InSight required slopes <15° at 84 m and 2 m length scales. This was needed for radar tracking and a stable touchdown.",
       "quotes": [
         "with slopes <15° at 84 m and 2 m length scales for radar tracking and touchdown stability"
       ],
@@ -207,7 +207,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "Perseverance rover: with the new EDL capabilities, elevation and latitude limits no longer decided site viability; more than 30 candidate sites were considered.",
+      "fact": "For the Perseverance rover, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable. More than 30 candidate sites were considered.",
       "quotes": [
         "Mission engineering constraints on elevation and latitude were used to identify candidate landing sites that addressed the scientific objectives of the mission. However, for the first time these constraints did not have a major influence on the viability of candidate sites and, with the new entry, descent, and landing capabilities included in the baseline mission, the vast majority of sites were evaluated and down-selected on the basis of science merit. More than 30 candidate sites with likely acceptable surface and atmospheric conditions were considered"
       ],
@@ -224,7 +224,7 @@
         "lander",
         "rover"
       ],
-      "fact": "MER could land only below –1.3 km (MOLA): the parachute needs an adequate atmospheric density column.",
+      "fact": "MER could only land below –1.3 km (MOLA). The parachute needs enough atmosphere above the site.",
       "quotes": [
         "the MER spacecraft are capable of landing below –1.3 km, with respect to the MOLA defined geoid [1, 2, 3]. This requirement stems mostly from the need for an adequate atmospheric density column for the parachute"
       ],
@@ -240,7 +240,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "Elevation <-1 km for sufficient atmosphere to slow the spacecraft.",
+      "fact": "MSL required an elevation <-1 km. This gave enough atmosphere to slow the spacecraft.",
       "quotes": [
         "(2) elevation (<-1 km) for sufficient atmosphere to slow the spacecraft"
       ],
@@ -256,7 +256,7 @@
       "missions": [
         "lander"
       ],
-      "fact": "Elevation ≤−2.5 km for sufficient atmosphere to slow the lander.",
+      "fact": "InSight required an elevation ≤−2.5 km. This gave enough atmosphere to slow the lander.",
       "quotes": [
         "≤−2.5 km for sufficient atmosphere to slow the lander"
       ],
@@ -273,7 +273,7 @@
         "lander",
         "rover"
       ],
-      "fact": "All five successful US landers: landed mass <0.6 t, footprints of hundreds of km, sites below -1 km MOLA for sufficient atmospheric density.",
+      "fact": "All five successful US landers had a landed mass <0.6 t and footprints of hundreds of km. All landed below -1 km MOLA, where the atmosphere is dense enough.",
       "quotes": [
         "The United States has successfully landed five robotic systems on the surface of Mars. These systems all had landed mass below 0.6 metric tons (t), had landed footprints on the order of hundreds of km and landed at sites below -1 km MOLA elevation due the need to perform entry, descent and landing operations in an environment with sufficient atmospheric density."
       ],
@@ -290,7 +290,7 @@
       "missions": [
         "human"
       ],
-      "fact": "Human missions plan 40-80 t surface elements landed within 10's of m of pre-positioned assets; robotic landers were <0.6 t.",
+      "fact": "Human missions plan to land 40-80 t surface elements within 10's of m of assets placed earlier. Robotic landers were <0.6 t.",
       "quotes": [
         "These systems all had landed mass below 0.6 metric tons (t)",
         "Current plans for human exploration of Mars call for the landing of 40-80 t surface elements at scientifically interesting locations within close proximity (10's of m) of pre-positioned robotic assets."
@@ -307,7 +307,7 @@
       "missions": [
         "any"
       ],
-      "fact": "Mean surface pressure 6.36 mb at mean radius (4.0-8.7 mb with season).",
+      "fact": "The mean surface pressure is 6.36 mb at the mean radius. It varies from 4.0 to 8.7 mb with the season.",
       "quotes": [
         "Surface pressure: 6.36 mb at mean radius (variable from 4.0 to 8.7 mb depending on season)"
       ],
@@ -323,7 +323,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "Relief <100-130 m at 1-1000 m baselines for control authority and fuel during powered descent.",
+      "fact": "MSL required relief <100-130 m at 1-1000 m baselines. This kept enough control and fuel during powered descent.",
       "quotes": [
         "(3) relief of <100-130 m at baselines of 1-1000 m for control authority and sufficient fuel during powered descent"
       ],
@@ -340,7 +340,7 @@
         "lander",
         "rover"
       ],
-      "fact": "Airbags qualified for 0.5 m rocks: <1% of the surface may be covered by rocks >0.5 m (met where total rock coverage is <20%).",
+      "fact": "The MER airbags were qualified for 0.5 m rocks. Rocks >0.5 m could cover <1% of the surface. This is met where total rock coverage is <20%.",
       "quotes": [
         "The MER airbags have been qualified to protect the lander from damage when landing on 0.5 m high rocks in any orientation. This requires a landing site with less than 1% of the surface covered by rocks greater than 0.5 m high.",
         "requirement can be satisfied at locations with total rock coverage of <20% as derived from thermal infrared measurements"
@@ -357,7 +357,7 @@
       "missions": [
         "lander"
       ],
-      "fact": "Rock abundance <10% to avoid impact and spacecraft tip-over.",
+      "fact": "InSight required rock abundance <10%. This avoided impacts and the spacecraft tipping over.",
       "quotes": [
         "low rock abundance (<10 %) to avoid impact and spacecraft tip over"
       ],
@@ -373,7 +373,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "Moderate rock abundance to avoid belly-pan impact; load-bearing, trafficable surface not dominated by fine-grained dust.",
+      "fact": "MSL required a moderate rock abundance to avoid hitting the belly pan. The surface also had to bear loads, be drivable and not be covered mostly by fine dust.",
       "quotes": [
         "(5) moderate rock abundance to avoid impacting the belly pan during touchdown",
         "(6) a radar-reflective, load-bearing, and trafficable surface that is safe for landing and roving and not dominated by fine-grained dust"
@@ -390,7 +390,7 @@
       "missions": [
         "human"
       ],
-      "fact": "Crew surface traverses planned out to a 100 km radius, 2-week duration.",
+      "fact": "Crew traverses on the surface are planned out to a 100 km radius. Each lasts up to 2 weeks.",
       "quotes": [
         "Surface traversing capability out to 100 km radius and 2-week duration"
       ],
@@ -406,7 +406,7 @@
       "missions": [
         "any"
       ],
-      "fact": "Solar irradiance 586.2 W/m² at Mars vs 1361.0 W/m² at Earth (ratio 0.431).",
+      "fact": "Solar irradiance is 586.2 W/m² at Mars and 1361.0 W/m² at Earth. The ratio is 0.431.",
       "quotes": [
         "Solar irradiance (W/m 2 ) 586.2 1361.0 0.431"
       ],
@@ -423,7 +423,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "Power and thermal cycling over the 90-sol mission held MER near the subsolar latitude: 5°N-15°S (MER-A), 10°N-10°S (MER-B).",
+      "fact": "Power and thermal cycling over the 90-sol mission kept MER near the subsolar latitude. MER-A used 5°N-15°S. MER-B used 10°N-10°S.",
       "quotes": [
         "Analyses of power generation/usage and thermal cycling of the rovers for the required 90 Sols restricts the landing sites to near the subsolar latitude at arrival. This translates to 5°N to 15°S for MER-A and 10°N to 10°S for MER-B"
       ],
@@ -440,7 +440,7 @@
       "missions": [
         "lander"
       ],
-      "fact": "Latitude band narrowed from 15°S-5°N to 3°N-5°N for solar power and thermal management.",
+      "fact": "The InSight latitude band was narrowed from 15°S-5°N to 3°N-5°N. This was for solar power and thermal management.",
       "quotes": [
         "latitude (initially 15°S–5°N and later 3°N–5°N for solar power and thermal management of the spacecraft)"
       ],
@@ -457,7 +457,7 @@
         "lander",
         "rover"
       ],
-      "fact": "Excess dust can cover solar panels and shorten surface lifetime; areas with fine-component thermal inertia <125-165 SI were avoided.",
+      "fact": "Too much dust can cover solar panels and shorten the mission. Areas with a fine-component thermal inertia <125-165 SI were avoided.",
       "quotes": [
         "excessive dust would coat rocks, which are of prime scientific interest (but which can impede mobility), and could reduce surface lifetime by covering the solar panels.",
         "Areas with fine component thermal inertia of less than 125-165 J m-2 s-0.5 K-1 or SI units should therefore be avoided"
@@ -474,7 +474,7 @@
       "missions": [
         "human"
       ],
-      "fact": "Landing and ascent favour mid-to-low latitudes and elevations; water-ice access for science and ISRU favours higher latitudes.",
+      "fact": "Landing and ascent favour low to middle latitudes and elevations. Access to water ice, for science and ISRU, favours higher latitudes.",
       "quotes": [
         "Landing and ascent technology options place boundaries on surface locations leading to a preference for mid- to low- latitudes and mid- to low- elevations",
         "Accessing water ice for science and ISRU purposes is attractive, leading to a preference for higher latitudes"
@@ -491,7 +491,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "Latitude within ±30° for thermal management of the rover and instruments.",
+      "fact": "MSL required a latitude within ±30°. This was for thermal management of the rover and its instruments.",
       "quotes": [
         "(1) latitude (±30°) for thermal management of the rover and instruments"
       ],
@@ -508,7 +508,7 @@
         "lander",
         "rover"
       ],
-      "fact": "Low-thermal-inertia, high-albedo sites imply extreme cold: bulk thermal inertia >250 and >200 SI with albedo <0.26 and <0.18.",
+      "fact": "Sites with low thermal inertia and high albedo are extremely cold. MER required a bulk thermal inertia >250 and >200 SI, with an albedo <0.26 and <0.18.",
       "quotes": [
         "Extremely low temperatures likely at low thermal inertia, high albedo sites further requires bulk thermal inertia to be >250 and >200 SI units with albedos <0.26 and <0.18, respectively."
       ],
@@ -526,7 +526,7 @@
       "missions": [
         "human"
       ],
-      "fact": "Human Exploration Zones: preliminary elevation limit no higher than +2 km (MOLA).",
+      "fact": "For human Exploration Zones, the preliminary elevation limit is no higher than +2 km (MOLA).",
       "quotes": [
         "Preliminary elevation boundary set at no higher than +2 km (MOLA reference)"
       ],
@@ -542,7 +542,7 @@
       "missions": [
         "human"
       ],
-      "fact": "Human Exploration Zones: preliminary latitude limits ±50°; 47 zones were proposed at the Exploration Zone workshop.",
+      "fact": "For human Exploration Zones, the preliminary latitude limit is ±50°. 47 zones were proposed at the Exploration Zone workshop.",
       "quotes": [
         "Preliminary latitude boundaries set at +/- 50 degrees",
         "Forty-five individuals or teams proposed 47 EZs"
@@ -560,7 +560,7 @@
       "missions": [
         "any"
       ],
-      "fact": "Holuhraun (erupted August 2014 to February 2015) was the primary Mars analog site of the 2018 FELDSPAR sampling campaign.",
+      "fact": "Holuhraun erupted from August 2014 to February 2015. It was the main Mars analog site of the 2018 FELDSPAR sampling campaign.",
       "quotes": [
         "that erupted from August 2014 to February 2015",
         "thus served as the primaryMars analog site for the 2018 FELDSPAR field campaign"
@@ -577,7 +577,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "2012 Moon and Mars analog rover test on Mauna Kea: a three day traverse at ~11,500 feet.",
+      "fact": "The 2012 Moon and Mars analog rover test on Mauna Kea was a three day traverse at ~11,500 feet.",
       "quotes": [
         "Rover-based 2012 Moon and Mars Analog Mission Activities (MMAMA) were recently completed on Mauna Kea Volcano, Hawaii.",
         "The rover traverse and associated science investigations were conducted over a three day period on the southeast flank of the Mauna Kea Volcano, Hawaii. The test area was at an elevation of ~11,500 feet"
@@ -594,7 +594,7 @@
       "missions": [
         "any"
       ],
-      "fact": "Best Earth analog of Martian ground ice; above 1500 m (University Valley) air temperatures do not exceed 0 C.",
+      "fact": "This is the best Earth analog of Martian ground ice. Above 1500 m (University Valley), air temperatures do not exceed 0 C.",
       "quotes": [
         "The high elevation Dry Valleys of Antarctica provide the best analog on Earth of Martian ground ice.",
         "in locations above 1500 m elevation, such as University Valley, air temperatures do not exceed 0 C"
@@ -612,7 +612,7 @@
       "missions": [
         "any"
       ],
-      "fact": "The hyperarid Atacama and the Antarctic Dry Valleys are the driest and coldest limits for life on Earth: key Mars analog habitats.",
+      "fact": "The hyperarid Atacama and the Antarctic Dry Valleys are the driest and coldest limits for life on Earth. They are key Mars analog habitats.",
       "quotes": [
         "Desert ecosystems are a key repository for important Mars analog habitats",
         "the hyperarid Atacama Desert and Dry Valleys of Antarctica, the driest and coldest limits for life on Earth"
@@ -629,7 +629,7 @@
       "missions": [
         "any"
       ],
-      "fact": "Death Valley's Ibex Dune Field, in the driest place in North America, has bedforms comparable to many areas on the Martian surface.",
+      "fact": "The Ibex Dune Field is in Death Valley, the driest place in North America. Its bedforms are comparable to many areas on the Martian surface.",
       "quotes": [
         "is the driest place in North America",
         "This area hosts a variety of bedforms of different scales in close proximity, comparable to many areas on the Martian surface"
@@ -646,7 +646,7 @@
       "missions": [
         "human"
       ],
-      "fact": "NASA Glenn measured habitat dust intrusion with analog Crew 188 at the Mars Desert Research Station, Utah.",
+      "fact": "NASA Glenn measured how much dust entered the habitat. This was done with analog Crew 188 at the Mars Desert Research Station, Utah.",
       "quotes": [
         "collaborated with Crew 188 at the Mars Desert Research Station (MDRS) in Utah"
       ]
@@ -662,7 +662,7 @@
       "missions": [
         "rover"
       ],
-      "fact": "NASA's K-REX2 rover tested a life-detection drill reaching two meters (6.5 feet) in the Atacama, one month each year from 2016 to 2019.",
+      "fact": "NASA's K-REX2 rover tested a life-detection drill in the Atacama. The drill reached two meters (6.5 feet). Tests ran for one month each year from 2016 to 2019.",
       "quotes": [
         "Each year from 2016 to 2019, the ARADS team, led by Brian Glass of NASA’s Ames Research Center, in California’s Silicon Valley, is spending one month working in the heart of the Atacama.",
         "Called K-REX2, it is equipped with a drill capable of reaching two meters (6.5 feet) down through salt, rock layers and parched soil to retrieve a sample for analysis.",

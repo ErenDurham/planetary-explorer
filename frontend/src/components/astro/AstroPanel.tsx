@@ -206,7 +206,7 @@ export function AstroPanel({
             aria-valuemin={entries.length || pending ? 240 : 180}
             aria-valuemax={Math.round(maxOverlayHeight ?? window.innerHeight * .8)}
             aria-valuenow={Math.round(Math.min(maxOverlayHeight ?? window.innerHeight * .8, chatHeight ?? (entries.length || pending ? 480 : 220)))}
-            title="Drag down to shorten, up to enlarge. Arrow keys resize; double-click resets."
+            title="Drag down to shrink and up to enlarge. The arrow keys also resize. Double-click to reset."
             className="flex h-4 shrink-0 touch-none cursor-ns-resize items-center justify-center rounded-t-xl hover:bg-bg-elev-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright"
             onPointerDown={e => beginResize(e, "top")}
             onPointerMove={moveResize}
@@ -225,7 +225,7 @@ export function AstroPanel({
           {(["left", "right"] as const).map(edge => <div key={edge}
             role="separator" tabIndex={0} aria-label={`Resize Astro from ${edge}`} aria-orientation="vertical"
             aria-valuemin={360} aria-valuemax={window.innerWidth - 32} aria-valuenow={Math.round(chatWidth ?? 720)}
-            title="Drag to resize chat width; arrow keys adjust; double-click resets."
+            title="Drag to change the chat width. The arrow keys also adjust it. Double-click to reset."
             className={`absolute bottom-3 top-4 z-10 hidden w-2 touch-none cursor-ew-resize hover:bg-copper/15 focus-visible:outline focus-visible:outline-copper-bright lg:block ${edge === "left" ? "left-0" : "right-0"}`}
             onPointerDown={e => beginResize(e, edge)} onPointerMove={moveResize} onPointerUp={endResize}
             onPointerCancel={() => { resize.current = null; }} onDoubleClick={() => setChatWidth(null)}
@@ -238,7 +238,7 @@ export function AstroPanel({
               setChatWidth(Math.min(max, Math.max(Math.min(360, max), e.key === "Home" ? 360 : e.key === "End" ? max : current + delta)));
             }} />)}
           {(["left", "right"] as const).map(edge => <div key={`corner-${edge}`} aria-hidden
-            data-testid={`astro-resize-top-${edge}`} title="Drag corner to resize; double-click resets."
+            data-testid={`astro-resize-top-${edge}`} title="Drag the corner to resize. Double-click to reset."
             className={`absolute top-0 z-20 hidden h-3 w-3 touch-none lg:block ${edge === "left" ? "left-0 cursor-nwse-resize" : "right-0 cursor-nesw-resize"}`}
             onPointerDown={e => beginResize(e, `top-${edge}`)} onPointerMove={moveResize} onPointerUp={endResize}
             onPointerCancel={() => { resize.current = null; }} onDoubleClick={() => { setChatWidth(null); setChatHeight(null); }} />)}
@@ -277,10 +277,10 @@ export function AstroPanel({
                 </p>
                 {entry.response && (
                   <div className="space-y-3 text-xs leading-relaxed text-fg-muted">
-                    {entry.response.generated_by === "deterministic_fallback" && <p className="text-xs text-fg-faint" role="status">{entry.response.fallback_reason === "rate_limit" ? "Free AI limit reached · using a site summary" : entry.response.fallback_reason === "not_configured" ? "AI is not connected · using a site summary" : "Using a site summary for this reply"}</p>}
+                    {entry.response.generated_by === "deterministic_fallback" && <p className="text-xs text-fg-faint" role="status">{entry.response.fallback_reason === "rate_limit" ? "The free AI limit was reached. A site summary is used instead." : entry.response.fallback_reason === "not_configured" ? "AI is not connected. A site summary is used instead." : "This reply uses a site summary."}</p>}
                     {entry.contextKey !== contextKey && (
                       <p className="rounded border border-warn/40 p-2 text-warn">
-                        Earlier context — this answer refers to the selection
+                        Earlier context. This answer refers to the selection
                         and priorities when you sent it.
                       </p>
                     )}

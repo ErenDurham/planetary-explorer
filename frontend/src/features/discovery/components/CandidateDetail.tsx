@@ -56,10 +56,10 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
   const ctx = candidate.context;
   const climate = (ctx?.climate ?? null) as Record<string, unknown> | null;
   const missing: string[] = [];
-  if (!climate) missing.push("Climate context: not available for this footprint (optional source absent; not scored).");
-  if (!ctx || ctx.land_cover == null) missing.push("Land-cover context: not available for this footprint (not scored; absence does not mean bare ground).");
-  missing.push("Geology: not assessed. No mineralogy or landform evidence is recorded for this footprint; none is inferred.");
-  if (candidate.research_status !== "literature_reviewed") missing.push("Candidate literature review: not completed. Small desktop checks do not establish a researched analog.");
+  if (!climate) missing.push("Climate: not available for this footprint. The optional source is missing, and climate is not scored.");
+  if (!ctx || ctx.land_cover == null) missing.push("Land cover: not available for this footprint. It is not scored. Missing data does not mean bare ground.");
+  missing.push("Geology: not assessed. No mineral or landform evidence is recorded for this footprint, and none is assumed.");
+  if (candidate.research_status !== "literature_reviewed") missing.push("Literature review: not completed. Small desktop checks do not make this a researched analog.");
   const profile = detail?.profile ?? null;
   const grid = (profile?.grid ?? {}) as Record<string, unknown>;
   const shape = Array.isArray(grid.shape) && grid.shape.length === 2 ? (grid.shape as unknown[]).map(num) : null;
@@ -96,7 +96,7 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
       </div>
 
       {/* B. the match: score, weights, the factor table the score can be recomputed from */}
-      <Section title={`Match to ${reference.name}`} subtitle="The whole of the score, so it can be checked by hand">
+      <Section title={`Match to ${reference.name}`} subtitle="The full score, so it can be checked by hand">
         {effectiveWeights && <p className="text-xs leading-relaxed text-fg-muted">{similarityExplanation(candidate, reference.name, effectiveWeights)}</p>}
         <dl className="mt-3 grid gap-2 text-xs">
           <div className="rounded-lg border border-line p-2.5"><dt className="text-[10.5px] uppercase tracking-wide text-ok">Why it resembles {reference.name}</dt><dd className="mt-1 text-fg">{why.similar ?? "No factor breakdown was returned."}</dd></div>
@@ -122,9 +122,9 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
             </tbody>
           </table>
         ) : <p className="mt-3 text-xs text-fg-muted">No factor breakdown was returned for this candidate.</p>}
-        <p className="num mt-2 text-[10.5px] text-fg-faint">D = {totalD.toFixed(3)} is the weighted sum of the contributions; index = 100 / (1 + D) = {(100 / (1 + totalD)).toFixed(1)}. Values are footprint medians on {cellM ? `${Math.round(cellM / 1000)} km` : "regional"} cells; scales are the service's fixed, unvalidated normalisation constants.</p>
+        <p className="num mt-2 text-[10.5px] text-fg-faint">D = {totalD.toFixed(3)} is the weighted sum of the contributions. The index is 100 / (1 + D) = {(100 / (1 + totalD)).toFixed(1)}. Values are footprint medians on {cellM ? `${Math.round(cellM / 1000)} km` : "regional"} cells. The scales are fixed constants set by the service, and they are not validated.</p>
         <p className="mt-1 text-[10.5px] text-fg-faint">{SEPARATE_SCORES_NOTE}</p>
-        <button type="button" onClick={() => document.getElementById("weight-controls")?.scrollIntoView({ behavior: "smooth", block: "center" })} className="mt-2 text-[10.5px] text-info underline underline-offset-2">Changing the weights in the left column re-ranks the same footprints</button>
+        <button type="button" onClick={() => document.getElementById("weight-controls")?.scrollIntoView({ behavior: "smooth", block: "center" })} className="mt-2 text-[10.5px] text-info underline underline-offset-2">Change the weights in the left column to re-rank the same footprints</button>
       </Section>
 
       {/* C. how it was measured: the inputs, from the immutable detail row */}
@@ -140,7 +140,7 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
               <dt className="text-fg-faint">Coverage</dt><dd className="num text-fg">terrain {(profile.terrain_valid_fraction * 100).toFixed(1)}% · gradient {(profile.gradient_valid_fraction * 100).toFixed(1)}%{num(grid.support_mean) != null ? ` · support mean ${(num(grid.support_mean)! * 100).toFixed(0)}%, min ${((num(grid.support_min) ?? 0) * 100).toFixed(0)}%` : ""}</dd>
               {str(grid.aggregation) && <><dt className="text-fg-faint">Aggregation</dt><dd className="text-fg">{str(grid.aggregation)}</dd></>}
               {str(grid.projection_limit) && <><dt className="text-fg-faint">Projection</dt><dd className="text-fg">{str(grid.projection_limit)}</dd></>}
-              {survey?.grid_specification?.no_nodata_fill === true && <><dt className="text-fg-faint">Missing data</dt><dd className="text-fg">No missing-data cells were filled.</dd></>}
+              {survey?.grid_specification?.no_nodata_fill === true && <><dt className="text-fg-faint">Missing data</dt><dd className="text-fg">No missing cells were filled in.</dd></>}
             </dl>
             <details className="mt-2 rounded-lg border border-line px-2.5 py-1.5 text-xs"><summary className="cursor-pointer text-fg-muted">Full grid record</summary><KeyValues dict={grid} /></details>
           </>
@@ -155,11 +155,11 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
         <p className="mt-1.5 text-[10.5px] text-fg-muted">Rule: {candidate.novelty.buffer_rule}</p>
         <p className="mt-1 text-[10.5px] text-fg-muted">{reviewStatusLabel(candidate.novelty.review_status)}.</p>
         {known && onCompareKnown && <button type="button" onClick={() => onCompareKnown(known.id)} className="mt-1.5 text-xs text-info underline underline-offset-2">Open {known.name} among the established analogs</button>}
-        {!known && <p className="mt-1 text-[10.5px] text-fg-faint">Nearest catalog site {candidate.novelty.nearest_known_site_id.replace(/_/g, " ")} ({formatKm(candidate.novelty.nearest_known_site_distance_km)}) is in the versioned catalog but not among this app's featured Earth regions.</p>}
+        {!known && <p className="mt-1 text-[10.5px] text-fg-faint">The nearest catalog site is {candidate.novelty.nearest_known_site_id.replace(/_/g, " ")} ({formatKm(candidate.novelty.nearest_known_site_distance_km)}). It is in the catalog, but it is not one of this app's featured Earth regions.</p>}
       </Section>
 
       {/* E. what was not compared: context shown as context, never as a score input */}
-      <Section title="What was not compared" subtitle="Context only; none of this enters the index">
+      <Section title="What was not compared" subtitle="Context only. None of this is used in the index.">
         <div className="grid gap-2 text-xs">
           <div className="rounded-lg border border-line p-2.5"><p className="text-fg-faint">Climate</p>{climate ? <ClimateContext climate={climate} /> : <p className="mt-1 text-fg-muted">Not available.</p>}</div>
           <div className="rounded-lg border border-line p-2.5"><p className="text-fg-faint">Land cover</p>{ctx?.land_cover ? <KeyValues dict={ctx.land_cover as Record<string, unknown>} /> : <p className="mt-1 text-fg-muted">Not available.</p>}</div>
@@ -188,13 +188,13 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
         <BulletList items={candidate.limitations} tone="warn" empty="None stated." />
         <h3 className="eyebrow mt-3">Proposed field validation</h3>
         <div className="mt-1.5">
-          {detail ? <BulletList items={detail.proposed_field_validation} empty="The service lists no validation steps for this candidate." /> : detailPending ? <p className="text-xs text-fg-muted">Loading…</p> : <EmptyNote>Validation steps come with the candidate inputs.</EmptyNote>}
+          {detail ? <BulletList items={detail.proposed_field_validation} empty="The service lists no validation steps for this site." /> : detailPending ? <p className="text-xs text-fg-muted">Loading…</p> : <EmptyNote>Validation steps load with the site inputs.</EmptyNote>}
         </div>
         <h3 className="eyebrow mt-3">Research</h3>
         <div className="mt-1.5 text-xs text-fg-muted" data-testid="candidate-research-summary">
           {dossier.data ? (
             <p>Status <span className="text-fg">{dossier.data.record.status.replace(/_/g, " ")}</span>{dossier.data.record.updated_at ? ` · notes updated ${dossier.data.record.updated_at.slice(0, 10)}` : " · no notes saved yet"} · {dossier.data.research_questions.length} questions and {dossier.data.search_tasks.length} searches prepared · background library {dossier.data.retrieval_status === "background_available" ? "available" : "unavailable"}.</p>
-          ) : dossier.isPending && dossier.fetchStatus !== "idle" ? <p role="status">Loading research status…</p> : <p>Research status could not be loaded; open Research Prospects to see it.</p>}
+          ) : dossier.isPending && dossier.fetchStatus !== "idle" ? <p role="status">Loading research status…</p> : <p>The research status did not load. Open Research Prospects to see it.</p>}
           <button type="button" disabled={!runId} className="mt-2 rounded-lg border border-info/60 bg-info/10 px-3 py-1.5 font-semibold text-info hover:bg-info/20 disabled:opacity-40" onClick={research}>Open in Research Prospects</button>
         </div>
       </Section>

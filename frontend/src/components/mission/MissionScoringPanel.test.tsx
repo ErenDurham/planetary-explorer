@@ -21,7 +21,7 @@ function mount(){return render(<QueryClientProvider client={new QueryClient({def
 describe("task mission scoring controls",()=>{
  it("sends task-specific shares and numeric targets without modifying analog or landing priorities",async()=>{
   const landing=structuredClone(useAppStore.getState().weights);mount();
-  await screen.findByText(/current top match to your mission requirements/);
+  await screen.findByText(/This is the current best match for your mission/);
   expect(requests[0]).toMatchObject({body:"earth",mission_type:"rover_field_test",weights:{slope:50,relief:50}});
   fireEvent.change(screen.getByLabelText("Target regional slope mission priority"),{target:{value:"70"}});
   fireEvent.change(screen.getByLabelText("Target regional slope (°)"),{target:{value:"3"}});

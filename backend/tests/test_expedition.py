@@ -98,7 +98,7 @@ def test_missing_raw_file(monkeypatch,tmp_path):
 
 def test_bad_product_rejected(tmp_path):
     p=tmp_path/"bad.img";p.write_bytes(b"broken")
-    with pytest.raises(ValueError,match="byte count"):_raw(str(p),6,1)
+    with pytest.raises(ValueError,match="wrong size"):_raw(str(p),6,1)
 
 def installed():
     ctx,g=load_terrain("mars","jezero_crater")

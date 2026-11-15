@@ -8,9 +8,9 @@ import type { BodyReference } from "@/types";
 export function PlanetaryContext({ differences, bodies }: { differences: string[] | undefined; bodies: BodyReference[] }) {
   const pair = bodies.filter((b): b is BodyReference & { id: "earth" | "mars" } => b.id === "earth" || b.id === "mars");
   return (
-    <section aria-label="Planetary context, not part of the similarity index" className="rounded border border-warn/40 bg-warn/5 p-4">
-      <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-warn">Planetary context · never part of the similarity index</h2>
-      <p className="mt-0.5 text-xs text-fg-muted">Body-level differences disclosed beside every pair. They are not compared, scored or subtracted.</p>
+    <section aria-label="Planetary context. This is not part of the similarity score." className="rounded border border-warn/40 bg-warn/5 p-4">
+      <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-warn">Planetary context · not part of the similarity score</h2>
+      <p className="mt-0.5 text-xs text-fg-muted">These are differences between the two planets. They are shown for every pair, but they are not compared or scored.</p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {pair.map(b => (
           <dl key={b.id} className="rounded border border-line bg-bg-elev p-3 text-xs" style={{ borderTop: `3px solid ${BODY_COLOR[b.id]}` }}>

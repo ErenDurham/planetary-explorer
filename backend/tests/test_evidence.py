@@ -102,7 +102,7 @@ def test_llm_path_keeps_only_registry_citations_for_that_factor_and_strips_numbe
     assert [c.evidence_id for c in by_id["terrain_safety"].evidence] == ["slope_msl"]
     assert [c.evidence_id for c in by_id["elevation_suitability"].evidence] == ["elev_limit_human", "pressure_mars", "elev_msl"]  # capped at 3
     assert by_id["thermal_conditions"].evidence == [] and by_id["thermal_conditions"].weight == 0
-    assert any("citation(s) removed" in n for n in r.validation_notes)
+    assert any("citation(s) were removed" in n for n in r.validation_notes)
     assert "40 t" not in by_id["elevation_suitability"].reason and any("stated numbers" in n for n in r.validation_notes)
     assert {"max_elevation", "latitude_band"} <= set(r.constraint_evidence)
     # the model sees the registry and may only answer with its ids

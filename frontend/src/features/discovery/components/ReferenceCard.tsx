@@ -16,7 +16,7 @@ export function ReferenceCard({ reference, image, status, criteria, compact = fa
       <div className="p-3 text-sm">
         <h3 className="text-base font-semibold text-fg">{reference.name}</h3>
         <p className="num text-xs text-fg-muted">{reference.lat.toFixed(4)}°N, {reference.lon_east.toFixed(4)}°E</p>
-        <p className="mt-2 text-xs leading-relaxed text-fg-muted">Every candidate is compared with this region on {criteria.map(c => c.label.toLowerCase()).join(" and ")}, measured the same way on both planets. Nothing else about {reference.name} enters the index.</p>
+        <p className="mt-2 text-xs leading-relaxed text-fg-muted">Every candidate is compared with this region on {criteria.map(c => c.label.toLowerCase()).join(" and ")}. Both are measured the same way on both planets. Nothing else about {reference.name} is used in the index.</p>
         {image && <p className="mt-2 text-[10.5px] text-fg-faint">{image.credit}</p>}
       </div>
     </section>

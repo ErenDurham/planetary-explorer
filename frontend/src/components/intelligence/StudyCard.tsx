@@ -45,12 +45,12 @@ export function StudyCardView({ study, citations, analogName, similarityNote }: 
               })}
             </span>
           ) : (
-            <span className="text-fg-faint">motivated by site data files, no passage cited</span>
+            <span className="text-fg-faint">based on the site data, with no passage cited</span>
           )}
         </Row>
         <Row label="What this cannot establish" tone="warn">{study.cannot_infer}</Row>
       </dl>
-      {similarityNote && study.analog_candidate_id && <p className="mt-2 text-[11px] text-fg-faint">Analog similarity is a heuristic index over comparable features, not evidence that findings transfer.</p>}
+      {similarityNote && study.analog_candidate_id && <p className="mt-2 text-[11px] text-fg-faint">Analog similarity is a rough index over the compared features. It is not evidence that results transfer.</p>}
     </li>
   );
 }

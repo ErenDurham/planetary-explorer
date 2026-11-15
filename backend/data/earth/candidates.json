@@ -208,7 +208,7 @@
       "country": "Chile",
       "lat": -24.08,
       "lon_east": -69.95,
-      "description": "Hyperarid core of the Atacama near Yungay: playa sediments over alluvial fan deposits, and polygonal ground cemented by sulfates, nitrates and chlorides. Used by NASA ARADS for rover and drill testing.",
+      "description": "The hyperarid core of the Atacama, near Yungay. Playa sediments lie over alluvial fan deposits. Polygonal ground is cemented by sulfates, nitrates and chlorides. NASA ARADS used this area for rover and drill tests.",
       "tags_terrain": [
         "alluvial_fan",
         "playa",
@@ -234,7 +234,7 @@
       "country": "Antarctica (treaty)",
       "lat": -77.86,
       "lon_east": 160.72,
-      "description": "High-elevation hyper-arid polar desert (University Valley) with dry permafrost over ice-cemented ground; studied as a Mars analog for periglacial processes and ground ice.",
+      "description": "A high-elevation, hyper-arid polar desert (University Valley). Dry permafrost lies over ice-cemented ground. It is studied as a Mars analog for periglacial processes and ground ice.",
       "tags_terrain": [
         "polar_desert",
         "periglacial"
@@ -257,7 +257,7 @@
       "country": "Canada",
       "lat": 75.38,
       "lon_east": -89.68,
-      "description": "A 23 km diameter impact crater on Devon Island with impact breccia, gypsum bedrock, carbonates and hydrothermal deposits weathered to iron-oxide crusts. Home of the Haughton-Mars Project.",
+      "description": "A 23 km diameter impact crater on Devon Island. It has impact breccia, gypsum bedrock, carbonates and hydrothermal deposits weathered to iron-oxide crusts. It is home to the Haughton-Mars Project.",
       "tags_terrain": [
         "impact_crater"
       ],
@@ -283,7 +283,7 @@
       "country": "United States",
       "lat": 36.46,
       "lon_east": -116.87,
-      "description": "Desert basin with dry lakebeds (playas) and polygon-patterned salt pans at Badwater Basin; its playa sediments hold clays, chloride and sulfate salts and borate minerals. Used as an analog for Gale crater's lake deposits.",
+      "description": "A desert basin with dry lakebeds (playas). Badwater Basin has salt pans with polygon patterns. The playa sediments contain clays, chloride and sulfate salts and borate minerals. It is used as an analog for the lake deposits in Gale crater.",
       "tags_terrain": [
         "playa",
         "polygonal_terrain"
@@ -311,7 +311,7 @@
       "country": "Iceland",
       "lat": 64.85,
       "lon_east": -16.8,
-      "description": "Basaltic lava flow field from the 2014-2015 fissure eruption, emplaced on a floodplain of glacial and fluvial deposits; an analog for young volcanic terrains in Elysium Planitia.",
+      "description": "A basaltic lava flow field from the 2014-2015 fissure eruption. It lies on a floodplain of glacial and river deposits. It is an analog for young volcanic terrains in Elysium Planitia.",
       "tags_terrain": [
         "lava_plain",
         "fissure_vent",
@@ -339,7 +339,7 @@
       "country": "United States",
       "lat": 38.41,
       "lon_east": -110.79,
-      "description": "Area around the Mars Desert Research Station near Hanksville, Utah: Jurassic and Cretaceous sandstone and shale with smectite clays and sulfate salts, and exhumed, inverted palaeochannels with carbonate concretions.",
+      "description": "The area around the Mars Desert Research Station, near Hanksville, Utah. It has Jurassic and Cretaceous sandstone and shale, with smectite clays and sulfate salts. It also has exhumed, inverted palaeochannels with carbonate concretions.",
       "tags_terrain": [
         "inverted_channels"
       ],
@@ -364,7 +364,7 @@
       "country": "United States",
       "lat": 19.82,
       "lon_east": -155.47,
-      "description": "Summit region of Mauna Kea: tephra cones such as Pu'u Poli'ahu, which holds a hematite-bearing outcrop, and upper flanks used for NASA rover and in-situ resource field tests. NOTE: the 0.5 deg footprint centred on the summit spans the whole upper mountain, so footprint statistics describe the summit region as a whole, not only the test sites.",
+      "description": "The summit region of Mauna Kea. It has tephra cones such as Pu'u Poli'ahu, which has a hematite-bearing outcrop. NASA used the upper flanks for rover and in-situ resource field tests. Note: the 0.5 deg footprint centred on the summit covers the whole upper mountain. So the footprint values describe the whole summit region, not only the test sites.",
       "tags_terrain": [
         "cinder_cone",
         "volcanic_slope"

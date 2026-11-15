@@ -22,7 +22,7 @@ from app.models import AnalogWeight, EnvironmentalProfile
 from app.models.analog_rank import AnalogRankRequest, AnalogRankResponse, ExcludedFeature, LocationRef, RankedCandidate
 from app.services.analog_engine import CLOSE_D, DIFFERENT_D, _fmt, _tags, _value, _words, feature_distance, load_spec
 
-TIE_RULE = "Rank by full-precision distance D ascending; equal D ordered by candidate id ascending. Rounded display values that look equal are not ties."
+TIE_RULE = "Sites are ranked by full-precision distance D, from smallest to largest. Sites with equal D are ordered by site id. Rounded values that look equal are not ties."
 
 
 def _resolve_weights(weights: list[AnalogWeight] | None) -> tuple[dict[str, float], list[str]]:
@@ -33,7 +33,7 @@ def _resolve_weights(weights: list[AnalogWeight] | None) -> tuple[dict[str, floa
         if aw.feature_id in w:
             w[aw.feature_id] = float(aw.weight)
         else:
-            warnings.append(f"ignored unknown analog weight '{aw.feature_id}'")
+            warnings.append(f"Unknown analog weight '{aw.feature_id}' was ignored")
     return w, warnings
 
 
@@ -49,19 +49,19 @@ def _narrative(fds, mars_p, earth_p):
     em = _tags(_value(earth_p, "mineralogy_tags")[0]) or []
     st, sm = sorted(set(mt) & set(et)), sorted(set(mm) & set(em))
     if st:
-        shared.append(f"Terrain morphology shared: {_words(st)}")
+        shared.append(f"Shared landforms: {_words(st)}")
     elif mt and et:
-        diffs.append(f"Terrain morphology: no shared tags")
+        diffs.append("No shared landforms")
     if sm:
-        shared.append(f"Composition shared: {_words(sm)}")
+        shared.append(f"Shared minerals: {_words(sm)}")
     elif mm and em:
-        diffs.append("Composition: no shared tags")
+        diffs.append("No shared minerals")
     for f in fds:
         if f.comparable and f.method == "scaled_absolute_difference" and f.distance is not None and f.raw_weight > 0:
             short = f.label.split(" (")[0]
             pair = f"{short}: Mars {_fmt(f.mars_value, f.unit)} vs Earth {_fmt(f.earth_value, f.unit)}"
             if f.distance <= CLOSE_D:
-                shared.append(pair + " (close at the harmonised scale)")
+                shared.append(pair + " (close at the matched scale)")
             elif f.distance > DIFFERENT_D:
                 diffs.append(pair + f" ({f.distance:.1f}x the comparison scale)")
     return shared, diffs
@@ -102,13 +102,13 @@ def rank_pool(req: AnalogRankRequest, store) -> AnalogRankResponse:
             continue
         missing = [loc.id for loc, _, _, fds in per_cand if not next(f for f in fds if f.feature_id == fid).comparable]
         if missing:
-            excluded.append(ExcludedFeature(feature_id=fid, label=labels[fid], reason=f"not comparable for {len(missing)} of {len(per_cand)} candidates ({', '.join(missing[:3])}{'...' if len(missing) > 3 else ''}); dropped pool-wide so every pair is scored on the same features"))
+            excluded.append(ExcludedFeature(feature_id=fid, label=labels[fid], reason=f"not comparable for {len(missing)} of {len(per_cand)} sites ({', '.join(missing[:3])}{'...' if len(missing) > 3 else ''}). It is left out for every site, so every pair is scored on the same features"))
             continue
         basis.append(fid)
     wsum = sum(w[f] for f in basis)
     eff = {f: w[f] / wsum for f in basis} if wsum > 0 else {}
     if not basis:
-        warnings.append("no positive-weight feature is comparable across the whole pool; the pool is unrankable")
+        warnings.append("No feature with a positive weight can be compared for every site, so the sites cannot be ranked")
 
     cands: list[RankedCandidate] = []
     full_distances: dict[str, float] = {}
@@ -124,7 +124,7 @@ def rank_pool(req: AnalogRankRequest, store) -> AnalogRankResponse:
         srcs = sorted(set(mp.sources.keys()) | (set(ep.sources.keys()) if ep else set()))
         cands.append(RankedCandidate(location=loc, rank=None, rank_color_position=None, similarity=None if sim is None else round(sim, 2), distance=None if D is None else round(D, 6),
                                      feature_distances=fds, coverage_fraction=1.0 if basis else 0.0,
-                                     unrankable_reason=None if basis else "no common comparable feature basis in this pool",
+                                     unrankable_reason=None if basis else "No feature can be compared for every site",
                                      shared_characteristics=shared, important_differences=diffs, sources=srcs))
     ranked = [c for c in cands if c.distance is not None]
     ranked.sort(key=lambda c: (full_distances[c.location.id], c.location.id))

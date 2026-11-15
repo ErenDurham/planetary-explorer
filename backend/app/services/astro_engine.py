@@ -52,12 +52,12 @@ choosing evidence_gaps or clarify and leaving evidence empty. Return JSON only.
 """
 
 LEADS = {
-    "ranking": "Here are the computed factors relevant to the current mission priorities. Review their limitations before interpreting the ranking.",
-    "evidence_gaps": "Start with the evidence gaps and regional measurement limits. The available context cannot resolve every research question.",
-    "analogs": "Inspect the reference and candidate matches below. Analog similarity and landing suitability answer different questions.",
-    "next_steps": "Use the evidence below to choose a focused next investigation. The suggested actions open existing views without changing your priorities.",
-    "mission": "Review your objective and priorities in Mission Design. Any suggested priority changes must be reviewed and applied there.",
-    "clarify": "Could you specify the location, factor, or comparison you want to investigate? The available context is shown below.",
+    "ranking": "Here are the calculated factors for the current mission priorities. Check their limits before reading the ranking.",
+    "evidence_gaps": "Start with the evidence gaps and the limits of the regional measurements. The available data cannot answer every research question.",
+    "analogs": "Look at the reference and the matched sites below. Analog similarity and landing suitability answer different questions.",
+    "next_steps": "Use the evidence below to choose what to investigate next. The suggested actions open views in the app. They do not change your priorities.",
+    "mission": "Review your objective and priorities in Mission Design. Any suggested priority changes must be reviewed and saved there.",
+    "clarify": "Which location, factor or comparison do you want to investigate? The available data is shown below.",
 }
 
 
@@ -123,8 +123,8 @@ def chat(req: AstroRequest) -> AstroResponse:
     facts, limitations = (
         [],
         [
-            "Relative decision-support indices are not probabilities or landing-safety certifications.",
-            "Terrain measurements are regional; missing measurements remain unknown. Earth analog similarity does not establish Mars safety.",
+            "The scores are relative indices. They are not probabilities, and they do not certify landing safety.",
+            "Terrain measurements are regional. Missing measurements are still unknown. Similarity to an Earth analog does not show that a Mars site is safe.",
         ],
     )
     actions = [
@@ -287,7 +287,7 @@ def chat(req: AstroRequest) -> AstroResponse:
             :3
         ]:
             facts.append(
-                f"Leading Mars candidate: {candidate.site_name}; landing index {candidate.score}; rank {candidate.rank}. These reflect the current mission priorities."
+                f"The top Mars site is {candidate.site_name}. Its landing index is {candidate.score} and its rank is {candidate.rank}. These use the current mission priorities."
             )
             actions.append(
                 AstroAction(
@@ -314,7 +314,7 @@ def chat(req: AstroRequest) -> AstroResponse:
                 )
             )
         limitations.append(
-            "Select a Mars reference before interpreting directional analog ranks; catalog order is not a scientific ranking."
+            "Select a Mars reference before reading the analog ranks. The catalog order is not a scientific ranking."
         )
     profile = (
         store.profile(current.id)
@@ -327,7 +327,7 @@ def chat(req: AstroRequest) -> AstroResponse:
         for measurement in profile.measurements[:16]:
             if measurement.is_missing or measurement.value is None:
                 limitations.append(
-                    f"{current.name}: {measurement.label} is unavailable; it must not be treated as zero."
+                    f"{current.name}: {measurement.label} is not available. It must not be treated as zero."
                 )
             elif body == "earth":
                 facts.append(
@@ -357,11 +357,11 @@ def chat(req: AstroRequest) -> AstroResponse:
             text = re.sub(r"\d+\.\d{3,}", lambda m: f"{float(m.group()):.1f}", text)
             readable.append(text)
         fallback_answer = "\n\n".join(readable) if readable else current.description
-        fallback_answer += "\n\nThese results reflect the current priorities and regional data; they do not establish local safety."
+        fallback_answer += "\n\nThese results use the current priorities and regional data. They do not show local safety."
     elif body == "mars":
-        fallback_answer = "Start with the candidates under your current mission priorities. Select a location to investigate its factors and evidence."
+        fallback_answer = "Start with the sites ranked for your current mission priorities. Select a site to see its factors and evidence."
     else:
-        fallback_answer = "Explore Earth locations or choose a Mars reference to compare environmental characteristics."
+        fallback_answer = "Explore Earth sites, or choose a Mars reference to compare their environments."
     if not current and facts:
         fallback_answer += "\n\n" + "\n\n".join(facts[:2])
     out = AstroResponse(
@@ -383,7 +383,7 @@ def chat(req: AstroRequest) -> AstroResponse:
     if not llm_client.enabled("astro"):   # a local model answers chat only when OLLAMA_FEATURES lists "astro"
         out.fallback_reason = "not_configured"
         out.limitations.append(
-            "AI is not configured. Showing deterministic context and navigation guidance."
+            "AI is not set up. Showing fixed-rule context and navigation help."
         )
         return out
     known_actions = {a.id for a in actions}
@@ -497,12 +497,12 @@ def chat(req: AstroRequest) -> AstroResponse:
         out.generated_by = "llm"
         if not draft.evidence:
             out.limitations.append(
-                "No supporting excerpt was selected for this response. Treat it as navigation guidance, not evidence for a scientific conclusion."
+                "No supporting excerpt was picked for this reply. Treat it as navigation help, not as evidence for a scientific conclusion."
             )
     except Exception as exc:  # noqa: BLE001 — optional AI must degrade on SDK/network/validation failures
         llm_client.record_error(exc)
         out.fallback_reason = "rate_limit" if getattr(exc, "status_code", None) == 429 else "validation_error" if isinstance(exc, (ValueError, TypeError)) else "provider_error"
         out.limitations.append(
-            "AI was unavailable or its response could not be validated. Showing deterministic guidance."
+            "AI was not available, or its reply could not be checked. Showing fixed-rule guidance."
         )
     return out

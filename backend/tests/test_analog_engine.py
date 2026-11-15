@@ -64,19 +64,19 @@ def test_tag_distance_note_names_shared_and_unshared_tags():
     assert d.mars_value == ["impact_crater", "delta", "crater_floor"] and d.earth_value == ["impact_crater", "polar_desert"]
 
 
-@pytest.mark.parametrize("mars,earth,where", [(None, 1.0, "Mars side"), (1.0, None, "Earth side"), (None, None, "both")])
+@pytest.mark.parametrize("mars,earth,where", [(None, 1.0, "the Mars site"), (1.0, None, "the Earth site"), (None, None, "both")])
 def test_missing_on_either_side_is_noncomparable_never_imputed(mars, earth, where):
     _, mp = make_site("m", {SLOPE: mars})
     _, ep = make_candidate("e", {SLOPE: earth})
     d = feature_distance(FEATURES[SLOPE], mp, ep, 10)
     assert not d.comparable and d.distance is None and d.normalized_weight is None and d.contribution is None
-    assert where in d.note and "not imputed" in d.note
+    assert where in d.note and "not estimated" in d.note
 
 
 def test_earth_profile_absent_is_noncomparable():
     _, mp = make_site("m", {SLOPE: 1.0})
     d = feature_distance(FEATURES[SLOPE], mp, None, 10)
-    assert not d.comparable and "Earth side" in d.note
+    assert not d.comparable and "the Earth site" in d.note
 
 
 @pytest.mark.parametrize("bad", [float("nan"), float("inf"), "1.0", True])
@@ -102,7 +102,7 @@ def test_tag_feature_holding_prose_is_noncomparable_not_split_into_characters():
     _, mp = make_site("m", {TERRAIN: "impact crater with a delta"})
     _, ep = make_candidate("e", {TERRAIN: ["impact_crater"]})
     d = feature_distance(FEATURES[TERRAIN], mp, ep, 20)
-    assert not d.comparable and "lists of tags" in d.note
+    assert not d.comparable and "lists of labels" in d.note
 
 
 def test_unknown_method_is_noncomparable():
@@ -120,8 +120,8 @@ def test_identical_profiles_give_similarity_100_and_distance_0():
     assert m.distance == 0.0 and m.similarity == 100.0
     assert all(f.distance == 0.0 for f in m.feature_distances if f.comparable)
     assert m.important_differences == []
-    assert any(x.startswith("Terrain morphology shared") for x in m.shared_characteristics)
-    assert any(x.startswith("Composition shared") for x in m.shared_characteristics)
+    assert any(x.startswith("Shared landforms") for x in m.shared_characteristics)
+    assert any(x.startswith("Shared minerals") for x in m.shared_characteristics)
 
 
 def test_normalised_weights_sum_to_one_over_comparable_features_and_similarity_formula():
@@ -163,7 +163,7 @@ def test_zero_total_weight_gives_similarity_none_with_warning():
     cands = [make_candidate("a", MARS_FULL), make_candidate("b", MARS_FULL)]
     matches, warnings = match_all(s, mp, cands, _weights(**{fid: 0 for fid in FEATURES}), 5)
     assert all(m.similarity is None and m.distance is None and m.rank is None for m in matches)
-    assert any("all analog weights are zero" in w for w in warnings)
+    assert any("All analog weights are zero" in w for w in warnings)
     assert [m.earth_candidate.id for m in matches] == ["a", "b"], "still deterministic by id"
 
 
@@ -174,7 +174,7 @@ def test_candidate_with_nothing_comparable_is_unranked_and_warned():
     assert [m.earth_candidate.id for m in matches] == ["ok", "bare"]
     assert matches[0].rank == 1 and matches[0].similarity == 100.0
     assert matches[1].rank is None and matches[1].similarity is None and matches[1].completeness_fraction == 0.0
-    assert any("bare" in w and "no comparable" in w for w in warnings)
+    assert any("bare" in w and "can be compared" in w for w in warnings)
     assert any("no processed profile" in x for x in matches[1].limitations)
     json.dumps([m.model_dump() for m in matches], allow_nan=False)
 
@@ -186,7 +186,7 @@ def test_mars_site_lacking_tag_lists_still_matches_on_numeric_features():
     m = matches[0]
     assert m.similarity is not None and m.rank == 1
     tag_fds = [f for f in m.feature_distances if f.feature_id in (TERRAIN, MINERAL)]
-    assert all(not f.comparable and "Mars side" in f.note for f in tag_fds)
+    assert all(not f.comparable and "the Mars site" in f.note for f in tag_fds)
     assert m.shared_characteristics and m.important_differences == []  # no tag diff claimed when one side has no tags
     assert warnings == []
 
@@ -267,7 +267,7 @@ def test_terrain_only_weights_rank_haughton_first_for_jezero():
     assert base[0].earth_candidate.id == "mdrs_utah"
     terrain = next(f for f in alt[0].feature_distances if f.feature_id == TERRAIN)
     assert terrain.normalized_weight == 1.0 and "impact crater" in terrain.note
-    assert any(x.startswith("Terrain morphology shared: impact crater") for x in alt[0].shared_characteristics)
+    assert any(x.startswith("Shared landforms: impact crater") for x in alt[0].shared_characteristics)
     # with only one comparable feature, similarity is 100/(1+d_terrain) exactly
     assert alt[0].similarity == pytest.approx(100 / (1 + terrain.distance), abs=0.01)
 

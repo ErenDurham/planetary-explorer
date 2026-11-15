@@ -61,7 +61,7 @@ export function WaypointList({ waypoints, selectedId, bounds, start, onSelect, o
           </li>
         );
       })}
-      {waypoints.length === 0 && <li className="rounded-lg border border-dashed border-line px-2.5 py-2 text-xs text-fg-faint">No waypoints yet. Click the map with the add tool, or press Enter on the map to place one at its centre.</li>}
+      {waypoints.length === 0 && <li className="rounded-lg border border-dashed border-line px-2.5 py-2 text-xs text-fg-faint">No waypoints yet. Click the map with the add tool. You can also press Enter on the map to place one at its centre.</li>}
     </ol>
   );
 }

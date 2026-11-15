@@ -45,7 +45,7 @@ def test_reviewed_requires_summary_and_direct_or_contradictory_source(client,not
     result=client.post(url(notebook),json=payload)
     assert result.status_code==200 and result.json()["status"]=="literature_reviewed"
     d=client.get(url(notebook)).json()
-    assert "analyst supplied" in " ".join(d["limitations"]).lower()
+    assert "entered by the analyst" in " ".join(d["limitations"]).lower()
     assert "field validation" in " ".join(d["limitations"]).lower()
 
 
@@ -84,7 +84,7 @@ def test_brief_export_is_read_only_deterministic_and_honest(client, notebook, mo
     assert data["record"]["updated_at"] is None
     assert not discovery_research.record_path(*notebook).exists()
     assert "draft" in data["markdown"].lower()
-    assert "not the current UI ranking" in " ".join(data["limitations"])
+    assert "does not have the current ranking" in " ".join(data["limitations"])
     assert data["discovery"]["provenance"]
     assert data["discovery"]["reference_profile"]
     assert "candidate_research" not in data["discovery"]["validation"]

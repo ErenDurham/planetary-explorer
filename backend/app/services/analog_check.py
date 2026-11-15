@@ -38,8 +38,8 @@ COMPARED = {
     "surface_roughness": ("roughness_regional_m", "m", _tolerance("roughness_regional_m")),
 }
 NOT_COMPARABLE = {
-    "elevation_suitability": ("elevation_median_m", "m", "Not comparable across planets: Earth elevations are above sea level, Mars elevations above the MOLA areoid."),
-    "solar_illumination": ("insolation_toa_annual_mean_wm2", "W/m2", "Not directly comparable: Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet)."),
+    "elevation_suitability": ("elevation_median_m", "m", "This cannot be compared across planets. Earth elevations are above sea level. Mars elevations are above the MOLA areoid."),
+    "solar_illumination": ("insolation_toa_annual_mean_wm2", "W/m2", "This cannot be compared directly. Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet)."),
 }
 
 
@@ -116,7 +116,7 @@ def check(earth_id: str, mars_id: str, chosen_by: str) -> AnalogCheck | None:
         ev, mv = _value(ep, feature), _value(mp, feature)
         if ev is None or mv is None:
             factors.append(AnalogFactorCheck(criterion_id=cid, earth_value=ev, mars_value=mv, unit=unit, tolerance=tol, comparable=None,
-                                             note="No measured value on one of the two sites, so they cannot be compared."))
+                                             note="One of the two sites has no measured value, so they cannot be compared."))
             continue
         diff = abs(ev - mv)
         ok = diff <= tol

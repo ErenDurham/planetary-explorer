@@ -83,7 +83,7 @@ export function ZoomableImage({ entry, geo, zoom, onZoom, frameClassName = "h-[3
     <div>
       {failed ? (
         <div role="alert" className={`flex ${frameClassName} items-center justify-center rounded border border-line bg-black/60 p-4 text-sm text-fg`}>
-          <span>Image could not be loaded.</span>
+          <span>The image did not load.</span>
           <button type="button" className="ml-3 text-info underline" onClick={() => { setFailed(false); setLoaded(false); setAttempt(n => n + 1); }}>Retry image</button>
         </div>
       ) : (
@@ -92,7 +92,7 @@ export function ZoomableImage({ entry, geo, zoom, onZoom, frameClassName = "h-[3
           ref={frameRef}
           tabIndex={0}
           role="group"
-          aria-label={`${ariaLabel}. Zoom ${Math.round(zoom * 100)}%. Plus and minus zoom, 0 fits, arrow keys pan.`}
+          aria-label={`${ariaLabel}. Zoom ${Math.round(zoom * 100)}%. Plus and minus zoom. 0 fits the image. The arrow keys pan.`}
           onKeyDown={onKey}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}

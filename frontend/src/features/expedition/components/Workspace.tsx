@@ -92,7 +92,7 @@ export function Workspace({ context, start, service, terrain, basemaps, onOpenRe
         {active && (
           <div role="status" data-testid="data-status" className={`flex items-start gap-2 rounded-lg border px-3 py-2 text-xs ${active.plan.data_status === "unavailable" ? "border-danger/40 bg-danger/10 text-danger" : "border-warn/40 bg-warn/10 text-warn"}`}>
             <Layers className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-            <span><span className="font-semibold">Terrain data {active.plan.data_status}.</span> <span className="text-fg">{active.plan.terrain.dem.note ?? (active.plan.data_status === "unavailable" ? "No routing terrain is installed for this region; no route was computed." : "Regional data only.")}{active.plan.terrain.dem.cell_height_m ? ` Grid cells are about ${(active.plan.terrain.dem.cell_height_m / 1000).toFixed(1)} km; stops snap to cell centres.` : ""}</span></span>
+            <span><span className="font-semibold">Terrain data {active.plan.data_status}.</span> <span className="text-fg">{active.plan.terrain.dem.note ?? (active.plan.data_status === "unavailable" ? "No routing terrain is installed for this region. No route was calculated." : "Regional data only.")}{active.plan.terrain.dem.cell_height_m ? ` Grid cells are about ${(active.plan.terrain.dem.cell_height_m / 1000).toFixed(1)} km. Stops are moved to the cell centres.` : ""}</span></span>
           </div>
         )}
         <div className="grid gap-3 md:grid-cols-2">
@@ -102,7 +102,7 @@ export function Workspace({ context, start, service, terrain, basemaps, onOpenRe
           </div>
           <div className="rounded-xl border border-line bg-bg-elev px-3 py-2">
             <p className="eyebrow mb-2">Route warnings · {active?.plan.warnings.length ?? 0}</p>
-            {active ? (active.plan.warnings.length ? <RouteWarnings warnings={active.plan.warnings} onHighlight={setHighlight} /> : <p className="text-xs text-fg-muted">The service raised no warnings for this route.</p>) : <p className="text-xs text-fg-faint">Warnings and difficult terrain reported by the service appear here after a calculation.</p>}
+            {active ? (active.plan.warnings.length ? <RouteWarnings warnings={active.plan.warnings} onHighlight={setHighlight} /> : <p className="text-xs text-fg-muted">The service raised no warnings for this route.</p>) : <p className="text-xs text-fg-faint">Warnings and difficult terrain from the service appear here after a calculation.</p>}
           </div>
         </div>
       </section>

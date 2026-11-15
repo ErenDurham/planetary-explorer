@@ -180,14 +180,14 @@ def deterministic(site: Site, profile: EnvironmentalProfile, result: Suitability
     cards, gap = build_study_cards(site, profile, result, evidence, analogs, cits, objective)
     if result:
         for f in sorted((f for f in result.factor_scores if f.suitability is not None), key=lambda f: -(f.weighted_contribution or 0)):
-            line = f"{f.label}: {f.feature_value:g} {f.unit or ''} -> suitability {f.suitability:.2f}, contributing {f.weighted_contribution or 0:.1f} of {result.score or 0:.1f} points."
+            line = f"{f.label}: {f.feature_value:g} {f.unit or ''} -> suitability {f.suitability:.2f}. It adds {f.weighted_contribution or 0:.1f} of {result.score or 0:.1f} points."
             (sec.favorable if f.suitability >= 0.6 else sec.unfavorable).append(line)
             sec.influential_factors.append(f"{f.label} (normalised weight {f.normalized_weight or 0:.2f})")
-        sec.risks += result.risks or ["No scored criterion fell below the 0.4 suitability level at the regional scale."]
+        sec.risks += result.risks or ["No scored factor fell below a suitability of 0.4 at the regional scale."]
         if not result.eligibility.eligible:
-            sec.risks += [f"Fails hard constraint {c.constraint_id}: {c.feature_value:g} {c.operator} {c.threshold} is false. {c.rationale}" for c in result.eligibility.failed_constraints]
-        sec.missing_evidence += [f"Criterion excluded: {c}" for c in result.completeness.excluded_criteria]
-    sec.missing_evidence += [f"No measurement for {fid} in profile {profile.profile_version}." for fid in profile.completeness.missing_feature_ids]
+            sec.risks += [f"Fails hard constraint {c.constraint_id}: {c.feature_value:g} {c.operator} {c.threshold} is not true. {c.rationale}" for c in result.eligibility.failed_constraints]
+        sec.missing_evidence += [f"Factor left out: {c}" for c in result.completeness.excluded_criteria]
+    sec.missing_evidence += [f"Profile {profile.profile_version} has no measurement for {fid}." for fid in profile.completeness.missing_feature_ids]
     # Applications are the structured study cards (digest_engine): proposals
     # motivated by cited passages and this site's data, never page fragments,
     # mission chronology or a repetition of the analog ranking. The string
@@ -197,14 +197,14 @@ def deterministic(site: Site, profile: EnvironmentalProfile, result: Suitability
     if gap:
         sec.missing_evidence.append(gap)
     sec.future_investigation += [
-        "Sample HiRISE/CTX-derived DTMs over the landing ellipse to replace regional MOLA slopes with metre-scale hazard maps.",
-        "Integrate THEMIS/TES thermal inertia and rock abundance so the thermal and hazard criteria can be scored.",
+        "Sample HiRISE/CTX DTMs over the landing ellipse. These would replace regional MOLA slopes with metre-scale hazard maps.",
+        "Add THEMIS/TES thermal inertia and rock abundance, so the thermal and hazard factors can be scored.",
     ]
     if not evidence:
-        sec.missing_evidence.append("No scientific documents were retrieved (index empty or unavailable); explanation is built from measurements and scoring only.")
-    limitations = ["Deterministic template assembled from measurements, scoring results and retrieved excerpts; no language model was used.",
-                   "Source digests are extractive sentences chosen by word overlap, not summaries; proposed studies are hypotheses, not performed work.",
-                   "Citations point at retrieved passages only; read the source before relying on a claim."] + digest_notes + list(extra_limitations or [])
+        sec.missing_evidence.append("No scientific documents were found, because the index is empty or not available. The explanation only uses the measurements and scores.")
+    limitations = ["This text was built by fixed rules from the measurements, scores and retrieved excerpts. No language model was used.",
+                   "Source digests are sentences picked by shared words. They are not summaries. Proposed studies are ideas, not completed work.",
+                   "Citations only point to the retrieved passages. Read the source before relying on a claim."] + digest_notes + list(extra_limitations or [])
     return ResearchExplanation(site_id=site.id, generated_by="deterministic_fallback", model=None, sections=sec, supporting_evidence=evidence, citations=cits,
                                source_digests=digests, research_studies=cards, evidence_gap=gap,
                                limitations=limitations, cached=False, generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"))
@@ -311,9 +311,9 @@ def validate_citations(sec: ExplanationSections, allowed: list[Citation]) -> tup
         cleaned[key] = new_lines
     notes = []
     if removed:
-        notes.append(f"{removed} unverifiable citation handles removed")
+        notes.append(f"{removed} citation handles that could not be checked were removed")
     if used == 0:
-        notes.append("No citations were produced; see supporting evidence.")
+        notes.append("No citations were produced. See the supporting evidence.")
     return ExplanationSections(**cleaned), notes
 
 
@@ -401,7 +401,7 @@ def explain(site: Site, profile: EnvironmentalProfile, result: SuitabilityResult
         _last_llm_error = (time.time(), f"{type(e).__name__}: {e}")
         log.warning("explanation: LLM path failed (%s); using deterministic fallback", _last_llm_error[1][:200])
         return deterministic(site, profile, result, evidence, analogs, objective=objective,
-                             extra_limitations=[f"Language model unavailable or returned an invalid answer ({type(e).__name__}); deterministic template used instead."])
+                             extra_limitations=[f"The language model was not available or gave an invalid answer ({type(e).__name__}). The fixed-rule text was used instead."])
 
     sections, cite_notes = validate_citations(sections, cits)
     unknown = check_numbers(_sections_text(sections), _result_payload(result), _measurements_payload(profile), _analogs_payload(analogs),
@@ -409,8 +409,8 @@ def explain(site: Site, profile: EnvironmentalProfile, result: SuitabilityResult
     if unknown:
         log.warning("explanation: LLM introduced numbers not in the inputs %s; using deterministic fallback", unknown[:10])
         return deterministic(site, profile, result, evidence, analogs, objective=objective,
-                             extra_limitations=["Language model answer discarded: it contained numbers not present in the structured data ("
-                                                + ", ".join(unknown[:8]) + "); deterministic template used instead."])
+                             extra_limitations=["The language model answer was discarded. It had numbers that are not in the data ("
+                                                + ", ".join(unknown[:8]) + "). The fixed-rule text was used instead."])
 
     # Digests and study cards: model proposals admitted only through the validators.
     digests, digest_notes = build_digests(evidence, site, result, objective, cits, llm_items=llm_digests)
@@ -428,15 +428,15 @@ def explain(site: Site, profile: EnvironmentalProfile, result: SuitabilityResult
     if not cards:
         cards, gap = det_cards, det_gap
         if llm_cards and card_notes:
-            card_notes.append("Deterministic study cards used instead.")
+            card_notes.append("Fixed-rule study cards were used instead.")
     sections.research_applications = [f"Proposed study ({', '.join(c.motivating_citation_ids) or 'no passage cited'}): {c.title} {c.cannot_infer} This study has not been performed." for c in cards]
     if gap:
         sections.missing_evidence.append(gap)
 
     limitations = [
-        f"Narrative generated by {s.llm_model} from the structured measurements, scoring results and retrieved excerpts; the model cannot change scores or add measurements.",
-        "Citations point at retrieved passages only; read the source before relying on a claim.",
-        "Proposed studies are hypotheses, not performed work; digests summarise retrieved passages only.",
+        f"This text was written by {s.llm_model} from the measurements, scores and retrieved excerpts. The model cannot change scores or add measurements.",
+        "Citations only point to the retrieved passages. Read the source before relying on a claim.",
+        "Proposed studies are ideas, not completed work. Digests only summarise the retrieved passages.",
     ] + cite_notes + digest_notes + card_notes
     out = ResearchExplanation(site_id=site.id, generated_by="llm", model=s.llm_model, sections=sections, supporting_evidence=evidence, citations=cits,
                               source_digests=digests, research_studies=cards, evidence_gap=gap,

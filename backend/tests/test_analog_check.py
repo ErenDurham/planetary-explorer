@@ -39,7 +39,7 @@ def test_comparison_uses_measured_profile_data_and_the_analog_scales():
     # elevation and sunlight are reported but never called comparable across planets
     for cid in ("elevation_suitability", "solar_illumination"):
         f = next(x for x in c.factors if x.criterion_id == cid)
-        assert f.comparable is None and "comparable" in f.note.lower()
+        assert f.comparable is None and "compared" in f.note.lower()
 
 
 def test_a_large_difference_is_not_comparable():

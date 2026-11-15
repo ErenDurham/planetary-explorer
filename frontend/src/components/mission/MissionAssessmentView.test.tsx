@@ -15,7 +15,7 @@ describe("MissionAssessmentList", () => {
     const first = within(screen.getByRole("list", { name: "Ranked sites" })).getAllByRole("button")[0];
     expect(first).toHaveAttribute("aria-pressed", "true");
     expect(first.querySelector('[aria-hidden] span')).toHaveStyle({ width: `${earth.results[0].score}%` });
-    expect(first).toHaveAccessibleName(/100% active-weight data availability/);
+    expect(first).toHaveAccessibleName(/Data available for 100% of the weighted factors/);
     fireEvent.click(first);
     expect(onSelect).toHaveBeenCalledWith(earth.results[0].site_id);
     const mars = { ...earth, body: "mars" as const, results: earth.results.map(r => ({ ...r, body: "mars" as const })) };

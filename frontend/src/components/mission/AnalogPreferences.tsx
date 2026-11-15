@@ -46,7 +46,7 @@ export function describeChange(previous: Record<string, number> | null | undefin
   s += ".";
   const moved = (changes ?? []).filter((c) => c.previousRank !== c.newRank);
   if (!changes) return s;
-  if (moved.length === 0) return `${s} Ranks did not change.`;
+  if (moved.length === 0) return `${s} The ranks did not change.`;
   const parts = moved.slice(0, 4).map((c) => `${c.name} ${c.previousRank ?? "unranked"} → ${c.newRank ?? "unranked"}`);
   return `${s} Rank changes: ${parts.join("; ")}${moved.length > 4 ? ` and ${moved.length - 4} more` : ""}.`;
 }
@@ -68,9 +68,9 @@ export function AnalogPreferences({ unavailable = {}, rankChanges, previousShare
   return (
     <Section
       title={title}
-      subtitle={compact ? undefined : "Shares total 100%. Increase a factor to give it more influence on cross-planet matching."}
+      subtitle={compact ? undefined : "The shares add up to 100%. Raise a factor to give it more weight when matching across planets."}
       actions={
-        <button type="button" onClick={reset} disabled={atRecommended} className="rounded border border-line px-2 py-1 text-[11px] text-fg-muted hover:text-fg disabled:opacity-40" title="Restore the applied objective's recommended analog preferences">
+        <button type="button" onClick={reset} disabled={atRecommended} className="rounded border border-line px-2 py-1 text-[11px] text-fg-muted hover:text-fg disabled:opacity-40" title="Go back to the suggested analog preferences for this objective">
           Reset
         </button>
       }
@@ -100,7 +100,7 @@ export function AnalogPreferences({ unavailable = {}, rankChanges, previousShare
                 onChange={(e) => setAnalogWeight(f.id, Number(e.target.value))}
                 className="col-span-2"
               />
-              {off && <span className="col-span-2 text-[10.5px] text-warn">Unavailable for this ranking: {unavailable[f.id]}</span>}
+              {off && <span className="col-span-2 text-[10.5px] text-warn">Not available for this ranking: {unavailable[f.id]}</span>}
             </li>
           );
         })}

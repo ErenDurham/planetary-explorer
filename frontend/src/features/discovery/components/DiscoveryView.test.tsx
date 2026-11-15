@@ -44,7 +44,7 @@ describe("DiscoveryView", () => {
     mount();
     expect(await screen.findByText("Survey installed · discovery-v1")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Find Earth regions with terrain similar to Jezero Crater" })).toBeInTheDocument();
-    expect(screen.getByText(/promising starting points for research, not confirmed planetary analogs/)).toBeInTheDocument();
+    expect(screen.getByText(/They are good starting points for research\. They are not confirmed planetary analogs/)).toBeInTheDocument();
     expect(screen.getByText(/Your mission objective asks for new regions/)).toBeInTheDocument();
     expect(screen.getByRole("radiogroup", { name: "Explore mode" })).toBeInTheDocument();
     // the one installed survey is named, the area searched is stated, and ranking starts on its own
@@ -56,7 +56,7 @@ describe("DiscoveryView", () => {
     // headline numbers bound to the response: evaluated, presented, footprint, resolution
     const stats = screen.getByTestId("survey-stats");
     expect(stats).toHaveTextContent(/16locations evaluated/);
-    expect(stats).toHaveTextContent(/3spatially separated candidates presented/);
+    expect(stats).toHaveTextContent(/3well-spaced candidates shown/);
     expect(stats).toHaveTextContent(/60 × 60 kmcomparison footprints/);
     expect(stats).toHaveTextContent(/4 kmterrain analysis resolution/);
     expect(within(list).getAllByRole("listitem")).toHaveLength(3);
@@ -90,15 +90,15 @@ describe("DiscoveryView", () => {
     expect(within(panel).getByRole("article", { name: /Candidate evidence/ })).toBe(card);
     expect(card).not.toHaveTextContent("Proposed terrain analog candidate");   // removed as fluff
     expect(card).toHaveTextContent("61.4");
-    expect(card).toHaveTextContent(/Terrain similarity: 61\.4\/100\. This reflects how closely the region's measured slope and relief match Jezero Crater under the selected weighting \(slope 50%, relief 50%\)\. It is not a probability/);
+    expect(card).toHaveTextContent(/Terrain similarity: 61\.4\/100\. It shows how closely the region's measured slope and relief match Jezero Crater with the selected weights \(slope 50%, relief 50%\)\. It is not a probability/);
     expect(card).toHaveTextContent(/Regional (slope|relief) is close: .* at Jezero Crater/);
     expect(card).toHaveTextContent(/Not compared: climate, land cover, geology and materials/);
     expect(card).toHaveTextContent(/The catalog is incomplete/);
     expect(within(card).getByRole("table")).toHaveTextContent(/Regional median slope.*1\.3°.*1\.077°/);
     expect(card).toHaveTextContent(/Not near a catalog location/);
-    expect(card).toHaveTextContent(/not a claim of novelty/);
+    expect(card).toHaveTextContent(/this does not prove the site is new/);
     expect(card).toHaveTextContent(/Geology: not assessed/);
-    expect(card).toHaveTextContent(/Climate context: not available/);
+    expect(card).toHaveTextContent(/Climate: not available/);
     expect(await within(card).findByText(/Acquire higher-resolution DEM/)).toBeInTheDocument();
     expect(card.textContent).not.toMatch(/unknown to science|validated analog|safe to|accessible/i);
     // the curated selection is untouched

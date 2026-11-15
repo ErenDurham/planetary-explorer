@@ -53,7 +53,7 @@ def test_single_ranked_candidate_is_position_zero_and_all_zero_weights_unrankabl
     assert r1.basis_features == ["terrain_morphology"] and r1.ranked_count == 7
     # ties: Jaccard-only ranking produces equal distances; order is by id, documented
     tied = [c for c in r1.candidates if c.distance == r1.candidates[-1].distance]
-    assert [c.location.id for c in tied] == sorted(c.location.id for c in tied) and "candidate id" in r1.tie_rule
+    assert [c.location.id for c in tied] == sorted(c.location.id for c in tied) and "site id" in r1.tie_rule
 
 
 def test_common_basis_drops_feature_missing_on_any_candidate(monkeypatch):

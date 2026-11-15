@@ -186,10 +186,10 @@ def _knee_sentence(cs: dict, x: float, q: float, unit: str | None) -> str:
     better = "at or below" if direction == "lower_is_better" else "at or above"
     worse = "at or above" if direction == "lower_is_better" else "at or below"
     if q >= 1.0:
-        return f"{xs} is {better} the {fs} fully-suitable knee, so q = 1.00."
+        return f"{xs} is {better} the {fs} full-marks value, so q = 1.00."
     if q <= 0.0:
         return f"{xs} is {worse} the {zs} cut-off, so q = 0.00."
-    return f"{xs} lies between the knees ({fs} -> 1.0, {zs} -> 0.0), so q = {q:.2f} by linear interpolation."
+    return f"{xs} is between the thresholds ({fs} -> 1.0, {zs} -> 0.0). Linear interpolation gives q = {q:.2f}."
 
 
 def _factor_line(f: FactorScore, m: EnvironmentalMeasurement | None) -> str:
@@ -222,8 +222,8 @@ def valid_criteria(mission: MissionProfile, profiles: dict[str, EnvironmentalPro
             missing_on = sorted(sid for sid, p in profiles.items() if _numeric(p, cs["feature_id"])[0] is None)
             if missing_on:
                 shown = ", ".join(missing_on[:4]) + (", ..." if len(missing_on) > 4 else "")
-                dropped[c.criterion_id] = (f"feature {cs['feature_id']} missing on {len(missing_on)}/{len(profiles)} sites ({shown});"
-                                          " excluded for all under common_feature_set")
+                dropped[c.criterion_id] = (f"{cs['feature_id']} is missing on {len(missing_on)}/{len(profiles)} sites ({shown}),"
+                                          " so it is left out for all sites (common_feature_set)")
                 continue
         kept.append(c.criterion_id)
     return kept, dropped
@@ -241,7 +241,7 @@ def evaluate_site(site: Site, profile: EnvironmentalProfile | None, mission: Mis
             factors.append(FactorScore(criterion_id=c.criterion_id, label=c.criterion_id, feature_id="?", feature_value=None, unit=None, suitability=None,
                                        raw_weight=c.weight, normalized_weight=None, weighted_contribution=None, is_missing=True,
                                        excluded_reason=dropped.get(c.criterion_id),
-                                       rationale=f"'{c.criterion_id}' is not a criterion of scoring spec {spec['version']}; it carries no weight in the score."))
+                                       rationale=f"'{c.criterion_id}' is not a factor in scoring spec {spec['version']}. It has no weight in the score."))
             continue
         x, unit = _numeric(profile, cs["feature_id"])
         unit = unit or cs["unit"]
@@ -254,8 +254,8 @@ def evaluate_site(site: Site, profile: EnvironmentalProfile | None, mission: Mis
             valid.append((c.weight, q))
             rationale = f"{_knee_sentence(cs, x, q, unit)} {cs['rationale']}"
         elif x is None:
-            rationale = (f"No finite value for {cs['feature_id']} in this profile, so the criterion is not scored; "
-                         f"its weight is renormalised over the remaining criteria rather than counted as zero. {cs['rationale']}")
+            rationale = (f"This profile has no finite value for {cs['feature_id']}, so the factor is not scored. "
+                         f"Its weight is spread over the other factors. It is not counted as zero. {cs['rationale']}")
         else:
             rationale = f"Not scored ({excluded}). {cs['rationale']}"
         factors.append(FactorScore(criterion_id=c.criterion_id, label=cs["label"], feature_id=cs["feature_id"], feature_value=x, unit=unit,
@@ -289,20 +289,20 @@ def evaluate_site(site: Site, profile: EnvironmentalProfile | None, mission: Mis
     risks = [_factor_line(f, meas(f)) for f in scored if f.suitability < RISK_MAX_Q]
     for r in failed:
         risks.append(f"Fails hard constraint '{r.constraint_id}': {r.feature_id} = {r.feature_value:g} violates {r.operator} {r.threshold:g}"
-                     f"{' (documented assumption)' if r.is_assumption else ''}; the site is ineligible whatever its score.")
+                     f"{' (documented assumption)' if r.is_assumption else ''}. The site is not eligible, whatever its score.")
 
-    limitations = [f"Excluded criterion '{cid}': {why}" for cid, why in dropped.items()]
-    limitations += [f"Excluded criterion '{cid}' for this site: feature {spec['_by_id'][cid]['feature_id']} missing (per_site_exclusion); "
-                    "its score rests on fewer criteria than other sites may use" for cid in per_site_excluded]
+    limitations = [f"Factor '{cid}' was left out: {why}" for cid, why in dropped.items()]
+    limitations += [f"Factor '{cid}' was left out for this site because {spec['_by_id'][cid]['feature_id']} is missing (per_site_exclusion). "
+                    "Its score uses fewer factors than other sites may use." for cid in per_site_excluded]
     if profile is None:
-        limitations.append("No environmental profile is available for this site in the served profile version; nothing could be scored.")
-    limitations.append("Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.")
+        limitations.append("This site has no environmental profile in this version. Nothing could be scored.")
+    limitations.append("Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.")
     if uneval:
-        limitations.append("Unevaluated constraints (feature missing, treated as neither passed nor failed): " + ", ".join(r.constraint_id for r in uneval))
+        limitations.append("These constraints were not checked because the value is missing. They count as neither passed nor failed: " + ", ".join(r.constraint_id for r in uneval))
     if score is not None:
-        limitations.append("Score is a relative decision-support index under documented threshold assumptions, not a probability.")
+        limitations.append("The score is a relative index based on documented threshold assumptions. It is not a probability.")
     elif status == "insufficient_data":
-        limitations.append(f"Only {len(valid)} criterion/criteria could be scored; at least 2 are required for a comparable score.")
+        limitations.append(f"Only {len(valid)} factor(s) could be scored. A comparable score needs at least 2.")
     return SuitabilityResult(site_id=site.id, site_name=site.name, status=status, score=None if score is None else round(score, 2), rank=None,
                              factor_scores=factors, eligibility=Eligibility(eligible=eligible, failed_constraints=failed, unevaluated_constraints=uneval),
                              completeness=completeness, favorable=favorable, risks=risks, limitations=limitations)

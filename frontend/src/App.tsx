@@ -362,7 +362,7 @@ export default function App() {
           <div className="scroll-thin min-h-0 flex-1 overflow-y-auto"><LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} /></div>
 {/* shown once a mission is saved: the tab opens on the chat box alone */}
           {missionDesigned && <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line bg-bg-elev px-5 py-4">
-            <p className="max-w-2xl text-sm text-fg-muted">{draftDirty ? "Review and apply your edited objective before exploring." : `Next: explore ${BODY_NAME[missionBody]} sites for your applied mission objective.`}</p>
+            <p className="max-w-2xl text-sm text-fg-muted">{draftDirty ? "Save your edited objective before exploring." : `Next, explore ${BODY_NAME[missionBody]} sites for your mission.`}</p>
             <button type="button" disabled={!appliedObjective || draftDirty || !initialMissionId || (missionType === "landing" ? evaluation.isPending : assessment.isPending)} onClick={() => navigateExplore("mission", initialMissionId)} className="ml-auto rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">Head to explore mission →</button>
           </footer>}
         </div>

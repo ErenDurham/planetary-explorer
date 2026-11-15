@@ -82,7 +82,7 @@ export function ImagePane({ roleLabel, location, imagery, view, sharedView, onOv
           <div role="status" className="flex h-[340px] flex-col items-start justify-center gap-2 rounded border border-dashed border-line bg-black/40 p-4 text-sm">
             <p className="font-medium text-fg">No {view === "surface" ? "field photographs" : "orbital imagery"} for {location.name}</p>
             {imagery.data?.notes?.map(n => <p key={n} className="text-fg-muted">{n}</p>)}
-            {!imagery.data?.notes?.length && <p className="text-fg-muted">No verified {view === "surface" ? "photograph from the ground" : "orbital product"} is recorded in the manifest for this location.</p>}
+            {!imagery.data?.notes?.length && <p className="text-fg-muted">No verified {view === "surface" ? "photo from the ground" : "orbital image"} is recorded for this site.</p>}
             {otherCount > 0 && <button type="button" onClick={() => onOverrideView(otherView)} className="mt-1 rounded border border-line px-3 py-2 text-sm text-fg">Show {VIEW_LABEL[otherView].toLowerCase()} for this location instead</button>}
           </div>
         )}
@@ -107,15 +107,15 @@ export function ImagePane({ roleLabel, location, imagery, view, sharedView, onOv
             <p className="text-xs text-fg-muted">
               <span className="text-fg">{location.name}</span> · {VIEW_LABEL[view]} · <span className={coverageKind(entry) === "regional" ? "text-warn" : "text-ok"}>{coverageKind(entry) === "regional" ? "Regional context" : "Exact-site imagery"}</span> · Credit: {entry.credit}
             </p>
-            {view === "orbital" && !isGeoreferenced(entry) && <p className="text-[11px] text-fg-faint" data-testid="no-georef">No georeferencing for this image: no footprint, marker or scale bar can be drawn.</p>}
-            {isGeoreferenced(entry) && <p className="text-[11px] text-fg-faint">Dot: selected coordinate. Dashed square: ±{location.halfWidthDeg}° analysis footprint, not a landing ellipse. Scale bar from the image bounds.</p>}
+            {view === "orbital" && !isGeoreferenced(entry) && <p className="text-[11px] text-fg-faint" data-testid="no-georef">This image is not georeferenced. No footprint, marker or scale bar can be drawn.</p>}
+            {isGeoreferenced(entry) && <p className="text-[11px] text-fg-faint">The dot is the selected coordinate. The dashed square is the ±{location.halfWidthDeg}° analysis footprint, not a landing ellipse. The scale bar comes from the image bounds.</p>}
             <p className="text-xs leading-relaxed text-fg">{entry.relevance}</p>
             <details className="rounded border border-line p-2 text-xs text-fg-muted">
               <summary className="cursor-pointer">Image details: dates, coverage, resolution, source</summary>
               <dl className="mt-2 grid grid-cols-[110px_1fr] gap-x-3 gap-y-1">
                 <dt className="text-fg-faint">Title</dt><dd className="text-fg">{entry.title}</dd>
                 <dt className="text-fg-faint">Acquired</dt><dd>{entry.acquisition_date ? <span className="num text-fg">{entry.acquisition_date}</span> : <span>Not verified as a single date</span>}{entry.acquisition_note && <span className="block">{entry.acquisition_note}</span>}</dd>
-                <dt className="text-fg-faint">Published</dt><dd>{entry.release_date ? <span className="num">{entry.release_date}</span> : "Not stated by the source"} <span className="text-fg-faint">(publication date, not acquisition)</span></dd>
+                <dt className="text-fg-faint">Published</dt><dd>{entry.release_date ? <span className="num">{entry.release_date}</span> : "Not stated by the source"} <span className="text-fg-faint">(publication date, not capture date)</span></dd>
                 <dt className="text-fg-faint">Coverage</dt><dd>{relationshipLabel(entry)}<span className="block">{entry.coverage_evidence}</span></dd>
                 <dt className="text-fg-faint">Resolution</dt><dd>{entry.spatial_resolution_m_per_px != null ? <span className="num text-fg">{entry.spatial_resolution_m_per_px} m/pixel</span> : "Not verified"}{entry.resolution_note && <span className="block">{entry.resolution_note}</span>}</dd>
                 {entry.bounds && <><dt className="text-fg-faint">Bounds</dt><dd className="num">{entry.bounds.south.toFixed(3)}°–{entry.bounds.north.toFixed(3)}° lat, {entry.bounds.west.toFixed(3)}°–{entry.bounds.east.toFixed(3)}° lon E <span className="text-fg-faint">({entry.bounds.source})</span></dd></>}

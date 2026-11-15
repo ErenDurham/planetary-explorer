@@ -40,7 +40,7 @@ export function ExplanationPanel({ siteId, mission }: { siteId: string | null; m
   if (!siteId) {
     return (
       <Section title="Research potential">
-        <EmptyNote>Select a site to generate a citation-backed explanation.</EmptyNote>
+        <EmptyNote>Select a site to get an explanation with citations.</EmptyNote>
       </Section>
     );
   }
@@ -53,13 +53,13 @@ export function ExplanationPanel({ siteId, mission }: { siteId: string | null; m
   return (
     <Section
       title="Research potential"
-      subtitle={data ? <span>Questions to investigate, practical next steps and supporting sources · generated {new Date(data.generated_at).toLocaleTimeString()}{data.cached ? " · served from backend cache" : ""}</span> : "Questions to investigate, practical next steps and supporting sources."}
+      subtitle={data ? <span>Questions to investigate, next steps and sources · generated {new Date(data.generated_at).toLocaleTimeString()}{data.cached ? " · from the backend cache" : ""}</span> : "Questions to investigate, next steps and sources."}
       actions={
         <button
           type="button"
           onClick={() => void q.refetch()}
           disabled={q.isFetching}
-          title={data?.generated_by === "llm" ? "Regenerate research with AI" : "Refresh research; rule-based results are used when AI is unavailable"}
+          title={data?.generated_by === "llm" ? "Regenerate research with AI" : "Refresh the research. Rule-based results are used when AI is not available."}
           className="inline-flex shrink-0 items-center gap-1 rounded border border-copper/60 bg-copper/10 px-2 py-1 text-[10.5px] text-copper-bright hover:bg-copper/20 disabled:opacity-50"
           aria-label={previous ? "Refresh the explanation for the current objective and priorities" : "Explain this site under the current priorities"}
         >
@@ -77,7 +77,7 @@ export function ExplanationPanel({ siteId, mission }: { siteId: string | null; m
       )}
       {(staleObjective || stalePriorities) && data && (
         <p className="mb-2 rounded border border-warn/40 bg-warn/10 px-2 py-1 text-xs text-warn" role="status">
-          {staleObjective ? "Digest generated for a previous objective." : "Generated under previous priorities."} Use Refresh to regenerate it for the current mission.
+          {staleObjective ? "This was made for a previous objective." : "This was made with previous priorities."} Use Refresh to update it for the current mission.
         </p>
       )}
       {data && (
@@ -100,12 +100,12 @@ export function ExplanationPanel({ siteId, mission }: { siteId: string | null; m
           </div>}
           </div><div><EvidenceLibrary data={data} /></div></div>
           <div className="mt-4 border-t border-line pt-4">
-            <h3 className="mb-2 text-sm font-semibold text-fg">Risks, missing evidence and limitations</h3>
+            <h3 className="mb-2 text-sm font-semibold text-fg">Risks, missing evidence and limits</h3>
             {[
-              { title: "Risks and unfavorable findings", items: [...(data.sections.risks ?? []), ...(data.sections.unfavorable ?? [])] },
+              { title: "Risks and unfavourable findings", items: [...(data.sections.risks ?? []), ...(data.sections.unfavorable ?? [])] },
               { title: "Missing evidence", items: data.sections.missing_evidence ?? [] },
               { title: "Limits of these proposals", items: [...(data.research_studies ?? []).map(s => s.cannot_infer), ...(data.source_digests ?? []).flatMap(d => d.limitation ? [d.limitation] : []), ...(data.limitations ?? [])] },
-            ].map(group => <details key={group.title} className="mb-2 rounded-lg border border-line-strong p-3"><summary className="cursor-pointer text-sm text-fg-muted">{group.title} · {group.items.length}</summary><div className="mt-3"><BulletList items={[...new Set(group.items)]} tone="warn" empty="No additional findings reported." /></div></details>)}
+            ].map(group => <details key={group.title} className="mb-2 rounded-lg border border-line-strong p-3"><summary className="cursor-pointer text-sm text-fg-muted">{group.title} · {group.items.length}</summary><div className="mt-3"><BulletList items={[...new Set(group.items)]} tone="warn" empty="No other findings were reported." /></div></details>)}
           </div>
         </div>
       )}
@@ -123,8 +123,8 @@ function EvidenceLibrary({ data }: { data: ResearchExplanation }) {
   }
   return <div className="mt-4">
     <h3 className="mb-2 text-sm font-semibold text-fg">Further reading and evidence · {groups.size} sources</h3>
-    <p className="mb-3 text-xs text-fg-muted">Each source appears once. Digest and excerpt labels show how its context was prepared; original passages remain available.</p>
-    {!groups.size && <EmptyNote>No supporting documents were retrieved. Proposed studies above use the structured measurements only.</EmptyNote>}
+    <p className="mb-3 text-xs text-fg-muted">Each source is listed once. The digest and excerpt labels show how each summary was made. The original passages are still available.</p>
+    {!groups.size && <EmptyNote>No supporting documents were found. The studies above only use the site measurements.</EmptyNote>}
     <ol className="space-y-3">{[...groups.entries()].map(([url, chunks]) => {
       const first = chunks[0];
       const citations = data.citations.filter(c => chunks.some(e => e.chunk_id === c.chunk_id));
@@ -145,11 +145,11 @@ function EvidenceLibrary({ data }: { data: ResearchExplanation }) {
             : <Badge tone="neutral"><Cpu className="h-3 w-3" aria-hidden /> Extractive (no model)</Badge>}
         </div>
         {digest ? <div className="mt-2 space-y-1.5 text-sm text-fg">
-          {digest.support_level === "insufficient" && <p className="text-xs text-warn">The retrieved passages from this source contain insufficient relevant evidence for this site and objective.</p>}
+          {digest.support_level === "insufficient" && <p className="text-xs text-warn">The passages from this source do not have enough relevant evidence for this site and objective.</p>}
           <p><span className="text-xs font-semibold text-fg-muted">What it tells us: </span>{digest.what_it_tells_us}</p>
           <p className="text-fg-muted"><span className="text-xs font-semibold text-fg-muted">Why it matters: </span>{digest.why_it_matters}</p>
           {digest.limitation && <p className="text-xs text-fg-faint"><span className="font-semibold">Limitation: </span>{digest.limitation}</p>}
-        </div> : <p className="mt-2 text-sm text-fg">{excerpt || "No clean preview available. Read the original passages below."}</p>}
+        </div> : <p className="mt-2 text-sm text-fg">{excerpt || "No clean preview is available. Read the original passages below."}</p>}
         <details className="mt-3">
           <summary className="cursor-pointer text-xs text-info">Read {chunks.length} original {chunks.length === 1 ? "passage" : "passages"} and citation details</summary>
           {chunks.map(e => <div key={e.chunk_id} className="mt-3 border border-line rounded p-3">
@@ -171,9 +171,9 @@ export function relevantExcerpt(text: string): string {
 }
 
 const SUPPORT: Record<SourceDigest["support_level"], { label: string; tone: BadgeTone; title: string }> = {
-  supports: { label: "Supports", tone: "ok", title: "The passages bear directly on this site and objective" },
-  context: { label: "Context", tone: "neutral", title: "Background that frames the site but does not support a specific claim" },
-  insufficient: { label: "Insufficient evidence", tone: "warn", title: "The retrieved passages contain insufficient relevant evidence for this site and objective" },
+  supports: { label: "Supports", tone: "ok", title: "The passages apply directly to this site and objective" },
+  context: { label: "Context", tone: "neutral", title: "Background on the site. It does not support a specific claim." },
+  insufficient: { label: "Insufficient evidence", tone: "warn", title: "The passages do not have enough relevant evidence for this site and objective" },
 };
 
 function normaliseUrl(url: string): string {
@@ -189,7 +189,7 @@ function StudyCards({ data }: { data: ResearchExplanation }) {
   return <div>
     {data.evidence_gap && <p className="mb-3 rounded-lg border border-warn/40 bg-warn/10 p-3 text-sm text-warn" role="note">{data.evidence_gap}</p>}
     {studies.length === 0
-      ? !data.evidence_gap && <EmptyNote>No study can be motivated from the retrieved evidence for this site.</EmptyNote>
+      ? !data.evidence_gap && <EmptyNote>The evidence found does not suggest a study for this site.</EmptyNote>
       : <ol className="space-y-3" aria-label="Study cards">{studies.map((study, i) => <StudyCardView key={`${study.title}-${i}`} study={study} citations={data.citations} />)}</ol>}
   </div>;
 }

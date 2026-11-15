@@ -6,10 +6,10 @@ import type { PairColumnData } from "@/components/compare/PairSelectors";
 import type { AnalogMatch, AnalogRankResponse, BodyReference, Provenance, SiteImagery } from "@/types";
 
 export const STATED_CAVEATS = [
-  "Earth temperature values are NASA POWER 2 m air-temperature climatology, not Martian ground temperature; thermal comparisons are qualitative only.",
-  "Earth elevations are relative to the EGM2008 geoid and Mars elevations to the MOLA areoid; the two cannot be subtracted.",
-  "Top-of-atmosphere sunlight is not surface irradiance: it ignores atmosphere, dust, clouds and terrain shading.",
-  "Terrestrial field use of an analog site is not a completed Mars experiment; similarity is a heuristic index, not evidence that findings transfer.",
+  "Earth temperatures are NASA POWER 2 m air temperatures. They are not Martian ground temperatures. Temperature comparisons are qualitative only.",
+  "Earth elevations use the EGM2008 geoid. Mars elevations use the MOLA areoid. The two cannot be subtracted.",
+  "Sunlight at the top of the atmosphere is not sunlight at the surface. It ignores the atmosphere, dust, clouds and terrain shading.",
+  "Field work at an Earth analog is not a completed Mars experiment. Similarity is a rough index. It is not evidence that results will transfer to Mars.",
 ];
 
 export function ProvenanceDisclosures({ columns, bodies, rank, pairMatch, imagery }: { columns: [PairColumnData, PairColumnData]; bodies: BodyReference[]; rank: AnalogRankResponse | undefined; pairMatch: AnalogMatch | undefined; imagery: (SiteImagery | null)[] }) {
@@ -29,16 +29,16 @@ export function ProvenanceDisclosures({ columns, bodies, rank, pairMatch, imager
       </details>
       <details className="rounded border border-line"><summary className="cursor-pointer px-4 py-3 text-sm text-fg-muted">Method: how the similarity index is computed</summary>
         <div className="space-y-2 px-4 pb-4 text-sm leading-relaxed text-fg-muted">
-          <p>Similarity = 100 / (1 + D), where D is the weighted sum of per-feature distances: scaled absolute differences for regional slope, detrended relief and precipitation, Jaccard distance for landform and material tags. The basis is the set of positively weighted features comparable for EVERY candidate on the candidate body, so no location looks better merely because a difficult feature is missing{rank ? ` (basis: ${rank.basis_features.join(", ")}; excluded: ${rank.excluded_features.map(f => `${f.label} - ${f.reason}`).join("; ") || "none"})` : ""}.</p>
-          <p>Rank is the position of this pair's candidate in that pool against the reference; the same pair has the same similarity in either direction, only the rank changes because the pool does. {rank?.tie_rule}</p>
-          <p>Terrain statistics come from harmonised ~3.7 km Earth and Mars grids over each location's analysis footprint (Mars ±0.5°, Earth ±0.25°). Analog preferences only reweight these features; mission priorities affect Mars landing ranking in Analyze and never this page.{rank ? ` Spec ${rank.analog_spec_version}, profile ${rank.profile_version}.` : ""}</p>
+          <p>Similarity = 100 / (1 + D). D is the weighted sum of the distances for each feature. Slope, relief and precipitation use scaled absolute differences. Landform and material labels use Jaccard distance. Only features with a positive weight that can be compared for every candidate are used. This way, no site looks better just because a hard feature is missing{rank ? ` (basis: ${rank.basis_features.join(", ")}; excluded: ${rank.excluded_features.map(f => `${f.label} - ${f.reason}`).join("; ") || "none"})` : ""}.</p>
+          <p>Rank is the position of this candidate among all candidates for the reference. A pair has the same similarity in either direction. Only the rank changes, because the group of candidates changes. {rank?.tie_rule}</p>
+          <p>Terrain values come from matched ~3.7 km Earth and Mars grids over each site's footprint (Mars ±0.5°, Earth ±0.25°). Analog preferences only change the weights of these features. Mission priorities affect the Mars landing ranking in Analyze, but never this page.{rank ? ` Spec ${rank.analog_spec_version}, profile ${rank.profile_version}.` : ""}</p>
         </div>
       </details>
       <details className="rounded border border-line"><summary className="cursor-pointer px-4 py-3 text-sm text-fg-muted">Limitations and caveats</summary>
         <ul className="space-y-1.5 px-4 pb-4 text-xs leading-relaxed text-fg">
           {STATED_CAVEATS.map(c => <li key={c} className="flex gap-2"><span aria-hidden className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-sm bg-warn" /><span>{c}</span></li>)}
           {(pairMatch?.limitations ?? []).map(c => <li key={c} className="flex gap-2"><span aria-hidden className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-sm bg-fg-faint" /><span>{c}</span></li>)}
-          <li className="flex gap-2"><span aria-hidden className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-sm bg-fg-faint" /><span>Imagery is contextual: orbital mosaics are uncontrolled and resampled, field photographs show one place and one moment, and neither resolves landing hazards. Regional and exact-site imagery are labelled on each pane.</span></li>
+          <li className="flex gap-2"><span aria-hidden className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-sm bg-fg-faint" /><span>Images give context only. Orbital mosaics are uncontrolled and resampled. Field photos show one place at one moment. Neither shows landing hazards. Each pane says whether the image is regional or of the exact site.</span></li>
         </ul>
       </details>
     </div>

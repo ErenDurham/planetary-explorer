@@ -33,7 +33,7 @@ export function marsFactors(criteria: CriterionSpec[], excluded: string[]): Prio
       description: g?.description ?? c.label,
       quantity: g?.quantity ?? `${c.feature_id.replace(/_/g, " ")}${c.unit ? ` (${c.unit})` : ""}`,
       caveat: g?.caveat ?? "Regional screening only.",
-      rule: `Scoring rule (backend, unchanged): ${c.function.direction.replace(/_/g, " ")}. Fully suitable at ${c.function.full} ${c.unit}; zero at ${c.function.zero} ${c.unit}.`,
+      rule: `Scoring rule: ${c.function.direction.replace(/_/g, " ")}. The factor scores full marks at ${c.function.full} ${c.unit} and zero at ${c.function.zero} ${c.unit}.`,
     };
   });
 }
@@ -41,12 +41,12 @@ export function marsFactors(criteria: CriterionSpec[], excluded: string[]): Prio
 /** Earth mode: the same factors, names, colours and descriptions as Mars;
  * only the (i) box says what the Earth data are and how each one is used. */
 export function earthFactors(criteria: CriterionSpec[], excluded: string[]): PriorityFactor[] {
-  const source = "Earth sites: Copernicus GLO-90 elevation model, averaged to ~3.7 km cells so it compares directly with the Mars (MOLA) values.";
+  const source = "Earth sites use the Copernicus GLO-90 elevation model. It is averaged to ~3.7 km cells so it matches the Mars (MOLA) values.";
   const earth: Record<string, { quantity: string; rule: string }> = {
-    terrain_safety: { quantity: `Median regional slope. ${source}`, rule: "Earth sites are ranked by similarity to the paired Mars site (slope, relief, landforms, minerals, dryness). This slider and Less rugged ground split the terrain half of that score." },
-    surface_roughness: { quantity: `Detrended regional relief. ${source}`, rule: "Earth sites are ranked by similarity to the paired Mars site (slope, relief, landforms, minerals, dryness). This slider and Low slopes split the terrain half of that score." },
-    elevation_suitability: { quantity: `Median elevation. ${source}`, rule: "Not used to rank Earth sites: Earth and Mars elevations use different datums, so they are never compared." },
-    solar_illumination: { quantity: "Annual-mean top-of-atmosphere sunlight from latitude, as for Mars.", rule: "Not used to rank Earth sites: Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet), so no Earth site matches it." },
+    terrain_safety: { quantity: `Median regional slope. ${source}`, rule: "Earth sites are ranked by how similar they are to the paired Mars site. The score uses slope, relief, landforms, minerals and dryness. This slider and Less rugged ground split the terrain half of the score." },
+    surface_roughness: { quantity: `Detrended regional relief. ${source}`, rule: "Earth sites are ranked by how similar they are to the paired Mars site. The score uses slope, relief, landforms, minerals and dryness. This slider and Low slopes split the terrain half of the score." },
+    elevation_suitability: { quantity: `Median elevation. ${source}`, rule: "This is not used to rank Earth sites. Earth and Mars elevations use different datums, so they are never compared." },
+    solar_illumination: { quantity: "Annual-mean sunlight at the top of the atmosphere, calculated from latitude. Mars uses the same method.", rule: "This is not used to rank Earth sites. Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet), so no Earth site matches it." },
   };
-  return marsFactors(criteria, excluded).map((f) => ({ ...f, ...(earth[f.id] ?? { rule: "Recorded as an Earth priority; not scored for Earth sites." }) }));
+  return marsFactors(criteria, excluded).map((f) => ({ ...f, ...(earth[f.id] ?? { rule: "This is recorded as an Earth priority. It is not scored for Earth sites." }) }));
 }

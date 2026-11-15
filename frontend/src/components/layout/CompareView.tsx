@@ -121,10 +121,10 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
   const baseline = recommendedAnalogWeights ? toAnalogShares(recommendedAnalogWeights) : defaultAnalogShares();
   const customised = !sharesEqual(shares, baseline);
   const referenceName = referenceCol.location?.name ?? `a ${BODY_NAME[referenceCol.body]} location`;
-  const linkNote = linkedActive ? "Scale linked: both panes show the same ground metres per screen pixel." : null;
+  const linkNote = linkedActive ? "The scales are linked. Both panes show the same ground distance per screen pixel." : null;
   const linkDisabledReason = canLink ? null : sharedView === "surface" || viewFor("earth") === "surface" || viewFor("mars") === "surface"
-    ? "Field photographs have no map scale, so their zoom cannot be linked."
-    : "Both panes need georeferenced orbital imagery (image bounds) before scales can be linked.";
+    ? "Field photos have no map scale, so their zoom cannot be linked."
+    : "Both panes need georeferenced orbital images before the scales can be linked.";
 
   return <AtlasSurface label="Earth and Mars pair comparison">
     <div className={atlasStyles.content}>
@@ -134,7 +134,7 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
       {data && <div className="space-y-4">
         <PairSelectors columns={columns} swapped={swapped} onSwap={() => setSwapped(s => !s)} onSelect={(body, id) => selectLocation(body, id)} onShowOnGlobe={(body, id) => showOnGlobe(body, id)} />
 
-        <AtlasSection number="01" title="Read the landscape" description="Orbital views show regional context. Field photos offer a view from the ground.">
+        <AtlasSection number="01" title="Read the landscape" description="Orbital views show the region. Field photos show the view from the ground.">
         <section aria-label="Side-by-side visual field views" className={atlasStyles.imagery}>
           <div className={atlasStyles.imageryToolbar}>
             <div className="flex flex-wrap gap-1 rounded border border-line p-1" role="group" aria-label="Imagery view for both panes">
@@ -142,9 +142,9 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
             </div>
             <div className="flex flex-col items-end gap-0.5 text-xs">
               <label className={`flex items-center gap-2 ${canLink ? "text-fg" : "text-fg-faint"}`}>
-                <input type="checkbox" checked={linkedActive} disabled={!canLink} onChange={e => toggleLink(e.target.checked)} aria-describedby="match-scale-note" />Match scale (link metres per screen pixel)
+                <input type="checkbox" checked={linkedActive} disabled={!canLink} onChange={e => toggleLink(e.target.checked)} aria-describedby="match-scale-note" />Match the scale of both panes
               </label>
-              <span id="match-scale-note" className="text-fg-faint">{linkDisabledReason ?? "Default is independent zoom; linking keeps both panes at one ground scale."}</span>
+              <span id="match-scale-note" className="text-fg-faint">{linkDisabledReason ?? "By default each pane zooms on its own. Linking keeps both panes at the same ground scale."}</span>
             </div>
           </div>
           <div className="grid gap-3 md:grid-cols-2" data-testid="panes">
@@ -161,15 +161,15 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
             <span className="text-fg-muted">Reference:</span> <span className="font-medium">{referenceName}</span> on {BODY_NAME[referenceCol.body]}
             <span className="text-fg-muted"> · analog preferences: </span><span className="num">{emphasisSummary(shares)}</span> <span className="text-fg-faint">({customised ? "customised" : recommendedAnalogWeights ? "objective's suggestion" : "spec defaults"})</span>
           </p>
-          {appliedReference && appliedReference.id !== (byBody[appliedReference.body].location?.id ?? null) && <p className="mt-1 text-xs text-fg-muted">The applied objective named {appliedReference.name} on {BODY_NAME[appliedReference.body]}; the {BODY_NAME[appliedReference.body]} selector now shows {byBody[appliedReference.body].location?.name ?? "nothing"}. The objective itself is unchanged.</p>}
+          {appliedReference && appliedReference.id !== (byBody[appliedReference.body].location?.id ?? null) && <p className="mt-1 text-xs text-fg-muted">Your objective named {appliedReference.name} on {BODY_NAME[appliedReference.body]}. The {BODY_NAME[appliedReference.body]} selector now shows {byBody[appliedReference.body].location?.name ?? "nothing"}. The objective did not change.</p>}
           <details className="mt-2 text-sm"><summary className="cursor-pointer text-fg-muted">Adjust analog preferences</summary><div className="mt-3 max-w-2xl"><AnalogPreferencesSlot /></div></details>
         </section>
 
-        <AtlasSection number="02" title="Understand the match" description="A similarity index for this pair under your current analog preferences.">
+        <AtlasSection number="02" title="Understand the match" description="A similarity score for this pair, using your current analog preferences.">
         <div className={atlasStyles.evidence}><SimilarityCard rank={pair.rank} candidate={pair.candidate} candidateBody={selectedCol.body} candidateName={selectedCol.location?.name ?? BODY_NAME[selectedCol.body]} referenceName={referenceName} /></div>
         </AtlasSection>
 
-        <AtlasSection number="03" title="Compare the measurements" description="Raw values stay in their original units. Unavailable measurements remain explicit.">
+        <AtlasSection number="03" title="Compare the measurements" description="Values are shown in their original units. Missing measurements are marked.">
         <PairMetricsTable columns={columns} candidate={pair.candidate} rankExcluded={pair.rank.data?.excluded_features ?? []} />
         </AtlasSection>
 
@@ -178,7 +178,7 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
         </AtlasSection>
         {pair.match.error && <ErrorNote error={pair.match.error} context="analogs/match" />}
 
-        <AtlasSection number="05" title="Context and sources" description="Review planetary differences, data provenance, and limits before drawing conclusions.">
+        <AtlasSection number="05" title="Context and sources" description="Check the planetary differences, data sources and limits before drawing conclusions.">
         <PlanetaryContext differences={pair.rank.data?.planetary_differences ?? pair.match.data?.planetary_differences} bodies={bodies} />
 
         <ProvenanceDisclosures columns={columns} bodies={bodies} rank={pair.rank.data} pairMatch={pair.pairMatch} imagery={[imagery.earth.data, imagery.mars.data]} />

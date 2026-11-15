@@ -29,7 +29,7 @@ describe("Explore imagery",()=>{
   it("does not substitute orbital imagery for a missing surface view",async()=>{
     vi.spyOn(globalThis,"fetch").mockResolvedValue(new Response(JSON.stringify({site_id:site.id,entries:[image],notes:["No landed camera at this site."]})));
     mount();fireEvent.click(screen.getByRole("button",{name:"Surface view"}));
-    expect(await screen.findByText(/No verified surface imagery/)).toBeInTheDocument();expect(screen.queryByRole("img")).toBeNull();
+    expect(await screen.findByText(/There is no verified surface image/)).toBeInTheDocument();expect(screen.queryByRole("img")).toBeNull();
   });
   it("offers a retry when an asset fails",async()=>{
     vi.spyOn(globalThis,"fetch").mockResolvedValue(new Response(JSON.stringify({site_id:site.id,entries:[image],notes:[]})));

@@ -19,11 +19,11 @@ export function SimilarityCard({ rank, candidate, candidateBody, candidateName, 
   const data = rank.data;
   const swatch = rankColor(candidate?.rank_color_position, palette);
   return (
-    <section aria-label="Similarity index for this pair" className="rounded border border-line bg-bg-elev p-4">
+    <section aria-label="Similarity score for this pair" className="rounded border border-line bg-bg-elev p-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-muted">Similarity index</h2>
-          <p className="mt-0.5 text-xs text-fg-faint">{candidateName} against the reference {referenceName} · 100 / (1 + D) over the common feature basis · heuristic, not landing suitability{data && <> · spec {data.analog_spec_version}</>}</p>
+          <p className="mt-0.5 text-xs text-fg-faint">{candidateName} compared with {referenceName}. The score is 100 / (1 + D) over the shared features. It is a rough index, not landing suitability{data && <> · spec {data.analog_spec_version}</>}</p>
         </div>
         {rank.isPending && <Spinner label="Ranking the pool" />}
         {rank.error && <div className="max-w-sm"><ErrorNote error={rank.error} context="analogs/rank" /><button type="button" className="mt-2 text-xs text-copper-bright underline" onClick={() => void rank.refetch()}>Retry ranking</button></div>}
@@ -37,7 +37,7 @@ export function SimilarityCard({ rank, candidate, candidateBody, candidateName, 
             </div>
           </div>
         )}
-        {data && !candidate && <p role="status" className="max-w-sm text-sm text-warn">{candidateName} is not in the pool ranked against {referenceName}; no similarity can be shown for this pair.</p>}
+        {data && !candidate && <p role="status" className="max-w-sm text-sm text-warn">{candidateName} is not among the sites ranked against {referenceName}. No similarity can be shown for this pair.</p>}
       </div>
       {data && (
         <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs" aria-label="Feature basis">
@@ -49,11 +49,11 @@ export function SimilarityCard({ rank, candidate, candidateBody, candidateName, 
       {data && data.excluded_features.length > 0 && <ul className="mt-1 text-[11px] text-fg-faint">{data.excluded_features.map(f => <li key={f.feature_id}>{f.label}: {f.reason}</li>)}</ul>}
       {candidate && (
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div><h3 className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-ok">Strongest supported similarities</h3><BulletList items={topTwo(candidate.shared_characteristics)} tone="ok" empty="No feature is close at the harmonised scale." /></div>
-          <div><h3 className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-danger">Important differences</h3><BulletList items={topTwo(candidate.important_differences)} tone="danger" empty="No large difference among comparable features." /></div>
+          <div><h3 className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-ok">Strongest supported similarities</h3><BulletList items={topTwo(candidate.shared_characteristics)} tone="ok" empty="No feature is close at the matched scale." /></div>
+          <div><h3 className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-danger">Important differences</h3><BulletList items={topTwo(candidate.important_differences)} tone="danger" empty="No large difference among the compared features." /></div>
         </div>
       )}
-      {data && candidate && (candidate.shared_characteristics?.length ?? 0) + (candidate.important_differences?.length ?? 0) === 0 && <EmptyNote>No characteristic statements were returned for this pair.</EmptyNote>}
+      {data && candidate && (candidate.shared_characteristics?.length ?? 0) + (candidate.important_differences?.length ?? 0) === 0 && <EmptyNote>No similarities or differences were returned for this pair.</EmptyNote>}
       <p className="mt-3 flex items-center gap-1 text-[11px] text-fg-faint">{RANK_LEGEND_SENTENCE}{data?.tie_rule && <InfoTip variant="help" label="How ties are ranked">{data.tie_rule}</InfoTip>}</p>
     </section>
   );

@@ -19,7 +19,7 @@ export function SurveyFunnel({ response, sources }: { response: DiscoveryRankRes
           <li key={String(label)} className="rounded-lg border border-line p-2.5"><p className="text-[10.5px] uppercase tracking-wide text-fg-faint">{label}</p><p className="num mt-0.5 text-lg text-fg">{n}</p></li>
         ))}
       </ol>
-      <p className="mt-2 text-fg-muted">Ranked pool {response.eligible_pool_count} · returned {response.returned_count} after diversification. A small survey may legitimately yield few or no qualifying regions.</p>
+      <p className="mt-2 text-fg-muted">Ranked pool {response.eligible_pool_count} · returned {response.returned_count} after spacing. A small survey can return few or no regions.</p>
       {excluded.length > 0 && (
         <div className="mt-3"><h3 className="text-[10.5px] uppercase tracking-wide text-fg-faint">Exclusion reasons</h3>
           <ul className="mt-1 space-y-0.5">{excluded.map(([reason, n]) => <li key={reason} className="flex justify-between gap-3"><span className="text-fg">{reason.replace(/_/g, " ")}</span><span className="num text-fg-muted">{n}</span></li>)}</ul></div>

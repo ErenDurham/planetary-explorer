@@ -18,7 +18,7 @@ describe("Research potential", () => {
     expect(screen.getByText("Documents regional measurements.")).toBeInTheDocument();
     expect(screen.getByRole("link", {name:"Open Terrain source"})).toHaveAttribute("href", "https://example.test/terrain");
     const study = screen.getByRole("heading", {name:"Validate terrain screening"});
-    const caveats = screen.getByRole("heading", {name:"Risks, missing evidence and limitations"});
+    const caveats = screen.getByRole("heading", {name:"Risks, missing evidence and limits"});
     expect(study.compareDocumentPosition(caveats) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

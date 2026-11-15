@@ -107,17 +107,17 @@ def analog_preferences(text: str) -> tuple[list[AnalogWeightSuggestion], list[st
     if MOBILITY.search(text):
         w.update({"slope_regional_median_deg": 30, "roughness_regional_m": 30, "terrain_morphology": 25, "mineralogy_tags": 10, "precipitation_mm_day": 5})
         for k in ("slope_regional_median_deg", "roughness_regional_m", "terrain_morphology"):
-            why[k] = "Mobility / terrain wording: emphasise terrain similarity."
-        why["mineralogy_tags"] = "Lowered: materials matter less for a mobility rehearsal."
-        notes.append("Mobility or terrain wording detected: terrain features emphasised over materials.")
+            why[k] = "The text mentions mobility or terrain, so terrain similarity gets more weight."
+        why["mineralogy_tags"] = "Lowered, because materials matter less for a mobility rehearsal."
+        notes.append("The text mentions mobility or terrain. Terrain features get more weight than materials.")
     if MATERIALS.search(text):
         w.update({"mineralogy_tags": max(w["mineralogy_tags"], 40)})
-        why["mineralogy_tags"] = "Mineral / geology wording: emphasise documented materials."
-        notes.append("Mineral or geology wording detected: materials emphasised.")
+        why["mineralogy_tags"] = "The text mentions minerals or geology, so documented materials get more weight."
+        notes.append("The text mentions minerals or geology. Materials get more weight.")
     if DRYNESS.search(text):
         w["precipitation_mm_day"] = max(w["precipitation_mm_day"], 20)
         why["precipitation_mm_day"] = "Dryness wording: aridity emphasised."
-        notes.append("Dryness wording detected: aridity emphasised.")
+        notes.append("The text mentions dryness. Aridity gets more weight.")
     total = sum(w.values())
     shares = {k: int(round(100 * v / total)) for k, v in w.items()}
     drift = 100 - sum(shares.values())
@@ -137,11 +137,11 @@ def interpret_task(text: str) -> TaskInterpretation:
     rationale: list[str] = []
     destination: str | None = "mars"
     if re.search(r"\b(moon|lunar)\b", text, re.I):
-        rationale.append("Lunar wording found: the Moon is not part of this release, so no lunar task is proposed.")
+        rationale.append("The text mentions the Moon. The Moon is not part of this release, so no lunar task is suggested.")
     if compare and not analog and not landing:
-        opts = [DirectionOption(task="analog_site_selection", focus_body="earth", label="Find Earth sites like a Mars site", description="Pick a Mars reference; rank the Earth field sites against it."),
-                DirectionOption(task="analog_site_selection", focus_body="mars", label="Find Mars sites like an Earth site", description="Pick an Earth reference; rank the Mars candidates against it.")]
-        rationale.append("The text asks for a comparison without a search direction; both directions are offered rather than inferred from planet mentions.")
+        opts = [DirectionOption(task="analog_site_selection", focus_body="earth", label="Find Earth sites like a Mars site", description="Pick a Mars site. The Earth field sites are ranked against it."),
+                DirectionOption(task="analog_site_selection", focus_body="mars", label="Find Mars sites like an Earth site", description="Pick an Earth site. The Mars sites are ranked against it.")]
+        rationale.append("The text asks for a comparison but does not say which planet to search. Both directions are offered.")
         return TaskInterpretation(task="ambiguous", focus_body=None, mission_destination=destination, reference_site=mars_ref or earth_ref, unresolved_sites=unresolved(text, found), direction_options=opts, analog_suggestions=analog_preferences(text)[0], rationale=rationale)
     if analog:
         if ON_EARTH.search(text):
@@ -153,13 +153,13 @@ def interpret_task(text: str) -> TaskInterpretation:
         elif earth_ref and not mars_ref:
             focus = "mars"; rationale.append(f"An Earth site ({earth_ref.name}) is the reference, so the search is for Mars sites resembling it.")
         elif mars_ref and earth_ref:
-            focus = "earth"; rationale.append("Both an Earth and a Mars site are named; Earth is treated as the search body and the Mars site as the reference. Switch the direction if that is not what you meant.")
+            focus = "earth"; rationale.append("The text names both an Earth site and a Mars site. Earth is searched, and the Mars site is the reference. Switch the direction if that is not what you meant.")
         else:
-            focus = "earth"; rationale.append("Analog wording with no named reference: Earth test sites for a Mars mission is assumed; choose a Mars reference site.")
+            focus = "earth"; rationale.append("The text mentions analogs but names no site. Earth test sites for a Mars mission are assumed. Choose a Mars reference site.")
         ref = mars_ref if focus == "earth" else earth_ref
         sugg, notes = analog_preferences(text)
         rationale += notes
         return TaskInterpretation(task="analog_site_selection", focus_body=focus, mission_destination=destination, reference_site=ref, unresolved_sites=unresolved(text, found), analog_suggestions=sugg, rationale=rationale)
     # landing screening (default for Mars mission wording)
-    rationale.append("Landing / site-screening wording: Mars landing screening with Earth analogs as an optional counterpart." if landing else "No analog wording: Mars landing screening is assumed; use 'Find Earth analogs' to switch.")
+    rationale.append("The text mentions landing or site screening. The task is Mars landing screening, with Earth analogs as an option." if landing else "The text does not mention analogs, so Mars landing screening is assumed. Use 'Find Earth analogs' to switch.")
     return TaskInterpretation(task="landing_screening", focus_body="mars", mission_destination=destination, reference_site=mars_ref, unresolved_sites=unresolved(text, found), analog_suggestions=analog_preferences(text)[0], rationale=rationale)

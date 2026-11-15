@@ -210,7 +210,7 @@ describe("Mission Design popups", () => {
     fireEvent.mouseMove(slice, { clientX: 10, clientY: 10 });
     const popup = screen.getByTestId("priority-popup-terrain_safety");
     expect(popup).toHaveTextContent("43%");
-    expect(popup).toHaveTextContent("How gently the ground tilts across the landing region");
+    expect(popup).toHaveTextContent("How much the ground tilts across the landing region");
     fireEvent.mouseLeave(slice.closest("div")!);
     expect(screen.queryByTestId("priority-popup-terrain_safety")).toBeNull();
 
@@ -220,7 +220,7 @@ describe("Mission Design popups", () => {
     // the sentence is static: it does not change with the share
     fireEvent.change(screen.getByLabelText("Low slopes share of priorities"), { target: { value: "60" } });
     expect(screen.getByTestId("priority-popup-terrain_safety")).toHaveTextContent("60%");
-    expect(screen.getByTestId("priority-popup-terrain_safety")).toHaveTextContent("How gently the ground tilts across the landing region");
+    expect(screen.getByTestId("priority-popup-terrain_safety")).toHaveTextContent("How much the ground tilts across the landing region");
     fireEvent.mouseLeave(label);
     expect(screen.queryByTestId("priority-popup-terrain_safety")).toBeNull();
   });
@@ -276,7 +276,7 @@ describe("Mission Design popups", () => {
     renderTab();
     await saveMission();
     fireEvent.click(screen.getByRole("button", { name: "Why these priorities?" }));
-    expect(within(screen.getByRole("dialog")).getByTestId("why-no-llm")).toHaveTextContent("Language model unavailable: weights come from keyword matching.");
+    expect(within(screen.getByRole("dialog")).getByTestId("why-no-llm")).toHaveTextContent("The language model was not available. The weights come from keyword matching.");
   });
 
   it("every info box closes as soon as the mouse leaves it, without a second click", async () => {

@@ -49,7 +49,7 @@ export function PrioritySliders({ factors, shares, onChange, onBegin, onReset, h
       title="Mission priorities"
       actions={
         <div className="flex shrink-0 items-center gap-2.5">
-          <button type="button" onClick={onReset} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-line-strong px-3 py-1.5 text-sm font-medium text-fg hover:border-copper hover:text-copper-bright" aria-label="Reset priorities to the applied objective's suggestion" title="Restore the applied objective's suggested shares">
+          <button type="button" onClick={onReset} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-line-strong px-3 py-1.5 text-sm font-medium text-fg hover:border-copper hover:text-copper-bright" aria-label="Reset priorities to the applied objective's suggestion" title="Go back to the suggested shares for this objective">
             <RotateCcw className="h-4 w-4" aria-hidden /> Reset
           </button>
           {headerExtra}

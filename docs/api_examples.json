@@ -31,7 +31,7 @@
           "approx_width_km": 56.2,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Impact crater whose floor holds water-altered igneous rocks below a sedimentary delta; its fan deposits carry Mg-rich carbonate, olivine and Fe/Mg-smectite. Perseverance landing site.",
+        "description": "An impact crater. Its floor has water-altered igneous rocks below a sedimentary delta. Its fan deposits contain Mg-rich carbonate, olivine and Fe/Mg-smectite. It is the Perseverance landing site.",
         "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
         "tags": [
           "carbonates",
@@ -66,7 +66,7 @@
           "approx_width_km": 59.1,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Impact crater with ancient lake deposits at Yellowknife Bay and a hematite-bearing ridge (Vera Rubin ridge) on the slope of Mount Sharp. Curiosity landing site.",
+        "description": "An impact crater with ancient lake deposits at Yellowknife Bay. A hematite-bearing ridge (Vera Rubin ridge) sits on the slope of Mount Sharp. It is the Curiosity landing site.",
         "heritage": "NASA Mars Science Laboratory Curiosity landing site (2012)",
         "tags": [
           "clays",
@@ -98,7 +98,7 @@
           "approx_width_km": 59.1,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Smooth plains of impact-fragmented regolith over basaltic lava flows. InSight landing site.",
+        "description": "Smooth plains of impact-broken regolith over basaltic lava flows. It is the InSight landing site.",
         "heritage": "NASA InSight landing site (2018)",
         "tags": [
           "basalt",
@@ -128,7 +128,7 @@
           "approx_width_km": 56.3,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Low-relief terrain of hydrous clay-bearing bedrock with a later fluviodeltaic system. ESA's selected landing site for the Rosalind Franklin rover.",
+        "description": "Low-relief terrain of hydrous, clay-bearing bedrock. A river delta system formed later. ESA selected it as the landing site for the Rosalind Franklin rover.",
         "heritage": "ESA ExoMars Rosalind Franklin rover selected landing site",
         "tags": [
           "clays",
@@ -157,7 +157,7 @@
           "approx_width_km": 39.9,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Lowland basin with giant polygonal terrain; Viking 2 imaged a rocky surface at its landing site. No recent source on the composition at the Viking 2 site was found, so no mineral labels are given.",
+        "description": "A lowland basin with giant polygonal terrain. Viking 2 imaged a rocky surface at its landing site. No recent source on the minerals at the Viking 2 site was found, so no mineral labels are given.",
         "heritage": "NASA Viking 2 landing site (1976)",
         "tags": [
           "polygonal_terrain",
@@ -185,7 +185,7 @@
           "approx_width_km": 54.9,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Northern plains near the terminus of the Maja Valles flood channel; Viking 1 imaged a boulder-strewn surface here.",
+        "description": "Northern plains near the end of the Maja Valles flood channel. Viking 1 imaged a boulder-strewn surface here.",
         "heritage": "NASA Viking 1 landing site (1976)",
         "tags": [
           "northern_lowlands",
@@ -215,7 +215,7 @@
           "approx_width_km": 59.2,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Plains with extensive layered deposits, some rich in hematite; the layered sulfate deposits of the Burns formation derive from a basaltic precursor. Opportunity landing site.",
+        "description": "Plains with large layered deposits. Some are rich in hematite. The layered sulfate deposits of the Burns formation formed from basaltic material. It is the Opportunity landing site.",
         "heritage": "NASA MER Opportunity landing site (2004)",
         "tags": [
           "basalt",
@@ -246,7 +246,7 @@
           "approx_width_km": 57.4,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Impact crater and possible former lake; basalts analysed by Spirit, with Mg-Fe carbonate outcrops and opaline silica in the Columbia Hills. Spirit landing site.",
+        "description": "An impact crater and possible former lake. Spirit analysed basalts here. The Columbia Hills have Mg-Fe carbonate outcrops and opaline silica. It is the Spirit landing site.",
         "heritage": "NASA MER Spirit landing site (2004)",
         "tags": [
           "basalt",
@@ -282,7 +282,7 @@
         "approx_width_km": 56.2,
         "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
       },
-      "description": "Impact crater whose floor holds water-altered igneous rocks below a sedimentary delta; its fan deposits carry Mg-rich carbonate, olivine and Fe/Mg-smectite. Perseverance landing site.",
+      "description": "An impact crater. Its floor has water-altered igneous rocks below a sedimentary delta. Its fan deposits contain Mg-rich carbonate, olivine and Fe/Mg-smectite. It is the Perseverance landing site.",
       "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
       "tags": [
         "carbonates",
@@ -869,7 +869,7 @@
           "feature_id": "elevation_median_m",
           "operator": "<=",
           "threshold": 2000.0,
-          "rationale": "ASSUMPTION: footprints with median elevation above +2 km leave too little atmosphere for current EDL architectures. Historical mission limits were lower; this is a permissive screening bound.",
+          "rationale": "Assumption: footprints with a median elevation above +2 km leave too little atmosphere for current EDL systems. Past mission limits were lower. This is a generous screening limit.",
           "is_assumption": true
         },
         {
@@ -877,7 +877,7 @@
           "feature_id": "latitude_abs_deg",
           "operator": "<=",
           "threshold": 50.0,
-          "rationale": "ASSUMPTION: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions screened candidate zones to within 50 degrees of the equator for solar power and thermal reasons. Applied here as a documented default, not as a rule for robotic landers.",
+          "rationale": "Assumption: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions limited candidate zones to within 50 degrees of the equator, for solar power and thermal reasons. It is used here as a documented default. It is not a rule for robotic landers.",
           "is_assumption": true
         }
       ],
@@ -891,7 +891,7 @@
         "feature_id": "slope_regional_median_deg",
         "unit": "deg",
         "default_weight": 35.0,
-        "rationale": "Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards.",
+        "rationale": "Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales.",
         "function": {
           "type": "piecewise_linear",
           "direction": "lower_is_better",
@@ -905,7 +905,7 @@
         "feature_id": "elevation_median_m",
         "unit": "m",
         "default_weight": 25.0,
-        "rationale": "Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system.",
+        "rationale": "Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system.",
         "function": {
           "type": "piecewise_linear",
           "direction": "lower_is_better",
@@ -919,7 +919,7 @@
         "feature_id": "roughness_regional_m",
         "unit": "m",
         "default_weight": 20.0,
-        "rationale": "Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness.",
+        "rationale": "Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness.",
         "function": {
           "type": "piecewise_linear",
           "direction": "lower_is_better",
@@ -933,7 +933,7 @@
         "feature_id": "surface_temperature_mean_c",
         "unit": "degC",
         "default_weight": 10.0,
-        "rationale": "Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored.",
+        "rationale": "Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored.",
         "function": {
           "type": "piecewise_linear",
           "direction": "higher_is_better",
@@ -947,7 +947,7 @@
         "feature_id": "insolation_toa_annual_mean_wm2",
         "unit": "W/m2",
         "default_weight": 10.0,
-        "rationale": "Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement.",
+        "rationale": "Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement.",
         "function": {
           "type": "piecewise_linear",
           "direction": "higher_is_better",
@@ -957,10 +957,10 @@
       }
     ],
     "notes": [
-      "Scores are relative decision-support indices on 0-100, not probabilities and not a landing-safety certification.",
-      "Every threshold below is a DOCUMENTED ASSUMPTION chosen for regional screening at the ~3.7 km MOLA MEGDR 16 ppd baseline. None is an established universal landing requirement.",
-      "Suitability functions are piecewise-linear: q = 1 at or beyond `full` toward the preferred direction, q = 0 at or beyond `zero`, linear in between.",
-      "landing-v1.1 (2026-11-14): solar_illumination `full` knee moved from 185 to 178 W/m2 so that q = 1 is attainable (see that criterion's rationale). Default weights, every other knee and both default hard constraints are unchanged from landing-v1.0."
+      "Scores are relative indices from 0 to 100 that support decisions. They are not probabilities, and they do not certify landing safety.",
+      "Every threshold below is a documented assumption. Each was chosen for regional screening on the ~3.7 km MOLA MEGDR 16 ppd baseline. None is an established landing requirement.",
+      "Each factor uses a piecewise-linear function. q = 1 at or beyond `full` in the preferred direction. q = 0 at or beyond `zero`. Between the two, q changes linearly.",
+      "landing-v1.1 (2026-11-14): the solar_illumination `full` value moved from 185 to 178 W/m2, so that q = 1 can be reached (see that factor's rationale). The default weights, every other threshold and both default hard constraints are the same as in landing-v1.0."
     ]
   },
   "evaluate_request": {
@@ -996,7 +996,7 @@
           "feature_id": "elevation_median_m",
           "operator": "<=",
           "threshold": 2000.0,
-          "rationale": "ASSUMPTION: footprints with median elevation above +2 km leave too little atmosphere for current EDL architectures. Historical mission limits were lower; this is a permissive screening bound.",
+          "rationale": "Assumption: footprints with a median elevation above +2 km leave too little atmosphere for current EDL systems. Past mission limits were lower. This is a generous screening limit.",
           "is_assumption": true
         },
         {
@@ -1004,7 +1004,7 @@
           "feature_id": "latitude_abs_deg",
           "operator": "<=",
           "threshold": 50.0,
-          "rationale": "ASSUMPTION: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions screened candidate zones to within 50 degrees of the equator for solar power and thermal reasons. Applied here as a documented default, not as a rule for robotic landers.",
+          "rationale": "Assumption: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions limited candidate zones to within 50 degrees of the equator, for solar power and thermal reasons. It is used here as a documented default. It is not a rule for robotic landers.",
           "is_assumption": true
         }
       ],
@@ -1044,7 +1044,7 @@
             "weighted_contribution": 38.88888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "0.14 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "0.14 deg is at or below the 2.00 deg full-marks value, so q = 1.00. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1058,7 +1058,7 @@
             "weighted_contribution": 27.77777777777778,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-3,624 m is at or below the -3,000 m fully-suitable knee, so q = 1.00. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-3,624 m is at or below the -3,000 m full-marks value, so q = 1.00. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1072,7 +1072,7 @@
             "weighted_contribution": 22.22222222222222,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "20 m is at or below the 20 m fully-suitable knee, so q = 1.00. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "20 m is at or below the 20 m full-marks value, so q = 1.00. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1085,8 +1085,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1100,7 +1100,7 @@
             "weighted_contribution": 9.829931972789113,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "167 W/m2 lies between the knees (178 W/m2 -> 1.0, 80 W/m2 -> 0.0), so q = 0.88 by linear interpolation. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "167 W/m2 is between the thresholds (178 W/m2 -> 1.0, 80 W/m2 -> 0.0). Linear interpolation gives q = 0.88. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1124,9 +1124,9 @@
         ],
         "risks": [],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       },
       {
@@ -1148,7 +1148,7 @@
             "weighted_contribution": 38.88888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "0.16 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "0.16 deg is at or below the 2.00 deg full-marks value, so q = 1.00. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1162,7 +1162,7 @@
             "weighted_contribution": 25.816666666666666,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-2,647 m lies between the knees (-3,000 m -> 1.0, 2,000 m -> 0.0), so q = 0.93 by linear interpolation. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-2,647 m is between the thresholds (-3,000 m -> 1.0, 2,000 m -> 0.0). Linear interpolation gives q = 0.93. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1176,7 +1176,7 @@
             "weighted_contribution": 21.34126984126984,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "31 m lies between the knees (20 m -> 1.0, 300 m -> 0.0), so q = 0.96 by linear interpolation. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "31 m is between the thresholds (20 m -> 1.0, 300 m -> 0.0). Linear interpolation gives q = 0.96. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1189,8 +1189,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1204,7 +1204,7 @@
             "weighted_contribution": 11.11111111111111,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "178 W/m2 is at or above the 178 W/m2 fully-suitable knee, so q = 1.00. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "178 W/m2 is at or above the 178 W/m2 full-marks value, so q = 1.00. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1228,9 +1228,9 @@
         ],
         "risks": [],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       },
       {
@@ -1252,7 +1252,7 @@
             "weighted_contribution": 38.88888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "0.34 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "0.34 deg is at or below the 2.00 deg full-marks value, so q = 1.00. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1266,7 +1266,7 @@
             "weighted_contribution": 27.77777777777778,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-3,069 m is at or below the -3,000 m fully-suitable knee, so q = 1.00. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-3,069 m is at or below the -3,000 m full-marks value, so q = 1.00. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1280,7 +1280,7 @@
             "weighted_contribution": 19.658730158730155,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "52 m lies between the knees (20 m -> 1.0, 300 m -> 0.0), so q = 0.88 by linear interpolation. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "52 m is between the thresholds (20 m -> 1.0, 300 m -> 0.0). Linear interpolation gives q = 0.88. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1293,8 +1293,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1308,7 +1308,7 @@
             "weighted_contribution": 10.272108843537415,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "171 W/m2 lies between the knees (178 W/m2 -> 1.0, 80 W/m2 -> 0.0), so q = 0.92 by linear interpolation. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "171 W/m2 is between the thresholds (178 W/m2 -> 1.0, 80 W/m2 -> 0.0). Linear interpolation gives q = 0.92. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1332,9 +1332,9 @@
         ],
         "risks": [],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       },
       {
@@ -1356,7 +1356,7 @@
             "weighted_contribution": 38.88888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "0.23 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "0.23 deg is at or below the 2.00 deg full-marks value, so q = 1.00. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1370,7 +1370,7 @@
             "weighted_contribution": 27.77777777777778,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-4,498 m is at or below the -3,000 m fully-suitable knee, so q = 1.00. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-4,498 m is at or below the -3,000 m full-marks value, so q = 1.00. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1384,7 +1384,7 @@
             "weighted_contribution": 22.039682539682538,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "22 m lies between the knees (20 m -> 1.0, 300 m -> 0.0), so q = 0.99 by linear interpolation. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "22 m is between the thresholds (20 m -> 1.0, 300 m -> 0.0). Linear interpolation gives q = 0.99. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1397,8 +1397,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1412,7 +1412,7 @@
             "weighted_contribution": 5.419501133786848,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "128 W/m2 lies between the knees (178 W/m2 -> 1.0, 80 W/m2 -> 0.0), so q = 0.49 by linear interpolation. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "128 W/m2 is between the thresholds (178 W/m2 -> 1.0, 80 W/m2 -> 0.0). Linear interpolation gives q = 0.49. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1435,9 +1435,9 @@
         ],
         "risks": [],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       },
       {
@@ -1459,7 +1459,7 @@
             "weighted_contribution": 38.88888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "0.17 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "0.17 deg is at or below the 2.00 deg full-marks value, so q = 1.00. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1473,7 +1473,7 @@
             "weighted_contribution": 21.705555555555556,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-1,907 m lies between the knees (-3,000 m -> 1.0, 2,000 m -> 0.0), so q = 0.78 by linear interpolation. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-1,907 m is between the thresholds (-3,000 m -> 1.0, 2,000 m -> 0.0). Linear interpolation gives q = 0.78. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1487,7 +1487,7 @@
             "weighted_contribution": 20.896825396825395,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "37 m lies between the knees (20 m -> 1.0, 300 m -> 0.0), so q = 0.94 by linear interpolation. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "37 m is between the thresholds (20 m -> 1.0, 300 m -> 0.0). Linear interpolation gives q = 0.94. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1500,8 +1500,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1515,7 +1515,7 @@
             "weighted_contribution": 10.600907029478458,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "174 W/m2 lies between the knees (178 W/m2 -> 1.0, 80 W/m2 -> 0.0), so q = 0.95 by linear interpolation. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "174 W/m2 is between the thresholds (178 W/m2 -> 1.0, 80 W/m2 -> 0.0). Linear interpolation gives q = 0.95. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1539,9 +1539,9 @@
         ],
         "risks": [],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       },
       {
@@ -1563,7 +1563,7 @@
             "weighted_contribution": 38.88888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "0.24 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "0.24 deg is at or below the 2.00 deg full-marks value, so q = 1.00. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1577,7 +1577,7 @@
             "weighted_contribution": 19.077777777777776,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-1,434 m lies between the knees (-3,000 m -> 1.0, 2,000 m -> 0.0), so q = 0.69 by linear interpolation. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-1,434 m is between the thresholds (-3,000 m -> 1.0, 2,000 m -> 0.0). Linear interpolation gives q = 0.69. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1591,7 +1591,7 @@
             "weighted_contribution": 17.134920634920636,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "84 m lies between the knees (20 m -> 1.0, 300 m -> 0.0), so q = 0.77 by linear interpolation. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "84 m is between the thresholds (20 m -> 1.0, 300 m -> 0.0). Linear interpolation gives q = 0.77. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1604,8 +1604,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1619,7 +1619,7 @@
             "weighted_contribution": 11.11111111111111,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "178 W/m2 is at or above the 178 W/m2 fully-suitable knee, so q = 1.00. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "178 W/m2 is at or above the 178 W/m2 full-marks value, so q = 1.00. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1642,9 +1642,9 @@
         ],
         "risks": [],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       },
       {
@@ -1666,7 +1666,7 @@
             "weighted_contribution": 38.88888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "1.08 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "1.08 deg is at or below the 2.00 deg full-marks value, so q = 1.00. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1680,7 +1680,7 @@
             "weighted_contribution": 22.93888888888889,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-2,129 m lies between the knees (-3,000 m -> 1.0, 2,000 m -> 0.0), so q = 0.83 by linear interpolation. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-2,129 m is between the thresholds (-3,000 m -> 1.0, 2,000 m -> 0.0). Linear interpolation gives q = 0.83. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1694,7 +1694,7 @@
             "weighted_contribution": 8.38095238095238,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "194 m lies between the knees (20 m -> 1.0, 300 m -> 0.0), so q = 0.38 by linear interpolation. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "194 m is between the thresholds (20 m -> 1.0, 300 m -> 0.0). Linear interpolation gives q = 0.38. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1707,8 +1707,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1722,7 +1722,7 @@
             "weighted_contribution": 10.249433106575964,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "170 W/m2 lies between the knees (178 W/m2 -> 1.0, 80 W/m2 -> 0.0), so q = 0.92 by linear interpolation. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "170 W/m2 is between the thresholds (178 W/m2 -> 1.0, 80 W/m2 -> 0.0). Linear interpolation gives q = 0.92. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1747,9 +1747,9 @@
           "Surface roughness 194 m (~56 km footprint) - poor (0.38)"
         ],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       },
       {
@@ -1771,7 +1771,7 @@
             "weighted_contribution": 25.248611111111114,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "4.81 deg lies between the knees (2.00 deg -> 1.0, 10.00 deg -> 0.0), so q = 0.65 by linear interpolation. Lower regional slopes reduce the chance that a landing ellipse spans tilted terrain such as crater walls or rises. The 2 deg 'fully suitable' knee echoes the km-scale slope constraint reported for Mars Exploration Rover site selection (Golombek et al., 2003, J. Geophys. Res. 108(E12), 8072); the 10 deg cut-off is an assumption for coarse screening. MEGDR 16 ppd slopes are regional (~3.7 km baseline) and cannot reveal lander-scale (metres) hazards."
+            "rationale": "4.81 deg is between the thresholds (2.00 deg -> 1.0, 10.00 deg -> 0.0). Linear interpolation gives q = 0.65. Lower regional slopes make it less likely that a landing ellipse covers tilted terrain, such as crater walls or rises. The 2 deg full-marks value and the 10 deg cut-off are screening assumptions on the ~3.7 km baseline. Recent landing-site selections set slope limits at much shorter baselines. InSight required slopes <15 deg at 84 m and 2 m length scales (Golombek et al., 2017). MSL required slopes <30 deg at 2-5 m baselines (Golombek et al., 2012). MEGDR 16 ppd slopes (~3.7 km baseline) cannot show slopes at these scales."
           },
           {
             "criterion_id": "elevation_suitability",
@@ -1785,7 +1785,7 @@
             "weighted_contribution": 27.77777777777778,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "-3,745 m is at or below the -3,000 m fully-suitable knee, so q = 1.00. Lower elevation means a thicker atmospheric column for entry, descent and landing deceleration. Historical engineering limits ranged from below -1.3 km (MER, Golombek et al. 2003) to around +1 km or lower for guided-entry missions (MSL, Mars 2020). The -3000 m / +2000 m knees are a screening assumption spanning that range; a real mission's limit depends on its EDL system."
+            "rationale": "-3,745 m is at or below the -3,000 m full-marks value, so q = 1.00. Lower elevation means more atmosphere above the site to slow the spacecraft during entry, descent and landing. MSL required an elevation <-1 km (Golombek et al., 2012). InSight required an elevation <=-2.5 km (Golombek et al., 2017). For Perseverance, new EDL capabilities meant that elevation and latitude limits no longer decided which sites were viable (Grant et al., 2018). The -3000 m and +2000 m values are a screening assumption that covers this range. +2 km is also the preliminary elevation limit for human Exploration Zones (Bussey & Hoffman, 2016). The real limit for a mission depends on its EDL system."
           },
           {
             "criterion_id": "surface_roughness",
@@ -1799,7 +1799,7 @@
             "weighted_contribution": 0.0,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "1,139 m is at or above the 300 m cut-off, so q = 0.00. Standard deviation of MOLA elevation within the footprint after removing a best-fit plane. Low values indicate smooth plains at the km scale; high values indicate crater rims, scarps or hummocky terrain. Knees are assumptions tuned so smooth plains score near 1 and crater-wall-dominated footprints score near 0. Not a proxy for rock abundance or decimetre-scale roughness."
+            "rationale": "1,139 m is at or above the 300 m cut-off, so q = 0.00. Standard deviation of MOLA elevation within the footprint, after a best-fit plane is removed. Low values show smooth plains at the km scale. High values show crater rims, scarps or hummocky terrain. The thresholds are assumptions. They were set so that smooth plains score near 1 and footprints dominated by crater walls score near 0. This value does not stand in for rock abundance or decimetre-scale roughness."
           },
           {
             "criterion_id": "thermal_conditions",
@@ -1812,8 +1812,8 @@
             "normalized_weight": null,
             "weighted_contribution": null,
             "is_missing": true,
-            "excluded_reason": "feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-            "rationale": "No finite value for surface_temperature_mean_c in this profile, so the criterion is not scored; its weight is renormalised over the remaining criteria rather than counted as zero. Warmer mean surface temperatures ease thermal management for landed hardware. PLACEHOLDER: no Mars site carries this feature in profile v1 (THEMIS/TES integration is an open Engineer-2 task), so under the common_feature_set policy this criterion is excluded and reported in completeness rather than scored."
+            "excluded_reason": "surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+            "rationale": "This profile has no finite value for surface_temperature_mean_c, so the factor is not scored. Its weight is spread over the other factors. It is not counted as zero. Warmer mean surface temperatures make thermal management easier for landed hardware. This is a placeholder. No Mars site has this value in profile v1, because THEMIS/TES data is not added yet. Under the common_feature_set policy, this factor is left out and reported as missing instead of scored."
           },
           {
             "criterion_id": "solar_illumination",
@@ -1827,7 +1827,7 @@
             "weighted_contribution": 11.11111111111111,
             "is_missing": false,
             "excluded_reason": null,
-            "rationale": "178 W/m2 is at or above the 178 W/m2 fully-suitable knee, so q = 1.00. Annual-mean top-of-atmosphere insolation computed from latitude and Mars orbital elements (see SCIENTIFIC_METHOD.md). The knees are the physical range of the feature under the pipeline's own model (scripts/geo.py): the equatorial annual mean is 178.6 W/m2 and the polar annual mean 79.8 W/m2, so `full` = 178 makes an equatorial site fully suitable and `zero` = 80 makes a polar site unsuitable. (An earlier 185 W/m2 knee was S_Mars/pi = 186.6 W/m2 without obliquity, a value no latitude attains, so q = 1 was unreachable - corrected 2026-11-14.) Ignores atmospheric dust opacity and local horizon, so it is a latitude-driven proxy for solar power availability, not a surface measurement."
+            "rationale": "178 W/m2 is at or above the 178 W/m2 full-marks value, so q = 1.00. Annual-mean sunlight at the top of the atmosphere, calculated from latitude and the orbital elements of Mars (see SCIENTIFIC_METHOD.md). The thresholds are the physical range of this value in the pipeline's model (scripts/geo.py). The equatorial annual mean is 178.6 W/m2 and the polar annual mean is 79.8 W/m2. So `full` = 178 gives an equatorial site full marks, and `zero` = 80 gives a polar site zero. An earlier value of 185 W/m2 was S_Mars/pi = 186.6 W/m2 without obliquity. No latitude reaches that value, so q = 1 was impossible. This was corrected on 2026-11-14. The value ignores dust in the atmosphere and the local horizon. It is a latitude-based stand-in for available solar power, not a surface measurement."
           }
         ],
         "eligibility": {
@@ -1851,9 +1851,9 @@
           "Surface roughness 1,139 m (~59 km footprint) - unsuitable (0.00)"
         ],
         "limitations": [
-          "Excluded criterion 'thermal_conditions': feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set",
-          "Terrain metrics are regional (~3.7 km MOLA baseline) and cannot certify lander-scale safety.",
-          "Score is a relative decision-support index under documented threshold assumptions, not a probability."
+          "Factor 'thermal_conditions' was left out: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)",
+          "Terrain values are regional (~3.7 km MOLA baseline). They cannot confirm safety at the scale of a lander.",
+          "The score is a relative index based on documented threshold assumptions. It is not a probability."
         ]
       }
     ],
@@ -1889,7 +1889,7 @@
           "feature_id": "elevation_median_m",
           "operator": "<=",
           "threshold": 2000.0,
-          "rationale": "ASSUMPTION: footprints with median elevation above +2 km leave too little atmosphere for current EDL architectures. Historical mission limits were lower; this is a permissive screening bound.",
+          "rationale": "Assumption: footprints with a median elevation above +2 km leave too little atmosphere for current EDL systems. Past mission limits were lower. This is a generous screening limit.",
           "is_assumption": true
         },
         {
@@ -1897,14 +1897,14 @@
           "feature_id": "latitude_abs_deg",
           "operator": "<=",
           "threshold": 50.0,
-          "rationale": "ASSUMPTION: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions screened candidate zones to within 50 degrees of the equator for solar power and thermal reasons. Applied here as a documented default, not as a rule for robotic landers.",
+          "rationale": "Assumption: the 2015 NASA First Landing Site / Exploration Zone Workshop for human missions limited candidate zones to within 50 degrees of the equator, for solar power and thermal reasons. It is used here as a documented default. It is not a rule for robotic landers.",
           "is_assumption": true
         }
       ],
       "missing_data_policy": "common_feature_set"
     },
     "warnings": [
-      "criterion 'thermal_conditions' excluded: feature surface_temperature_mean_c missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...); excluded for all under common_feature_set"
+      "criterion 'thermal_conditions' excluded: surface_temperature_mean_c is missing on 8/8 sites (chryse_planitia, elysium_planitia, gale_crater, gusev_crater, ...), so it is left out for all sites (common_feature_set)"
     ],
     "client_request_id": "req-42"
   },
@@ -1931,7 +1931,7 @@
             "approx_width_km": 43.6,
             "description": "0.5 deg square centred on the site"
           },
-          "description": "Area around the Mars Desert Research Station near Hanksville, Utah: Jurassic and Cretaceous sandstone and shale with smectite clays and sulfate salts, and exhumed, inverted palaeochannels with carbonate concretions.",
+          "description": "The area around the Mars Desert Research Station, near Hanksville, Utah. It has Jurassic and Cretaceous sandstone and shale, with smectite clays and sulfate salts. It also has exhumed, inverted palaeochannels with carbonate concretions.",
           "tags": [
             "carbonates",
             "clays",
@@ -1964,7 +1964,7 @@
             "normalized_weight": 0.25,
             "contribution": 0.025666666666666654,
             "method": "scaled_absolute_difference",
-            "note": "Mars 1.08 deg vs Earth 0.92 deg: |difference| 0.15 deg / scale 1.50 deg = d 0.10 (close at the harmonised ~3.7 km baseline)"
+            "note": "Mars 1.08 deg vs Earth 0.92 deg: |difference| 0.15 deg / scale 1.50 deg = d 0.10 (close on the matched ~3.7 km baseline)"
           },
           {
             "feature_id": "roughness_regional_m",
@@ -1979,7 +1979,7 @@
             "normalized_weight": 0.25,
             "contribution": 0.16200000000000003,
             "method": "scaled_absolute_difference",
-            "note": "Mars 194 m vs Earth 130 m: |difference| 65 m / scale 100 m = d 0.65 (moderately different at the harmonised ~3.7 km baseline)"
+            "note": "Mars 194 m vs Earth 130 m: |difference| 65 m / scale 100 m = d 0.65 (moderately different on the matched ~3.7 km baseline)"
           },
           {
             "feature_id": "terrain_morphology",
@@ -2061,18 +2061,18 @@
           }
         ],
         "shared_characteristics": [
-          "Composition shared: carbonates, clays, sulfates",
+          "Shared minerals: carbonates, clays, sulfates",
           "Regional slope: Mars 1.08 deg vs Earth 0.92 deg (difference 0.15 deg, within half the 1.50 deg comparison scale)"
         ],
         "important_differences": [
-          "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: inverted channels)"
+          "No shared landforms. Mars: impact crater, crater floor, delta, paleolake basin. Earth: inverted channels."
         ],
         "noncomparable_variables": [
-          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
-          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
-          "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
-          "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
-          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
+          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb). Earth's is 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets). No Earth site is comparable.",
+          "Gravity: Mars surface gravity is 3.73 m/s2. Earth's is 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
+          "Radiation: Mars has no global magnetic field and a thin atmosphere. Its surface radiation dose is far higher than anywhere on Earth.",
+          "Temperature: mean surface temperatures on Mars are far below any Earth analog. Temperature comparisons are qualitative only.",
+          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3). Earth elevations are relative to the EGM2008 geoid. So absolute elevations are shown, but they are never subtracted."
         ],
         "research_applications": [
           "Mars Desert Research Station crewed simulations"
@@ -2084,18 +2084,18 @@
           {
             "kind": "proposed_study",
             "title": "Instrument and sample-handling tests on shared materials (carbonates, clays, sulfates)",
-            "research_question": "Can instrument calibration and sample-handling procedures developed on carbonates, clays, sulfates at San Rafael Swell - MDRS area be validated before use on the materials reported at Jezero Crater?",
-            "method": "Field spectroscopy and sample preparation on the Earth materials; compare instrument response against laboratory reference measurements; document which procedures depend on Earth-only conditions.",
-            "why_here": "Both sites carry cited carbonates, clays, sulfates; the comparison targets materials, not landing suitability.",
+            "research_question": "Can instrument calibration and sample handling, developed on carbonates, clays, sulfates at San Rafael Swell - MDRS area, be validated before use on the materials reported at Jezero Crater?",
+            "method": "Do field spectroscopy and sample preparation on the Earth materials. Compare the instrument response with laboratory reference measurements. Record which procedures depend on conditions found only on Earth.",
+            "why_here": "Both sites have cited carbonates, clays, sulfates. The comparison is about materials, not landing suitability.",
             "motivating_citation_ids": [],
-            "cannot_infer": "Composition tags are literature labels, not spectral matches; weathering, humidity and biology on Earth have no Mars counterpart.",
+            "cannot_infer": "Mineral labels come from the literature. They are not spectral matches. Weathering, humidity and biology on Earth have no match on Mars.",
             "analog_candidate_id": "mdrs_utah"
           }
         ],
         "limitations": [
-          "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
-          "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
-          "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
+          "Similarity is a rough index (100 / (1 + D)) over the chosen features. It is not a validated probability.",
+          "Terrain values are compared on the same ~3.7 km baseline. Metre-scale landforms are not assessed.",
+          "Mineral and landform labels come from the literature. They are not spectral measurements."
         ],
         "citations": [
           "clarke2011_hanksville",
@@ -2103,7 +2103,6 @@
           "derived_toa_insolation",
           "farley2022_jezero",
           "lit_jezero_mineralogy",
-          "mdrs",
           "mola_megdr_16ppd",
           "nasa_m2020_landing_site",
           "nasa_power",
@@ -2131,7 +2130,7 @@
             "approx_width_km": 50.8,
             "description": "0.5 deg square centred on the site"
           },
-          "description": "Hyperarid core of the Atacama near Yungay: playa sediments over alluvial fan deposits, and polygonal ground cemented by sulfates, nitrates and chlorides. Used by NASA ARADS for rover and drill testing.",
+          "description": "The hyperarid core of the Atacama, near Yungay. Playa sediments lie over alluvial fan deposits. Polygonal ground is cemented by sulfates, nitrates and chlorides. NASA ARADS used this area for rover and drill tests.",
           "tags": [
             "alluvial_fan",
             "chlorides",
@@ -2165,7 +2164,7 @@
             "normalized_weight": 0.25,
             "contribution": 0.014833333333333329,
             "method": "scaled_absolute_difference",
-            "note": "Mars 1.08 deg vs Earth 1.17 deg: |difference| 0.09 deg / scale 1.50 deg = d 0.06 (close at the harmonised ~3.7 km baseline)"
+            "note": "Mars 1.08 deg vs Earth 1.17 deg: |difference| 0.09 deg / scale 1.50 deg = d 0.06 (close on the matched ~3.7 km baseline)"
           },
           {
             "feature_id": "roughness_regional_m",
@@ -2180,7 +2179,7 @@
             "normalized_weight": 0.25,
             "contribution": 0.16975,
             "method": "scaled_absolute_difference",
-            "note": "Mars 194 m vs Earth 126 m: |difference| 68 m / scale 100 m = d 0.68 (moderately different at the harmonised ~3.7 km baseline)"
+            "note": "Mars 194 m vs Earth 126 m: |difference| 68 m / scale 100 m = d 0.68 (moderately different on the matched ~3.7 km baseline)"
           },
           {
             "feature_id": "terrain_morphology",
@@ -2263,19 +2262,19 @@
           }
         ],
         "shared_characteristics": [
-          "Composition shared: sulfates",
+          "Shared minerals: sulfates",
           "Regional slope: Mars 1.08 deg vs Earth 1.17 deg (difference 0.09 deg, within half the 1.50 deg comparison scale)",
           "Aridity: Mars 0.00 mm/day vs Earth 0.02 mm/day (difference 0.02 mm/day, within half the 1.00 mm/day comparison scale)"
         ],
         "important_differences": [
-          "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: alluvial fan, playa, polygonal terrain)"
+          "No shared landforms. Mars: impact crater, crater floor, delta, paleolake basin. Earth: alluvial fan, playa, polygonal terrain."
         ],
         "noncomparable_variables": [
-          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
-          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
-          "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
-          "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
-          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
+          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb). Earth's is 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets). No Earth site is comparable.",
+          "Gravity: Mars surface gravity is 3.73 m/s2. Earth's is 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
+          "Radiation: Mars has no global magnetic field and a thin atmosphere. Its surface radiation dose is far higher than anywhere on Earth.",
+          "Temperature: mean surface temperatures on Mars are far below any Earth analog. Temperature comparisons are qualitative only.",
+          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3). Earth elevations are relative to the EGM2008 geoid. So absolute elevations are shown, but they are never subtracted."
         ],
         "research_applications": [
           "NASA ARADS rover and drilling campaigns"
@@ -2287,18 +2286,18 @@
           {
             "kind": "proposed_study",
             "title": "Instrument and sample-handling tests on shared materials (sulfates)",
-            "research_question": "Can instrument calibration and sample-handling procedures developed on sulfates at Atacama Desert - Yungay region be validated before use on the materials reported at Jezero Crater?",
-            "method": "Field spectroscopy and sample preparation on the Earth materials; compare instrument response against laboratory reference measurements; document which procedures depend on Earth-only conditions.",
-            "why_here": "Both sites carry cited sulfates; the comparison targets materials, not landing suitability.",
+            "research_question": "Can instrument calibration and sample handling, developed on sulfates at Atacama Desert - Yungay region, be validated before use on the materials reported at Jezero Crater?",
+            "method": "Do field spectroscopy and sample preparation on the Earth materials. Compare the instrument response with laboratory reference measurements. Record which procedures depend on conditions found only on Earth.",
+            "why_here": "Both sites have cited sulfates. The comparison is about materials, not landing suitability.",
             "motivating_citation_ids": [],
-            "cannot_infer": "Composition tags are literature labels, not spectral matches; weathering, humidity and biology on Earth have no Mars counterpart.",
+            "cannot_infer": "Mineral labels come from the literature. They are not spectral matches. Weathering, humidity and biology on Earth have no match on Mars.",
             "analog_candidate_id": "atacama_yungay"
           }
         ],
         "limitations": [
-          "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
-          "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
-          "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
+          "Similarity is a rough index (100 / (1 + D)) over the chosen features. It is not a validated probability.",
+          "Terrain values are compared on the same ~3.7 km baseline. Metre-scale landforms are not assessed.",
+          "Mineral and landform labels come from the literature. They are not spectral measurements."
         ],
         "citations": [
           "copernicus_glo90",
@@ -2307,7 +2306,6 @@
           "horstmann2024_yungay",
           "lit_jezero_mineralogy",
           "mola_megdr_16ppd",
-          "nasa_arads",
           "nasa_m2020_landing_site",
           "nasa_power",
           "sager2020_yungay"
@@ -2334,7 +2332,7 @@
             "approx_width_km": 11.7,
             "description": "0.5 deg square centred on the site"
           },
-          "description": "High-elevation hyper-arid polar desert (University Valley) with dry permafrost over ice-cemented ground; studied as a Mars analog for periglacial processes and ground ice.",
+          "description": "A high-elevation, hyper-arid polar desert (University Valley). Dry permafrost lies over ice-cemented ground. It is studied as a Mars analog for periglacial processes and ground ice.",
           "tags": [
             "periglacial",
             "polar_desert",
@@ -2365,7 +2363,7 @@
             "normalized_weight": 0.25,
             "contribution": 0.14633333333333334,
             "method": "scaled_absolute_difference",
-            "note": "Mars 1.08 deg vs Earth 1.96 deg: |difference| 0.88 deg / scale 1.50 deg = d 0.59 (moderately different at the harmonised ~3.7 km baseline)"
+            "note": "Mars 1.08 deg vs Earth 1.96 deg: |difference| 0.88 deg / scale 1.50 deg = d 0.59 (moderately different on the matched ~3.7 km baseline)"
           },
           {
             "feature_id": "roughness_regional_m",
@@ -2380,7 +2378,7 @@
             "normalized_weight": 0.25,
             "contribution": 0.04550000000000004,
             "method": "scaled_absolute_difference",
-            "note": "Mars 194 m vs Earth 176 m: |difference| 18 m / scale 100 m = d 0.18 (close at the harmonised ~3.7 km baseline)"
+            "note": "Mars 194 m vs Earth 176 m: |difference| 18 m / scale 100 m = d 0.18 (close on the matched ~3.7 km baseline)"
           },
           {
             "feature_id": "terrain_morphology",
@@ -2464,15 +2462,15 @@
           "Aridity: Mars 0.00 mm/day vs Earth 0.39 mm/day (difference 0.39 mm/day, within half the 1.00 mm/day comparison scale)"
         ],
         "important_differences": [
-          "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: polar desert, periglacial)",
-          "Composition: no shared tags (Mars: carbonates, olivine, clays, sulfates, perchlorates; Earth: water ice)"
+          "No shared landforms. Mars: impact crater, crater floor, delta, paleolake basin. Earth: polar desert, periglacial.",
+          "No shared minerals. Mars: carbonates, olivine, clays, sulfates, perchlorates. Earth: water ice."
         ],
         "noncomparable_variables": [
-          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
-          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
-          "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
-          "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
-          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
+          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb). Earth's is 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets). No Earth site is comparable.",
+          "Gravity: Mars surface gravity is 3.73 m/s2. Earth's is 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
+          "Radiation: Mars has no global magnetic field and a thin atmosphere. Its surface radiation dose is far higher than anywhere on Earth.",
+          "Temperature: mean surface temperatures on Mars are far below any Earth analog. Temperature comparisons are qualitative only.",
+          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3). Earth elevations are relative to the EGM2008 geoid. So absolute elevations are shown, but they are never subtracted."
         ],
         "research_applications": [
           "Phoenix landing-site ground-ice analog studies"
@@ -2482,9 +2480,9 @@
         ],
         "proposed_studies": [],
         "limitations": [
-          "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
-          "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
-          "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
+          "Similarity is a rough index (100 / (1 + D)) over the chosen features. It is not a validated probability.",
+          "Terrain values are compared on the same ~3.7 km baseline. Metre-scale landforms are not assessed.",
+          "Mineral and landform labels come from the literature. They are not spectral measurements."
         ],
         "citations": [
           "copernicus_glo90",
@@ -2492,7 +2490,6 @@
           "farley2022_jezero",
           "goordial2016_university_valley",
           "heldmann2015_dryvalleys",
-          "lit_dry_valleys",
           "lit_jezero_mineralogy",
           "mola_megdr_16ppd",
           "nasa_m2020_landing_site",
@@ -2503,11 +2500,11 @@
     ],
     "analog_spec_version": "analog-v1.0",
     "planetary_differences": [
-      "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
-      "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
-      "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
-      "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
-      "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
+      "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb). Earth's is 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets). No Earth site is comparable.",
+      "Gravity: Mars surface gravity is 3.73 m/s2. Earth's is 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
+      "Radiation: Mars has no global magnetic field and a thin atmosphere. Its surface radiation dose is far higher than anywhere on Earth.",
+      "Temperature: mean surface temperatures on Mars are far below any Earth analog. Temperature comparisons are qualitative only.",
+      "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3). Earth elevations are relative to the EGM2008 geoid. So absolute elevations are shown, but they are never subtracted."
     ],
     "warnings": []
   },
@@ -2517,12 +2514,12 @@
     "model": null,
     "sections": {
       "favorable": [
-        "Terrain safety (regional slope): 1.077 deg -> suitability 1.00, contributing 38.9 of 80.5 points.",
-        "Elevation suitability (EDL atmosphere): -2129 m -> suitability 0.83, contributing 22.9 of 80.5 points.",
-        "Solar illumination (annual mean, top of atmosphere): 170.4 W/m2 -> suitability 0.92, contributing 10.2 of 80.5 points."
+        "Terrain safety (regional slope): 1.077 deg -> suitability 1.00. It adds 38.9 of 80.5 points.",
+        "Elevation suitability (EDL atmosphere): -2129 m -> suitability 0.83. It adds 22.9 of 80.5 points.",
+        "Solar illumination (annual mean, top of atmosphere): 170.4 W/m2 -> suitability 0.92. It adds 10.2 of 80.5 points."
       ],
       "unfavorable": [
-        "Surface roughness (detrended relief): 194.4 m -> suitability 0.38, contributing 8.4 of 80.5 points."
+        "Surface roughness (detrended relief): 194.4 m -> suitability 0.38. It adds 8.4 of 80.5 points."
       ],
       "risks": [
         "Surface roughness 194 m (~56 km footprint) - poor (0.38)"
@@ -2534,23 +2531,37 @@
         "Surface roughness (detrended relief) (normalised weight 0.22)"
       ],
       "research_applications": [
-        "Proposed study ([C3], [C7], [C8]): Does the regional terrain statistic predict landing-scale hazards at Jezero Crater? Regional statistics cannot resolve lander-scale hazards, and the suitability score is a screening index; neither establishes that a landing would be safe. This study has not been performed.",
-        "Proposed study ([C1], [C2], [C3]): Record of past water at Jezero Crater: carbonates, clays, delta, paleolake basin Composition tags are literature-derived labels, not spectral measurements made by this tool, and they have no bearing on the landing suitability score. This study has not been performed.",
-        "Proposed study (no passage cited): Field rehearsal at San Rafael Swell - MDRS area on terrain it shares with Jezero Crater The similarity index (64.36) is a heuristic; Earth gravity, atmosphere and radiation differ, and no transfer has been demonstrated. This study has not been performed."
+        "Proposed study ([C4]): Does the regional terrain statistic predict landing-scale hazards at Jezero Crater? Regional values cannot show lander-scale hazards. The suitability score is a screening index. Neither shows that a landing would be safe. This study has not been performed.",
+        "Proposed study ([C1], [C2], [C3]): Record of past water at Jezero Crater: carbonates, clays, delta, paleolake basin Mineral labels come from the literature. They are not spectral measurements made by this tool. They do not affect the landing suitability score. This study has not been performed.",
+        "Proposed study (no passage cited): Field rehearsal at San Rafael Swell - MDRS area on terrain it shares with Jezero Crater The similarity index (64.36) is a rough measure. Earth gravity, atmosphere and radiation are different. It has not been shown that results transfer. This study has not been performed."
       ],
       "missing_evidence": [
-        "Criterion excluded: thermal_conditions",
-        "No measurement for surface_temperature_mean_c in profile v1.",
-        "No measurement for atmospheric_pressure_pa in profile v1.",
-        "No measurement for rock_abundance_pct in profile v1.",
-        "No measurement for dust_cover_index in profile v1."
+        "Factor left out: thermal_conditions",
+        "Profile v1 has no measurement for surface_temperature_mean_c.",
+        "Profile v1 has no measurement for atmospheric_pressure_pa.",
+        "Profile v1 has no measurement for rock_abundance_pct.",
+        "Profile v1 has no measurement for dust_cover_index."
       ],
       "future_investigation": [
-        "Sample HiRISE/CTX-derived DTMs over the landing ellipse to replace regional MOLA slopes with metre-scale hazard maps.",
-        "Integrate THEMIS/TES thermal inertia and rock abundance so the thermal and hazard criteria can be scored."
+        "Sample HiRISE/CTX DTMs over the landing ellipse. These would replace regional MOLA slopes with metre-scale hazard maps.",
+        "Add THEMIS/TES thermal inertia and rock abundance, so the thermal and hazard factors can be scored."
       ]
     },
     "supporting_evidence": [
+      {
+        "chunk_id": "crossref_farley2022_jezero#004",
+        "document_id": "crossref_farley2022_jezero",
+        "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.abo2196",
+        "publication_date": "2022-09-30",
+        "geographic_relevance": [
+          "jezero_crater",
+          "Nili Fossae / Isidis basin rim"
+        ],
+        "excerpt": "cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.\n\nAbstract (from Crossref): The Perseverance rover landed in Jezero crater, Mars, to investigate ancient lake and river deposits. We report observations of the crater floor, below the crater\u2019s sedimentary delta, finding that the floor consists of igneous rocks altered by water. The lowest exposed unit, informally named S\u00e9\u00edtah, is a coarsely crystalline olivine-rich rock, which accumulated at the base of a magma body. Magnesium-iron carbonates along grain boundaries indicate reactions with carbon dioxide\u2013rich water under water-poor conditions. ",
+        "score": 0.022541
+      },
       {
         "chunk_id": "crossref_lit_jezero_mineralogy#002",
         "document_id": "crossref_lit_jezero_mineralogy",
@@ -2563,7 +2574,7 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "present results from geomorphic mapping and visible to near\u2010infrared spectral analyses of the Jezero crater paleolake basin and its associated watershed. The goal of this study is to understand the provenance of the sedimentary deposits within this open\u2010basin lake using a source\u2010to\u2010sink approach. Two fan deposits located within the basin have distinct visible to near\u2010infrared mineralogic signatures measured by the Compact Reconnaissance Imaging Spectrometer for Mars (CRISM). The northern fan is spectrally characterized by a mixture of Mg\u2010rich carbonate and olivine, while the western fan is characterized by Fe/Mg\u2010smectite (e.g., saponite or nontronite) with variable amounts of Mg\u2010rich carbona",
-        "score": 0.022541
+        "score": 0.022177
       },
       {
         "chunk_id": "crossref_lit_jezero_mineralogy#003",
@@ -2577,7 +2588,7 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "geomorphic units that are likely to have supplied sediment to the Jezero crater paleolake, as the fluvial valleys that fed the basin incise these units. The geomorphic units include exposures of Fe/Mg\u2010smectite\u2010, olivine\u2010, and Mg\u2010rich carbonate\u2010bearing terrain. We show that the difference in fan deposit mineralogy is a function of the areal exposure of the major geomorphic units within their watersheds. This indicates that the spectrally dominant aqueous alteration minerals in the fan deposits are primarily detrital, or transported, in nature and did not form in situ. We conclude that the aqueous alteration of the units in the watershed occurred prior to the fluvial activity that carved the v",
-        "score": 0.022177
+        "score": 0.021825
       },
       {
         "chunk_id": "nasa_m2020_overview#007",
@@ -2591,7 +2602,7 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "Martian atmosphere \u2014 technology for future explorers to fill lungs and fuel rockets.\n\nSee what Perseverance has been capturing this week with its cameras.\n\nNASA chose Jezero Crater as the landing site for the Perseverance rover. Scientists believe the area was once flooded with water and was home to an ancient river delta. The process of landing site selection involved a combination of mission team members and scientists from around the world, who carefully examined more than 60 candidate locations on the Red Planet. After the exhaustive five-year study of potential sites, each with its own unique characteristics and appeal, Jezero rose to the top.",
-        "score": 0.021825
+        "score": 0.021484
       },
       {
         "chunk_id": "nasa_m2020_overview#005",
@@ -2622,6 +2633,20 @@
         "score": 0.019366
       },
       {
+        "chunk_id": "crossref_farley2022_jezero#001",
+        "document_id": "crossref_farley2022_jezero",
+        "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.abo2196",
+        "publication_date": "2022-09-30",
+        "geographic_relevance": [
+          "jezero_crater",
+          "Nili Fossae / Isidis basin rim"
+        ],
+        "excerpt": "Bibliographic record (Crossref metadata, not the paper's full text): Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars.\n\nAuthors: K. A. Farley, K. M. Stack, D. L. Shuster, B. H. N. Horgan, J. A. Hurowitz, J. D. Tarnas, J. I. Simon, V. Z. Sun, E. L. Scheller, K. R. Moore, S. M. McLennan, P. M. Vasconcelos, R. C. Wiens, A. H. Treiman, L. E. Mayhew, O. Beyssac, T. V. Kizovski, N. J. Tosca, K. H. Williford, L. S. Crumpler, L. W. Beegle, J. F. Bell, B. L. Ehlmann, Y. Liu, J. N. Maki, M. E. Schmidt, A. C. Allwood, H. E. F. Amundsen, R. Bhartia, T. Bosak, A. J. Brown, B. C. Clark, A. Cousin, O. Forni, T. S. J. Gabriel, Y. Goreva, S. Gupta, S.-E. Hamran, C. D. K. Herd, K. H",
+        "score": 0.019097
+      },
+      {
         "chunk_id": "nasa_m2020_science#001",
         "document_id": "nasa_m2020_science",
         "title": "Perseverance Science - NASA Science",
@@ -2633,40 +2658,20 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "Perseverance takes the next step in Mars Exploration by looking for the signs of past life itself.\n\nPerseverance is exploring Jezero Crater, a location on Mars that shows promising signs of a place that was likely friendly to life in the distant past. The rover\u2019s goal is to study the site in detail for its past conditions and seek the very signs of past life. It is carrying out its mission to identify and collect the most compelling rock cores and other samples of Mars material, which a future mission could retrieve and bring to Earth for more detailed study. Perseverance also tests technologies needed for the future human and robotic exploration of Mars.\n\nComposed of 993 individual images a",
-        "score": 0.016768
-      },
-      {
-        "chunk_id": "crossref_lit_gusev_basalt#003",
-        "document_id": "crossref_lit_gusev_basalt",
-        "title": "Basaltic Rocks Analyzed by the Spirit Rover in Gusev Crater",
-        "institution": "Science / American Association for the Advancement of Science (AAAS)",
-        "url": "https://api.crossref.org/works/10.1126/science.3050842",
-        "publication_date": "2004-08-06",
-        "geographic_relevance": [
-          "gusev_crater",
-          "Gusev Crater / Ma'adim Vallis outlet"
-        ],
-        "excerpt": "cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.\n\nAbstract (from Crossref): The Spirit landing site in Gusev Crater on Mars contains dark, fine-grained, vesicular rocks interpreted as lavas. Pancam and Mini\u00e2\u0080\u0093Thermal Emission Spectrometer (Mini-TES) spectra suggest that all of these rocks are similar but have variable coatings and dust mantles. Magnified images of brushed and abraded rock surfaces show alteration rinds and veins. Rock interiors contain \u00e2\u0089\u00a425% megacrysts. Chemical analyses of rocks by the Alpha Particle X-ray Spectrometer are consistent with picritic basalts, containing norm",
-        "score": 0.014493
-      },
-      {
-        "chunk_id": "esa_oxia_planum#006",
-        "document_id": "esa_oxia_planum",
-        "title": "Oxia Planum favoured for ExoMars surface mission",
-        "institution": "ESA",
-        "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
-        "publication_date": null,
-        "geographic_relevance": [
-          "oxia_planum",
-          "Chryse Planitia margin / Mawrth Vallis region"
-        ],
-        "excerpt": "two candidates for the 2020 mission, with both undergoing a detailed evaluation over the last 18 months.\n\nExoMars landing site candidates \u2013 elevation\n\nOn the technical side, the landing site must be at a suitably low elevation level, so that there is sufficient atmosphere and time to help slow the landing module\u2019s parachute descent. Then, the 120 x 19 km landing ellipses should not contain features that could endanger the landing, the deployment of the surface platform ramps for the rover to exit, and the subsequent driving of the rover. This means scrutinising the region for steep slopes, loose material and large rocks.\n\nOn the science side, the analysis had to identify sites where the rove",
-        "score": 0.014286
+        "score": 0.015805
       }
     ],
     "citations": [
       {
         "citation_id": "[C1]",
+        "chunk_id": "crossref_farley2022_jezero#004",
+        "document_id": "crossref_farley2022_jezero",
+        "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.abo2196"
+      },
+      {
+        "citation_id": "[C2]",
         "chunk_id": "crossref_lit_jezero_mineralogy#002",
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
@@ -2674,7 +2679,7 @@
         "url": "https://api.crossref.org/works/10.1002/2014JE004782"
       },
       {
-        "citation_id": "[C2]",
+        "citation_id": "[C3]",
         "chunk_id": "crossref_lit_jezero_mineralogy#003",
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
@@ -2682,7 +2687,7 @@
         "url": "https://api.crossref.org/works/10.1002/2014JE004782"
       },
       {
-        "citation_id": "[C3]",
+        "citation_id": "[C4]",
         "chunk_id": "nasa_m2020_overview#007",
         "document_id": "nasa_m2020_overview",
         "title": "Mars 2020: Perseverance Rover - NASA Science",
@@ -2690,7 +2695,7 @@
         "url": "https://science.nasa.gov/mission/mars-2020-perseverance/"
       },
       {
-        "citation_id": "[C4]",
+        "citation_id": "[C5]",
         "chunk_id": "nasa_m2020_overview#005",
         "document_id": "nasa_m2020_overview",
         "title": "Mars 2020: Perseverance Rover - NASA Science",
@@ -2698,7 +2703,7 @@
         "url": "https://science.nasa.gov/mission/mars-2020-perseverance/"
       },
       {
-        "citation_id": "[C5]",
+        "citation_id": "[C6]",
         "chunk_id": "nasa_m2020_science#004",
         "document_id": "nasa_m2020_science",
         "title": "Perseverance Science - NASA Science",
@@ -2706,31 +2711,44 @@
         "url": "https://science.nasa.gov/mission/mars-2020-perseverance/science/"
       },
       {
-        "citation_id": "[C6]",
+        "citation_id": "[C7]",
+        "chunk_id": "crossref_farley2022_jezero#001",
+        "document_id": "crossref_farley2022_jezero",
+        "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.abo2196"
+      },
+      {
+        "citation_id": "[C8]",
         "chunk_id": "nasa_m2020_science#001",
         "document_id": "nasa_m2020_science",
         "title": "Perseverance Science - NASA Science",
         "institution": "NASA Science / JPL",
         "url": "https://science.nasa.gov/mission/mars-2020-perseverance/science/"
-      },
-      {
-        "citation_id": "[C7]",
-        "chunk_id": "crossref_lit_gusev_basalt#003",
-        "document_id": "crossref_lit_gusev_basalt",
-        "title": "Basaltic Rocks Analyzed by the Spirit Rover in Gusev Crater",
-        "institution": "Science / American Association for the Advancement of Science (AAAS)",
-        "url": "https://api.crossref.org/works/10.1126/science.3050842"
-      },
-      {
-        "citation_id": "[C8]",
-        "chunk_id": "esa_oxia_planum#006",
-        "document_id": "esa_oxia_planum",
-        "title": "Oxia Planum favoured for ExoMars surface mission",
-        "institution": "ESA",
-        "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission"
       }
     ],
     "source_digests": [
+      {
+        "document_id": "crossref_farley2022_jezero",
+        "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.abo2196",
+        "publication_date": "2022-09-30",
+        "purpose_label": "Peer-reviewed record",
+        "chunk_ids": [
+          "crossref_farley2022_jezero#004",
+          "crossref_farley2022_jezero#001"
+        ],
+        "citation_ids": [
+          "[C1]",
+          "[C7]"
+        ],
+        "what_it_tells_us": "We report observations of the crater floor, below the crater\u2019s sedimentary delta, finding that the floor consists of igneous rocks altered by water.",
+        "why_it_matters": "Relevant because it names delta, floor, jezero.",
+        "limitation": "Only the citation and abstract are available. The full paper was not retrieved, so detailed results are not shown here.",
+        "support_level": "supports",
+        "generated_by": "extractive"
+      },
       {
         "document_id": "crossref_lit_jezero_mineralogy",
         "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
@@ -2743,12 +2761,12 @@
           "crossref_lit_jezero_mineralogy#003"
         ],
         "citation_ids": [
-          "[C1]",
-          "[C2]"
+          "[C2]",
+          "[C3]"
         ],
         "what_it_tells_us": "The goal of this study is to understand the provenance of the sedimentary deposits within this open\u2010basin lake using a source\u2010to\u2010sink approach.",
         "why_it_matters": "Relevant because it names jezero, olivine, paleolake.",
-        "limitation": "Bibliographic record and abstract only; the full paper was not retrieved, so detailed results are not available here.",
+        "limitation": "Only the citation and abstract are available. The full paper was not retrieved, so detailed results are not shown here.",
         "support_level": "supports",
         "generated_by": "extractive"
       },
@@ -2764,12 +2782,12 @@
           "nasa_m2020_overview#005"
         ],
         "citation_ids": [
-          "[C3]",
-          "[C4]"
+          "[C4]",
+          "[C5]"
         ],
         "what_it_tells_us": "NASA chose Jezero Crater as the landing site for the Perseverance rover.",
         "why_it_matters": "Relevant because it names jezero, perseverance.",
-        "limitation": "Mission overview text documents landing context and history; it does not validate the model's quantitative score.",
+        "limitation": "The mission overview describes the landing context and history. It does not validate the model's score.",
         "support_level": "supports",
         "generated_by": "extractive"
       },
@@ -2785,51 +2803,13 @@
           "nasa_m2020_science#001"
         ],
         "citation_ids": [
-          "[C5]",
-          "[C6]"
+          "[C6]",
+          "[C8]"
         ],
         "what_it_tells_us": "NASA's Perseverance rover has been exploring the surface of Mars since landing in February 2021.",
         "why_it_matters": "Relevant because it names jezero, perseverance.",
-        "limitation": "Mission overview text documents landing context and history; it does not validate the model's quantitative score.",
+        "limitation": "The mission overview describes the landing context and history. It does not validate the model's score.",
         "support_level": "supports",
-        "generated_by": "extractive"
-      },
-      {
-        "document_id": "crossref_lit_gusev_basalt",
-        "title": "Basaltic Rocks Analyzed by the Spirit Rover in Gusev Crater",
-        "institution": "Science / American Association for the Advancement of Science (AAAS)",
-        "url": "https://api.crossref.org/works/10.1126/science.3050842",
-        "publication_date": "2004-08-06",
-        "purpose_label": "Peer-reviewed record",
-        "chunk_ids": [
-          "crossref_lit_gusev_basalt#003"
-        ],
-        "citation_ids": [
-          "[C7]"
-        ],
-        "what_it_tells_us": "Abstract (from Crossref): The Spirit landing site in Gusev Crater on Mars contains dark, fine-grained, vesicular rocks interpreted as lavas.",
-        "why_it_matters": "Provides background for the topic rather than evidence about this site.",
-        "limitation": "Bibliographic record and abstract only; the full paper was not retrieved, so detailed results are not available here.",
-        "support_level": "context",
-        "generated_by": "extractive"
-      },
-      {
-        "document_id": "esa_oxia_planum",
-        "title": "Oxia Planum favoured for ExoMars surface mission",
-        "institution": "ESA",
-        "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
-        "publication_date": null,
-        "purpose_label": "Mission context",
-        "chunk_ids": [
-          "esa_oxia_planum#006"
-        ],
-        "citation_ids": [
-          "[C8]"
-        ],
-        "what_it_tells_us": "ExoMars landing site candidates \u2013 elevation On the technical side, the landing site must be at a suitably low elevation level, so that there is sufficient atmosphere and time to help slow the landing module\u2019s parachute descent.",
-        "why_it_matters": "Provides background for the topic rather than evidence about this site.",
-        "limitation": "Mission overview text documents landing context and history; it does not validate the model's quantitative score.",
-        "support_level": "context",
         "generated_by": "extractive"
       }
     ],
@@ -2837,50 +2817,48 @@
       {
         "kind": "proposed_study",
         "title": "Does the regional terrain statistic predict landing-scale hazards at Jezero Crater?",
-        "research_question": "Do the ~3.7 km MOLA slope and relief values that rank Jezero Crater here (median slope 1.077 deg, detrended relief 194.4 m) correspond to metre-scale slopes and rock hazards inside a realistic landing ellipse?",
-        "method": "Sample HiRISE/CTX-derived digital terrain models at 1-5 m baselines over the footprint, count rocks from HiRISE images, and compare the distributions with the regional MOLA statistics used by this tool.",
-        "why_here": "Jezero Crater has a complete regional terrain profile and retrieved documentation of the topographic data and its sampling caveats, so the comparison can be made without new orbital data.",
+        "research_question": "Do the ~3.7 km MOLA slope and relief values used to rank Jezero Crater (median slope 1.077 deg, detrended relief 194.4 m) match the metre-scale slopes and rock hazards inside a realistic landing ellipse?",
+        "method": "Sample HiRISE/CTX digital terrain models at 1-5 m baselines over the footprint. Count rocks in HiRISE images. Compare these results with the regional MOLA values used by this tool.",
+        "why_here": "Jezero Crater has a complete regional terrain profile. The retrieved documents describe the topographic data and its limits. So the comparison can be made without new orbital data.",
         "motivating_citation_ids": [
-          "[C3]",
-          "[C7]",
-          "[C8]"
+          "[C4]"
         ],
-        "cannot_infer": "Regional statistics cannot resolve lander-scale hazards, and the suitability score is a screening index; neither establishes that a landing would be safe.",
+        "cannot_infer": "Regional values cannot show lander-scale hazards. The suitability score is a screening index. Neither shows that a landing would be safe.",
         "analog_candidate_id": null
       },
       {
         "kind": "proposed_study",
         "title": "Record of past water at Jezero Crater: carbonates, clays, delta, paleolake basin",
-        "research_question": "What depositional or alteration history produced the carbonates, clays, delta, paleolake basin reported for Jezero Crater, and how well are those materials preserved for in-situ or returned-sample analysis?",
-        "method": "Targeted orbital spectroscopy (CRISM) over the footprint to map the cited units, then in-situ or returned-sample mineralogy and organic chemistry on the mapped outcrops.",
-        "why_here": "The cited literature for Jezero Crater documents these materials, and the retrieved passages describe their setting, so the hypotheses are specific rather than generic.",
+        "research_question": "What deposition or alteration history produced the carbonates, clays, delta, paleolake basin reported at Jezero Crater? How well are these materials preserved for in-situ or returned-sample analysis?",
+        "method": "Use targeted orbital spectroscopy (CRISM) over the footprint to map the cited units. Then do in-situ or returned-sample mineralogy and organic chemistry on the mapped outcrops.",
+        "why_here": "The cited literature for Jezero Crater documents these materials. The retrieved passages describe their setting. So the hypotheses are specific, not generic.",
         "motivating_citation_ids": [
           "[C1]",
           "[C2]",
           "[C3]"
         ],
-        "cannot_infer": "Composition tags are literature-derived labels, not spectral measurements made by this tool, and they have no bearing on the landing suitability score.",
+        "cannot_infer": "Mineral labels come from the literature. They are not spectral measurements made by this tool. They do not affect the landing suitability score.",
         "analog_candidate_id": null
       },
       {
         "kind": "proposed_study",
         "title": "Field rehearsal at San Rafael Swell - MDRS area on terrain it shares with Jezero Crater",
-        "research_question": "Do traverse-planning and terrain-mapping methods exercised at San Rafael Swell - MDRS area transfer to the Jezero Crater landforms they share?",
-        "method": "Run instrumented traverses and terrain mapping on the matched landforms at the Earth site, measure where predicted and observed trafficability diverge, then test the method on orbital data for the Mars footprint.",
-        "why_here": "Shared at the harmonised ~3.7 km baseline: Regional slope: Mars 1.08 deg vs Earth 0.92 deg (difference 0.15 deg, within half the 1.50 deg comparison scale).",
+        "research_question": "Do traverse-planning and terrain-mapping methods tested at San Rafael Swell - MDRS area work on the landforms it shares with Jezero Crater?",
+        "method": "Run instrumented traverses and terrain mapping on the matched landforms at the Earth site. Measure where the predicted and observed trafficability differ. Then test the method on orbital data for the Mars footprint.",
+        "why_here": "Shared on the matched ~3.7 km baseline: Regional slope: Mars 1.08 deg vs Earth 0.92 deg (difference 0.15 deg, within half the 1.50 deg comparison scale).",
         "motivating_citation_ids": [],
-        "cannot_infer": "The similarity index (64.36) is a heuristic; Earth gravity, atmosphere and radiation differ, and no transfer has been demonstrated.",
+        "cannot_infer": "The similarity index (64.36) is a rough measure. Earth gravity, atmosphere and radiation are different. It has not been shown that results transfer.",
         "analog_candidate_id": "mdrs_utah"
       }
     ],
     "evidence_gap": null,
     "limitations": [
-      "Deterministic template assembled from measurements, scoring results and retrieved excerpts; no language model was used.",
-      "Source digests are extractive sentences chosen by word overlap, not summaries; proposed studies are hypotheses, not performed work.",
-      "Citations point at retrieved passages only; read the source before relying on a claim."
+      "This text was built by fixed rules from the measurements, scores and retrieved excerpts. No language model was used.",
+      "Source digests are sentences picked by shared words. They are not summaries. Proposed studies are ideas, not completed work.",
+      "Citations only point to the retrieved passages. Read the source before relying on a claim."
     ],
     "cached": false,
-    "generated_at": "2026-11-15T08:31:00+00:00"
+    "generated_at": "2026-11-15T16:58:34+00:00"
   },
   "error_404": {
     "error": {

@@ -88,7 +88,7 @@
   "sites": {
     "atacama_yungay": {
       "planet": "earth",
-      "description": "Hyperarid core of the Atacama near Yungay: playa sediments over alluvial fan deposits, and polygonal ground cemented by sulfates, nitrates and chlorides. Used by NASA ARADS for rover and drill testing.",
+      "description": "The hyperarid core of the Atacama, near Yungay. Playa sediments lie over alluvial fan deposits. Polygonal ground is cemented by sulfates, nitrates and chlorides. NASA ARADS used this area for rover and drill tests.",
       "known_analog_use": ["NASA ARADS rover and drilling campaigns"],
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["alluvial_fan"], "source_id": "horstmann2024_yungay", "quote": "In the underlying alluvial fan deposits, microbial communities reemerge"},
@@ -101,7 +101,7 @@
     },
     "mcmurdo_dry_valleys": {
       "planet": "earth",
-      "description": "High-elevation hyper-arid polar desert (University Valley) with dry permafrost over ice-cemented ground; studied as a Mars analog for periglacial processes and ground ice.",
+      "description": "A high-elevation, hyper-arid polar desert (University Valley). Dry permafrost lies over ice-cemented ground. It is studied as a Mars analog for periglacial processes and ground ice.",
       "known_analog_use": ["Phoenix landing-site ground-ice analog studies"],
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["polar_desert"], "source_id": "heldmann2015_dryvalleys", "quote": "The Dry Valleys are a hyper-arid polar desert environment and in locations above 1500 m elevation, such as University Valley"},
@@ -111,7 +111,7 @@
     },
     "haughton_crater": {
       "planet": "earth",
-      "description": "A 23 km diameter impact crater on Devon Island with impact breccia, gypsum bedrock, carbonates and hydrothermal deposits weathered to iron-oxide crusts. Home of the Haughton-Mars Project.",
+      "description": "A 23 km diameter impact crater on Devon Island. It has impact breccia, gypsum bedrock, carbonates and hydrothermal deposits weathered to iron-oxide crusts. It is home to the Haughton-Mars Project.",
       "known_analog_use": ["Haughton-Mars Project (NASA Ames / Mars Institute / SETI)"],
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["impact_crater"], "source_id": "trowbridge2024_haughton", "quote": "a 23 km diameter crater located on Devon Island"},
@@ -123,7 +123,7 @@
     },
     "death_valley": {
       "planet": "earth",
-      "description": "Desert basin with dry lakebeds (playas) and polygon-patterned salt pans at Badwater Basin; its playa sediments hold clays, chloride and sulfate salts and borate minerals. Used as an analog for Gale crater's lake deposits.",
+      "description": "A desert basin with dry lakebeds (playas). Badwater Basin has salt pans with polygon patterns. The playa sediments contain clays, chloride and sulfate salts and borate minerals. It is used as an analog for the lake deposits in Gale crater.",
       "known_analog_use": ["Named in the Space Apps challenge statement", "Terrestrial analog for Gale crater lake deposits (Das et al., 2026)"],
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["playa"], "source_id": "elmaarry2015_playas", "quote": "we have carried out fieldwork in seven of these dried lakes in San Bernardino and the Death Valley National Park regions"},
@@ -136,7 +136,7 @@
     },
     "holuhraun_iceland": {
       "planet": "earth",
-      "description": "Basaltic lava flow field from the 2014-2015 fissure eruption, emplaced on a floodplain of glacial and fluvial deposits; an analog for young volcanic terrains in Elysium Planitia.",
+      "description": "A basaltic lava flow field from the 2014-2015 fissure eruption. It lies on a floodplain of glacial and river deposits. It is an analog for young volcanic terrains in Elysium Planitia.",
       "known_analog_use": ["FELDSPAR analog sampling expedition (Stockton et al., 2019)", "Analog for young volcanic terrains in Elysium Planitia (Voigt et al., 2025)"],
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["lava_plain"], "source_id": "lit_holuhraun", "quote": "The lava flow field covered"},
@@ -149,7 +149,7 @@
     },
     "mdrs_utah": {
       "planet": "earth",
-      "description": "Area around the Mars Desert Research Station near Hanksville, Utah: Jurassic and Cretaceous sandstone and shale with smectite clays and sulfate salts, and exhumed, inverted palaeochannels with carbonate concretions.",
+      "description": "The area around the Mars Desert Research Station, near Hanksville, Utah. It has Jurassic and Cretaceous sandstone and shale, with smectite clays and sulfate salts. It also has exhumed, inverted palaeochannels with carbonate concretions.",
       "known_analog_use": ["Mars Desert Research Station crewed simulations"],
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["inverted_channels"], "source_id": "clarke2011_hanksville", "quote": "segmented and inverted anatasomosing palaeochannels exhumed from the Late Jurassic Brushy Basin Member of the Morrison Formation"},
@@ -161,7 +161,7 @@
     },
     "mauna_kea_summit": {
       "planet": "earth",
-      "description": "Summit region of Mauna Kea: tephra cones such as Pu'u Poli'ahu, which holds a hematite-bearing outcrop, and upper flanks used for NASA rover and in-situ resource field tests. NOTE: the 0.5 deg footprint centred on the summit spans the whole upper mountain, so footprint statistics describe the summit region as a whole, not only the test sites.",
+      "description": "The summit region of Mauna Kea. It has tephra cones such as Pu'u Poli'ahu, which has a hematite-bearing outcrop. NASA used the upper flanks for rover and in-situ resource field tests. Note: the 0.5 deg footprint centred on the summit covers the whole upper mountain. So the footprint values describe the whole summit region, not only the test sites.",
       "known_analog_use": ["NASA / CSA / DLR in-situ resource utilization field tests (Sanders et al., 2011)", "2012 Moon and Mars Analog Mission Activities rover test (Graham & Graff, 2013)"],
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["cinder_cone"], "source_id": "adams2014_maunakea", "quote": "a cinder cone called Pu'u Poli'ahu located on the summit of Mauna Kea"},
@@ -172,7 +172,7 @@
     },
     "jezero_crater": {
       "planet": "mars",
-      "description": "Impact crater whose floor holds water-altered igneous rocks below a sedimentary delta; its fan deposits carry Mg-rich carbonate, olivine and Fe/Mg-smectite. Perseverance landing site.",
+      "description": "An impact crater. Its floor has water-altered igneous rocks below a sedimentary delta. Its fan deposits contain Mg-rich carbonate, olivine and Fe/Mg-smectite. It is the Perseverance landing site.",
       "water_ice_evidence": "Ancient lake and river deposits (Farley et al., 2022); no ice reported in the cited sources.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["impact_crater", "crater_floor", "delta"], "source_id": "farley2022_jezero", "quote": "We report observations of the crater floor, below the crater's sedimentary delta"},
@@ -184,7 +184,7 @@
     },
     "gale_crater": {
       "planet": "mars",
-      "description": "Impact crater with ancient lake deposits at Yellowknife Bay and a hematite-bearing ridge (Vera Rubin ridge) on the slope of Mount Sharp. Curiosity landing site.",
+      "description": "An impact crater with ancient lake deposits at Yellowknife Bay. A hematite-bearing ridge (Vera Rubin ridge) sits on the slope of Mount Sharp. It is the Curiosity landing site.",
       "water_ice_evidence": "Ancient lake deposits (Grotzinger et al., 2014); no ice reported in the cited sources.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["impact_crater"], "source_id": "rampe2020_gale", "quote": "an erosion‐resistant feature on the northwestern slope of Mount Sharp in Gale crater"},
@@ -197,7 +197,7 @@
     },
     "elysium_planitia": {
       "planet": "mars",
-      "description": "Smooth plains of impact-fragmented regolith over basaltic lava flows. InSight landing site.",
+      "description": "Smooth plains of impact-broken regolith over basaltic lava flows. It is the InSight landing site.",
       "water_ice_evidence": "No ice reported in the cited sources.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["smooth_plains"], "source_id": "golombek2020_insight", "quote": "InSight landed in a degraded impact crater in Elysium Planitia on a smooth sandy, granule- and pebble-rich surface with few rocks"},
@@ -207,7 +207,7 @@
     },
     "oxia_planum": {
       "planet": "mars",
-      "description": "Low-relief terrain of hydrous clay-bearing bedrock with a later fluviodeltaic system. ESA's selected landing site for the Rosalind Franklin rover.",
+      "description": "Low-relief terrain of hydrous, clay-bearing bedrock. A river delta system formed later. ESA selected it as the landing site for the Rosalind Franklin rover.",
       "water_ice_evidence": "Hydrous clay-bearing bedrock from past aqueous activity (Quantin-Nataf et al., 2021); no ice reported in the cited sources.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["smooth_plains"], "source_id": "lit_oxia_clays", "quote": "Oxia Planum is a 200 km-wide low-relief terrain characterized by hydrous clay-bearing bedrock units"},
@@ -217,8 +217,8 @@
     },
     "utopia_planitia": {
       "planet": "mars",
-      "description": "Lowland basin with giant polygonal terrain; Viking 2 imaged a rocky surface at its landing site. No recent source on the composition at the Viking 2 site was found, so no mineral labels are given.",
-      "water_ice_evidence": "Not reported at the Viking 2 site in the cited sources; SHARAD subsurface ice is reported for western Utopia Planitia (Stuurman et al., 2016), outside this footprint.",
+      "description": "A lowland basin with giant polygonal terrain. Viking 2 imaged a rocky surface at its landing site. No recent source on the minerals at the Viking 2 site was found, so no mineral labels are given.",
+      "water_ice_evidence": "The cited sources do not report ice at the Viking 2 site. SHARAD found subsurface ice in western Utopia Planitia (Stuurman et al., 2016), which is outside this footprint.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["polygonal_terrain"], "source_id": "cooke2011_utopia", "quote": "the spacing of troughs in the polygonal terrain of the Utopia basin"},
         {"feature": "terrain_morphology", "tags": ["rocky_surface"], "source_id": "nasa_viking", "quote": "The first color picture taken by Viking 2 on the Martian surface shows a rocky reddish surface"}
@@ -226,7 +226,7 @@
     },
     "chryse_planitia": {
       "planet": "mars",
-      "description": "Northern plains near the terminus of the Maja Valles flood channel; Viking 1 imaged a boulder-strewn surface here.",
+      "description": "Northern plains near the end of the Maja Valles flood channel. Viking 1 imaged a boulder-strewn surface here.",
       "water_ice_evidence": "Catastrophic flood and possible megatsunami deposits (Rodriguez et al., 2022); no ice reported in the cited sources.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["outflow_channel_deposits"], "source_id": "rodriguez2022_chryse", "quote": "The V1L landed near the terminus of an enormous catastrophic flood channel, Maja Valles."},
@@ -237,7 +237,7 @@
     },
     "meridiani_planum": {
       "planet": "mars",
-      "description": "Plains with extensive layered deposits, some rich in hematite; the layered sulfate deposits of the Burns formation derive from a basaltic precursor. Opportunity landing site.",
+      "description": "Plains with large layered deposits. Some are rich in hematite. The layered sulfate deposits of the Burns formation formed from basaltic material. It is the Opportunity landing site.",
       "water_ice_evidence": "Layered sulfate deposits altered by acidic, sulfate-rich fluids (McCollom et al., 2018); no ice reported in the cited sources.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["layered_deposits"], "source_id": "hynek2017_meridiani", "quote": "this area contains extensive layered deposits, some of which are rich in the mineral hematite"},
@@ -248,7 +248,7 @@
     },
     "gusev_crater": {
       "planet": "mars",
-      "description": "Impact crater and possible former lake; basalts analysed by Spirit, with Mg-Fe carbonate outcrops and opaline silica in the Columbia Hills. Spirit landing site.",
+      "description": "An impact crater and possible former lake. Spirit analysed basalts here. The Columbia Hills have Mg-Fe carbonate outcrops and opaline silica. It is the Spirit landing site.",
       "water_ice_evidence": "Opaline silica from ancient hot-spring activity (Ruff et al., 2019) and carbonate from a possible ephemeral lake (Ruff et al., 2014); no ice reported in the cited sources.",
       "evidence": [
         {"feature": "terrain_morphology", "tags": ["impact_crater", "paleolake_basin"], "source_id": "nasa_mer", "quote": "Spirit landed at Gusev Crater, a possible former lake in a giant impact crater."},

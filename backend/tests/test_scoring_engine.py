@@ -283,7 +283,7 @@ def test_unevaluated_constraint_is_reported_and_site_stays_eligible():
     r = res[0]
     assert r.status == "ok" and r.eligibility.eligible
     assert [c.constraint_id for c in r.eligibility.unevaluated_constraints] == ["latitude_band"] and r.eligibility.failed_constraints == []
-    assert any("latitude_band" in x and "Unevaluated" in x for x in r.limitations)
+    assert any("latitude_band" in x and "not checked" in x for x in r.limitations)
 
 
 def test_ineligible_site_still_carries_its_score_and_factors():
@@ -443,8 +443,8 @@ def test_favorable_and_risk_lines_read_well():
     assert r.favorable[1] == "Elevation suitability -3,624 m (median over ~59 km footprint) - fully suitable (1.00)"
     assert len(r.risks) == 1 and r.risks[0].startswith("Surface roughness 290 m (~59 km footprint) - poor (0.04)")
     by = {f.criterion_id: f for f in r.factor_scores}
-    assert by["terrain_safety"].rationale.startswith("0.16 deg is at or below the 2.00 deg fully-suitable knee, so q = 1.00.")
-    assert by["surface_roughness"].rationale.startswith("290 m lies between the knees (20 m -> 1.0, 300 m -> 0.0), so q = 0.04")
+    assert by["terrain_safety"].rationale.startswith("0.16 deg is at or below the 2.00 deg full-marks value, so q = 1.00.")
+    assert by["surface_roughness"].rationale.startswith("290 m is between the thresholds (20 m -> 1.0, 300 m -> 0.0). Linear interpolation gives q = 0.04")
     assert SPEC["_by_id"]["terrain_safety"]["rationale"] in by["terrain_safety"].rationale, "the spec's documented assumption is kept"
 
 
@@ -452,5 +452,5 @@ def test_missing_factor_rationale_says_weight_is_renormalised():
     s, p = make_site("a", {"slope_regional_median_deg": 1.0, "elevation_median_m": -4000.0})
     res, _ = scoring_engine.evaluate([s], {s.id: p}, mission({"terrain_safety": 1, "elevation_suitability": 1, "thermal_conditions": 1}))
     f = next(f for f in res[0].factor_scores if f.criterion_id == "thermal_conditions")
-    assert "renormalised" in f.rationale and "not scored" in f.rationale
+    assert "spread over the other factors" in f.rationale and "not scored" in f.rationale
     assert f.is_missing and f.feature_value is None and f.excluded_reason

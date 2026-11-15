@@ -25,7 +25,7 @@ describe("ImagePane expand dialog", () => {
     expect(document.activeElement).toBe(opener);
     // acquisition and publication dates are labelled separately, and the photo is a real photograph entry
     expect(screen.getByText("Acquired").nextSibling).toHaveTextContent("2021-02-21");
-    expect(screen.getByText("Published").nextSibling).toHaveTextContent(/2021-02-24.*publication date, not acquisition/);
+    expect(screen.getByText("Published").nextSibling).toHaveTextContent(/2021-02-24.*publication date, not capture date/);
     expect(screen.getByRole("img", { name: /A panorama\. The ground at the site\./ })).toBeInTheDocument();
   });
 });

@@ -15,7 +15,7 @@ describe("Explore established-analogs cue", () => {
     const cue = screen.getByTestId("discovery-cue");
     expect(cue).toHaveTextContent(/established analogs/);
     expect(cue).toHaveTextContent(/Your objective asks for new regions/);
-    fireEvent.click(screen.getByRole("button", { name: /Find candidate Earth analogs beyond them/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Find new candidate Earth analogs/ }));
     expect(useAppStore.getState().activeTab).toBe("explore");
     expect(useAppStore.getState().exploreMode).toBe("find_analogs");
   });

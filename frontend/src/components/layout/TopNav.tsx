@@ -2,11 +2,11 @@ import { Orbit } from "lucide-react";
 import { type Tab } from "@/store/useAppStore";
 
 const TABS: Array<{ id: Tab; label: string; hint: string }> = [
-  { id: "mission", label: "Mission Design", hint: "Mission objective, priorities and recommendation" },
-  { id: "explore", label: "Explore", hint: "Globe, sites and environmental profiles" },
-  { id: "analyze", label: "Analyze", hint: "Rankings and cross-site charts" },
+  { id: "mission", label: "Mission Design", hint: "Set the mission objective and priorities" },
+  { id: "explore", label: "Explore", hint: "Globe, sites and their measurements" },
+  { id: "analyze", label: "Analyze", hint: "Rankings and charts across sites" },
   { id: "compare", label: "Compare", hint: "Compare the selected Earth and Mars locations" },
-  { id: "research", label: "Research", hint: "Study ideas, supporting evidence and further reading" },
+  { id: "research", label: "Research", hint: "Study ideas, evidence and further reading" },
 ];
 
 export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t: Tab) => void; right?: React.ReactNode }) {

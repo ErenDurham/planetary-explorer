@@ -23,11 +23,11 @@ export interface AnalogFeatureSpec {
 }
 
 export const ANALOG_FEATURES: readonly AnalogFeatureSpec[] = [
-  { id: "slope_regional_median_deg", label: "Similar slopes", description: "Regional median slope at the harmonised ~3.7 km scale.", defaultWeight: 25 },
-  { id: "roughness_regional_m", label: "Similar regional relief", description: "Detrended relief once the broad terrain tilt is removed.", defaultWeight: 25 },
-  { id: "terrain_morphology", label: "Similar landforms", description: "Documented landform tags; a shared tag is a shared description, not identical terrain.", defaultWeight: 20 },
-  { id: "mineralogy_tags", label: "Similar materials", description: "Documented composition tags; not a quantitative mineral abundance.", defaultWeight: 20 },
-  { id: "precipitation_mm_day", label: "Dryness", description: "Closeness to Mars' effectively zero precipitation (Earth climatology).", defaultWeight: 10 },
+  { id: "slope_regional_median_deg", label: "Similar slopes", description: "Regional median slope on the matched ~3.7 km scale.", defaultWeight: 25 },
+  { id: "roughness_regional_m", label: "Similar regional relief", description: "Detrended relief, after the broad tilt is removed.", defaultWeight: 25 },
+  { id: "terrain_morphology", label: "Similar landforms", description: "Landform labels from the literature. A shared label means a shared description, not identical terrain.", defaultWeight: 20 },
+  { id: "mineralogy_tags", label: "Similar materials", description: "Mineral labels from the literature. They are not measured mineral amounts.", defaultWeight: 20 },
+  { id: "precipitation_mm_day", label: "Dryness", description: "How close the site is to the near-zero precipitation of Mars (Earth climate data).", defaultWeight: 10 },
 ] as const;
 
 export const ANALOG_FEATURE_IDS: readonly string[] = ANALOG_FEATURES.map((f) => f.id);
@@ -35,7 +35,7 @@ export const ANALOG_FEATURE_IDS: readonly string[] = ANALOG_FEATURES.map((f) => 
 /** Informational only: shown as a note, never as an active slider. */
 export const INSOLATION_FEATURE_ID = "insolation_toa_annual_mean_wm2";
 export const INSOLATION_NOTE =
-  "Top-of-atmosphere insolation is shown for information only and carries no weight: the Earth/Mars insolation gap is a planetary constant, so it would rank every candidate the same way.";
+  "Sunlight at the top of the atmosphere is shown for information only. It has no weight. The gap between Earth and Mars is the same for every site, so it would not change the ranking.";
 
 /** Spec defaults as integer shares summing to 100. */
 export function defaultAnalogShares(): Shares {

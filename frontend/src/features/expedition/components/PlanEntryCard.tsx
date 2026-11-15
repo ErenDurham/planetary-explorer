@@ -18,7 +18,7 @@ export function PlanEntryCard({ body, siteId, siteName, onOpen }: { body: Expedi
         <div className="max-w-xl">
           <p className="eyebrow flex items-center gap-1.5 text-copper-bright"><Compass className="h-3.5 w-3.5" aria-hidden />Expedition Planner</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight text-fg">Plan an expedition across {siteName}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-fg-muted">Lay out a rover traverse on the region's georeferenced orbital imagery, choose what it should achieve, and let the shared expedition service compute distance, energy, slopes and feasibility.</p>
+          <p className="mt-2 text-sm leading-relaxed text-fg-muted">Lay out a rover traverse on georeferenced orbital images of the region. Choose what it should achieve. The shared expedition service then calculates the distance, energy, slopes and feasibility.</p>
           <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-fg-muted">
             <li>{basemaps.status === "loading" ? "Checking imagery…" : basemaps.status === "ready" ? `${basemaps.basemaps.length} georeferenced basemap${basemaps.basemaps.length === 1 ? "" : "s"}` : "No georeferenced basemap"}</li>
             <li>{service.kind === "available" ? "Expedition service connected" : service.kind === "loading" ? "Connecting to the expedition service…" : "Expedition service not connected"}</li>

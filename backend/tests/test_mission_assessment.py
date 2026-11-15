@@ -32,7 +32,7 @@ def test_research_target_coverage_deduplicates_and_preserves_unreported_semantic
     req=MissionAssessmentRequest(body="mars",mission_type="research",weights={"materials":100,"landforms":0},requirements={"material_targets":["basalt","basalt","clays"]})
     result=evaluate(req,pool)
     assert all(s.score==50 and s.rank==1 for s in result.results)
-    assert "not confirmed absent" in result.results[0].factors[0].note
+    assert "may still be present" in result.results[0].factors[0].note
     assert result.results[0].factors[0].source.source_id=="test_source"
 
 def test_research_needs_targets_and_rejects_unknown_vocabulary():

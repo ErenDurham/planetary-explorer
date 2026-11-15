@@ -30,11 +30,11 @@ export function EnvironmentalProfilePanel({ profile }: { profile: EnvironmentalP
       </div>
       {hasDemo && (
         <div className="mb-2">
-          <Badge tone="danger">contains demo data - not real measurements</Badge>
+          <Badge tone="danger">contains demo data, not real measurements</Badge>
         </div>
       )}
       {groups.length === 0 ? (
-        <EmptyNote>No measurements are available for this site.</EmptyNote>
+        <EmptyNote>There are no measurements for this site.</EmptyNote>
       ) : (
         <div className="space-y-3">
           {groups.map(([category, items]) => (
@@ -61,7 +61,7 @@ export function EnvironmentalProfilePanel({ profile }: { profile: EnvironmentalP
           ))}
         </div>
       )}
-      <p className="mt-3 text-xs text-fg-muted">Terrain measurements cover regional features (~3.7 km cells), not lander-scale hazards.</p>
+      <p className="mt-3 text-xs text-fg-muted">Terrain measurements describe regional features on ~3.7 km cells. They do not show lander-scale hazards.</p>
       <details className="mt-2 text-xs text-fg-muted">
         <summary className="cursor-pointer">Processing details</summary>
         <p className="mt-2">Profile {profile.profile_version} · {profile.pipeline}</p>

@@ -180,12 +180,12 @@ export function TerrainMap(p: TerrainMapProps) {
       <div className={`flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-line-strong bg-bg p-8 text-center ${p.className ?? "h-[460px]"}`} role="status">
         <MapPin className="h-6 w-6 text-fg-faint" aria-hidden />
         <p className="text-sm text-fg">No georeferenced basemap is available for this region.</p>
-        <p className="max-w-md text-xs text-fg-muted">The planner only draws waypoints on imagery whose geographic extent is verified, so that every coordinate sent to the expedition service matches what you see. Decorative imagery is never substituted.</p>
+        <p className="max-w-md text-xs text-fg-muted">The planner only draws waypoints on images with a verified geographic extent. This way, every coordinate sent to the expedition service matches what you see. Decorative images are never used instead.</p>
       </div>
     );
   }
 
-  const label = `Terrain map of ${entry.title}. ${p.readOnly ? "" : p.tool === "add" ? "Click to add a waypoint, drag a waypoint to move it, Delete removes the selected one. " : "Drag to pan. "}Arrow keys pan, plus and minus zoom, 0 fits the image. Zoom ${Math.round(view.zoom * 100)}%.`;
+  const label = `Terrain map of ${entry.title}. ${p.readOnly ? "" : p.tool === "add" ? "Click to add a waypoint. Drag a waypoint to move it. Delete removes the selected one. " : "Drag to pan. "}The arrow keys pan. Plus and minus zoom. 0 fits the image. Zoom ${Math.round(view.zoom * 100)}%.`;
 
   return (
     <div className={`relative overflow-hidden rounded-xl border border-line-strong bg-black ${p.className ?? "h-[460px]"}`}>
@@ -342,8 +342,8 @@ export function TerrainMap(p: TerrainMapProps) {
             ))}
           </ul>
         )}
-        {p.waypoints.length > 0 && !p.route && <span className="rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg-muted">Dashed line: stop order only, not a computed route</span>}
-        {(p.snappedStops ?? []).some(s => s.snapped) && <span className="flex items-center gap-1.5 rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg-muted"><span className="inline-block h-3 w-3 rounded-full border-2 border-dashed border-fg/80" aria-hidden />Dashed ring: grid cell the service snapped a stop to</span>}
+        {p.waypoints.length > 0 && !p.route && <span className="rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg-muted">Dashed line: stop order only. This is not a calculated route.</span>}
+        {(p.snappedStops ?? []).some(s => s.snapped) && <span className="flex items-center gap-1.5 rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg-muted"><span className="inline-block h-3 w-3 rounded-full border-2 border-dashed border-fg/80" aria-hidden />Dashed ring: the grid cell the service moved a stop to</span>}
         {bar && (
           <div className="rounded bg-black/70 px-2 py-1 text-[11px] text-white" data-testid="map-scale-bar" aria-label={`Scale bar: ${bar.label}`}>
             <div className="h-1.5 border-x-2 border-b-2 border-white" style={{ width: `${Math.round(bar.px)}px` }} aria-hidden />
