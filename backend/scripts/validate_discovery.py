@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw
 BACKEND=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(BACKEND))
 from app.services import discovery_engine as engine
-from scripts.build_discovery import CACHE, atomic, encoded, digest, earth_grid, mars_grid
+from scripts.build_discovery import CACHE, atomic, encoded, digest, earth_grid, mars_grid, worldcover_url
 from scripts.discovery_terrain import profile
 
 CLASSES={10:"tree_cover",20:"shrubland",30:"grassland",40:"cropland",50:"built_up",60:"bare_sparse",
@@ -66,17 +66,24 @@ def review(run,offline=False):
     if not order:return []
     chosen=[order[i][1] for i in sorted({0,len(order)//2,len(order)-1})]
     source=run.validation["optional_access_checks"]["worldcover"]
-    url=source.get("url")
     output=[]
     for cid in chosen:
         c=next(r.candidate for r in run.audit_rows if r.candidate.id==cid)
+        # The tile must cover THIS candidate. A survey spanning continents has no single
+        # tile, and reading a candidate from someone else's tile yields an empty window.
+        url=worldcover_url(c.lat,c.lon_east)
         path=CACHE/(run.run_id+"-"+cid+"-worldcover.npz")
         meta_path=path.with_suffix(".json")
         try:
+            # A cached window counts only when it is intact AND came from the tile this
+            # candidate needs; anything else is treated as not cached and fetched again.
+            cached=None
             if path.exists() and meta_path.exists():
                 meta=json.loads(meta_path.read_text())
                 if digest(path.read_bytes())!=meta["sha256"]:raise ValueError("WorldCover cache checksum mismatch")
-                arr=np.load(path)["classes"]
+                if meta.get("url")==url:cached=np.load(path)["classes"]
+            if cached is not None:
+                arr=cached
             else:
                 if offline:raise FileNotFoundError("No independent WorldCover window cached")
                 # Independent native-resolution ~1km window at the candidate centre.
@@ -90,6 +97,9 @@ def review(run,offline=False):
                 meta={"url":url,"sha256":digest(path.read_bytes()),"transform":transform,"shape":list(arr.shape),
                     "etag":source.get("etag"),"dataset":"ESA WorldCover 2021 v200 10m", "license":"CC BY 4.0; ESA WorldCover project 2021", "source_id":"esa_worldcover_2021_v200"}
                 atomic(meta_path,encoded(meta))
+            # An empty window means the tile did not cover the point: report it as missing
+            # evidence, never as an available sample with nothing in it.
+            if arr.size==0:raise ValueError("WorldCover window is empty at this centre")
             counts={CLASSES.get(int(k),"unknown_"+str(k)):int(v) for k,v in zip(*np.unique(arr,return_counts=True))}
             item={"candidate_id":cid,"status":"independent_land_cover_sample_available","scope":"Native 10m classification in 0.01 degree square at centre only; NOT full footprint, not geology, access or field validation.",
                 "class_counts":counts,"sample_count":int(arr.size),"source":meta,"manual_observations":None}

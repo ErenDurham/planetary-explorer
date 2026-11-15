@@ -285,6 +285,14 @@ def catalog():
             "Moroccan analog research extends beyond Marrakech; outside these points is not proof of a previously unstudied region."]}
 
 
+def worldcover_url(lat,lon):
+    """The ESA WorldCover tile covering this point. Tiles are a 3-degree grid named by
+    their south-west corner, so a tile picked for one point does not cover another."""
+    la=int(math.floor(lat/3)*3);lo=int(math.floor(lon/3)*3)
+    name=f"ESA_WorldCover_10m_2021_v200_{'N' if la>=0 else 'S'}{abs(la):02d}{'E' if lo>=0 else 'W'}{abs(lo):03d}_Map.tif"
+    return "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/"+name
+
+
 def optional_access(spec,offline):
     """One representative climate query, explicitly NOT a per-footprint measurement."""
     b=spec["bounds"];lat=(b["south"]+b["north"])/2;lon=(b["west"]+b["east"])/2
@@ -305,9 +313,7 @@ def optional_access(spec,offline):
     except (OSError, ValueError,KeyError,urllib.error.URLError) as exc:
         result["checks"]["power"]={"status":"unavailable","reason":str(exc)}
     # Metadata/range spike only: no land-cover percentage inferred from a TIFF header.
-    la=int(math.floor(lat/3)*3);lo=int(math.floor(lon/3)*3)
-    name=f"ESA_WorldCover_10m_2021_v200_{'N' if la>=0 else 'S'}{abs(la):02d}{'E' if lo>=0 else 'W'}{abs(lo):03d}_Map.tif"
-    url="https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/"+name
+    url=worldcover_url(lat,lon)
     check_path=CACHE/"worldcover-check.json"
     if offline and check_path.exists():
         result["checks"]["worldcover"]=json.loads(check_path.read_text())
