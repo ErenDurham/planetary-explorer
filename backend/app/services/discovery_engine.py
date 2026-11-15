@@ -10,15 +10,43 @@ from pathlib import Path
 from app.config.settings import get_settings
 from app.models.discovery import (
     DiscoveryCapabilities, DiscoveryCandidateDetail, DiscoveryCriterion,
-    DiscoveryExport, DiscoveryFeatureDistance, DiscoveryRankRequest,
-    DiscoveryRankResponse, DiscoveryRunArtifact, DiscoveryRunSummary,
+    DiscoveryDimensionScore, DiscoveryExport, DiscoveryFeatureDistance,
+    DiscoveryRankRequest, DiscoveryRankResponse, DiscoveryRunArtifact,
+    DiscoveryRunSummary,
 )
 
-FEATURES = {"slope_regional_median_deg": ("Regional median slope", "deg", 1.5),
-            "roughness_regional_m": ("Detrended regional relief", "m", 100.0)}
+# Dimension groups. An analog may be strong in one and poor in another; the engine
+# scores each separately so the shortlist never hides that behind a single number.
+GROUPS = {
+    "terrain": "Terrain and landform",
+    "illumination": "Illumination and latitude",
+    "water": "Water and aridity",
+}
+
+# Every feature the engine knows how to score, with the scale that turns a physical
+# difference into a dimensionless one. Scales are documented screening assumptions,
+# not calibrated tolerances. A run scores whichever subset its specification registers.
+FEATURE_REGISTRY = {
+    "slope_regional_median_deg": ("Regional median slope", "deg", 1.5, "terrain",
+        "Typical regional gradient: the first control on where a vehicle can go and where loose material comes to rest."),
+    "slope_regional_p90_deg": ("Steep-tail slope (90th percentile)", "deg", 3.0, "terrain",
+        "The steep tail that actually constrains landing and mobility, which a median slope hides."),
+    "roughness_regional_m": ("Detrended regional relief", "m", 100.0, "terrain",
+        "Relief left after removing the regional plane: surface texture rather than overall tilt."),
+    "elevation_range_m": ("Elevation range (p90 minus p10)", "m", 400.0, "terrain",
+        "Vertical amplitude across the footprint: how dissected the region is, and the depth of any basin or valley in it."),
+    "insolation_toa_annual_mean_wm2": ("Annual-mean insolation (top of atmosphere)", "W/m2", 40.0, "illumination",
+        "Latitude-driven energy budget. Computed the same analytic way on both bodies, so it compares directly."),
+    "precipitation_mm_day": ("Mean precipitation", "mm/day", 1.0, "water",
+        "Liquid water reaching the surface today: the aridity axis that separates a dry analog from a merely rocky one."),
+}
+
+# Back-compatible view used by the offline builder and the v1 artifacts.
+FEATURES = {f: (v[0], v[1], v[2]) for f, v in FEATURE_REGISTRY.items() if f in ("slope_regional_median_deg", "roughness_regional_m")}
+
 LIMITATIONS = [
     "Proposed regional terrain analog candidates; field validation required.",
-    "Similarity is a two-feature heuristic index, not confidence or a probability; do not compare with curated five-feature scores.",
+    "Similarity is a heuristic index over the scored features, not confidence or a probability; do not compare it with curated five-feature scores.",
     "4 km cells and 60 km footprints do not resolve rover hazards, trafficability, geology or landing safety.",
     "Outside a catalog buffer does not mean unknown to science or accessible; catalog coverage is incomplete.",
     "Copernicus is a surface model including vegetation and infrastructure; MOLA includes interpolated bins.",
@@ -28,6 +56,10 @@ LIMITATIONS = [
 
 class DiscoveryUnavailable(Exception):
     pass
+
+
+class DiscoveryRejected(ValueError):
+    """A well-formed request the installed survey cannot answer. Never a server fault."""
 
 
 def root() -> Path:
@@ -77,6 +109,43 @@ def load_run(run_id: str) -> tuple[DiscoveryRunArtifact, dict]:
         raise DiscoveryUnavailable(f"Invalid discovery artifact {run_id}: {exc}") from exc
 
 
+def basis(run) -> dict[str, tuple]:
+    """The features this run scores, taken from its own preregistered scales.
+
+    A run may never score a feature the engine does not know, and the stored scale
+    always wins over the registry default: the artifact is the record of what was run.
+    """
+    scales = run.specification.get("scales") or {}
+    unknown = sorted(set(scales) - set(FEATURE_REGISTRY))
+    if unknown:
+        raise ValueError("run scores unknown features: " + ", ".join(unknown))
+    if not scales:
+        raise ValueError("run registers no scored features")
+    out = {}
+    for feature, scale in scales.items():
+        label, unit, _, group, rationale = FEATURE_REGISTRY[feature]
+        if not isinstance(scale, (int, float)) or not math.isfinite(scale) or scale <= 0:
+            raise ValueError("invalid discovery comparison scale")
+        out[feature] = (label, unit, float(scale), group, rationale)
+    return out
+
+
+def criteria_for(run) -> list[DiscoveryCriterion]:
+    return [DiscoveryCriterion(feature_id=f, label=v[0], unit=v[1], scale=v[2], group=v[3],
+                               group_label=GROUPS.get(v[3], v[3]), rationale=v[4])
+            for f, v in basis(run).items()]
+
+
+def default_weights_for(run) -> dict[str, float]:
+    """A run's own default emphasis, falling back to an equal split over its basis."""
+    features = basis(run)
+    stored = run.specification.get("default_weights") or {}
+    weights = {f: float(stored[f]) for f in features if f in stored and isinstance(stored[f], (int, float))}
+    if weights and sum(weights.values()) > 0:
+        return weights
+    return {f: round(100 / len(features), 4) for f in features}
+
+
 def verify_run(run):
     rows = run.audit_rows
     valid = sum(r.profile is not None for r in rows)
@@ -94,10 +163,11 @@ def verify_run(run):
     for profile in [run.reference_profile] + [r.profile for r in rows if not r.screening_reasons]:
         if profile is None:
             raise ValueError("eligible candidate lacks terrain")
-        for fid, (_, unit, _) in FEATURES.items():
-            m = profile.measurements[fid]
-            if m.unit != unit or m.measurement_type != "derived" or not math.isfinite(m.value) or m.value < 0:
-                raise ValueError("invalid terrain measurement or unit")
+        for fid, (_, unit, _, _, _) in basis(run).items():
+            m = profile.measurements.get(fid)
+            # Precipitation is legitimately zero on Mars; no scored feature may be negative.
+            if m is None or m.unit != unit or not math.isfinite(m.value) or m.value < 0:
+                raise ValueError(f"invalid or missing measurement for {fid}")
         if profile.terrain_valid_fraction < run.specification["min_terrain_valid_fraction"]:
             raise ValueError("inadequate valid terrain")
         if profile.gradient_valid_fraction < run.specification["min_gradient_valid_fraction"]:
@@ -112,22 +182,69 @@ def capabilities():
                 continue
             try:
                 run, _ = load_run(p.name)
+                regions = run.survey.regions
                 summaries.append(DiscoveryRunSummary(run_id=run.run_id, label=run.label,
                     created_at=run.created_at, bounds=run.survey.bounds,
-                    total_sampled=run.survey.generated_count, eligible_count=run.survey.eligible_count))
+                    total_sampled=run.survey.generated_count, eligible_count=run.survey.eligible_count,
+                    region_count=len(regions) or 1, regions=regions,
+                    criteria=criteria_for(run), default_weights=default_weights_for(run)))
             except (DiscoveryUnavailable, KeyError) as exc:
                 problems.append(str(exc))
     summaries.sort(key=lambda r: r.created_at, reverse=True)
+    # Capabilities describe the newest survey; each summary still carries its own basis
+    # so switching surveys switches the weight controls with it.
+    newest = summaries[0] if summaries else None
+    union, seen = [], set()
+    for summary in summaries:
+        for criterion in summary.criteria:
+            if criterion.feature_id not in seen:
+                seen.add(criterion.feature_id); union.append(criterion)
     return DiscoveryCapabilities(state="ready" if summaries else "unavailable", runs=summaries,
-        criteria=[DiscoveryCriterion(feature_id=f, label=v[0], unit=v[1], scale=v[2]) for f,v in FEATURES.items()],
-        default_weights={f: 50 for f in FEATURES}, limitations=LIMITATIONS + problems)
+        criteria=newest.criteria if newest else union,
+        default_weights=newest.default_weights if newest else {}, limitations=LIMITATIONS + problems)
+
+
+def resolve_weights(run, requested: dict[str, float] | None) -> dict[str, float]:
+    """Normalise a weight request against the run's own basis.
+
+    Unknown or unscored features are refused rather than silently dropped, so a
+    client can never believe it weighted something the survey does not measure.
+    """
+    features = basis(run)
+    raw = dict(requested) if requested else default_weights_for(run)
+    unknown = sorted(set(raw) - set(features))
+    if unknown:
+        raise DiscoveryRejected("this survey does not score: " + ", ".join(unknown))
+    raw = {f: float(raw.get(f, 0.0)) for f in features}
+    total = sum(raw.values())
+    if not math.isfinite(total) or total <= 0:
+        raise DiscoveryRejected("weights need a finite positive total")
+    return {f: v / total for f, v in raw.items()}
+
+
+def dimension_scores(factors, weights) -> list[DiscoveryDimensionScore]:
+    """Similarity within each dimension, on the same index scale as the total.
+
+    A group's distance is the weighted mean inside that group, so a candidate that
+    matches the terrain but not the water budget reports both plainly.
+    """
+    out = []
+    for group, label in GROUPS.items():
+        members = [f for f in factors if FEATURE_REGISTRY[f.feature_id][3] == group]
+        share = sum(weights[f.feature_id] for f in members)
+        if not members or share <= 0:
+            continue
+        distance = sum(f.contribution for f in members) / share
+        out.append(DiscoveryDimensionScore(group=group, label=label,
+            feature_ids=[f.feature_id for f in members], weight_share=share,
+            distance=distance, similarity_index=100 / (1 + distance)))
+    return out
 
 
 def rank(req: DiscoveryRankRequest):
     run, _ = load_run(req.run_id)
-    weights = req.weights.model_dump()
-    total = sum(weights.values())
-    weights = {f: v / total for f,v in weights.items()}
+    features = basis(run)
+    weights = resolve_weights(run, req.weights)
     ranked = []
     for row in run.audit_rows:
         if row.screening_reasons:
@@ -136,16 +253,14 @@ def rank(req: DiscoveryRankRequest):
         from app.services.discovery_research import get_record
         c.research_status = get_record(run.run_id, c.id).status
         factors = []
-        for fid, (_, unit, _) in FEATURES.items():
-            scale = run.specification["scales"][fid]
-            if not math.isfinite(scale) or scale <= 0:
-                raise DiscoveryUnavailable("Invalid discovery comparison scale")
+        for fid, (_, unit, scale, _, _) in features.items():
             earth = row.profile.measurements[fid].value
             mars = run.reference_profile.measurements[fid].value
             d = abs(earth-mars)/scale
             factors.append(DiscoveryFeatureDistance(feature_id=fid, earth_value=earth, mars_value=mars,
                 unit=unit, scale=scale, normalized_weight=weights[fid], distance=d, contribution=d*weights[fid]))
         c.feature_distances = factors
+        c.dimension_scores = dimension_scores(factors, weights)
         c.distance = sum(f.contribution for f in factors)
         c.similarity_index = 100/(1+c.distance)
         ranked.append(c)

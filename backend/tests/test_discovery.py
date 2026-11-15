@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from rasterio.transform import from_origin
 
 from app.config.settings import get_settings
-from app.models.discovery import DiscoveryRankRequest, DiscoveryWeights
+from app.models.discovery import DiscoveryRankRequest
 from app.services import discovery_engine as engine
 from app.services.analog_engine import feature_distance, load_spec
 from app.services.data_loader import get_store
@@ -87,10 +87,39 @@ def test_sampling_is_systematic_predeclared_and_not_score_driven():
 @pytest.mark.parametrize("weights",[
     {"slope_regional_median_deg":0,"roughness_regional_m":0},
     {"slope_regional_median_deg":-1}, {"roughness_regional_m":float("nan")},
-    {"roughness_regional_m":float("inf")},{"unknown":1},
+    {"roughness_regional_m":float("inf")}, {}, {"Not A Feature":1},
 ])
-def test_weights_reject_invalid_or_unsupported_values(weights):
-    with pytest.raises(ValidationError):DiscoveryWeights(**weights)
+def test_weights_reject_malformed_values(weights):
+    """Shape is a request concern: totals, signs, finiteness and feature-id form."""
+    with pytest.raises(ValidationError):DiscoveryRankRequest(run_id=installed(),weights=weights)
+
+
+def test_weights_naming_a_feature_this_survey_does_not_score_are_rejected_not_ignored():
+    """Which features exist is a property of the run, so it is the engine that refuses."""
+    request=DiscoveryRankRequest(run_id=installed(),weights={"precipitation_mm_day":100})
+    with pytest.raises(engine.DiscoveryRejected) as exc:engine.rank(request)
+    assert "precipitation_mm_day" in str(exc.value)
+
+
+def test_each_installed_run_declares_the_basis_it_scores():
+    run,_=engine.load_run(installed())
+    features=engine.basis(run)
+    assert set(features)==set(run.specification["scales"])
+    assert all(f in engine.FEATURE_REGISTRY for f in features)
+    # A run's defaults must cover exactly its own basis, never a global assumption.
+    assert set(engine.default_weights_for(run))==set(features)
+
+
+def test_dimension_scores_partition_the_weighted_total():
+    response=engine.rank(DiscoveryRankRequest(run_id=installed()))
+    for candidate in response.candidates:
+        assert candidate.dimension_scores
+        assert sum(d.weight_share for d in candidate.dimension_scores)==pytest.approx(1)
+        scored={f for d in candidate.dimension_scores for f in d.feature_ids}
+        assert scored=={f.feature_id for f in candidate.feature_distances}
+        # Weighting each group's own distance by its share rebuilds the overall distance.
+        total=sum(d.distance*d.weight_share for d in candidate.dimension_scores)
+        assert total==pytest.approx(candidate.distance)
 
 
 def test_real_run_counts_provenance_geometry_and_numeric_basis():
