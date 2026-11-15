@@ -45,7 +45,7 @@ export function PlannerIntro({ region, mission, service, terrain, basemaps, onCo
             : <ul className="grid gap-2 sm:grid-cols-2">{studies.slice(0, 4).map((s, i) => <li key={i} className="rounded-lg border border-line bg-bg-elev p-3"><p className="text-xs font-semibold text-fg">{s.title}</p><p className="mt-1 line-clamp-3 text-[11px] leading-snug text-fg-muted">{s.research_question}</p><Badge tone={s.kind === "proposed_study" ? "info" : "ok"} className="mt-2">{s.kind === "proposed_study" ? "Proposed · not performed" : "Documented campaign"}</Badge></li>)}</ul>}
         </section>
         <div className="flex flex-wrap items-center gap-3 pt-1">
-          <button type="button" onClick={onContinue} className="inline-flex items-center gap-2 rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-copper-bright hover:text-bg">Choose a mission objective <ArrowRight className="h-4 w-4" aria-hidden /></button>
+          <button type="button" onClick={onContinue} className="inline-flex items-center gap-2 rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-bg transition-colors hover:bg-copper-bright hover:text-bg">Choose a mission objective <ArrowRight className="h-4 w-4" aria-hidden /></button>
           <p className="text-xs text-fg-muted">Your selected region and research context carry over.</p>
         </div>
       </div>

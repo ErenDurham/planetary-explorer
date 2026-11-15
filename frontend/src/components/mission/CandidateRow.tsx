@@ -11,7 +11,7 @@ export function rowKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
   buttons[next]?.focus();
 }
 
-export const candidateRowClass = (selected: boolean) => `group grid w-full grid-cols-[22px_1fr_auto] items-center gap-2 rounded border px-2 py-1.5 text-left transition-colors ${selected ? "border-copper bg-copper/10" : "border-transparent hover:border-line-strong hover:bg-bg-elev-2"}`;
+export const candidateRowClass = (selected: boolean) => `candidate-row group grid w-full grid-cols-[22px_1fr_auto] items-center gap-2 rounded border px-2 py-1.5 text-left transition-colors ${selected ? "border-copper bg-copper/10" : "border-transparent hover:border-line-strong hover:bg-bg-elev-2"}`;
 
 export function CandidateRow({ name, rank, score, color, selected, status, tone, detail, scoreSuffix = "", accessibleLabel, onSelect }: {
   name: string; rank?: number | null; score?: number | null; color?: string;
@@ -24,8 +24,8 @@ export function CandidateRow({ name, rank, score, color, selected, status, tone,
     className={candidateRowClass(selected)}>
     <span className="num text-xs text-fg-muted">{rank ?? "—"}</span>
     <span className="min-w-0">
-      <span className="block truncate text-xs text-fg" title={name}>{name}</span>
-      <span className="mt-1 block h-1.5 w-full overflow-hidden rounded-sm bg-line" aria-hidden>
+      <span className="candidate-name block text-xs text-fg" title={name}>{name}</span>
+      <span className="mt-2 block h-0.5 w-full overflow-hidden rounded-sm bg-line" aria-hidden>
         {score != null && <span className="block h-full" style={{ width: `${score}%`, backgroundColor: color }} />}
       </span>
     </span>

@@ -138,11 +138,23 @@ Verified reachable without login on 2026-11-14.
 | Parameters and units | `T2M` 2 m air temperature, degC (annual mean `ANN` used); `T2M_MIN`, `T2M_MAX` degC (the pipeline takes the **minimum over months** of the monthly-mean minimum, and the maximum over months of the monthly-mean maximum); `ALLSKY_SFC_SW_DWN` kWh/m2/day (converted to W/m2 by x1000/24); `PRECTOTCORR` bias-corrected precipitation, mm/day |
 | Observation period | Multi-decade climatology; the exact span is in the API response header, which the pipeline does not store. Record it in the next profile version. |
 | Quality limitations | `measurement_type` is `estimated` (reanalysis/satellite product, not an in-situ reading). The coarse grid may not resolve valley or summit microclimates (Death Valley floor, Mauna Kea summit). `PRECTOTCORR` underestimates orographic extremes. `T2M` is **air** temperature at 2 m, not ground temperature; the profile notes say so. |
-| Extraction | `power_climate()` in `backend/scripts/build_earth_profiles.py`, one request per candidate |
+| Extraction | `power_climate()` in `backend/scripts/build_earth_profiles.py`, one request per candidate. The discovery builder (`power_climate()` in `backend/scripts/build_discovery.py`) makes the same call per surveyed footprint centre, with `WS2M` added |
 | Licence | Public domain (NASA) |
-| Retrieved | 2026-11-14 |
+| Retrieved | 2026-11-14; discovery survey 2026-11-15 |
 
 Verified reachable without login on 2026-11-14.
+
+### Use in discovery-v2
+
+The global survey queries POWER once per footprint centre, not once per survey. Of what comes
+back, **only `PRECTOTCORR` is scored**, as the aridity axis against a Mars reference value of
+0.0 mm/day taken from the curated Jezero profile (`nasa_m2020_landing_site`); Mars has no liquid
+precipitation at the surface. `T2M`, `T2M_MIN`, `T2M_MAX`, `WS2M` and `ALLSKY_SFC_SW_DWN` are
+carried as per-candidate context and are **never** scored, because this release holds no measured
+Mars counterpart for any of them — a difference the UI reports rather than ranks. A footprint whose
+POWER response carries a fill value or a non-finite annual mean is screened out
+(`climate_unavailable`) rather than part-scored. The 0.5 x 0.625 degree meteorological grid is
+coarser than the 60 km footprint, so these values describe the regional climate, not the footprint.
 
 ## 4. Mars globe texture: NASA Solar System Treks, Viking MDIM 2.1
 

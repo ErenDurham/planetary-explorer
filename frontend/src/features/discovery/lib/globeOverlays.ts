@@ -31,7 +31,11 @@ export function discoveryOverlays({ bounds, survey, candidates, selectedId, pale
 }): { rings: SurfaceRing[]; dots: SurfaceDot[] } {
   const n = candidates.length;
   const rings: SurfaceRing[] = [];
-  if (bounds) rings.push({ id: "survey-bounds", points: boundsRing(bounds), color: SURVEY_BOUNDS_COLOR, dashed: true, width: 1.5 });
+  // Outline every region that was actually searched. Drawing the single rectangle that
+  // encloses separate regions would claim a continuous search that never happened.
+  const regions = (survey?.regions ?? []).map(r => r.bounds as DiscoveryBounds | undefined).filter((b): b is DiscoveryBounds => !!b && typeof b.north === "number");
+  if (regions.length > 0) regions.forEach((b, i) => rings.push({ id: `survey-region-${i}`, points: boundsRing(b), color: SURVEY_BOUNDS_COLOR, dashed: true, width: 1.5 }));
+  else if (bounds) rings.push({ id: "survey-bounds", points: boundsRing(bounds), color: SURVEY_BOUNDS_COLOR, dashed: true, width: 1.5 });
   for (const c of candidates) {
     const color = rankColor(rankPosition(c.display_rank, n), palette) ?? NOT_RANKED_COLOR;
     const selected = c.id === selectedId;

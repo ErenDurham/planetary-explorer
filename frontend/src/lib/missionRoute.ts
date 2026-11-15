@@ -1,7 +1,7 @@
 // Where an applied mission sends the user next, said honestly. The discovery
 // pilot is the only "new region" capability and it is bounded: a fixed set of
 // surveyed Earth footprints compared with Jezero Crater on regional median
-// slope and detrended relief. Everything else routes to a workflow that does
+// the features each survey declares. Everything else routes to a workflow that does
 // exist (the established analogs ranked against the reference, or Mars
 // landing screening), and an objective whose task could not be read is not
 // guessed at: the user is asked to choose a supported task. Nothing here

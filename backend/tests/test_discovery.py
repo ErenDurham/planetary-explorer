@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from rasterio.transform import from_origin
 
 from app.config.settings import get_settings
-from app.models.discovery import DiscoveryRankRequest, DiscoveryWeights
+from app.models.discovery import DiscoveryRankRequest
 from app.services import discovery_engine as engine
 from app.services.analog_engine import feature_distance, load_spec
 from app.services.data_loader import get_store
@@ -24,10 +24,18 @@ from tests.factories import make_site, make_candidate
 DATA=Path(__file__).resolve().parents[1]/"data/discovery"
 
 
-def installed():
+def installed(spec_version="discovery-v1.0"):
+    """A run chosen by its preregistered spec version, never by install order.
+
+    Several real surveys ship at once, so a test says which one it means.
+    """
     runs=engine.capabilities().runs
     assert runs, "A real pilot artifact must ship; synthetic fixtures are not the release acceptance."
-    return runs[0].run_id
+    for summary in runs:
+        run,_=engine.load_run(summary.run_id)
+        if run.specification["spec_version"]==spec_version:
+            return summary.run_id
+    raise AssertionError(f"no installed run for {spec_version}")
 
 
 def test_analytical_plane_has_correct_slope_and_no_detrended_relief():
@@ -87,10 +95,39 @@ def test_sampling_is_systematic_predeclared_and_not_score_driven():
 @pytest.mark.parametrize("weights",[
     {"slope_regional_median_deg":0,"roughness_regional_m":0},
     {"slope_regional_median_deg":-1}, {"roughness_regional_m":float("nan")},
-    {"roughness_regional_m":float("inf")},{"unknown":1},
+    {"roughness_regional_m":float("inf")}, {}, {"Not A Feature":1},
 ])
-def test_weights_reject_invalid_or_unsupported_values(weights):
-    with pytest.raises(ValidationError):DiscoveryWeights(**weights)
+def test_weights_reject_malformed_values(weights):
+    """Shape is a request concern: totals, signs, finiteness and feature-id form."""
+    with pytest.raises(ValidationError):DiscoveryRankRequest(run_id=installed(),weights=weights)
+
+
+def test_weights_naming_a_feature_this_survey_does_not_score_are_rejected_not_ignored():
+    """Which features exist is a property of the run, so it is the engine that refuses."""
+    request=DiscoveryRankRequest(run_id=installed(),weights={"precipitation_mm_day":100})
+    with pytest.raises(engine.DiscoveryRejected) as exc:engine.rank(request)
+    assert "precipitation_mm_day" in str(exc.value)
+
+
+def test_each_installed_run_declares_the_basis_it_scores():
+    run,_=engine.load_run(installed())
+    features=engine.basis(run)
+    assert set(features)==set(run.specification["scales"])
+    assert all(f in engine.FEATURE_REGISTRY for f in features)
+    # A run's defaults must cover exactly its own basis, never a global assumption.
+    assert set(engine.default_weights_for(run))==set(features)
+
+
+def test_dimension_scores_partition_the_weighted_total():
+    response=engine.rank(DiscoveryRankRequest(run_id=installed()))
+    for candidate in response.candidates:
+        assert candidate.dimension_scores
+        assert sum(d.weight_share for d in candidate.dimension_scores)==pytest.approx(1)
+        scored={f for d in candidate.dimension_scores for f in d.feature_ids}
+        assert scored=={f.feature_id for f in candidate.feature_distances}
+        # Weighting each group's own distance by its share rebuilds the overall distance.
+        total=sum(d.distance*d.weight_share for d in candidate.dimension_scores)
+        assert total==pytest.approx(candidate.distance)
 
 
 def test_real_run_counts_provenance_geometry_and_numeric_basis():
@@ -137,7 +174,9 @@ def test_api_serves_rank_detail_export_without_network(client,monkeypatch):
     d=client.get(f'/api/v1/discovery/runs/{rid}/candidates/{candidate["id"]}')
     assert d.status_code==200 and d.json()["profile"] and d.json()["distance"] is None
     export=client.get(f'/api/v1/discovery/runs/{rid}/export')
-    assert export.status_code==200 and len(export.json()["audit_rows"])==16
+    # The export is the whole survey, whichever survey the service serves first.
+    assert export.status_code==200
+    assert len(export.json()["audit_rows"])==export.json()["survey"]["generated_count"]
     assert client.get(f'/api/v1/discovery/runs/{rid}/candidates/unknown').status_code==404
     assert client.post('/api/v1/discovery/rank',json={"run_id":"unknown"}).status_code==404
     for payload in [{"run_id":rid,"top_k":0},{"run_id":rid,"reference_id":"moon"},
@@ -229,3 +268,49 @@ def test_validation_attachment_is_bound_to_immutable_run(tmp_path,monkeypatch):
     monkeypatch.setattr(engine,"root",lambda:tmp_path)
     with pytest.raises(engine.DiscoveryUnavailable,match="attachment"):
         engine.load_run(rid)
+
+
+def test_global_survey_searches_many_regions_on_a_multi_dimensional_basis():
+    """The shipped v2 survey is the real acceptance for multi-region, multi-feature discovery."""
+    run,_=engine.load_run(installed("discovery-v2.0"))
+    regions={r["id"] for r in run.survey.regions}
+    assert len(regions)>=10
+    # Every region states the hypothesis it was chosen for, before any score existed.
+    assert all(r.get("hypothesis") for r in run.survey.regions)
+    features=engine.basis(run)
+    groups={v[3] for v in features.values()}
+    assert len(features)>=5 and groups>={"terrain","illumination","water"}
+    assert {row.candidate.region_id for row in run.audit_rows if not row.screening_reasons}==regions
+
+
+def test_global_survey_shortlist_spans_distinct_regions_and_names_them():
+    rid=installed("discovery-v2.0")
+    response=engine.rank(DiscoveryRankRequest(run_id=rid,top_k=6))
+    assert response.returned_count>=5
+    # The spacing rule is what stops a shortlist being one place sampled repeatedly.
+    assert len({c.region_id for c in response.candidates})==response.returned_count
+    for candidate in response.candidates:
+        assert candidate.region_name and candidate.region_name in candidate.name
+        assert len(candidate.dimension_scores)>=3
+
+
+def test_unscorable_dimensions_are_carried_as_context_never_as_score():
+    """Thermal and wind are measured on Earth only; they must never reach the index."""
+    rid=installed("discovery-v2.0")
+    response=engine.rank(DiscoveryRankRequest(run_id=rid,top_k=3))
+    scored={f.feature_id for c in response.candidates for f in c.feature_distances}
+    for candidate in response.candidates:
+        context={m.feature_id:m for m in candidate.context.measurements}
+        assert context, "candidates must report the dimensions they could not score"
+        assert not (set(context)&scored), "a context dimension must not also be scored"
+        # Insolation is measured on both bodies and still excluded from the index.
+        flux=context["insolation_toa_annual_mean_wm2"]
+        assert flux.comparable and flux.mars_value is not None
+        assert context["surface_temperature_mean_c"].mars_value is None
+
+@pytest.mark.parametrize("weights", [None, {"precipitation_mm_day": 1}])
+def test_global_rank_reports_the_features_that_actually_have_weight(weights):
+    response = engine.rank(DiscoveryRankRequest(run_id=installed("discovery-v2.0"), weights=weights))
+    expected = {feature for feature, weight in response.effective_weights.items() if weight > 0}
+    assert set(response.basis_features) == expected
+    assert expected == {feature.feature_id for feature in response.candidates[0].feature_distances if feature.normalized_weight > 0}

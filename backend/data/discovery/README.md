@@ -1,6 +1,37 @@
-# Discovery v1 data and reproduction
+# Discovery data and reproduction
 
-The installed survey is `morocco-4c20d8478ee2`: 16 systematic centres in
+Two surveys are installed. The current one is `survey-bf8e644974b2`, the
+**global under-studied terrain survey**, described below; the original v1 pilot
+`morocco-4c20d8478ee2` is kept because its preregistered record and its
+immutable replay still hold.
+
+## Global under-studied terrain survey (`global.json`, spec `discovery-v2.0`)
+
+Sixteen one-degree regions on five continents, 3x3 systematic centres each:
+144 footprints, 143 eligible (one failed the terrain-coverage cutoff). Each
+region carries the Mars process or surface it was chosen for — desert pavement,
+yardangs, evaporite playa, megadunes, lava tubes, relict drainage — written
+down in `global.json` **before** any terrain was processed or any score seen.
+Antarctica, the Atacama proper, Iceland and Hawaii are deliberately absent:
+the brief asks for analogs beyond the places already studied to exhaustion.
+
+Six features are scored across three dimensions: regional median slope,
+steep-tail slope (p90), detrended relief and elevation range (terrain);
+distance from the equator (illumination); mean precipitation (water). Latitude
+rather than insolation carries illumination, because Earth receives about 2.2
+times Jezero's top-of-atmosphere flux at any latitude and no Earth site can
+close that gap — the flux is reported as context instead. Air temperature,
+wind and surface shortwave are measured on Earth only and are never scored.
+
+The separation rule is 150 km, wider than a one-degree region, so a shortlist
+spans distinct regions rather than neighbouring cells of one place.
+
+Build: `.venv/bin/python scripts/build_discovery.py --spec data/discovery/global.json`
+(about ten minutes; ~144 Copernicus tiles and one NASA POWER query per footprint).
+
+## Eastern Morocco pilot (`pilot.json`, spec `discovery-v1.0`)
+
+The pilot survey is `morocco-4c20d8478ee2`: 16 systematic centres in
 31–32 N, 3–2 W. This is a regional terrain screening experiment, not a list of
 newly established scientific analog sites. The broad label “eastern Morocco”
 is geographic context, not an administrative boundary or access assessment;

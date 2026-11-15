@@ -98,7 +98,7 @@ export function recommendObjective(text: string, defaults: Record<string, number
   } else {
     for (const [pattern, changes, note] of rules) if (pattern.test(text)) { Object.assign(weights, changes); notes.push(note); }
   }
-  if (!notes.length) notes.push("No supported priority terms matched. Baseline priorities are a starting point; review them manually.");
+  if (!notes.length) notes.push("The mission does not name a priority directly, so the app made a best guess: the standard starting weights. Adjust them if needed.");
   if (/\b(ice|water|habitability|biology|life|radiation|base|settlement|moon|lunar|geology|sample|samples|mineral)\b/i.test(text)) notes.push("This objective includes science or habitation needs outside the current landing model. These weights cannot optimise those needs; use the evidence and Earth comparisons separately.");
   if (/\b(thermal|temperature|warm|cold)\b/i.test(text)) notes.push("Temperature is currently unmeasured, so a thermal objective cannot yet be scored.");
   for (const id of excluded) weights[id] = 0;

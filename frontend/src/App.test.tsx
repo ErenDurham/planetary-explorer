@@ -158,13 +158,15 @@ describe("App", () => {
     expect(await screen.findByRole("heading", {name:"Mission suitability"})).toBeInTheDocument();
   });
 
-  it("a fresh session opens on Mission Design, with Explore and Research one click away and nothing intercepting them", async () => {
+  it("a fresh session opens on Home, with the research workflow one click away", async () => {
     useAppStore.setState(useAppStore.getInitialState(), true);
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={qc}><App /></QueryClientProvider>);
-    expect(useAppStore.getState().activeTab).toBe("mission");
+    expect(useAppStore.getState().activeTab).toBe("home");
+    expect(screen.getByRole("heading", { name: /Explore Mars/ })).toBeInTheDocument();
     const nav = screen.getByRole("navigation", { name: "Primary" });
     expect(within(nav).getAllByRole("button").map((b: HTMLElement) => b.textContent)).toEqual(["Mission Design", "Explore", "Research", expect.stringContaining("Advanced")].map(x => typeof x === "string" ? expect.stringContaining(x) : x));
+    fireEvent.click(screen.getByRole("button", { name: "Start with a mission" }));
     expect(within(nav).getByRole("button", { name: "Mission Design" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
     expect(screen.getByTestId("mission-lede")).toHaveTextContent(/established Earth analogs or Mars landing screening/);

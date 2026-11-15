@@ -1,3 +1,4 @@
+import { motionIsReduced } from "@/lib/motion/preferences";
 // Whether this browser can draw the globe at all. Checked once, before the
 // React Three Fiber canvas mounts, so a device without WebGL gets the static
 // fallback instead of a blank canvas and a console error. jsdom has no WebGL
@@ -24,5 +25,5 @@ export function setWebGLSupport(value: boolean | null): void { cached = value; }
 
 /** Reduced-motion preference, read once per call so a change is honoured on the next render. */
 export function prefersReducedMotion(): boolean {
-  return typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  return motionIsReduced();
 }

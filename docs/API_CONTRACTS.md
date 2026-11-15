@@ -650,7 +650,7 @@ Response:
       "label": "Elevation suitability (EDL atmosphere)",
       "weight": 25,
       "previous_weight": 25,
-      "reason": "Unchanged: the objective did not mention this factor.",
+      "reason": "Best guess: kept at its starting weight, because the mission does not point either way.",
       "data_available": true
     },
     "... (3 more)"

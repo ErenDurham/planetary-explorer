@@ -1,8 +1,16 @@
-"""Public discovery-v1 contract. Discovery never modifies curated profiles."""
+"""Public discovery contract. Discovery never modifies curated profiles.
+
+discovery-v2 keeps every v1 artifact loadable: the scored basis is whatever the
+run's own specification registers, so a two-feature v1 run and a six-feature v2
+run are both served by one engine.
+"""
 from __future__ import annotations
 
 import math
+import re
 from typing import Any, Literal
+
+EngineVersion = Literal["discovery-v1", "discovery-v2"]
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -39,9 +47,10 @@ class DiscoverySource(Record):
 
 
 class TerrainMeasurement(Record):
+    """One scored quantity. Units are closed: a new unit is a contract change."""
     value: float
-    unit: Literal["deg", "m"]
-    measurement_type: Literal["derived"] = "derived"
+    unit: Literal["deg", "m", "W/m2", "mm/day"]
+    measurement_type: Literal["derived", "measured"] = "derived"
 
 
 class DiscoveryProfile(Record):
@@ -60,10 +69,27 @@ class DiscoveryNovelty(Record):
     review_status: Literal["not_reviewed", "desktop_reviewed"] = "not_reviewed"
 
 
+class DiscoveryContextMeasurement(Record):
+    """An Earth dimension carried for honesty, never for scoring.
+
+    `mars_value` is null whenever this release holds no measured Mars counterpart;
+    the UI must present these as differences it cannot rank, not as a match.
+    """
+    feature_id: str
+    label: str
+    group: str
+    earth_value: float
+    mars_value: float | None = None
+    unit: str
+    comparable: bool = False
+    note: str
+
+
 class DiscoveryContext(Record):
     climate: dict[str, Any] | None = None
     land_cover: dict[str, Any] | None = None
     geology_status: Literal["not_assessed"] = "not_assessed"
+    measurements: list[DiscoveryContextMeasurement] = Field(default_factory=list)
 
 
 class DiscoveryFeatureDistance(Record):
@@ -77,9 +103,21 @@ class DiscoveryFeatureDistance(Record):
     contribution: float = Field(ge=0)
 
 
+class DiscoveryDimensionScore(Record):
+    """Similarity restricted to one dimension group, on the same index as the total."""
+    group: str
+    label: str
+    feature_ids: list[str]
+    weight_share: float = Field(ge=0, le=1)
+    distance: float = Field(ge=0)
+    similarity_index: float = Field(ge=0, le=100)
+
+
 class DiscoveryCandidate(Record):
     id: str
     name: str
+    region_id: str | None = None
+    region_name: str | None = None
     lat: float = Field(ge=-90, le=90)
     lon_east: float = Field(ge=-180, le=180)
     footprint_geojson: dict[str, Any]
@@ -89,6 +127,7 @@ class DiscoveryCandidate(Record):
     distance: float | None = None
     similarity_index: float | None = None
     feature_distances: list[DiscoveryFeatureDistance] = Field(default_factory=list)
+    dimension_scores: list[DiscoveryDimensionScore] = Field(default_factory=list)
     terrain_valid_fraction: float = Field(ge=0, le=1)
     novelty: DiscoveryNovelty
     context: DiscoveryContext = Field(default_factory=DiscoveryContext)
@@ -108,6 +147,9 @@ class DiscoveryCriterion(Record):
     label: str
     unit: str
     scale: float = Field(gt=0)
+    group: str = "terrain"
+    group_label: str = "Terrain and landform"
+    rationale: str = ""
 
 
 class DiscoveryRunSummary(Record):
@@ -117,10 +159,17 @@ class DiscoveryRunSummary(Record):
     bounds: DiscoveryBounds
     total_sampled: int
     eligible_count: int
+    region_count: int = 1
+    regions: list[dict[str, Any]] = Field(default_factory=list)
+    criteria: list["DiscoveryCriterion"] = Field(default_factory=list)
+    default_weights: dict[str, float] = Field(default_factory=dict)
+
+
+DiscoveryRunSummary.model_rebuild()
 
 
 class DiscoveryCapabilities(Record):
-    engine_version: Literal["discovery-v1"] = "discovery-v1"
+    engine_version: EngineVersion = "discovery-v2"
     state: Literal["ready", "unavailable"]
     reference: DiscoveryReference = Field(default_factory=DiscoveryReference)
     runs: list[DiscoveryRunSummary]
@@ -129,24 +178,29 @@ class DiscoveryCapabilities(Record):
     limitations: list[str]
 
 
-class DiscoveryWeights(Record):
-    slope_regional_median_deg: float = Field(50, ge=0)
-    roughness_regional_m: float = Field(50, ge=0)
+class DiscoveryRankRequest(Record):
+    """Weights name features; the engine rejects any the chosen run does not score."""
+    run_id: str = Field(min_length=1, max_length=100, pattern=r"^[a-zA-Z0-9_-]+$")
+    reference_id: Literal["jezero_crater"] = "jezero_crater"
+    weights: dict[str, float] | None = None
+    top_k: int = Field(6, ge=1, le=40)
+    client_request_id: str | None = Field(None, max_length=200)
 
     @model_validator(mode="after")
-    def positive_total(self):
-        total = sum(self.model_dump().values())
+    def usable_weights(self):
+        if self.weights is None:
+            return self
+        if not self.weights:
+            raise ValueError("weights need at least one feature")
+        for feature, value in self.weights.items():
+            if not re.fullmatch(r"[a-z0-9_]{1,60}", feature):
+                raise ValueError(f"invalid feature id: {feature}")
+            if not math.isfinite(value) or value < 0:
+                raise ValueError("weights must be finite and non-negative")
+        total = sum(self.weights.values())
         if not math.isfinite(total) or total <= 0:
             raise ValueError("weights need a finite positive total")
         return self
-
-
-class DiscoveryRankRequest(Record):
-    run_id: str = Field(min_length=1, max_length=100, pattern=r"^[a-zA-Z0-9_-]+$")
-    reference_id: Literal["jezero_crater"] = "jezero_crater"
-    weights: DiscoveryWeights = Field(default_factory=DiscoveryWeights)
-    top_k: int = Field(5, ge=1, le=20)
-    client_request_id: str | None = Field(None, max_length=200)
 
 
 class DiscoverySurvey(Record):
@@ -161,10 +215,12 @@ class DiscoverySurvey(Record):
     dataset_versions: dict[str, str]
     spec_version: str
     diversification: dict[str, Any]
+    regions: list[dict[str, Any]] = Field(default_factory=list)
+    context_features: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class DiscoveryRankResponse(Record):
-    engine_version: Literal["discovery-v1"] = "discovery-v1"
+    engine_version: EngineVersion = "discovery-v2"
     run_id: str
     reference: DiscoveryReference
     survey: DiscoverySurvey
@@ -184,7 +240,7 @@ class DiscoveryAuditRow(Record):
 
 
 class DiscoveryRunArtifact(Record):
-    engine_version: Literal["discovery-v1"] = "discovery-v1"
+    engine_version: EngineVersion = "discovery-v1"
     run_id: str
     label: str
     created_at: str

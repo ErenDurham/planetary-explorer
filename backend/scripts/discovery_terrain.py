@@ -54,7 +54,12 @@ def aggregate(z, source_transform, source_crs, projection, target_transform, sha
 
 
 def stats(z, cell_m=4000):
-    """Central-difference slopes need all four neighbours, excluding edge cells."""
+    """Central-difference slopes need all four neighbours, excluding edge cells.
+
+    Four terrain quantities come off one grid: the typical gradient, the steep tail
+    that actually constrains a vehicle, the relief left after removing the regional
+    plane, and the raw vertical amplitude. Nothing here is filled or interpolated.
+    """
     z=np.asarray(z,dtype=float)
     valid=np.isfinite(z)
     mask=np.zeros_like(valid)
@@ -66,13 +71,25 @@ def stats(z, cell_m=4000):
     if valid.sum()<3 or not mask.any():
         raise ValueError("insufficient terrain support")
     coef=np.linalg.lstsq(design,z[valid],rcond=None)[0]
+    low,high=np.percentile(z[valid],[10,90])
     return {"slope_regional_median_deg":float(np.median(slope[mask])),
-            "roughness_regional_m":float(np.std(z[valid]-design@coef))}, float(valid.mean()), float(mask.sum()/((z.shape[0]-2)*(z.shape[1]-2)))
+            "slope_regional_p90_deg":float(np.percentile(slope[mask],90)),
+            "roughness_regional_m":float(np.std(z[valid]-design@coef)),
+            "elevation_range_m":float(high-low)}, float(valid.mean()), float(mask.sum()/((z.shape[0]-2)*(z.shape[1]-2)))
 
 
-def profile(z, support, geographic, projection, transform, spec):
+# Units are a property of the quantity, never guessed from the identifier's spelling.
+UNITS={"slope_regional_median_deg":"deg","slope_regional_p90_deg":"deg","roughness_regional_m":"m",
+       "elevation_range_m":"m","latitude_abs_deg":"deg","precipitation_mm_day":"mm/day"}
+
+
+def profile(z, support, geographic, projection, transform, spec, extra=None):
+    """Terrain from the grid, plus any non-terrain measurements the caller supplies."""
     values, fraction, gradient=stats(z,spec["cell_m"])
-    return {"measurements":{f:{"value":v,"unit":"deg" if f.endswith("deg") else "m","measurement_type":"derived"} for f,v in values.items()},
+    values.update(extra or {})
+    return {"measurements":{f:{"value":v,"unit":UNITS[f],
+                               "measurement_type":"measured" if f=="precipitation_mm_day" else "derived"}
+                            for f,v in values.items() if f in spec["scales"]},
         "terrain_valid_fraction":fraction,"gradient_valid_fraction":gradient,
         "grid":{"body_geographic_crs":geographic.to_wkt(),"metric_crs":projection.to_wkt(),
             "transform":list(transform)[:6],"cell_m":spec["cell_m"],"shape":list(z.shape),

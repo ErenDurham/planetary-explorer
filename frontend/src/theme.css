@@ -1,5 +1,6 @@
 @import "./theme/geometry.css";
 @import "./theme/panes.css";
+@import "./theme/observatory.css";
 
 /* =============================================================================
    PLANETARY EXPLORER THEME — the one place to edit the look of the whole app.
@@ -9,7 +10,7 @@
    from them too). Change a value here and it changes everywhere.
 
    The palette is the "atlas" look that first shipped on Compare and Research:
-   warm near-black, soft off-white type, copper accent, Manrope for text and
+   near-black graphite, ivory type, a muted signal accent, Manrope for text and
    IBM Plex Mono for numbers.
 
    Deliberately NOT here: colours that encode data. The rank scale
@@ -22,24 +23,28 @@
 
 @theme {
   /* --- surfaces --------------------------------------------------------- */
-  --color-bg: #181818;          /* page background */
-  --color-bg-elev: #1f1f1f;     /* panels, headers, cards */
-  --color-bg-elev-2: #272727;   /* hover and nested surfaces */
-  --color-canvas: #121212;      /* globe, maps and image frames */
+  --color-bg: #0f0c14;          /* page background */
+  --color-bg-elev: #17131e;     /* panels, headers, cards */
+  --color-bg-elev-2: #231c2e;   /* hover and nested surfaces */
+  --color-canvas: #08070c;      /* globe, maps and image frames */
 
   /* --- lines ------------------------------------------------------------ */
-  --color-line: #313131;        /* dividers, quiet borders */
-  --color-line-strong: #51514b; /* input and card borders */
+  --color-line: #30283b;        /* dividers, quiet borders */
+  --color-line-strong: #574765; /* input and card borders */
 
   /* --- text ------------------------------------------------------------- */
-  --color-fg: #ecebe6;          /* primary text */
-  --color-fg-muted: #b8b8af;    /* secondary text */
-  --color-fg-faint: #a09f96;    /* labels, eyebrows, hints */
+  --color-fg: #ece7f3;          /* primary text */
+  --color-fg-muted: #b5abbf;    /* secondary text */
+  --color-fg-faint: #9c90a8;    /* labels, eyebrows, hints */
 
-  /* --- accent ----------------------------------------------------------- */
-  --color-copper: #c2622b;        /* primary action */
-  --color-copper-bright: #f0a03c; /* highlights, selected state, focus ring */
-  --color-copper-dim: #7a3f1f;
+  /* --- interaction accent (legacy copper names; scientific palettes are separate) --- */
+  --color-copper: #b9a0e7;        /* primary action */
+  --color-copper-bright: #d7baff; /* highlights, selected state, focus ring */
+  --color-copper-dim: #70558f;
+
+  /* Uniform measurement contribution color; independent of the UI accent. */
+  --color-data-contribution: #b4c985;
+  --color-data-highlight: #dceaa9;
 
   /* --- status ----------------------------------------------------------- */
   --color-ok: #6fb98f;
@@ -55,12 +60,12 @@
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* --- shape ------------------------------------------------------------ */
-  --radius-panel: 8px;
+  --radius-panel: 4px;
 }
 
 /* Overlay chrome drawn over imagery and maps (labels, scale bars, legends). */
 :root {
-  --overlay-bg: rgba(18, 18, 18, 0.78);
+  --overlay-bg: rgba(13, 10, 19, 0.86);
   --overlay-fg: var(--color-fg);
   --focus-ring: var(--color-copper-bright);
 }

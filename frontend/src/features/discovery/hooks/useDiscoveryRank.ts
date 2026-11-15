@@ -11,7 +11,7 @@ import type { Shares } from "@/lib/allocation";
 import { discoveryService, StaleDiscoveryResponse, type DiscoveryRankResponse, type DiscoveryService } from "../adapter";
 import { toRequestWeights, weightsKey } from "../lib/weights";
 
-export const DISCOVERY_ENGINE = "discovery-v1";
+export const DISCOVERY_ENGINE = "discovery-v2";
 export const REFERENCE_ID = "jezero_crater" as const;
 
 export function rankQueryKey(runId: string | null, shares: Shares, topK: number) {
@@ -32,7 +32,10 @@ export function useDiscoveryRank(runId: string | null, shares: Shares, topK: num
   const q = useQuery({
     queryKey: key,
     queryFn: ({ signal }) => fetchDiscoveryRank(guard.current, discoveryService(), runId as string, shares, topK, signal),
-    enabled: enabled && runId != null,
+    // A survey declares the features it scores, so no ranking is requested before the
+    // weights have been seeded from it: empty weights are not a neutral request, they
+    // are one the service rejects.
+    enabled: enabled && runId != null && Object.keys(shares).length > 0,
     staleTime: Infinity,
     retry: false,
     // keep the previous ranking visible while a weight change re-ranks, for THIS run only

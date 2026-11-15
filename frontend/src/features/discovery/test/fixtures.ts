@@ -2,11 +2,19 @@
 import { DiscoveryUnavailable, DiscoveryRequestRejected, type DiscoveryCapabilities, type DiscoveryCandidate, type DiscoveryCandidateDetail, type DiscoveryExport, type DiscoveryRankRequest, type DiscoveryRankResponse, type DiscoveryService } from "../adapter";
 
 export const reference = { body: "mars" as const, id: "jezero_crater" as const, name: "Jezero Crater", lat: 18.4447, lon_east: 77.4508 };
-export const criteria = [{ feature_id: "slope_regional_median_deg", label: "Regional median slope", unit: "deg", scale: 1.5 }, { feature_id: "roughness_regional_m", label: "Detrended regional relief", unit: "m", scale: 100 }];
-export const run = { run_id: "pilot_2026_11_14", label: "Eastern Morocco pilot", created_at: "2026-11-14T22:00:00Z", bounds: { west: -3, south: 31, east: -2, north: 32 }, total_sampled: 16, eligible_count: 3 };
+export const criteria = [
+  { feature_id: "slope_regional_median_deg", label: "Regional median slope", unit: "deg", scale: 1.5, group: "terrain", group_label: "Terrain and landform", rationale: "Typical regional gradient." },
+  { feature_id: "roughness_regional_m", label: "Detrended regional relief", unit: "m", scale: 100, group: "terrain", group_label: "Terrain and landform", rationale: "Relief after removing the regional plane." },
+  { feature_id: "precipitation_mm_day", label: "Mean precipitation", unit: "mm/day", scale: 1, group: "water", group_label: "Water and aridity", rationale: "Liquid water reaching the surface." },
+];
+export const regions = [
+  { id: "morocco_east", name: "Eastern Morocco", locale: "Morocco", bounds: { west: -3, south: 31, east: -2, north: 32 }, hypothesis: "Inland semi-arid regional terrain.", sampled: 9 },
+  { id: "tademait", name: "Tademait Plateau", locale: "Algeria", bounds: { west: 2, south: 28, east: 3, north: 29 }, hypothesis: "Hyperarid stony desert pavement.", sampled: 7 },
+];
+export const run = { run_id: "pilot_2026_11_14", label: "Eastern Morocco pilot", created_at: "2026-11-14T22:00:00Z", bounds: { west: -3, south: 31, east: -2, north: 32 }, total_sampled: 16, eligible_count: 3, region_count: 2, regions, criteria, default_weights: { slope_regional_median_deg: 40, roughness_regional_m: 40, precipitation_mm_day: 20 } };
 export const source = { source_id: "glo90", title: "Copernicus GLO-90 DEM", institution: "ESA / Airbus", url: "https://copernicus-dem-90m.s3.amazonaws.com/readme.html", license: "Copernicus DEM licence", retrieved_at: "2026-11-14", observation_period: "2011-2015 (TanDEM-X)", sha256: null, etag: null };
 
-export const capabilities: DiscoveryCapabilities = { engine_version: "discovery-v1", state: "ready", reference, runs: [run], criteria, default_weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 }, limitations: ["Proposed regional terrain analog candidates; field validation required."] };
+export const capabilities: DiscoveryCapabilities = { engine_version: "discovery-v2", state: "ready", reference, runs: [run], criteria, default_weights: { slope_regional_median_deg: 40, roughness_regional_m: 40, precipitation_mm_day: 20 }, limitations: ["Proposed regional terrain analog candidates; field validation required."] };
 export const unavailableCapabilities: DiscoveryCapabilities = { ...capabilities, state: "unavailable", runs: [] };
 
 function square(lat: number, lon: number, half = 0.27) {
@@ -15,8 +23,15 @@ function square(lat: number, lon: number, half = 0.27) {
 export function candidate(id: string, lat: number, lon: number, rank: number, sim: number, extra: Partial<DiscoveryCandidate> = {}): DiscoveryCandidate {
   return { research_status: "unresearched", id, name: `Footprint ${id}`, lat, lon_east: lon, footprint_geojson: square(lat, lon), raw_rank: rank, display_rank: rank, distance: 100 / sim - 1, similarity_index: sim,
     feature_distances: [{ feature_id: "slope_regional_median_deg", earth_value: 1.3, mars_value: 1.077, unit: "deg", scale: 1.5, normalized_weight: 0.5, distance: 0.149, contribution: 0.074 }, { feature_id: "roughness_regional_m", earth_value: 150.2, mars_value: 194.4, unit: "m", scale: 100, normalized_weight: 0.5, distance: 0.442, contribution: 0.221 }],
+    dimension_scores: [
+      { group: "terrain", label: "Terrain and landform", feature_ids: ["slope_regional_median_deg", "roughness_regional_m"], weight_share: 0.8, distance: 0.37, similarity_index: 73 },
+      { group: "water", label: "Water and aridity", feature_ids: ["precipitation_mm_day"], weight_share: 0.2, distance: 0.09, similarity_index: 91.7 },
+    ],
     terrain_valid_fraction: 0.99, novelty: { catalog_version: "known-analogs-v1", nearest_known_site_id: "atacama_yungay", nearest_known_site_distance_km: 8120, buffer_rule: "100 km centre buffer", outside_catalog_buffer: true, review_status: "not_reviewed" },
-    context: { climate: null, land_cover: null, geology_status: "not_assessed" }, sources: [source], limitations: ["4 km cells do not resolve rover hazards."], ...extra };
+    context: { climate: null, land_cover: null, geology_status: "not_assessed", measurements: [
+      { feature_id: "insolation_toa_annual_mean_wm2", label: "Annual-mean insolation (top of atmosphere)", group: "illumination", earth_value: 368.9, mars_value: 170.4, unit: "W/m2", comparable: true, note: "Earth receives about 2.2 times Jezero's flux." },
+      { feature_id: "surface_temperature_mean_c", label: "Mean air temperature", group: "thermal", earth_value: 23.9, mars_value: null, unit: "degC", comparable: false, note: "No measured Mars surface temperature in this release." },
+    ] }, sources: [source], limitations: ["4 km cells do not resolve rover hazards."], ...extra };
 }
 export const candidates = [candidate("c_31_25_m2_75", 31.25, -2.75, 1, 77.1), candidate("c_31_75_m2_25", 31.75, -2.25, 2, 61.4), candidate("c_31_25_m2_25", 31.25, -2.25, 3, 44.0)];
 

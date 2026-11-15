@@ -6,7 +6,9 @@ from app.services import discovery_engine, discovery_research
 @pytest.fixture
 def notebook(monkeypatch,tmp_path):
     monkeypatch.setattr(discovery_research,"record_path",lambda run,candidate:tmp_path/run/(candidate+".json"))
-    rid=discovery_engine.capabilities().runs[0].run_id
+    # The notebook tests address the pilot's own candidate ids, so they target the pilot.
+    rid=next(summary.run_id for summary in discovery_engine.capabilities().runs
+             if discovery_engine.load_run(summary.run_id)[0].specification["spec_version"]=="discovery-v1.0")
     return rid,"region-03-03"
 
 

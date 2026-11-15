@@ -11,8 +11,8 @@ describe("discovery weights", () => {
     expect(setDiscoveryShare(moved, "mineralogy_tags", 10)).toBe(moved);
     expect(toRequestWeights(moved)).toEqual({ slope_regional_median_deg: 80, roughness_regional_m: 20 });
   });
-  it("clamps top_k to the contract's 1..20", () => {
-    expect(clampTopK(0)).toBe(1); expect(clampTopK(99)).toBe(20); expect(clampTopK(NaN)).toBe(5);
+  it("clamps top_k to the contract's 1..40", () => {
+    expect(clampTopK(0)).toBe(1); expect(clampTopK(99)).toBe(40); expect(clampTopK(NaN)).toBe(6);
   });
   it("recognises an objective asking for new regions beyond the established analogs", () => {
     expect(wantsDiscovery("Identify and characterize new candidate Earth regions beyond established analog sites")).toBe(true);

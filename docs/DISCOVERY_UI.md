@@ -4,11 +4,16 @@
 
 - **Browse Regions**: the featured Mars and Earth regions, including the established analogs
   (the existing globe, candidate list and detail panel).
-- **Find Unresearched Analogs**: the discovery-v1 interface (`frontend/src/features/discovery/`), built
+- **Find Unresearched Analogs**: the discovery-v2 interface (`frontend/src/features/discovery/`), built
   against the backend-owned contract in [`DISCOVERY_CONTRACT.md`](../DISCOVERY_CONTRACT.md).
 
+Both modes are drawn from the same primitives, so they read as one product: the ranked list uses the
+Browse Regions row shape (`candidateRowClass`, `rowKeyDown`) and panel header, and the evidence panel
+uses the same `Section` and `Badge` vocabulary. What differs is what a discovery row has to say.
+
 There is no separate Discover tab. Find Unresearched Analogs keeps its own run-scoped store, its own
-two-feature terrain index, and never writes to the curated selection. It is reached from the switch,
+similarity index over whichever features the selected survey declares, and never writes to the
+curated selection. It is reached from the switch,
 from a Mars region's detail panel ("Find Earth analogs", enabled for the service's reference region),
 from the Earth analog bar in Browse Regions, and from the Research page's candidate panel.
 
@@ -198,3 +203,33 @@ The mode label refers to research status recorded in this app, not scientific
 novelty. The shared mode switch is the only cross-view navigation in the survey
 header; a short map key lives beside the candidate list instead of above the
 globe. Candidate research badges remain authoritative for each footprint.
+
+
+## What the page shows (discovery-v2)
+
+A candidate is a place in a named survey region, so rows lead with that name ("Salar de Coipasa
+(south-east)") and carry the coordinates underneath, not the other way round. Under the overall index
+each row draws the service's per-dimension indices — terrain, illumination, water — because a single
+number hides the thing a reader most needs: a region can be an excellent aridity analog and only a fair
+terrain one. The evidence panel repeats that breakdown at full size and states it in words ("Closest on
+water and aridity (93/100); furthest on illumination and latitude (67/100). An analog does not have to
+match on everything, and this one does not.").
+
+**The weight controls follow the survey.** Nothing in the UI hardcodes a feature list: the sliders are
+built from the selected run's `criteria`, grouped by dimension, each with the service's own rationale for
+why that feature is comparable between two planets at all. Switching surveys switches the basis. A weight
+naming a feature the run does not score is refused by the service rather than silently dropped, and no
+ranking is requested before the weights have been seeded from the run.
+
+**Two honesty rules the layout enforces.**
+1. *Outline what was searched, not what encloses it.* A multi-region survey draws one dashed outline per
+   region, on both the globe and the survey map. Drawing the single rectangle that encloses sixteen
+   regions would claim a continuous search that never happened.
+2. *Report what cannot be scored.* Each candidate carries a "Measured, but deliberately not scored"
+   block: air temperature, wind and surface shortwave (no measured Mars counterpart in this release), and
+   top-of-atmosphere insolation (measured on both bodies, and about 2.2× larger on Earth no matter which
+   site you pick). These are shown as differences, never folded into the index.
+
+**The camera.** A survey spanning continents opens on its whole extent. The first selection in a run is
+automatic — it fills the evidence panel so it is never blank on arrival — and that automatic selection
+deliberately does not move the camera; only a selection the reader makes closes in on a footprint.

@@ -1,0 +1,61 @@
+{
+  "registered_at": "2026-11-15T21:19:34+00:00",
+  "specification": {
+    "assumptions": [
+      "Physical grids, coverage cutoffs, distance scales, catalog buffer and diversification are unvalidated screening choices, not NASA operating requirements.",
+      "Regional terrain, latitude and aridity similarity do not establish geological analogy, accessibility or safe field conditions.",
+      "Each region's stated hypothesis is published literature or physical geography, not a measurement made by this survey.",
+      "A one-degree region is a sampling frame, not a claim that the whole region behaves alike."
+    ],
+    "bounds": {
+      "east": 118.0,
+      "north": 45.0,
+      "south": -26.0,
+      "west": -69.0
+    },
+    "catalog_buffer_km": 100,
+    "cell_m": 4000,
+    "default_weights": {
+      "elevation_range_m": 10,
+      "latitude_abs_deg": 10,
+      "precipitation_mm_day": 20,
+      "roughness_regional_m": 20,
+      "slope_regional_median_deg": 25,
+      "slope_regional_p90_deg": 15
+    },
+    "footprint_m": 60000,
+    "label": "Smoke test single region",
+    "min_cell_valid_fraction": 0.95,
+    "min_gradient_valid_fraction": 0.8,
+    "min_terrain_valid_fraction": 0.95,
+    "minimum_center_distance_km": 150,
+    "reference_id": "jezero_crater",
+    "regions": [
+      {
+        "bounds": {
+          "east": 3.0,
+          "north": 29.0,
+          "south": 28.0,
+          "west": 2.0
+        },
+        "hypothesis": "Hyperarid stony desert pavement (reg and hamada) over limestone. A varnished, rock-strewn pavement is among the closest common Earth covers to the plains Mars landers actually sit on.",
+        "id": "tademait",
+        "locale": "Algeria",
+        "name": "Tademait Plateau"
+      }
+    ],
+    "run_prefix": "smoketest",
+    "samples_per_axis": 3,
+    "scales": {
+      "elevation_range_m": 400.0,
+      "latitude_abs_deg": 15.0,
+      "precipitation_mm_day": 1.0,
+      "roughness_regional_m": 100.0,
+      "slope_regional_median_deg": 1.5,
+      "slope_regional_p90_deg": 3.0
+    },
+    "selection_rationale": "Sixteen one-degree regions on five continents, each fixed with its hypothesis before any terrain was processed or any score inspected. The brief asks for analogs beyond the few places already studied to exhaustion, so Antarctica, the Atacama proper, Iceland and Hawaii are deliberately absent; the Argentine Puna and the Namib interior stand in for their better-known neighbours. Regions were chosen for the Mars process or surface each is known to express -- desert pavement, yardangs, evaporite playa, megadunes, lava fields, relict drainage -- not for an expected score, and no region was added, moved or dropped after its numbers were seen.",
+    "spec_version": "discovery-v2.0"
+  },
+  "specification_sha256": "b6981a31ff97a8daefc3b23d668671ccbba3aa705f813b6942eb1824fd4564f1"
+}

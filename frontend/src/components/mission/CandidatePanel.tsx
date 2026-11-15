@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export function CandidatePanel({ title, subtitle, actions, controls, children }: {
   title: string; subtitle: ReactNode; actions?: ReactNode; controls: ReactNode; children: ReactNode;
 }) {
-  return <section aria-label={title} className="flex h-full min-h-0 flex-col px-4 py-3">
+  return <section aria-label={title} className="candidate-panel flex h-full min-h-0 flex-col px-4 py-3">
     {/* sized to its content (no reserved blank space); long controls scroll within half the pane */}
     <div className="scroll-thin max-h-[50%] shrink-0 overflow-y-auto pb-3">
       <header className="mb-3 flex items-start justify-between gap-2">

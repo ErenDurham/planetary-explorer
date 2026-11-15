@@ -46,7 +46,7 @@ export function buildResearchBrief(input: ResearchBriefInput): string {
   lines.push("");
   lines.push(`${status.meaning} Downloading this brief does not change the status.`);
   lines.push("");
-  lines.push("Proposed terrain analog candidate; field validation required. The similarity index is a two-feature terrain heuristic (regional median slope and detrended relief), not a probability, geological equivalence or mission suitability.");
+  lines.push("Proposed terrain analog candidate; field validation required. The similarity index is a heuristic over the features the survey declares, not a probability, geological equivalence or mission suitability.");
 
   h("Candidate");
   lines.push(`- Location: ${formatPoint(c.lat, c.lon_east, 4)} (centre of the comparison footprint)`);
