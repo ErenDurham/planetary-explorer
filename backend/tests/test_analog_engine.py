@@ -255,19 +255,19 @@ def test_committed_data_every_candidate_fully_comparable_and_deterministic():
         json.dumps(m.model_dump(), allow_nan=False)
 
 
-def test_terrain_only_weights_rank_haughton_first_for_jezero():
-    """Haughton (impact crater) and the Svalbard fan-delta (delta) each share one
-    landform with Jezero, so with morphology as the sole criterion they lead; the
-    ordering differs from the default-weight ordering. Candidates with no cited
-    landform label cannot be compared and say so."""
+def test_terrain_only_weights_rank_a_shared_landform_first_for_jezero():
+    """With morphology as the sole criterion the leader shares a cited landform with
+    Jezero, and the ordering differs from the default-weight ordering. Candidates
+    with no cited landform label cannot be compared and say so."""
     site, prof, cands = _real("jezero_crater")
     base, _ = match_all(site, prof, cands, None, 17)
     w = _weights(terrain_morphology=100, slope_regional_median_deg=0, roughness_regional_m=0, mineralogy_tags=0, precipitation_mm_day=0)
     alt, warnings = match_all(site, prof, cands, w, 17)
     unlabelled = {c.id for c, p in cands if "terrain_morphology" in p.completeness.missing_feature_ids}
     assert len(warnings) == len(unlabelled) and all("no comparable weighted feature" in x for x in warnings)
-    assert {alt[0].earth_candidate.id, alt[1].earth_candidate.id} == {"haughton_crater", "svalbard_fan_delta"}
-    alt = [m for m in alt if m.earth_candidate.id == "haughton_crater"] + [m for m in alt if m.earth_candidate.id != "haughton_crater"]
+    # the leader shares a cited landform with Jezero (the Svalbard delta: delta)
+    jez = set(site.tags)
+    assert alt[0].earth_candidate.id == "svalbard_fan_delta" and jez & set(alt[0].earth_candidate.tags)
     assert [m.earth_candidate.id for m in alt] != [m.earth_candidate.id for m in base]
     terrain = next(f for f in alt[0].feature_distances if f.feature_id == TERRAIN)
     assert terrain.normalized_weight == 1.0 and "impact crater" in terrain.note
@@ -302,7 +302,7 @@ def test_http_custom_weights_and_unknown_weight_warning(client):
     w = [{"feature_id": "terrain_morphology", "weight": 100}, {"feature_id": "slope_regional_median_deg", "weight": 0}, {"feature_id": "roughness_regional_m", "weight": 0},
          {"feature_id": "mineralogy_tags", "weight": 0}, {"feature_id": "precipitation_mm_day", "weight": 0}]
     alt = client.post("/api/v1/analogs/match", json={"mars_site_id": "jezero_crater", "top_k": 7, "weights": w}).json()
-    assert alt["matches"][0]["earth_candidate"]["id"] in {"haughton_crater", "svalbard_fan_delta"}
+    assert alt["matches"][0]["earth_candidate"]["id"] == "svalbard_fan_delta"
     assert all("no comparable weighted feature" in x for x in alt["warnings"])   # unlabelled candidates are disclosed
     bad = client.post("/api/v1/analogs/match", json={"mars_site_id": "jezero_crater", "weights": [{"feature_id": "bogus", "weight": 5}]}).json()
     assert any("bogus" in x for x in bad["warnings"])

@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "coordinate_convention": "Planetocentric latitude, east-positive longitude in -180..180, IAU2000 Mars reference (same convention as MOLA MEGDR). Positions are rover/lander touchdown points or the published centre of a selected landing ellipse.",
-  "footprint_definition": "Square footprint of half-width 0.5 degrees (about 59 km N-S, 59*cos(lat) km E-W) centred on the site coordinates. Chosen to hold 17x17 MOLA MEGDR 16 ppd cells (floor/ceil edges) so slope and roughness statistics are populated; it is a REGIONAL footprint, far larger than any landing ellipse. Positions are rover/lander touchdown points or the published centre of a selected landing ellipse where the app already held one within ~20 km of the workbook's point; otherwise the coordinates compiled in the Lesser-Known Mars Sites workbook (some flagged approximate).",
+  "footprint_definition": "Square footprint of half-width 0.5 degrees (about 59 km N-S, 59*cos(lat) km E-W) centred on the site coordinates. Chosen to hold 17x17 MOLA MEGDR 16 ppd cells (floor/ceil edges) so slope and roughness statistics are populated; it is a REGIONAL footprint, far larger than any landing ellipse. Positions are rover/lander touchdown points or the published centre of a selected landing ellipse where the app already held one; otherwise coordinates selected by the project team (source_id project_site_coordinates; some flagged approximate).",
   "sources": {
     "nasa_m2020_landing_site": {
       "source_id": "nasa_m2020_landing_site",
@@ -17,13 +17,6 @@
       "url": "https://science.nasa.gov/mission/insight/",
       "access_method": "web page"
     },
-    "esa_oxia_planum": {
-      "source_id": "esa_oxia_planum",
-      "title": "ExoMars Rosalind Franklin rover landing site: Oxia Planum",
-      "institution": "ESA",
-      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
-      "access_method": "web page"
-    },
     "nasa_viking": {
       "source_id": "nasa_viking",
       "title": "Viking 1 and 2 missions",
@@ -35,12 +28,32 @@
       "kind": "nasa",
       "retrieved_at": "2026-11-15"
     },
-    "workbook_lesser_known_sites": {
-      "source_id": "workbook_lesser_known_sites",
-      "title": "Lesser-Known Mars Sites - Conditions Comparison (research workbook; coordinates as compiled by the workbook author)",
-      "institution": "Planetary Explorer research team",
-      "url": "data/workbook/lesser_known_sites.v1.json",
-      "access_method": "project workbook (scripts/import_workbook.py)"
+    "project_site_coordinates": {
+      "source_id": "project_site_coordinates",
+      "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+      "institution": "Planetary Explorer project team",
+      "url": "data/sites/site_conditions.v1.json",
+      "access_method": "project selection"
+    },
+    "bao2026_chryse_mafic": {
+      "source_id": "bao2026_chryse_mafic",
+      "title": "Crater-exposed mafic materials in Chryse Planitia",
+      "institution": "Journal of Geophysical Research: Planets",
+      "url": "https://doi.org/10.1029/2026JE010126",
+      "access_method": "publication",
+      "cite": "Bao, Zeng et al., 2026",
+      "year": 2026,
+      "kind": "peer_reviewed"
+    },
+    "brown2020_jezero_olivine_carbonate": {
+      "source_id": "brown2020_jezero_olivine_carbonate",
+      "title": "Olivine-carbonate mineralogy of the Jezero crater region",
+      "institution": "Journal of Geophysical Research: Planets",
+      "url": "https://doi.org/10.1029/2019JE006011",
+      "access_method": "publication",
+      "cite": "Brown et al., 2020",
+      "year": 2020,
+      "kind": "peer_reviewed"
     },
     "esa_mex_mawrth_clays": {
       "source_id": "esa_mex_mawrth_clays",
@@ -53,15 +66,16 @@
       "kind": "esa",
       "retrieved_at": "2026-11-15"
     },
-    "farley2022_jezero": {
-      "source_id": "farley2022_jezero",
-      "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
-      "institution": "Science",
-      "url": "https://doi.org/10.1126/science.abo2196",
-      "access_method": "publication",
-      "cite": "Farley et al., 2022",
-      "year": 2022,
-      "kind": "peer_reviewed"
+    "esa_oxia_planum": {
+      "source_id": "esa_oxia_planum",
+      "title": "Oxia Planum favoured for ExoMars surface mission",
+      "institution": "ESA",
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
+      "access_method": "web page",
+      "cite": "ESA",
+      "year": null,
+      "kind": "esa",
+      "retrieved_at": "2026-11-15"
     },
     "golombek2020_insight": {
       "source_id": "golombek2020_insight",
@@ -93,26 +107,6 @@
       "year": 2017,
       "kind": "usgs"
     },
-    "lit_jezero_mineralogy": {
-      "source_id": "lit_jezero_mineralogy",
-      "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
-      "institution": "Journal of Geophysical Research: Planets",
-      "url": "https://doi.org/10.1002/2014JE004782",
-      "access_method": "publication",
-      "cite": "Goudge et al., 2015",
-      "year": 2015,
-      "kind": "peer_reviewed"
-    },
-    "lit_oxia_clays": {
-      "source_id": "lit_oxia_clays",
-      "title": "Oxia Planum: The Landing Site for the ExoMars \"Rosalind Franklin\" Rover Mission: Geological Context and Prelanding Interpretation",
-      "institution": "Astrobiology",
-      "url": "https://doi.org/10.1089/ast.2019.2191",
-      "access_method": "publication",
-      "cite": "Quantin-Nataf et al., 2021",
-      "year": 2021,
-      "kind": "peer_reviewed"
-    },
     "liu2018_columbus_gypsum": {
       "source_id": "liu2018_columbus_gypsum",
       "title": "Raman, mid-IR and NIR spectroscopic study of calcium sulfates and mapping gypsum abundances in Columbus crater, Mars",
@@ -133,11 +127,32 @@
       "year": 2025,
       "kind": "peer_reviewed"
     },
+    "mandon2021_oxia_clays": {
+      "source_id": "mandon2021_oxia_clays",
+      "title": "Morphological and spectral diversity of the clay-bearing unit at the ExoMars landing site Oxia Planum",
+      "institution": "Astrobiology",
+      "url": "https://doi.org/10.1089/ast.2020.2292",
+      "access_method": "publication",
+      "cite": "Mandon et al., 2021",
+      "year": 2021,
+      "kind": "peer_reviewed"
+    },
     "nasa_columbus_sulfates_clays": {
       "source_id": "nasa_columbus_sulfates_clays",
       "title": "Sulfates and clays in Columbus crater, Mars",
       "institution": "NASA / JPL",
       "url": "https://www.nasa.gov/image-article/sulfates-clays-columbus-crater-mars/",
+      "access_method": "web page",
+      "cite": "NASA",
+      "year": null,
+      "kind": "nasa",
+      "retrieved_at": "2026-11-15"
+    },
+    "nasa_jezero_delta_panorama": {
+      "source_id": "nasa_jezero_delta_panorama",
+      "title": "Detailed panorama of Mars' Jezero crater delta",
+      "institution": "NASA / JPL-Caltech",
+      "url": "https://science.nasa.gov/resource/detailed-panorama-of-mars-jezero-crater-delta/",
       "access_method": "web page",
       "cite": "NASA",
       "year": null,
@@ -208,16 +223,6 @@
       "year": 2026,
       "kind": "nasa"
     },
-    "rodriguez2022_chryse": {
-      "source_id": "rodriguez2022_chryse",
-      "title": "Evidence of an oceanic impact and megatsunami sedimentation in Chryse Planitia, Mars",
-      "institution": "Scientific Reports",
-      "url": "https://doi.org/10.1038/s41598-022-18082-2",
-      "access_method": "publication",
-      "cite": "Rodriguez et al., 2022",
-      "year": 2022,
-      "kind": "peer_reviewed"
-    },
     "sharma2025_hebrus_caves": {
       "source_id": "sharma2025_hebrus_caves",
       "title": "Water-driven accessible potential karstic caves in Hebrus Valles",
@@ -254,7 +259,7 @@
       "id": "amazonis_arcadia_ap8",
       "planet": "mars",
       "name": "Amazonis / Arcadia Planitia (AP-8)",
-      "region": "Arcadia / northern Amazonis Planitia boundary",
+      "region": "Boundary of Arcadia and northern Amazonis Planitia",
       "lat": 39.5,
       "lon_east": -163.0,
       "role": "Base candidate",
@@ -263,7 +268,7 @@
       "paired_earth_site_id": "mcmurdo_dry_valleys",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "description": "Candidate landing site AP-8 on the boundary between Arcadia and northern Amazonis Planitia, in the northern mid-latitudes; mapped thermal contraction polygons point to ice tens of centimetres below the surface.",
       "tags_terrain": [
@@ -284,7 +289,7 @@
       "id": "planum_boreum",
       "planet": "mars",
       "name": "North Pole (Planum Boreum)",
-      "region": "North polar cap",
+      "region": "North polar ice cap",
       "lat": 87.0,
       "lon_east": 0.0,
       "role": "To evaluate",
@@ -293,7 +298,7 @@
       "paired_earth_site_id": "summit_station_greenland",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "description": "The north polar ice cap: about 2 km of layered ice, sand and dust (the north polar layered deposits) above an ice-sand basal unit, estimated at about 4 million years old.",
       "tags_terrain": [
@@ -325,7 +330,7 @@
       "paired_earth_site_id": "south_pole_station",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "description": "The south polar cap: a water ice-rich polar cap with a permanent carbon dioxide ice cap; the Mars Polar Lander site lies about 2.4 km high, midway into the polar layered terrain.",
       "tags_terrain": [],
@@ -344,7 +349,7 @@
       "id": "mawrth_vallis",
       "planet": "mars",
       "name": "Mawrth Vallis",
-      "region": "Dichotomy boundary, Arabia Terra",
+      "region": "Mawrth Vallis region",
       "lat": 24.7,
       "lon_east": -20.5,
       "role": "Base candidate",
@@ -353,9 +358,9 @@
       "paired_earth_site_id": "painted_desert",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
-      "description": "Ancient channel on the dichotomy boundary with a 25 km impact crater; thick light-toned clays rich in iron, magnesium and aluminium, up to about 200 m deep, under dark volcanic caps.",
+      "description": "Mawrth Vallis region with a large 25 km impact crater; light-toned clays rich in iron, magnesium and aluminium, some 200 m deep in places, under darker caps thought to be volcanic.",
       "tags_terrain": [
         "impact_crater"
       ],
@@ -374,7 +379,7 @@
       "id": "noctis_labyrinthus",
       "planet": "mars",
       "name": "Noctis Labyrinthus",
-      "region": "Western Valles Marineris, Tharsis",
+      "region": "Noctis Labyrinthus",
       "lat": -7.2,
       "lon_east": -95.0,
       "role": "Resource site",
@@ -383,9 +388,9 @@
       "paired_earth_site_id": "jaroso_ravine",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
-      "description": "Maze of troughs and pits at the western end of Valles Marineris; many of its depressions contain water-bearing minerals.",
+      "description": "Many depressions in Noctis Labyrinthus contain water-bearing minerals, suggesting persistent water during the Late Hesperian to Amazonian.",
       "tags_terrain": [],
       "tags_mineralogy": [],
       "water_ice_evidence": "Water-bearing minerals in many depressions, suggesting water was available during the Late Hesperian to Amazonian (NASA PIA18632).",
@@ -400,7 +405,7 @@
       "id": "hebrus_valles",
       "planet": "mars",
       "name": "Hebrus Valles",
-      "region": "Northern lowlands west of Elysium",
+      "region": "Northern lowlands west of the Elysium volcanic region",
       "lat": 20.2,
       "lon_east": 128.1,
       "role": "Base candidate",
@@ -409,7 +414,7 @@
       "paired_earth_site_id": "liwa_desert",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "description": "Channel system in the northern lowlands west of the Elysium volcanic region, with deep pits that may be cave entrances in carbonate- and sulfate-rich rock.",
       "tags_terrain": [
@@ -433,7 +438,7 @@
       "id": "huygens_crater",
       "planet": "mars",
       "name": "Huygens Crater",
-      "region": "Noachian highlands near the Hellas rim",
+      "region": "Southern highlands",
       "lat": -13.5,
       "lon_east": 55.5,
       "role": "Base candidate",
@@ -442,7 +447,7 @@
       "paired_earth_site_id": "sudbury_impact_structure",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "description": "Large double-ring impact crater, about 470 km across, in the heavily cratered southern highlands.",
       "tags_terrain": [
@@ -470,7 +475,7 @@
       "paired_earth_site_id": "yilgarn_salt_lakes",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "description": "Crater in Terra Sirenum that likely hosted a lake: sulfate deposits overlie clays and ring the crater like a bathtub ring.",
       "tags_terrain": [
@@ -498,23 +503,23 @@
       "lat": 18.275,
       "lon_east": -24.632,
       "heritage": "ESA ExoMars Rosalind Franklin rover selected landing site",
-      "description": "Low-relief terrain of hydrous clay-bearing bedrock with a later fluviodeltaic system. ESA's selected landing site for the Rosalind Franklin rover.",
+      "description": "Plain where many channels emptied into the lowland plains; orbital observations show layers of clay-rich minerals formed in wet conditions about four billion years ago.",
       "tags_terrain": [
-        "smooth_plains",
-        "delta"
+        "smooth_plains"
       ],
       "tags_mineralogy": [
         "clays"
       ],
-      "water_ice_evidence": "Hydrous clay-bearing bedrock from past aqueous activity (Quantin-Nataf et al., 2021); no ice reported in the cited sources.",
+      "water_ice_evidence": "Clay-rich layers formed in wet conditions, likely in a large body of standing water (ESA); no ice reported in the cited sources.",
       "coordinate_sources": [
         "esa_oxia_planum"
       ],
       "composition_sources": [
-        "lit_oxia_clays"
+        "esa_oxia_planum"
       ],
       "literature_sources": [
-        "lit_oxia_clays"
+        "esa_oxia_planum",
+        "mandon2021_oxia_clays"
       ],
       "role": "Base candidate",
       "notes": null,
@@ -525,7 +530,7 @@
       "id": "deuteronilus_mensae",
       "planet": "mars",
       "name": "Deuteronilus Mensae",
-      "region": "Dichotomy boundary, fretted terrain",
+      "region": "Deuteronilus Mensae",
       "lat": 41.0,
       "lon_east": 22.0,
       "role": "Base candidate",
@@ -534,9 +539,9 @@
       "paired_earth_site_id": "galena_creek_rock_glacier",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
-      "description": "Fretted terrain on the dichotomy boundary: mesas surrounded by lobate debris aprons that radar shows to be nearly pure ice.",
+      "description": "Region of mesas surrounded by lobate debris aprons that radar shows to be composed of nearly pure ice.",
       "tags_terrain": [],
       "tags_mineralogy": [
         "water_ice"
@@ -553,7 +558,7 @@
       "id": "protonilus_mensae",
       "planet": "mars",
       "name": "Protonilus Mensae",
-      "region": "Dichotomy boundary, fretted terrain",
+      "region": "Protonilus Mensae",
       "lat": 43.86,
       "lon_east": 49.4,
       "role": "Base candidate",
@@ -562,9 +567,9 @@
       "paired_earth_site_id": "haughton_crater",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
-      "description": "Fretted terrain on the dichotomy boundary with gully debris-flow deposits and a long record of possible periglacial and glacial cycling.",
+      "description": "Protonilus Mensae, studied for a billion or more years of possible periglacial and glacial cycling.",
       "tags_terrain": [
         "periglacial"
       ],
@@ -580,29 +585,27 @@
     {
       "id": "chryse_planitia",
       "planet": "mars",
-      "name": "Chryse Planitia (Viking 1)",
+      "name": "Chryse Planitia",
       "region": "Chryse Planitia",
       "lat": 22.27,
       "lon_east": -47.95,
       "heritage": "NASA Viking 1 landing site (1976)",
-      "description": "Northern plains near the terminus of the Maja Valles flood channel; Viking 1 imaged a boulder-strewn surface here.",
+      "description": "Northern plains where olivine- and pyroxene-bearing materials are exposed by impact craters beneath a sediment-mantled surface.",
       "tags_terrain": [
-        "outflow_channel_deposits",
-        "rocky_surface",
-        "northern_lowlands"
+        "impact_crater"
       ],
       "tags_mineralogy": [
-        "regolith"
+        "olivine"
       ],
-      "water_ice_evidence": "Catastrophic flood and possible megatsunami deposits (Rodriguez et al., 2022); no ice reported in the cited sources.",
+      "water_ice_evidence": null,
       "coordinate_sources": [
         "nasa_viking"
       ],
       "composition_sources": [
-        "rodriguez2022_chryse"
+        "bao2026_chryse_mafic"
       ],
       "literature_sources": [
-        "rodriguez2022_chryse"
+        "bao2026_chryse_mafic"
       ],
       "role": "Context only",
       "notes": "Not probable as base; good area data",
@@ -626,7 +629,7 @@
       ],
       "water_ice_evidence": "Water-altered bedrock outcrops record prolonged surface and near-surface fluid/rock interaction (Hynek & Di Achille, 2017); no ice reported in the cited sources.",
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "composition_sources": [
         "hynek2017_meridiani"
@@ -647,30 +650,26 @@
       "lat": 18.4447,
       "lon_east": 77.4508,
       "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
-      "description": "Impact crater whose floor holds water-altered igneous rocks below a sedimentary delta; its fan deposits carry Mg-rich carbonate, olivine and Fe/Mg-smectite. Perseverance landing site.",
+      "description": "Impact crater holding an ancient river delta where, billions of years ago, a river flowed into a lake; carbonates occur with olivine in the crater and its watershed.",
       "tags_terrain": [
         "impact_crater",
-        "crater_floor",
         "delta",
         "paleolake_basin"
       ],
       "tags_mineralogy": [
         "carbonates",
-        "olivine",
-        "clays",
-        "sulfates",
-        "perchlorates"
+        "olivine"
       ],
-      "water_ice_evidence": "Ancient lake and river deposits (Farley et al., 2022); no ice reported in the cited sources.",
+      "water_ice_evidence": "An ancient river flowed into a lake here, depositing the delta (NASA); no ice reported in the cited sources.",
       "coordinate_sources": [
         "nasa_m2020_landing_site"
       ],
       "composition_sources": [
-        "lit_jezero_mineralogy"
+        "brown2020_jezero_olivine_carbonate"
       ],
       "literature_sources": [
-        "farley2022_jezero",
-        "lit_jezero_mineralogy"
+        "nasa_jezero_delta_panorama",
+        "brown2020_jezero_olivine_carbonate"
       ],
       "role": "Instrument testing",
       "notes": "Not a base; good for instrument-test matches",
@@ -680,17 +679,17 @@
     {
       "id": "utopia_planitia",
       "planet": "mars",
-      "name": "Utopia Planitia (Zhurong area)",
-      "region": "Southern Utopia Planitia (Zhurong landing region)",
+      "name": "Utopia Planitia",
+      "region": "Utopia Planitia",
       "lat": 25.07,
       "lon_east": 109.93,
       "heritage": "Near the CNSA Tianwen-1 Zhurong rover landing region (2021)",
-      "description": "Southern Utopia Planitia near the Zhurong rover landing region, where manganese (hydr)oxides are interpreted as a record of a Hesperian ocean.",
+      "description": "Utopia Planitia, where manganese (hydr)oxides are interpreted as a record of a million-year Hesperian ocean.",
       "tags_terrain": [],
       "tags_mineralogy": [],
       "water_ice_evidence": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
       "composition_sources": [
         "hou2026_zhurong_mn_oxides"
@@ -720,7 +719,7 @@
         "basalt",
         "regolith"
       ],
-      "water_ice_evidence": "No ice reported in the cited sources.",
+      "water_ice_evidence": null,
       "coordinate_sources": [
         "nasa_insight"
       ],
@@ -738,8 +737,8 @@
     {
       "id": "xanthe_terra_tyras",
       "planet": "mars",
-      "name": "Xanthe Terra (Tyras Vallis delta)",
-      "region": "Xanthe Terra highlands",
+      "name": "Xanthe Terra",
+      "region": "Xanthe Terra",
       "lat": 8.43,
       "lon_east": -49.71,
       "role": "Instrument testing",
@@ -748,9 +747,9 @@
       "paired_earth_site_id": "svalbard_fan_delta",
       "heritage": null,
       "coordinate_sources": [
-        "workbook_lesser_known_sites"
+        "project_site_coordinates"
       ],
-      "description": "Highland valleys of Xanthe Terra with fan-shaped deltaic deposits at the mouth of Tyras Vallis.",
+      "description": "Xanthe Terra, whose sedimentary deposits are discussed for the ancient climate on Mars.",
       "tags_terrain": [],
       "tags_mineralogy": [],
       "water_ice_evidence": null,

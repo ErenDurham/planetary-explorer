@@ -28,7 +28,7 @@ def comparison_catalog() -> ComparisonCatalog:
                 source_ids=site.sources if body == "earth" else site.coordinate_sources,
                 role=site.role, coordinates_approximate=site.coordinates_approximate,
                 paired_location_id=site.paired_mars_site_id if body == "earth" else site.paired_earth_site_id,
-                why_they_match=site.why_they_match if body == "earth" else store.why_they_match(site.id),
+                analog_basis=site.analog_basis if body == "earth" else store.analog_basis(site.id),
                 reported_conditions=site.reported_conditions, condition_sources=site.condition_sources,
             ))
     return ComparisonCatalog(version=data["version"], bodies=data["bodies"], locations=locations + data["locations"])

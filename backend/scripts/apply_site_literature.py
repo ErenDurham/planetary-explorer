@@ -135,7 +135,7 @@ def apply() -> None:
         # keep the data sources (DEM, climate) and every source a site still cites; literature
         # sources come from the literature file, so an old or generic one no site uses is dropped
         keep = {k: v for k, v in cfg["sources"].items()
-                if (k in used or k in ("copernicus_glo90", "nasa_power", "workbook_lesser_known_sites")) and k not in all_lit}
+                if (k in used or k in ("copernicus_glo90", "nasa_power", "project_site_coordinates")) and k not in all_lit}
         for sid in sorted(used & all_lit):
             keep[sid] = provenance(sid, sources[sid])
         cfg["sources"] = keep

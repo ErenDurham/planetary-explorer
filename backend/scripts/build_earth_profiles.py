@@ -155,9 +155,9 @@ def measurement(fid, label, category, value, unit, source_id, mtype, res, fp, un
 
 def build(c: dict, sources: dict, now: str) -> dict:
     lat, lon = c["lat"], c["lon_east"]
-    # a candidate with no literature source yet cites the workbook for its coordinates
-    lit_first = c["sources"][0] if c["sources"] else "workbook_lesser_known_sites"
-    lit_last = c["sources"][-1] if c["sources"] else "workbook_lesser_known_sites"
+    # a candidate with no literature source yet cites its coordinate source
+    lit_first = c["sources"][0] if c["sources"] else "project_site_coordinates"
+    lit_last = c["sources"][-1] if c["sources"] else "project_site_coordinates"
     fp = {"shape": "square", "center_lat": lat, "center_lon_east": lon, "half_width_deg": HALF_WIDTH_DEG, "radius_km": None,
           "crs": "EPSG:4326", "longitude_convention": "east_-180_180",
           "approx_width_km": round(footprint_width_km(HALF_WIDTH_DEG, lat, EARTH_RADIUS_KM), 1),

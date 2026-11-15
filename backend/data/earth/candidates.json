@@ -29,12 +29,12 @@
       "access_method": "REST API, no login",
       "license": "Public domain (NASA)"
     },
-    "workbook_lesser_known_sites": {
-      "source_id": "workbook_lesser_known_sites",
-      "title": "Lesser-Known Mars Sites - Conditions Comparison (research workbook; coordinates as compiled by the workbook author)",
-      "institution": "Planetary Explorer research team",
-      "url": "data/workbook/lesser_known_sites.v1.json",
-      "access_method": "project workbook (scripts/import_workbook.py)"
+    "project_site_coordinates": {
+      "source_id": "project_site_coordinates",
+      "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+      "institution": "Planetary Explorer project team",
+      "url": "data/sites/site_conditions.v1.json",
+      "access_method": "project selection"
     },
     "aerts2019_yilgarn_lakes": {
       "source_id": "aerts2019_yilgarn_lakes",
@@ -116,36 +116,6 @@
       "year": 2024,
       "kind": "peer_reviewed"
     },
-    "hartley2018_holuhraun": {
-      "source_id": "hartley2018_holuhraun",
-      "title": "Melt inclusion constraints on petrogenesis of the 2014-2015 Holuhraun eruption, Iceland",
-      "institution": "Contributions to Mineralogy and Petrology",
-      "url": "https://doi.org/10.1007/s00410-017-1435-0",
-      "access_method": "publication",
-      "cite": "Hartley et al., 2018",
-      "year": 2018,
-      "kind": "peer_reviewed"
-    },
-    "heldmann2015_dryvalleys": {
-      "source_id": "heldmann2015_dryvalleys",
-      "title": "Mars: Periglacial Morphology and Implications for Future Landing Sites",
-      "institution": "NASA Technical Reports Server 20150023012",
-      "url": "https://ntrs.nasa.gov/citations/20150023012",
-      "access_method": "publication",
-      "cite": "Heldmann et al., 2015",
-      "year": 2015,
-      "kind": "nasa"
-    },
-    "izawa2011_haughton": {
-      "source_id": "izawa2011_haughton",
-      "title": "Weathering of Post-Impact Hydrothermal Deposits from the Haughton Impact Structure: Implications for Microbial Colonization and Biosignature Preservation",
-      "institution": "Astrobiology",
-      "url": "https://doi.org/10.1089/ast.2011.0612",
-      "access_method": "publication",
-      "cite": "Izawa et al., 2011",
-      "year": 2011,
-      "kind": "peer_reviewed"
-    },
     "kong2018_dalangtan": {
       "source_id": "kong2018_dalangtan",
       "title": "The Dalangtan saline playa in a hyperarid region on Tibet Plateau: I. Evolution and environments",
@@ -216,15 +186,15 @@
       "year": 2015,
       "kind": "nasa"
     },
-    "parnell2012_haughton": {
-      "source_id": "parnell2012_haughton",
-      "title": "Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars",
-      "institution": "International Journal of Astrobiology",
-      "url": "https://doi.org/10.1017/S1473550411000395",
+    "ntrs_haughton_gullies": {
+      "source_id": "ntrs_haughton_gullies",
+      "title": "Haughton crater gullies (LPSC 2020)",
+      "institution": "NASA Technical Reports Server",
+      "url": "https://ntrs.nasa.gov/citations/20200001979",
       "access_method": "publication",
-      "cite": "Parnell et al., 2012",
-      "year": 2012,
-      "kind": "peer_reviewed"
+      "cite": "NASA NTRS (LPSC 2020)",
+      "year": 2020,
+      "kind": "nasa"
     },
     "petersen2019_galena_creek": {
       "source_id": "petersen2019_galena_creek",
@@ -244,16 +214,6 @@
       "access_method": "publication",
       "cite": "Sobron et al., 2014",
       "year": 2014,
-      "kind": "peer_reviewed"
-    },
-    "trowbridge2024_haughton": {
-      "source_id": "trowbridge2024_haughton",
-      "title": "Modeling of the Impact-Generated Hydrothermal System at the Haughton Impact Structure",
-      "institution": "Journal of Geophysical Research: Planets",
-      "url": "https://doi.org/10.1029/2023JE008267",
-      "access_method": "publication",
-      "cite": "Trowbridge et al., 2024",
-      "year": 2024,
       "kind": "peer_reviewed"
     },
     "voigt2025_holuhraun": {
@@ -295,19 +255,16 @@
       "country": "Antarctica (treaty)",
       "lat": -77.86,
       "lon_east": 160.72,
-      "description": "High-elevation hyper-arid polar desert (University Valley) with dry permafrost over ice-cemented ground; studied as a Mars analog for periglacial processes and ground ice.",
-      "tags_terrain": [
-        "polar_desert",
-        "periglacial"
-      ],
+      "description": "University Valley, a high-elevation (~1700 m) valley in the Dry Valleys with some of the coldest and driest permafrost soils on Earth: dry permafrost over ice-cemented ground.",
+      "tags_terrain": [],
       "tags_mineralogy": [
+        "regolith",
         "water_ice"
       ],
       "known_analog_use": [
-        "Phoenix landing-site ground-ice analog studies"
+        "Dry permafrost over ice-cemented ground studied as a Mars analogue (Marinova et al., 2022)"
       ],
       "sources": [
-        "heldmann2015_dryvalleys",
         "goordial2016_university_valley"
       ],
       "coordinates_approximate": false,
@@ -316,13 +273,13 @@
     {
       "id": "summit_station_greenland",
       "name": "Summit Station, Greenland Ice Sheet",
-      "region": "Greenland Ice Sheet summit",
-      "country": "Greenland (Denmark)",
+      "region": "Greenland Ice Sheet",
+      "country": "Greenland",
       "lat": 72.596,
       "lon_east": -38.422,
       "coordinates_approximate": false,
       "paired_mars_site_id": "planum_boreum",
-      "description": "Research station at the summit of the Greenland Ice Sheet, paired with the north polar layered deposits; old ice exposed at the ice-sheet margin shows dusty layering.",
+      "description": "Summit of the Greenland Ice Sheet. Along the ice-sheet margin, surface melting exposes old ice with a visible stratigraphy of variable dust content.",
       "tags_terrain": [],
       "tags_mineralogy": [],
       "known_analog_use": [
@@ -335,13 +292,13 @@
     {
       "id": "south_pole_station",
       "name": "Amundsen\u2013Scott South Pole Station",
-      "region": "Antarctic Plateau, geographic South Pole",
+      "region": "Antarctica",
       "country": "Antarctica",
       "lat": -90.0,
       "lon_east": 0.0,
       "coordinates_approximate": false,
       "paired_mars_site_id": "planum_australe",
-      "description": "Research station on the Antarctic ice sheet at the geographic South Pole, paired with the south polar cap as a polar-base analogue.",
+      "description": "Amundsen\u2013Scott South Pole Station, Antarctica. No approved source describes this site.",
       "tags_terrain": [],
       "tags_mineralogy": [],
       "known_analog_use": [],
@@ -349,14 +306,14 @@
     },
     {
       "id": "painted_desert",
-      "name": "Painted Desert, Petrified Forest National Park",
-      "region": "Northeastern Arizona",
+      "name": "Painted Desert",
+      "region": "Arizona",
       "country": "United States",
       "lat": 35.088,
       "lon_east": -109.806,
       "coordinates_approximate": false,
       "paired_mars_site_id": "mawrth_vallis",
-      "description": "Badlands in Arizona with wide clay-bearing horizons interspersed with iron oxide/hydroxide and carbonate units, compared with the layered clays of Mawrth Vallis.",
+      "description": "Painted Desert, Arizona, with wide clay-bearing horizons interspersed with iron oxide/hydroxide and carbonate units.",
       "tags_terrain": [],
       "tags_mineralogy": [
         "clays",
@@ -372,8 +329,8 @@
     },
     {
       "id": "jaroso_ravine",
-      "name": "Jaroso Ravine, Sierra Almagrera",
-      "region": "Almer\u00eda, Andalusia",
+      "name": "Jaroso Ravine",
+      "region": "Jaroso hydrothermal system, SE Spain",
       "country": "Spain",
       "lat": 37.25,
       "lon_east": -1.8,
@@ -392,13 +349,13 @@
     {
       "id": "liwa_desert",
       "name": "Liwa Desert",
-      "region": "Abu Dhabi",
+      "region": "United Arab Emirates",
       "country": "United Arab Emirates",
       "lat": 23.1,
       "lon_east": 53.8,
       "coordinates_approximate": true,
       "paired_mars_site_id": "hebrus_valles",
-      "description": "Desert of large dunes and salt flats in Abu Dhabi; lithified aeolian deposits in the UAE were used as analogues for calcium-sulfate-cemented Martian dunes.",
+      "description": "Liwa Desert, United Arab Emirates. Lithified aeolian deposits in the UAE were used as analogues for calcium-sulfate-cemented Martian dunes.",
       "tags_terrain": [],
       "tags_mineralogy": [
         "sulfates"
@@ -419,9 +376,11 @@
       "lon_east": -81.0,
       "coordinates_approximate": true,
       "paired_mars_site_id": "huygens_crater",
-      "description": "One of Earth's largest impact structures, in Ontario, assessed as a field analog for planetary exploration.",
+      "description": "Sudbury impact structure, Canada, known for the Sudbury Breccia; ranked among terrestrial impact sites used as planetary field analogs.",
       "tags_terrain": [],
-      "tags_mineralogy": [],
+      "tags_mineralogy": [
+        "impact_breccia"
+      ],
       "known_analog_use": [
         "Ranked among terrestrial impact sites as field analogs (Lambert & Reimold, 2023)",
         "Robotic sample-return analogue deployment (Moores et al., 2012)"
@@ -432,16 +391,19 @@
     },
     {
       "id": "yilgarn_salt_lakes",
-      "name": "Yilgarn Craton acid saline lakes",
-      "region": "Kalgoorlie region, Western Australia",
+      "name": "Yilgarn Craton salt lakes",
+      "region": "Yilgarn Craton",
       "country": "Australia",
       "lat": -30.75,
       "lon_east": 121.47,
       "coordinates_approximate": true,
       "paired_mars_site_id": "columbus_crater",
-      "description": "Mildly acidic ephemeral salt lakes on the Yilgarn Craton, Western Australia, studied as terrestrial analogs to ancient Mars.",
+      "description": "Shallow ephemeral, mildly acidic salt lakes on the Yilgarn Craton, Australia, over paleodrainage channels; their sediments hold halite and gypsum.",
       "tags_terrain": [],
-      "tags_mineralogy": [],
+      "tags_mineralogy": [
+        "chlorides",
+        "sulfates"
+      ],
       "known_analog_use": [
         "Sediment microbiology of acidic salt lakes as terrestrial analogs to ancient Mars (Aerts et al., 2019)"
       ],
@@ -451,14 +413,14 @@
     },
     {
       "id": "granby_tuff",
-      "name": "Granby Basaltic Tuff",
-      "region": "Granby, Massachusetts (Connecticut Valley)",
+      "name": "Granby tuff",
+      "region": "Granby, Massachusetts",
       "country": "United States",
       "lat": 42.256,
       "lon_east": -72.517,
       "coordinates_approximate": false,
       "paired_mars_site_id": "oxia_planum",
-      "description": "Hydrothermally altered basaltic flows, dikes and tuffs at Granby, Massachusetts, whose Fe-rich vermiculite clays are the best spectral match found for the clays of Oxia Planum.",
+      "description": "Hydrothermally altered basaltic flows, dikes and tuffs at Granby, Massachusetts, whose Fe-rich vermiculite clays are the best spectral analogy found for the clays of Oxia Planum.",
       "tags_terrain": [],
       "tags_mineralogy": [
         "basalt",
@@ -476,13 +438,13 @@
     {
       "id": "galena_creek_rock_glacier",
       "name": "Galena Creek Rock Glacier",
-      "region": "Absaroka Mountains, Wyoming",
+      "region": "Wyoming",
       "country": "United States",
       "lat": 44.64,
       "lon_east": -109.8,
       "coordinates_approximate": true,
       "paired_mars_site_id": "deuteronilus_mensae",
-      "description": "Ice-cored rock glacier in the Absaroka Mountains, Wyoming, with a boulder debris layer over ice; radar-surveyed as an analog for Martian debris-covered glaciers.",
+      "description": "Ice-cored Galena Creek Rock Glacier, Wyoming, with a boulder debris layer over ice; radar-surveyed to image its internal structure.",
       "tags_terrain": [
         "rocky_surface"
       ],
@@ -503,23 +465,16 @@
       "country": "Canada",
       "lat": 75.38,
       "lon_east": -89.68,
-      "description": "A 23 km diameter impact crater on Devon Island with impact breccia, gypsum bedrock, carbonates and hydrothermal deposits weathered to iron-oxide crusts. Home of the Haughton-Mars Project.",
-      "tags_terrain": [
-        "impact_crater"
-      ],
+      "description": "Haughton impact structure (Arctic Canada), where gullies formed through the melting of snow and ground ice are studied for their implications for gullies on Mars.",
+      "tags_terrain": [],
       "tags_mineralogy": [
-        "impact_breccia",
-        "carbonates",
-        "sulfates",
-        "iron_oxides"
+        "water_ice"
       ],
       "known_analog_use": [
-        "Haughton-Mars Project (NASA Ames / Mars Institute / SETI)"
+        "Gully formation studied as an analogue for Martian gullies (NASA NTRS, LPSC 2020)"
       ],
       "sources": [
-        "trowbridge2024_haughton",
-        "izawa2011_haughton",
-        "parnell2012_haughton"
+        "ntrs_haughton_gullies"
       ],
       "coordinates_approximate": false,
       "paired_mars_site_id": "protonilus_mensae"
@@ -527,7 +482,7 @@
     {
       "id": "channeled_scablands",
       "name": "Channeled Scablands",
-      "region": "Eastern Washington",
+      "region": "Columbia Plateau, eastern Washington",
       "country": "United States",
       "lat": 47.31,
       "lon_east": -119.52,
@@ -549,14 +504,14 @@
     },
     {
       "id": "rio_tinto",
-      "name": "R\u00edo Tinto (Pe\u00f1a de Hierro, Nerva)",
-      "region": "Huelva, Andalusia",
+      "name": "R\u00edo Tinto",
+      "region": "Tinto basin",
       "country": "Spain",
       "lat": 37.7,
       "lon_east": -6.55,
       "coordinates_approximate": false,
       "paired_mars_site_id": "meridiani_planum",
-      "description": "Acidic river basin in Huelva, Spain, whose sulfide bioleaching products resemble the sulfate and iron oxide deposits of Mars; a NASA drilling test site.",
+      "description": "R\u00edo Tinto basin, Spain: an acidic river whose sulfide bioleaching products resemble the sulfate and iron oxide deposits of Mars; a NASA drilling test site.",
       "tags_terrain": [],
       "tags_mineralogy": [
         "sulfates",
@@ -575,13 +530,13 @@
     {
       "id": "lake_salda",
       "name": "Lake Salda",
-      "region": "Burdur, southwestern Turkey",
+      "region": "Lake Salda",
       "country": "Turkey",
       "lat": 37.553,
       "lon_east": 29.681,
       "coordinates_approximate": false,
       "paired_mars_site_id": "jezero_crater",
-      "description": "Alkaline lake in southwestern Turkey hosting hydromagnesite microbialites; a terrestrial analog for the paleolake in Jezero Crater.",
+      "description": "Lake Salda, Turkey: a terrestrial analog for the paleolake in Jezero Crater, hosting active, subfossil and fossil hydromagnesite microbialites.",
       "tags_terrain": [],
       "tags_mineralogy": [],
       "known_analog_use": [
@@ -593,14 +548,14 @@
     },
     {
       "id": "dalangtan_playa",
-      "name": "Dalangtan Playa, western Qaidam Basin",
-      "region": "Qaidam Basin, Qinghai (NE Tibetan Plateau)",
+      "name": "Dalangtan Playa",
+      "region": "Qaidam Basin, Tibetan Plateau",
       "country": "China",
       "lat": 38.4,
       "lon_east": 91.4,
       "coordinates_approximate": true,
       "paired_mars_site_id": "utopia_planitia",
-      "description": "Saline playa in the hyperarid western Qaidam Basin on the Tibetan Plateau, with Mars-like salts (magnesium sulfates, chlorides, perchlorates) and polygonal landforms.",
+      "description": "Dalangtan saline playa in the hyperarid Qaidam Basin, Tibetan Plateau, with Mars-like salts (magnesium sulfates, chlorides, perchlorates) and polygonal landforms.",
       "tags_terrain": [
         "playa",
         "polygonal_terrain"
@@ -625,7 +580,7 @@
       "country": "Iceland",
       "lat": 64.85,
       "lon_east": -16.8,
-      "description": "Basaltic lava flow field from the 2014-2015 fissure eruption, emplaced on a floodplain of glacial and fluvial deposits; an analog for young volcanic terrains in Elysium Planitia.",
+      "description": "Lava flow field of the 2014\u20132015 fissure-fed Holuhraun eruption, with lava\u2013water interactions; a terrestrial analog for volcanic terrains in Elysium Planitia.",
       "tags_terrain": [
         "lava_plain",
         "fissure_vent",
@@ -633,31 +588,29 @@
         "polygonal_terrain"
       ],
       "tags_mineralogy": [
-        "basalt",
-        "volcanic_glass"
+        "basalt"
       ],
       "known_analog_use": [
-        "FELDSPAR analog sampling expedition (Stockton et al., 2019)",
-        "Analog for young volcanic terrains in Elysium Planitia (Voigt et al., 2025)"
+        "Analog for volcanic terrains in Elysium Planitia (Voigt et al., 2025)",
+        "Rover and helicopter mission field test, 2022 (Gwizd et al., 2024)"
       ],
       "sources": [
         "lit_holuhraun",
-        "voigt2025_holuhraun",
-        "hartley2018_holuhraun"
+        "voigt2025_holuhraun"
       ],
       "coordinates_approximate": false,
       "paired_mars_site_id": "elysium_planitia"
     },
     {
       "id": "svalbard_fan_delta",
-      "name": "Terraced fan-delta, Svalbard",
-      "region": "Svalbard (Adventdalen area)",
+      "name": "Adventdalen delta, Svalbard",
+      "region": "Adventdalen, Spitsbergen",
       "country": "Norway",
       "lat": 77.74,
       "lon_east": 15.64,
       "coordinates_approximate": false,
       "paired_mars_site_id": "xanthe_terra_tyras",
-      "description": "Adventdalen fjord-valley, central Spitsbergen, whose Holocene fill includes a Gilbert-type delta and permafrost with excess ground ice.",
+      "description": "Adventdalen fjord-valley, Spitsbergen, whose Holocene fill includes a Gilbert-type delta and permafrost with excess ground ice.",
       "tags_terrain": [
         "delta"
       ],

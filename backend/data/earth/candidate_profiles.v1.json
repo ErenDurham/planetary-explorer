@@ -216,7 +216,7 @@
           "category": "light",
           "value": 77.86,
           "unit": "deg",
-          "source_id": "heldmann2015_dryvalleys",
+          "source_id": "goordial2016_university_valley",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -389,12 +389,9 @@
           "feature_id": "terrain_morphology",
           "label": "Terrain morphology",
           "category": "ground",
-          "value": [
-            "polar_desert",
-            "periglacial"
-          ],
+          "value": null,
           "unit": null,
-          "source_id": "heldmann2015_dryvalleys",
+          "source_id": null,
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -409,15 +406,16 @@
             "description": "0.5 deg square centred on the site"
           },
           "uncertainty": null,
-          "quality_flag": "qualitative",
-          "is_missing": false,
-          "notes": "Literature labels: polar_desert, periglacial (Heldmann et al., 2015)."
+          "quality_flag": "missing",
+          "is_missing": true,
+          "notes": "No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
+            "regolith",
             "water_ice"
           ],
           "unit": null,
@@ -438,7 +436,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": "Literature labels: water_ice (Goordial et al., 2016)."
+          "notes": "Literature labels: regolith, water_ice (Goordial et al., 2016)."
         }
       ],
       "sources": {
@@ -489,23 +487,15 @@
           "cite": "Goordial et al., 2016",
           "year": 2016,
           "kind": "peer_reviewed"
-        },
-        "heldmann2015_dryvalleys": {
-          "source_id": "heldmann2015_dryvalleys",
-          "title": "Mars: Periglacial Morphology and Implications for Future Landing Sites",
-          "institution": "NASA Technical Reports Server 20150023012",
-          "url": "https://ntrs.nasa.gov/citations/20150023012",
-          "access_method": "publication",
-          "cite": "Heldmann et al., 2015",
-          "year": 2015,
-          "kind": "nasa"
         }
       },
       "completeness": {
         "features_requested": 17,
-        "features_available": 17,
-        "fraction": 1.0,
-        "missing_feature_ids": []
+        "features_available": 16,
+        "fraction": 0.9412,
+        "missing_feature_ids": [
+          "terrain_morphology"
+        ]
       }
     },
     {
@@ -1214,7 +1204,7 @@
           "category": "light",
           "value": 90.0,
           "unit": "deg",
-          "source_id": "workbook_lesser_known_sites",
+          "source_id": "project_site_coordinates",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -1459,13 +1449,6 @@
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
         },
-        "workbook_lesser_known_sites": {
-          "source_id": "workbook_lesser_known_sites",
-          "title": "Lesser-Known Mars Sites - Conditions Comparison (research workbook; coordinates as compiled by the workbook author)",
-          "institution": "Planetary Explorer research team",
-          "url": "data/workbook/lesser_known_sites.v1.json",
-          "access_method": "project workbook (scripts/import_workbook.py)"
-        },
         "copernicus_glo90": {
           "source_id": "copernicus_glo90",
           "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
@@ -1479,6 +1462,13 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
+        },
+        "project_site_coordinates": {
+          "source_id": "project_site_coordinates",
+          "title": "Site coordinates selected by the project team (no approved source states these coordinates)",
+          "institution": "Planetary Explorer project team",
+          "url": "data/sites/site_conditions.v1.json",
+          "access_method": "project selection"
         }
       },
       "completeness": {
@@ -3385,9 +3375,11 @@
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
-          "value": null,
+          "value": [
+            "impact_breccia"
+          ],
           "unit": null,
-          "source_id": null,
+          "source_id": "lambert_reimold2023_impact_analogs",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3402,9 +3394,9 @@
             "description": "0.5 deg square centred on the site"
           },
           "uncertainty": "Qualitative tags from the cited source",
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given."
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": "Literature labels: impact_breccia (Lambert & Reimold, 2023)."
         }
       ],
       "sources": {
@@ -3459,11 +3451,10 @@
       },
       "completeness": {
         "features_requested": 17,
-        "features_available": 15,
-        "fraction": 0.8824,
+        "features_available": 16,
+        "fraction": 0.9412,
         "missing_feature_ids": [
-          "terrain_morphology",
-          "mineralogy_tags"
+          "terrain_morphology"
         ]
       }
     },
@@ -3878,9 +3869,12 @@
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
-          "value": null,
+          "value": [
+            "chlorides",
+            "sulfates"
+          ],
           "unit": null,
-          "source_id": null,
+          "source_id": "aerts2019_yilgarn_lakes",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3895,9 +3889,9 @@
             "description": "0.5 deg square centred on the site"
           },
           "uncertainty": "Qualitative tags from the cited source",
-          "quality_flag": "missing",
-          "is_missing": true,
-          "notes": "No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given."
+          "quality_flag": "qualitative",
+          "is_missing": false,
+          "notes": "Literature labels: chlorides, sulfates (Aerts et al., 2019)."
         }
       ],
       "sources": {
@@ -3952,11 +3946,10 @@
       },
       "completeness": {
         "features_requested": 17,
-        "features_available": 15,
-        "fraction": 0.8824,
+        "features_available": 16,
+        "fraction": 0.9412,
         "missing_feature_ids": [
-          "terrain_morphology",
-          "mineralogy_tags"
+          "terrain_morphology"
         ]
       }
     },
@@ -5173,7 +5166,7 @@
           "category": "light",
           "value": 75.38,
           "unit": "deg",
-          "source_id": "trowbridge2024_haughton",
+          "source_id": "ntrs_haughton_gullies",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -5346,11 +5339,9 @@
           "feature_id": "terrain_morphology",
           "label": "Terrain morphology",
           "category": "ground",
-          "value": [
-            "impact_crater"
-          ],
+          "value": null,
           "unit": null,
-          "source_id": "trowbridge2024_haughton",
+          "source_id": null,
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -5365,22 +5356,19 @@
             "description": "0.5 deg square centred on the site"
           },
           "uncertainty": null,
-          "quality_flag": "qualitative",
-          "is_missing": false,
-          "notes": "Literature labels: impact_crater (Trowbridge et al., 2024)."
+          "quality_flag": "missing",
+          "is_missing": true,
+          "notes": "No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "impact_breccia",
-            "carbonates",
-            "sulfates",
-            "iron_oxides"
+            "water_ice"
           ],
           "unit": null,
-          "source_id": "izawa2011_haughton",
+          "source_id": "ntrs_haughton_gullies",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -5397,7 +5385,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": "Literature labels: impact_breccia, carbonates (Izawa et al., 2011); sulfates, iron_oxides (Parnell et al., 2012)."
+          "notes": "Literature labels: water_ice (NASA NTRS (LPSC 2020))."
         }
       ],
       "sources": {
@@ -5439,42 +5427,24 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
         },
-        "izawa2011_haughton": {
-          "source_id": "izawa2011_haughton",
-          "title": "Weathering of Post-Impact Hydrothermal Deposits from the Haughton Impact Structure: Implications for Microbial Colonization and Biosignature Preservation",
-          "institution": "Astrobiology",
-          "url": "https://doi.org/10.1089/ast.2011.0612",
+        "ntrs_haughton_gullies": {
+          "source_id": "ntrs_haughton_gullies",
+          "title": "Haughton crater gullies (LPSC 2020)",
+          "institution": "NASA Technical Reports Server",
+          "url": "https://ntrs.nasa.gov/citations/20200001979",
           "access_method": "publication",
-          "cite": "Izawa et al., 2011",
-          "year": 2011,
-          "kind": "peer_reviewed"
-        },
-        "parnell2012_haughton": {
-          "source_id": "parnell2012_haughton",
-          "title": "Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars",
-          "institution": "International Journal of Astrobiology",
-          "url": "https://doi.org/10.1017/S1473550411000395",
-          "access_method": "publication",
-          "cite": "Parnell et al., 2012",
-          "year": 2012,
-          "kind": "peer_reviewed"
-        },
-        "trowbridge2024_haughton": {
-          "source_id": "trowbridge2024_haughton",
-          "title": "Modeling of the Impact-Generated Hydrothermal System at the Haughton Impact Structure",
-          "institution": "Journal of Geophysical Research: Planets",
-          "url": "https://doi.org/10.1029/2023JE008267",
-          "access_method": "publication",
-          "cite": "Trowbridge et al., 2024",
-          "year": 2024,
-          "kind": "peer_reviewed"
+          "cite": "NASA NTRS (LPSC 2020)",
+          "year": 2020,
+          "kind": "nasa"
         }
       },
       "completeness": {
         "features_requested": 17,
-        "features_available": 17,
-        "fraction": 1.0,
-        "missing_feature_ids": []
+        "features_available": 16,
+        "fraction": 0.9412,
+        "missing_feature_ids": [
+          "terrain_morphology"
+        ]
       }
     },
     {
@@ -7897,15 +7867,14 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": "Literature labels: lava_plain, fissure_vent, outwash_plain (Pedersen et al., 2017); polygonal_terrain (Voigt et al., 2025)."
+          "notes": "Literature labels: lava_plain, fissure_vent, outwash_plain (Pedersen et al., 2017); polygonal_terrain, fissure_vent, lava_plain (Voigt et al., 2025)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "basalt",
-            "volcanic_glass"
+            "basalt"
           ],
           "unit": null,
           "source_id": "lit_holuhraun",
@@ -7925,7 +7894,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": "Literature labels: basalt (Pedersen et al., 2017); volcanic_glass (Hartley et al., 2018)."
+          "notes": "Literature labels: basalt (Pedersen et al., 2017)."
         }
       ],
       "sources": {
@@ -7966,16 +7935,6 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-15"
-        },
-        "hartley2018_holuhraun": {
-          "source_id": "hartley2018_holuhraun",
-          "title": "Melt inclusion constraints on petrogenesis of the 2014-2015 Holuhraun eruption, Iceland",
-          "institution": "Contributions to Mineralogy and Petrology",
-          "url": "https://doi.org/10.1007/s00410-017-1435-0",
-          "access_method": "publication",
-          "cite": "Hartley et al., 2018",
-          "year": 2018,
-          "kind": "peer_reviewed"
         },
         "lit_holuhraun": {
           "source_id": "lit_holuhraun",
