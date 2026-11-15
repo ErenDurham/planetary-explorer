@@ -22,7 +22,7 @@ const STATUS: Record<SuitabilityStatus, { label: string; tone: BadgeTone }> = {
 
 export { rowKeyDown } from "./CandidateRow";
 
-export function RankedList({ results, selectedId, onSelect, isPending, warnings, shown }: { results: SuitabilityResult[] | undefined; selectedId: string | null; onSelect: (id: string) => void; isPending?: boolean; warnings?: string[]; /** Role display filter: rows not in it are hidden; ranks and colours still come from every site. */ shown?: (id: string) => boolean }) {
+export function RankedList({ results, selectedId, onSelect, isPending, warnings, shown, palette = "roygbiv" }: { results: SuitabilityResult[] | undefined; palette?: RankPalette; selectedId: string | null; onSelect: (id: string) => void; isPending?: boolean; warnings?: string[]; /** Role display filter: rows not in it are hidden; ranks and colours still come from every site. */ shown?: (id: string) => boolean }) {
   return (
     <CandidatePanel
       title="Ranked candidates"
@@ -44,7 +44,7 @@ export function RankedList({ results, selectedId, onSelect, isPending, warnings,
       ) : (
         <ol className="space-y-1" aria-label="Ranked sites">
           {results.filter((r) => !shown || shown(r.site_id)).map((r) => {
-            const color = r.status === "ok" ? rankColor(missionRankPosition(r.rank,results.map(r=>r.rank))) ?? NOT_RANKED_COLOR : markerAppearance(r.status,r.score).color;
+            const color = r.status === "ok" ? rankColor(missionRankPosition(r.rank,results.map(r=>r.rank)), palette) ?? NOT_RANKED_COLOR : markerAppearance(r.status,r.score).color;
             const selected = r.site_id === selectedId;
             const st = STATUS[r.status];
             return (

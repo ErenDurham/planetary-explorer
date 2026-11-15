@@ -28,6 +28,12 @@ class Settings(BaseSettings):
     ollama_think: bool = False
     # Seconds before a local answer is abandoned for the keyword reading.
     ollama_timeout_s: float = 30.0
+    # Reading a mission objective: after INTERPRET_READY_S the model stops as
+    # soon as both the Mars and the Earth priorities are usable; if one is still
+    # missing it keeps going until INTERPRET_LIMIT_S, and the app fills any gap
+    # with best guesses.
+    interpret_ready_s: float = 30.0
+    interpret_limit_s: float = 60.0
     # How long Ollama keeps the model in memory after a request ("-1" = until
     # Ollama stops). Unloading frees ~15 GB but makes the next request slow.
     ollama_keep_alive: str = "-1"

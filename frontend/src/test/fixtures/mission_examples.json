@@ -6,9 +6,9 @@
     "model": null,
     "suggestions": [
       { "criterion_id": "terrain_safety", "label": "Terrain safety (regional slope)", "weight": 75, "previous_weight": 65, "reason": "\"safety\" is ranked above \"sunlight\" in the objective, so it is raised.", "data_available": true },
-      { "criterion_id": "elevation_suitability", "label": "Elevation suitability (EDL atmosphere)", "weight": 45, "previous_weight": 45, "reason": "Unchanged: the objective did not mention this factor.", "data_available": true },
-      { "criterion_id": "surface_roughness", "label": "Surface roughness (detrended relief)", "weight": 55, "previous_weight": 55, "reason": "Unchanged: the objective did not mention this factor.", "data_available": true },
-      { "criterion_id": "thermal_conditions", "label": "Thermal conditions", "weight": 0, "previous_weight": 0, "reason": "Unchanged: the objective did not mention this factor.", "data_available": false },
+      { "criterion_id": "elevation_suitability", "label": "Elevation suitability (EDL atmosphere)", "weight": 45, "previous_weight": 45, "reason": "Best guess: kept at its starting weight, because the mission does not point either way.", "data_available": true },
+      { "criterion_id": "surface_roughness", "label": "Surface roughness (detrended relief)", "weight": 55, "previous_weight": 55, "reason": "Best guess: kept at its starting weight, because the mission does not point either way.", "data_available": true },
+      { "criterion_id": "thermal_conditions", "label": "Thermal conditions", "weight": 0, "previous_weight": 0, "reason": "Best guess: kept at its starting weight, because the mission does not point either way.", "data_available": false },
       { "criterion_id": "solar_illumination", "label": "Solar illumination (annual mean, top of atmosphere)", "weight": 0, "previous_weight": 75, "reason": "\"ignore ... solar\" reads as an exclusion, so this factor is set to 0.", "data_available": true }
     ],
     "rationale": [

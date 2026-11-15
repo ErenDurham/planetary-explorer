@@ -103,18 +103,27 @@ def api_schema(schema):
     return schema
 
 
-def _call_ollama(system: str, user: str, schema: dict, max_tokens: int) -> str:
+def _call_ollama(system: str, user: str, schema: dict, max_tokens: int, *, limit_s: float | None = None,
+                 ready_s: float | None = None, ready=None, keep_partial: bool = False) -> tuple[str, bool]:
     """Local model through Ollama's chat API. `format` holds the JSON schema, so
     decoding is grammar-constrained: enums (e.g. evidence ids) cannot be
     invented. Temperature 0 keeps answers repeatable. The answer is streamed
-    so OLLAMA_TIMEOUT_S is a hard total limit: past it the connection is
-    closed, which also stops Ollama generating (the next request isn't held up)."""
+    so the time limit (`limit_s`, default OLLAMA_TIMEOUT_S) is a hard total:
+    past it the connection is closed, which also stops Ollama generating (the
+    next request isn't held up).
+
+    With `ready_s` and `ready`, the answer may stop early: once `ready_s`
+    seconds have passed, generation stops as soon as `ready(text so far)` is
+    true. With `keep_partial`, reaching the limit returns the text so far
+    instead of raising. Returns (text, complete)."""
     import json
+    import threading
     import time
 
     import httpx
 
     s = get_settings()
+    limit = s.ollama_timeout_s if limit_s is None else limit_s
     body = {
         "model": s.ollama_model,
         "stream": True,
@@ -124,37 +133,74 @@ def _call_ollama(system: str, user: str, schema: dict, max_tokens: int) -> str:
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         "options": {"temperature": 0, "num_ctx": OLLAMA_NUM_CTX, "num_predict": max_tokens},
     }
-    deadline = time.monotonic() + s.ollama_timeout_s
-    too_slow = RuntimeError(f"local model took longer than {s.ollama_timeout_s:g} s (OLLAMA_TIMEOUT_S)")
+    start = time.monotonic()
+    deadline = start + limit
+    too_slow = RuntimeError(f"local model took longer than {limit:g} s")
     parts: list[str] = []
     done_reason = None
+    stopped = False          # stopped before the model finished (early or at the limit)
+    timed_out = threading.Event()
+    next_check = start + (ready_s or 0)
     try:
-        with httpx.stream("POST", f"{s.ollama_url.rstrip('/')}/api/chat", json=body, timeout=httpx.Timeout(s.ollama_timeout_s, connect=5.0)) as r:
-            if r.status_code == 404:
-                raise RuntimeError(f"Ollama has no model '{s.ollama_model}'; run `ollama pull {s.ollama_model}`")
-            r.raise_for_status()
-            for line in r.iter_lines():
-                if time.monotonic() > deadline:
-                    raise too_slow
-                if not line.strip():
-                    continue
-                chunk = json.loads(line)
-                if chunk.get("error"):
-                    raise RuntimeError(f"Ollama error: {chunk['error']}")
-                parts.append((chunk.get("message") or {}).get("content") or "")
-                if chunk.get("done"):
-                    done_reason = chunk.get("done_reason")
-                    break
+        with httpx.stream("POST", f"{s.ollama_url.rstrip('/')}/api/chat", json=body, timeout=httpx.Timeout(limit, connect=5.0)) as r:
+            # Watchdog: close the connection at the limit even while waiting for
+            # the next token, so the limit is exact rather than "limit + one wait".
+            def _expire():
+                timed_out.set()
+                close = getattr(r, "close", None)
+                if close:
+                    try:
+                        close()
+                    except Exception:  # noqa: BLE001 - closing is best effort
+                        pass
+            watchdog = threading.Timer(max(0.0, deadline - time.monotonic()), _expire)
+            watchdog.daemon = True
+            watchdog.start()
+            try:
+                if r.status_code == 404:
+                    raise RuntimeError(f"Ollama has no model '{s.ollama_model}'; run `ollama pull {s.ollama_model}`")
+                r.raise_for_status()
+                for line in r.iter_lines():
+                    now = time.monotonic()
+                    if now > deadline or timed_out.is_set():
+                        if keep_partial:
+                            stopped = True
+                            break
+                        raise too_slow
+                    if not line.strip():
+                        continue
+                    chunk = json.loads(line)
+                    if chunk.get("error"):
+                        raise RuntimeError(f"Ollama error: {chunk['error']}")
+                    parts.append((chunk.get("message") or {}).get("content") or "")
+                    if chunk.get("done"):
+                        done_reason = chunk.get("done_reason")
+                        break
+                    if ready is not None and ready_s is not None and now >= next_check:
+                        next_check = now + 0.25   # check a few times a second, not on every token
+                        if ready("".join(parts)):
+                            stopped = True
+                            break
+            except Exception:
+                if not timed_out.is_set():
+                    raise
+                if not keep_partial:
+                    raise too_slow from None
+                stopped = True      # the watchdog closed the stream at the limit
+            finally:
+                watchdog.cancel()
     except httpx.ConnectError as e:
         raise RuntimeError(f"Ollama is not running at {s.ollama_url} (start it with `ollama serve` or `systemctl start ollama`)") from e
     except httpx.TimeoutException as e:
-        raise too_slow from e
-    if done_reason == "length":
+        if not (keep_partial and parts):
+            raise too_slow from e
+        stopped = True
+    if done_reason == "length" and not keep_partial:
         raise RuntimeError("model output was truncated (num_predict / num_ctx)")
     text = "".join(parts)
     if not text.strip():
-        raise RuntimeError("model returned no text")
-    return text
+        raise too_slow if stopped or timed_out.is_set() else RuntimeError("model returned no text")
+    return text, not stopped and done_reason != "length"
 
 
 def _keep_alive(value: str) -> int | str:
@@ -189,7 +235,7 @@ def call_json(system: str, user: str, schema: dict, max_tokens: int = MIN_MAX_TO
         _last_error = None
         return text
     if provider() == "ollama":
-        text = _call_ollama(system, user, schema, max_tokens)
+        text, _ = _call_ollama(system, user, schema, max_tokens)
         _last_error = None
         return text
     if provider() != "anthropic":
@@ -224,6 +270,22 @@ def call_json(system: str, user: str, schema: dict, max_tokens: int = MIN_MAX_TO
         raise RuntimeError("model returned no text")
     _last_error = None
     return text
+
+
+def call_json_within(system: str, user: str, schema: dict, *, ready_s: float, limit_s: float, ready,
+                     max_tokens: int = MIN_MAX_TOKENS) -> tuple[str, bool]:
+    """Like `call_json`, with a two-step time limit for the local model: after
+    `ready_s` seconds it stops as soon as `ready(text so far)` says the answer
+    is good enough; otherwise it keeps going until exactly `limit_s` seconds
+    and returns whatever has arrived. Returns (text, complete); an incomplete
+    text is a cut-off JSON prefix the caller must repair. Other providers
+    answer in one piece and keep their own timeouts."""
+    global _last_error
+    if provider() == "ollama":
+        out = _call_ollama(system, user, schema, max_tokens, limit_s=limit_s, ready_s=ready_s, ready=ready, keep_partial=True)
+        _last_error = None
+        return out
+    return call_json(system, user, schema, max_tokens), True
 
 
 def _strict_schema(value):

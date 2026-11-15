@@ -317,7 +317,7 @@ export default function App() {
     </div>
   );
   const taskCandidates = missionType !== "landing" && (activeTab === "analyze" || taskMissionView);
-  const candidatePane = taskCandidates ? <MissionAssessmentList data={assessment.data} pending={assessment.isPending} error={assessment.error} selectedId={missionSelectedId} onSelect={id=>selectLocation(missionBody,id)}/> : exploreAnalog ? (
+  const candidatePane = taskCandidates ? <MissionAssessmentList data={assessment.data} pending={assessment.isPending} error={assessment.error} palette={rankPalette} selectedId={missionSelectedId} onSelect={id=>selectLocation(missionBody,id)}/> : exploreAnalog ? (
     <AnalogRankedList
       candidates={rankData?.candidates}
       bodyName={BODY_NAME[viewedBody]}
@@ -336,7 +336,7 @@ export default function App() {
   ) : (
     <>
       {evaluation.error && <div className="p-3"><ErrorNote error={evaluation.error} context="scoring/evaluate" /></div>}
-      <RankedList results={evaluation.data?.results} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} shown={shownOnBody("mars")} />
+      <RankedList results={evaluation.data?.results} palette={rankPalette} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} shown={shownOnBody("mars")} />
     </>
   );
 
@@ -394,7 +394,7 @@ export default function App() {
               <div className="h-full">{centre}</div>
             </div>
             {activeTab === "explore" && <div className="order-3 min-h-0 border-t border-line bg-bg-elev lg:border-l lg:border-t-0">
-                <SitePanelShell width={sitePanelWidth} onWidthChange={setSitePanelWidth}>{taskMissionView ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===selectedId)} location={missionLocation} pending={assessment.isPending}/> : <RightSidebar body={viewedBody} selectedId={selectedId} evaluation={evaluation.data} evaluationPending={evaluation.isPending} mission={evaluation.mission} earthLocation={earthLocation} earthPending={earth.isPending} analog={analog ? { response: rankData, referenceName, palette: rankPalette } : null} />}</SitePanelShell>
+                <SitePanelShell width={sitePanelWidth} onWidthChange={setSitePanelWidth}>{taskMissionView ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===selectedId)} location={missionLocation} pending={assessment.isPending} palette={rankPalette}/> : <RightSidebar body={viewedBody} selectedId={selectedId} evaluation={evaluation.data} evaluationPending={evaluation.isPending} mission={evaluation.mission} earthLocation={earthLocation} earthPending={earth.isPending} analog={analog ? { response: rankData, referenceName, palette: rankPalette } : null} />}</SitePanelShell>
             </div>}
           </div>
         )}

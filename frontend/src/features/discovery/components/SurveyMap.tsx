@@ -4,7 +4,7 @@
 // view. There is no imagery under it, and it says so; footprints are coloured
 // by display rank only.
 import { useMemo, useRef, useState, useLayoutEffect } from "react";
-import { NOT_RANKED_COLOR, rankColor, rankPosition, RANK_LEGEND_SENTENCE, type RankPalette } from "@/lib/rankColor";
+import { NOT_RANKED_COLOR, paletteStops, rankColor, rankPosition, RANK_LEGEND_SENTENCE, type RankPalette } from "@/lib/rankColor";
 import type { EarthSite } from "@/hooks/useEarthSites";
 import { boundsPath, footprintRings, makeFrame, padBounds, project, pxPerKm, readSamplingCentre, ringPath, ringsBounds, unionBounds, type Frame } from "../lib/geo";
 import type { DiscoveryCandidate, DiscoveryRunSummary, DiscoverySurvey } from "../adapter";
@@ -68,7 +68,7 @@ export function SurveyMap({ run, survey, candidates, selectedId, onSelect, estab
         <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg" aria-label="Map legend">
           <li className="flex items-center gap-1.5"><span className="inline-block h-3 w-5 border border-dashed border-info" aria-hidden />Area searched</li>
           <li className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-fg" aria-hidden />Sampled centres{centres.length ? ` (${centres.length})` : ""}, evaluated</li>
-          <li className="flex items-center gap-1.5"><span className="inline-block h-3 w-5 rounded-sm bg-[#f0862a]/40 ring-1 ring-[#f0862a]" aria-hidden />Shortlist candidates{n ? ` (${n})` : ""}, by rank</li>
+          <li className="flex items-center gap-1.5"><span className="inline-block h-3 w-5 rounded-sm" style={{ backgroundColor: `${paletteStops(palette)[1]}66`, boxShadow: `0 0 0 1px ${paletteStops(palette)[1]}` }} aria-hidden />Shortlist candidates{n ? ` (${n})` : ""}, by rank</li>
           <li className="flex items-center gap-1.5"><span aria-hidden className="text-fg-muted">+</span>Catalog context site{known.length ? `s (${known.length} in view)` : " (none in view)"}</li>
         </ul>
         <div className="rounded bg-black/70 px-2 py-1 text-[11px] text-white" aria-label={`Scale bar: ${barKm} km`}><div className="h-1.5 border-x-2 border-b-2 border-white" style={{ width: `${Math.round(barKm * kmPx)}px` }} aria-hidden /><div className="num mt-0.5">{barKm} km</div></div>

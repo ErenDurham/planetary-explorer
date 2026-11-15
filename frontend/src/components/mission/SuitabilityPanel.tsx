@@ -4,11 +4,11 @@ import { Section, BulletList, EmptyNote } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import { Spinner } from "@/components/ui/Spinner";
 import { formatNumber, formatValueWithUnit } from "@/lib/format";
-import { rankColor, rankPosition } from "@/lib/rankColor";
+import { rankColor, rankPosition, type RankPalette } from "@/lib/rankColor";
 import { FactorBreakdownChart } from "@/components/charts/FactorBreakdownChart";
 import type { SuitabilityResult } from "@/types";
 
-export function SuitabilityPanel({ result, isPending, totalRanked }: { result: SuitabilityResult | undefined; scoringSpecVersion?: string; isPending?: boolean; totalRanked?: number }) {
+export function SuitabilityPanel({ result, isPending, totalRanked, palette = "roygbiv" }: { result: SuitabilityResult | undefined; scoringSpecVersion?: string; isPending?: boolean; totalRanked?: number; palette?: RankPalette }) {
   if (!result) {
     return (
       <Section title="Mission suitability" subtitle="Relative index under the current mission priorities">
@@ -16,7 +16,7 @@ export function SuitabilityPanel({ result, isPending, totalRanked }: { result: S
       </Section>
     );
   }
-  const color = result.status === "ok" && result.score != null ? rankColor(rankPosition(result.rank,totalRanked??1)) ?? undefined : undefined;
+  const color = result.status === "ok" && result.score != null ? rankColor(rankPosition(result.rank,totalRanked??1), palette) ?? undefined : undefined;
   return (
     <>
       <Section
