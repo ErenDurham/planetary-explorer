@@ -5,7 +5,7 @@
 import type { MarkerAppearance } from "./colors";
 import type { SuitabilityStatus } from "@/types";
 
-export type MarkerMode = "landing" | "analog";
+export type MarkerMode = "landing" | "analog" | "browse" | "mission";
 
 export interface MarkerDatum {
   id: string;

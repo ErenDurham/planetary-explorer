@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ROYGBIV_STOPS, SINGLE_HUE_STOPS, assignRankPositions, rankColor, rankPosition } from "./rankColor";
+import { ROYGBIV_STOPS, SINGLE_HUE_STOPS, assignRankPositions, missionRankPosition, rankColor, rankPosition } from "./rankColor";
 
 function lum(hex: string) {
   const h = hex.replace("#", "");
@@ -62,4 +62,11 @@ describe("rankColor", () => {
     expect(c).not.toBe(ROYGBIV_STOPS[1]);
     expect(c).toMatch(/^#[0-9a-f]{6}$/);
   });
+});
+
+it("uses full-pool mission ranks for ROYGBIV endpoints and shared ties",()=>{
+ expect(rankColor(missionRankPosition(1,[1,2,3,4,5,6,7,8]))).toBe(ROYGBIV_STOPS[0]);
+ expect(rankColor(missionRankPosition(8,[1,2,3,4,5,6,7,8]))).toBe(ROYGBIV_STOPS[6]);
+ expect(rankColor(missionRankPosition(3,[1,1,3,3]))).toBe(ROYGBIV_STOPS[6]);
+ expect(missionRankPosition(null,[1,2])).toBeNull();
 });

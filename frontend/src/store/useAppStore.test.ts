@@ -58,7 +58,7 @@ describe("objective application", () => {
     expect(s.selectedSiteId).toBe("elysium_planitia"); // alias
     expect(s.selectedEarthId).toBeNull();
     expect(referenceIdFor(s)).toBe("elysium_planitia");
-    expect(effectiveMapMode(s)).toBe("analog_match");
+    expect(effectiveMapMode(s)).toBe("mission_browse");
     expect(s.analogWeights).toEqual({ slope_regional_median_deg: 30, roughness_regional_m: 30, terrain_morphology: 25, mineralogy_tags: 10, precipitation_mm_day: 5 });
   });
   it("'Find Mars sites resembling Haughton' -> Mars focus, analog task, Haughton selected as the Earth reference", () => {
@@ -66,7 +66,7 @@ describe("objective application", () => {
     const s = useAppStore.getState();
     expect(s.task).toBe("analog_site_selection");
     expect(s.viewedBody).toBe("mars");
-    expect(s.mapMode).toBe("analog_match");
+    expect(s.mapMode).toBe("landing_suitability");
     expect(s.selectedEarthId).toBe("haughton_crater");
     expect(s.selectedMarsId).toBeNull();
     expect(referenceIdFor(s)).toBe("haughton_crater");

@@ -15,7 +15,6 @@ import { GlobeLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
 import type { RankPalette } from "@/lib/rankColor";
-import { formatNumber } from "@/lib/format";
 
 export interface PlanetViewerProps {
   config: PlanetConfig;
@@ -81,8 +80,8 @@ export function PlanetViewer(props: PlanetViewerProps) {
       <LoadingOverlay body={body} />
 
       {/* HUD */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">
-        <div className="pointer-events-auto flex items-center gap-1.5">
+      <div className="pointer-events-none absolute left-0 right-36 top-0 flex items-start p-3">
+        <div className="pointer-events-auto flex flex-wrap items-center gap-1.5">
           <button
             type="button"
             onClick={onRequestReset}
@@ -105,9 +104,8 @@ export function PlanetViewer(props: PlanetViewerProps) {
             {autoRotate ? "Rotating" : "Paused"}
           </button>
         </div>
-        {statusLine && <div className="pointer-events-auto rounded border border-line bg-bg-elev/90 px-2.5 py-1.5 text-[10.5px] text-fg-muted">{statusLine}</div>}
+        {statusLine && <div className="sr-only">{statusLine}</div>}
       </div>
-      {selected && <div className="pointer-events-none absolute left-3 right-3 top-16 max-w-md rounded-lg border border-line bg-bg-elev/90 p-3 text-sm text-fg" role="status">{selected.name}{mode === "analog" && <span className="num ml-2 text-xs text-fg-muted">{selected.rank != null ? `match rank ${selected.rank}` : "Not ranked"}{selected.similarity != null ? ` · similarity ${formatNumber(selected.similarity, { maxFractionDigits: 1 })}` : ""}</span>}<p className="mt-1 text-xs text-fg-muted">{config.textureNote}</p></div>}
       <div className="pointer-events-none absolute bottom-3 left-3">
         <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} />
       </div>

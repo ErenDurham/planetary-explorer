@@ -68,7 +68,7 @@ export function AnalogPreferences({ unavailable = {}, rankChanges, previousShare
   return (
     <Section
       title={title}
-      subtitle={compact ? undefined : "Shares of the match emphasis, summing to 100. Different from landing priorities; nothing is copied between them."}
+      subtitle={compact ? undefined : "Shares total 100%. Increase a factor to give it more influence on cross-planet matching."}
       actions={
         <button type="button" onClick={reset} disabled={atRecommended} className="rounded border border-line px-2 py-1 text-[11px] text-fg-muted hover:text-fg disabled:opacity-40" title="Restore the applied objective's recommended analog preferences">
           Reset
@@ -81,9 +81,10 @@ export function AnalogPreferences({ unavailable = {}, rankChanges, previousShare
           const id = `analog-pref-${f.id}`;
           const value = off ? 0 : shares[f.id] ?? 0;
           return (
-            <li key={f.id} className={`mission-row grid grid-cols-[minmax(0,1fr)_38px] items-center gap-x-2 ${off ? "opacity-60" : ""}`}>
+            <li key={f.id} className={`mission-row grid grid-cols-[minmax(0,1fr)_38px] items-center gap-x-2 ${compact ? "" : "gap-y-2 border-b border-line py-3 last:border-0"} ${off ? "opacity-60" : ""}`}>
               <label htmlFor={id} className="truncate text-xs text-fg" title={f.description}>{f.label}</label>
               <span className="num text-right text-xs text-fg-muted" aria-hidden>{value}%</span>
+              {!compact && <p className="col-span-2 text-xs leading-relaxed text-fg-muted">{f.description}</p>}
               <input
                 id={id}
                 type="range"

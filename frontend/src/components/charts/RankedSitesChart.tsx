@@ -1,5 +1,6 @@
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { AXIS, GRID, TOOLTIP_STYLE } from "./theme";
+import { missionRankPosition, rankColor, NOT_RANKED_COLOR } from "@/lib/rankColor";
 import { markerAppearance } from "@/components/globe/colors";
 import type { SuitabilityResult } from "@/types";
 
@@ -9,7 +10,7 @@ export function RankedSitesChart({ results, selectedId, onSelect }: { results: S
     name: `${r.rank != null ? `${r.rank}. ` : ""}${r.site_name.replace(/\s*\(.*\)\s*$/, "")}`,
     score: r.score ?? 0,
     status: r.status,
-    color: markerAppearance(r.status, r.score).color,
+    color: r.status === "ok" ? rankColor(missionRankPosition(r.rank,results.map(r=>r.rank))) ?? NOT_RANKED_COLOR : markerAppearance(r.status,r.score).color,
   }));
   return (
     <figure aria-label="Ranked sites by relative suitability index">

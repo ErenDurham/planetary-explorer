@@ -113,3 +113,9 @@ export type BodyKind = LocationRef["body"];
 
 // Georeferenced imagery extent (only CTX / GIBS mosaics carry bounds).
 export type ImageBounds = S["ImageBounds"];
+
+export type MissionRequirements = S["MissionRequirements"];
+export type MissionAssessmentRequest = S["MissionAssessmentRequest"];
+export type MissionAssessmentResponse = S["MissionAssessmentResponse"];
+export type MissionAssessmentResult = S["MissionAssessmentResult"];
+export type MissionFactor = S["MissionFactor"];

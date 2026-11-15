@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import fixture from "@/test/fixtures/api_examples.json";
+import assessments from "@/test/fixtures/mission_assessment.json";
 import catalog from "@/test/fixtures/comparison_catalog.json";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -45,6 +46,7 @@ function rankResponse(body: Record<string, unknown>) {
 }
 
 beforeEach(() => {
+  useAppStore.setState(useAppStore.getInitialState(), true);
   rankCalls = [];
   useAppStore.setState({ weights: {}, defaultWeights: {}, hardConstraints: [], selectedSiteId: null, selectedMarsId: null, selectedEarthId: null, viewedBody: "mars", mapMode: "landing_suitability", followObjective: true, activeTab: "explore", suggestedSelection: null });
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
@@ -56,6 +58,7 @@ beforeEach(() => {
     if (url.endsWith("/scoring/default-mission")) return json(fixture.default_mission);
     if (url.endsWith("/mission/interpret")) return json({ error: { code: "unavailable", message: "offline in test" } }, 503);
     if (url.endsWith("/scoring/evaluate")) { const body = JSON.parse(String(init?.body)); return json({ ...fixture.evaluate, client_request_id: body.client_request_id }); }
+    if (url.endsWith("/missions/evaluate")) {const body=JSON.parse(String(init?.body)); return json({...assessments[body.body as "earth"|"mars"],client_request_id:body.client_request_id});}
     if (url.endsWith("/analogs/rank")) { const body = JSON.parse(String(init?.body)); rankCalls.push(body); return json(rankResponse(body)); }
     return json({ error: { code: "not_found", message: `unmocked ${url}`, details: null } }, 404);
   });
@@ -75,7 +78,7 @@ describe("Earth and Mars markers", () => {
     expect(stub).toHaveAttribute("data-mode", "landing");
     for (const id of earthIds) expect(stub).not.toHaveTextContent(id);
 
-    fireEvent.click(screen.getByRole("radio", { name: "Earth" }));
+    fireEvent.click(screen.getByRole("button", { name: "View Earth" }));
     await waitFor(() => expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-body", "earth"));
     const earthStub = screen.getByTestId("globe-stub");
     await waitFor(() => expect(earthStub).toHaveTextContent("haughton_crater/analog/-"), { timeout: 3000 });
@@ -84,23 +87,46 @@ describe("Earth and Mars markers", () => {
     expect(earthIds.length).toBeGreaterThan(0);
     for (const id of earthIds) expect(earthStub).toHaveTextContent(`${id}/analog/-`);
     for (const s of sitesFixture.sites) expect(earthStub).not.toHaveTextContent(s.id);
-    // no reference yet: no ranking request, and the pane offers a Mars reference selector
-    expect(rankCalls).toHaveLength(0);
-    expect(screen.getByRole("combobox", { name: /Choose a reference location on Mars/ })).toBeInTheDocument();
+    // Planet navigation initializes a mission site, so analogs rank immediately.
+    expect(rankCalls.length).toBeGreaterThan(0);
+    expect(rankCalls[0].reference_id).toBe(useAppStore.getState().selectedMarsId);
     expect(screen.queryByTestId("landing-legend")).toBeNull();
   });
+  it("explicit Earth focus opens scored mission profiles, then ranks Mars analogs against the Earth selection", async () => {
+    renderApp();
+    fireEvent.click(screen.getByRole("button",{name:"Mission Design"}));
+    fireEvent.click(screen.getByRole("button",{name:"Earth"}));
+    expect(screen.getByRole("heading",{name:"Mission priorities"})).toBeInTheDocument();
+    expect(screen.getAllByRole("slider")).toHaveLength(2);
+    fireEvent.change(screen.getByLabelText("Target regional slope mission priority"),{target:{value:"40"}});
+    expect(useAppStore.getState().missionProfileWeights.rover_field_test.slope).toBe(40);
+    const start=screen.getByRole("button",{name:"Head to explore mission →"});
+    await waitFor(()=>expect(start).toBeEnabled());
+    fireEvent.click(start);
+    await waitFor(()=>expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-mode","mission"));
+    expect(screen.getByRole("heading",{name:"Mission candidates"})).toBeInTheDocument();
+    expect(screen.queryByRole("heading",{name:"Mission suitability"})).toBeNull();
+    expect(rankCalls).toHaveLength(0);
+    const selectedEarth=useAppStore.getState().selectedEarthId;
+    expect(selectedEarth).toBeTruthy();
+    fireEvent.click(screen.getByRole("button",{name:/^Analog match/}));
+    await waitFor(()=>expect(rankCalls.length).toBeGreaterThan(0));
+    expect(rankCalls[0]).toMatchObject({reference_body:"earth",reference_id:selectedEarth,candidate_body:"mars"});
+    expect(useAppStore.getState().selectionBody).toBe("earth");
+  });
+
   it("ranks the Earth candidates against the selected Mars reference, names it in the legend, and a candidate click never rewrites the reference", async () => {
     useAppStore.getState().selectSite("elysium_planitia");
     renderApp();
-    fireEvent.click(await screen.findByRole("radio", { name: "Earth" }));
+    fireEvent.click(await screen.findByRole("button", { name: "View Earth" }));
     await waitFor(() => expect(rankCalls.length).toBeGreaterThan(0), { timeout: 3000 });
     expect(rankCalls[0]).toMatchObject({ reference_body: "mars", reference_id: "elysium_planitia", candidate_body: "earth" });
     expect(rankCalls[0].client_request_id).toMatch(/^analog-rank-/);
     expect((rankCalls[0].weights as unknown[]).length).toBe(5);
     await waitFor(() => expect(screen.getByTestId("globe-stub")).toHaveTextContent("Earth matches to Elysium Planitia (InSight)"), { timeout: 3000 });
-    expect(screen.getByTestId("match-context-line")).toHaveTextContent(/^Earth matches to Elysium Planitia \(InSight\) · /);
+    expect(screen.getByTestId("match-context-line")).toHaveTextContent(/^Earth matches to Elysium Planitia \(InSight\)/);
     const second = earthIds[1];
-    const row = await screen.findByRole("button", { name: new RegExp(`^${second}, match rank 2 of ${earthIds.length}, similarity 85`) });
+    const row = await screen.findByRole("button", { name: new RegExp(`^${second}, match rank 2 of ${earthIds.length}, 85% match`) });
     fireEvent.click(row);
     const s = useAppStore.getState();
     expect(s.selectedEarthId).toBe(second);

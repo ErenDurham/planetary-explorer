@@ -1,0 +1,33 @@
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/services/api";
+import { useAppStore } from "@/store/useAppStore";
+import { DEFAULT_PROFILE_WEIGHTS, PROFILE_CRITERIA } from "@/lib/missionProfiles";
+import { humanize } from "@/lib/format";
+import { useMissionAssessment } from "@/hooks/useMissionAssessment";
+import { ErrorNote } from "@/components/ui/ErrorNote";
+import type { MissionRequirements } from "@/types";
+
+export function MissionScoringPanel(){
+ const kind=useAppStore(s=>s.missionType),body=useAppStore(s=>s.selectionBody);
+ const all=useAppStore(s=>s.missionProfileWeights),reqs=useAppStore(s=>s.missionRequirements);
+ const setWeight=useAppStore(s=>s.setMissionProfileWeight),reset=useAppStore(s=>s.resetMissionProfileWeights),patch=useAppStore(s=>s.patchMissionRequirements);
+ const catalog=useQuery({queryKey:["comparison-catalog"],queryFn:api.comparisonCatalog,staleTime:Infinity});
+ const assessment=useMissionAssessment();
+ if(kind==="landing")return null;
+ const criteria=PROFILE_CRITERIA[kind],weights=all[kind],requirements=reqs[body];
+ const options=(feature:string)=>[...new Set(catalog.data?.locations.filter(l=>l.body===body).flatMap(l=>{const m=l.measurements.find(m=>m.feature_id===feature&&!m.is_missing);return Array.isArray(m?.value)?m.value:[];})??[])].sort();
+ const tags=(field:"material_targets"|"landform_targets",feature:string,label:string)=><fieldset className="mt-4"><legend className="text-sm font-medium text-fg">{label}</legend><div className="mt-2 flex flex-wrap gap-2">{options(feature).map(tag=><label key={tag} className={`cursor-pointer rounded border px-2 py-1.5 text-xs ${(requirements[field]??[]).includes(tag)?"border-copper bg-copper/10 text-fg":"border-line text-fg-muted"}`}><input type="checkbox" checked={(requirements[field]??[]).includes(tag)} onChange={e=>patch({[field]:e.target.checked?[...(requirements[field]??[]),tag]:(requirements[field]??[]).filter(t=>t!==tag)})} className="mr-2"/>{humanize(tag)}</label>)}</div></fieldset>;
+ const number=(field:keyof MissionRequirements,label:string,min:number,max:number,step:number)=> <label className="block text-xs text-fg-muted">{label}<input type="number" value={Number(requirements[field]??0)} min={min} max={max} step={step} onChange={e=>{const n=e.target.valueAsNumber;if(Number.isFinite(n)&&n>=min&&n<=max)patch({[field]:n});}} className="mt-1 w-full rounded border border-line-strong bg-bg p-2 text-sm text-fg"/></label>;
+ const leader=assessment.data?.results.find(r=>r.rank===1);
+ return <>
+  <section aria-label="Task-specific mission priorities" className="min-w-0 p-4">
+   <header className="flex items-center justify-between gap-3"><h2 className="text-xs font-semibold uppercase tracking-widest text-fg-muted">Mission priorities</h2>{criteria.length>0&&<button type="button" onClick={reset} className="rounded border border-line px-3 py-1 text-xs text-fg-muted">Reset profile weights</button>}</header>
+   {criteria.length>0&&<p className="mt-2 text-xs text-fg-muted">Shares total 100%. These priorities rank {body=== "earth"?"Earth":"Mars"} mission sites independently of analog matching.</p>}
+   {criteria.map(c=><div key={c.id} className="border-b border-line py-4"><label className="flex justify-between text-sm text-fg" htmlFor={`mission-profile-${c.id}`}><span>{c.label}</span><span>{weights[c.id]}%</span></label><p className="my-2 text-xs leading-relaxed text-fg-muted">{c.description}</p><input id={`mission-profile-${c.id}`} aria-label={`${c.label} mission priority`} type="range" min={0} max={100} value={weights[c.id]} onChange={e=>setWeight(c.id,Number(e.target.value))} style={{["--pct" as string]:`${weights[c.id]}%`}}/></div>)}
+   {kind==="research"&&<><p className="mt-4 text-sm text-fg">Choose the geological targets your study needs.</p>{catalog.error&&<ErrorNote error={catalog.error}/>}{catalog.isPending&&<p className="mt-2 text-xs text-fg-muted">Loading available research targets…</p>}{tags("material_targets","mineralogy_tags","Materials to investigate")}{tags("landform_targets","terrain_morphology","Landforms to investigate")}</>}
+   {kind==="rover_field_test"&&<><h3 className="mt-5 text-sm font-semibold">Requested test environment</h3><p className="mt-2 text-xs leading-relaxed text-fg-muted">Editable example preferences. Tolerance is the difference at which factor fit falls to zero; these are not rover safety limits.</p><div className="mt-4 grid grid-cols-2 gap-4">{number("slope_target_deg","Target regional slope (°)",0,90,.1)}{number("slope_tolerance_deg","Slope tolerance (°)",.1,90,.1)}{number("relief_target_m","Target regional relief (m)",0,10000,1)}{number("relief_tolerance_m","Relief tolerance (m)",1,10000,1)}</div></>}
+   {kind==="base_planning"&&<p className="mt-4 text-sm leading-relaxed text-fg-muted">Base planning needs resources, power, hazards and logistics evidence. Review the available profiles in Explore; no overall score is calculated.</p>}
+  </section>
+  <aside aria-label="Mission scoring guidance" className="min-w-0 border-t border-line p-4 md:col-span-2 xl:col-span-1 xl:border-l xl:border-t-0"><h2 className="text-xs font-semibold uppercase tracking-widest text-fg-muted">Live mission ranking</h2>{assessment.isPending?<p className="mt-3 text-sm text-fg-muted">Updating mission scores…</p>:leader?<p className="mt-3 rounded border border-line bg-bg p-3 text-sm text-fg"><strong>{leader.site_name}</strong><br/>{leader.score?.toFixed(1)} / 100 · current top match to your mission requirements.</p>:<p className="mt-3 text-sm text-fg-muted">{kind==="research"?"Select at least one research target to calculate site alignment.":"No supported aggregate score is available."}</p>}{leader?.evidence_gaps.some(g=>g.includes("site-specific"))&&<p className="mt-3 text-xs text-warn">Some catalogue tags need site-specific source verification. Inspect the site evidence before relying on its rank.</p>}{assessment.error&&<div className="mt-3"><ErrorNote error={assessment.error}/></div>}{assessment.data?.warnings.map(w=><p key={w} className="mt-3 text-xs text-warn">{w}</p>)}<details className="mt-5 border-t border-line pt-3"><summary className="cursor-pointer text-xs text-fg-muted">Scoring method & limits</summary><p className="mt-3 text-xs leading-relaxed text-fg-muted">{assessment.data?.method}</p>{assessment.data?.assumptions.map(n=><p key={n} className="mt-3 text-xs leading-relaxed text-fg-muted">{n}</p>)}<p className="mt-3 text-xs text-fg-muted">Profile defaults: {Object.entries(DEFAULT_PROFILE_WEIGHTS[kind]).map(([id,v])=>`${id} ${v}%`).join(", ")||"unscored evidence review"}.</p></details></aside>
+ </>;
+}

@@ -249,6 +249,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/missions/profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Profiles */
+        get: operations["profiles_api_v1_missions_profiles_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/missions/evaluate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Assess */
+        post: operations["assess_api_v1_missions_evaluate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/comparison/catalog": {
         parameters: {
             query?: never;
@@ -1319,6 +1353,107 @@ export interface components {
             /** Warnings */
             warnings?: string[];
         };
+        /** MissionAssessmentRequest */
+        MissionAssessmentRequest: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "earth" | "mars";
+            /**
+             * Mission Type
+             * @enum {string}
+             */
+            mission_type: "research" | "rover_field_test" | "base_planning";
+            /** Weights */
+            weights?: {
+                [key: string]: number;
+            };
+            requirements?: components["schemas"]["MissionRequirements"];
+            /** Client Request Id */
+            client_request_id?: string | null;
+        };
+        /** MissionAssessmentResponse */
+        MissionAssessmentResponse: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "earth" | "mars";
+            /**
+             * Mission Type
+             * @enum {string}
+             */
+            mission_type: "research" | "rover_field_test" | "base_planning";
+            /** Spec Version */
+            spec_version: string;
+            /** Profile Label */
+            profile_label: string;
+            /** Method */
+            method: string;
+            /** Assumptions */
+            assumptions: string[];
+            /** Warnings */
+            warnings: string[];
+            requirements: components["schemas"]["MissionRequirements"];
+            /** Results */
+            results: components["schemas"]["MissionAssessmentResult"][];
+            /** Client Request Id */
+            client_request_id: string | null;
+        };
+        /** MissionAssessmentResult */
+        MissionAssessmentResult: {
+            /** Site Id */
+            site_id: string;
+            /** Site Name */
+            site_name: string;
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "earth" | "mars";
+            /** Score */
+            score?: number | null;
+            /** Rank */
+            rank?: number | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "scored" | "needs_requirements" | "insufficient_data" | "not_supported";
+            /** Coverage Fraction */
+            coverage_fraction: number;
+            /** Factors */
+            factors: components["schemas"]["MissionFactor"][];
+            /** Evidence Gaps */
+            evidence_gaps: string[];
+        };
+        /** MissionFactor */
+        MissionFactor: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Label */
+            label: string;
+            /** Feature Id */
+            feature_id: string;
+            /** Value */
+            value?: number | string[] | null;
+            /** Unit */
+            unit?: string | null;
+            /** Q */
+            q?: number | null;
+            /** Normalized Weight */
+            normalized_weight?: number | null;
+            /** Contribution */
+            contribution?: number | null;
+            source?: components["schemas"]["Provenance"] | null;
+            /** Method */
+            method: string;
+            /** Note */
+            note: string;
+            /** Quality */
+            quality?: string | null;
+        };
         /** MissionProfile */
         MissionProfile: {
             /**
@@ -1337,6 +1472,33 @@ export interface components {
              * @enum {string}
              */
             missing_data_policy: "common_feature_set" | "per_site_exclusion";
+        };
+        /** MissionRequirements */
+        MissionRequirements: {
+            /** Material Targets */
+            material_targets?: string[];
+            /** Landform Targets */
+            landform_targets?: string[];
+            /**
+             * Slope Target Deg
+             * @default 1
+             */
+            slope_target_deg: number;
+            /**
+             * Slope Tolerance Deg
+             * @default 5
+             */
+            slope_tolerance_deg: number;
+            /**
+             * Relief Target M
+             * @default 100
+             */
+            relief_target_m: number;
+            /**
+             * Relief Tolerance M
+             * @default 300
+             */
+            relief_tolerance_m: number;
         };
         /**
          * Provenance
@@ -2750,6 +2912,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    profiles_api_v1_missions_profiles_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    assess_api_v1_missions_evaluate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MissionAssessmentRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MissionAssessmentResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
