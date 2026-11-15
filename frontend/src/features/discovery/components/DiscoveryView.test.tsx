@@ -1,6 +1,7 @@
 // The discovery workflow against test-injected services: ready, unavailable,
-// dead, empty, rejected, stale. Also that discovery selections never touch the
-// curated analog selection, and that the Explore page points at this view.
+// dead, empty, rejected, stale, on the three-column workspace (list, stage,
+// evidence panel). Also that discovery selections never touch the curated
+// analog selection, and that the Explore page points at this view.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -37,7 +38,7 @@ describe("DiscoveryView", () => {
   });
   afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
-  it("explains the survey, ranks it automatically, and walks inspect → re-weight → export with every number from the service", async () => {
+  it("explains the survey, ranks it automatically, and walks select → evidence → re-weight → export with every number from the service", async () => {
     const svc = connectedService();
     setDiscoveryService(svc);
     mount();
@@ -59,13 +60,18 @@ describe("DiscoveryView", () => {
     expect(stats).toHaveTextContent(/60 × 60 kmcomparison footprints/);
     expect(stats).toHaveTextContent(/4 kmterrain analysis resolution/);
     expect(within(list).getAllByRole("listitem")).toHaveLength(3);
+    // the left list: rank, where, index and the two status chips, nothing invented
     const first = within(list).getByRole("article", { name: /Rank 1: Footprint c_31_25_m2_75, similarity index 77\.1/ });
-    expect(first).toHaveTextContent(/Terrain similarity: 77\.1\/100\. This reflects how closely the region's measured slope and relief match Jezero Crater under the selected weighting \(slope 50%, relief 50%\)\. It is not a probability/);
-    expect(first).toHaveTextContent(/Regional slope is close: 1\.30° here against 1\.08° at Jezero Crater/);
-    expect(first).toHaveTextContent(/Not compared: climate, land cover, geology and materials/);
-    expect(first).toHaveTextContent(/Not near a location in our current reference catalog/);
-    expect(first).toHaveTextContent(/The catalog is incomplete/);
+    expect(first).toHaveTextContent(/31\.250°N, 2\.750°W/);
+    expect(first).toHaveTextContent(/77\.1/);
+    expect(first).toHaveTextContent(/Not near a catalog location/);
     expect(first.textContent).not.toMatch(/Outside catalog buffer/);
+    expect(screen.getByRole("heading", { name: /Candidates · 3/ })).toBeInTheDocument();
+    // before any selection the evidence panel explains the survey rather than sitting blank
+    const panel = screen.getByTestId("discovery-panel");
+    expect(panel).toHaveTextContent(/Select a candidate on the globe or in the list/);
+    expect(panel).toHaveTextContent(/Reference region.*Jezero Crater · Mars/);
+    expect(panel).toHaveTextContent(/How the index is calculated/);
     // survey boundary, sampling coverage, footprints, established site in view, counts
     expect(screen.getByTestId("survey-boundary")).toBeInTheDocument();
     expect(screen.getAllByTestId("sampling-centre")).toHaveLength(16);
@@ -76,11 +82,18 @@ describe("DiscoveryView", () => {
     expect(funnel).toHaveTextContent(/insufficient terrain coverage2/);
     expect(funnel).toHaveTextContent("2011-2015 (TanDEM-X)");
     expect(funnel).toHaveTextContent(/Ranked pool 3 · returned 3/);
-    // inspect a candidate: label, factor table, novelty wording, missing evidence, validation steps from the detail call
-    fireEvent.click(within(within(list).getByRole("article", { name: /Rank 2:/ })).getByRole("button", { name: "Inspect evidence" }));
+    // select a candidate from the list: the panel shows its evidence (label, index sentence, reasons, factor table, novelty wording, missing evidence, validation steps from the detail call)
+    const row2 = within(within(list).getByRole("article", { name: /Rank 2:/ })).getByRole("button");
+    fireEvent.click(row2);
+    expect(row2).toHaveAttribute("aria-pressed", "true");
     const card = await screen.findByRole("article", { name: /Candidate evidence: Footprint c_31_75_m2_25/ });
+    expect(within(panel).getByRole("article", { name: /Candidate evidence/ })).toBe(card);
     expect(card).toHaveTextContent("Proposed terrain analog candidate; field validation required.");
     expect(card).toHaveTextContent("61.4");
+    expect(card).toHaveTextContent(/Terrain similarity: 61\.4\/100\. This reflects how closely the region's measured slope and relief match Jezero Crater under the selected weighting \(slope 50%, relief 50%\)\. It is not a probability/);
+    expect(card).toHaveTextContent(/Regional (slope|relief) is close: .* at Jezero Crater/);
+    expect(card).toHaveTextContent(/Not compared: climate, land cover, geology and materials/);
+    expect(card).toHaveTextContent(/The catalog is incomplete/);
     expect(within(card).getByRole("table")).toHaveTextContent(/Regional median slope.*1\.3°.*1\.077°/);
     expect(card).toHaveTextContent(/Not near a catalog location/);
     expect(card).toHaveTextContent(/not a claim of novelty/);
@@ -123,7 +136,7 @@ describe("DiscoveryView", () => {
     setDiscoveryService(svc);
     mount();
     expect(await screen.findByText(/No footprint in this survey passed screening/)).toBeInTheDocument();
-    expect(screen.getByText(/Candidate regions · 0/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Candidates · 0/ })).toBeInTheDocument();
     setDiscoveryService(connectedService({ rank: async () => { throw new DiscoveryRequestRejected("validation_error", "weights must have a positive total"); } }));
     fireEvent.change(screen.getByRole("slider", { name: /Regional median slope weight share/ }), { target: { value: "60" } });
     expect(await screen.findByRole("alert")).toHaveTextContent(/weights must have a positive total/);
@@ -153,8 +166,13 @@ describe("DiscoveryView", () => {
     const globe = await screen.findByTestId("globe-stub");
     expect(globe).toHaveTextContent("globe: 5 markers");
     expect(globe).toHaveTextContent(/3 proposed candidate centres/);
+    const before = useDiscoveryStore.getState().selectionRevision;
     fireEvent.click(within(globe).getByRole("button", { name: "Footprint c_31_25_m2_75" }));
     expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBe("c_31_25_m2_75");
+    expect(useDiscoveryStore.getState().selectionRevision).toBe(before + 1);
+    // the list row and the panel follow the globe click
+    expect(within(screen.getByRole("list", { name: "Ranked proposed candidates" })).getByRole("button", { name: /Footprint c_31_25_m2_75/ })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("article", { name: /Candidate evidence: Footprint c_31_25_m2_75/ })).toBeInTheDocument();
     fireEvent.click(within(globe).getByRole("button", { name: /Atacama Desert - Yungay region \(established analog\)/ }));
     expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBe("c_31_25_m2_75");
     expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
@@ -187,7 +205,8 @@ describe("DiscoveryView", () => {
     useAppStore.setState({ selectedMarsId: "gale_crater" });
     mount();
     const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
-    fireEvent.click(within(within(list).getByRole("article", { name: /Rank 1:/ })).getByRole("button", { name: "Research this candidate" }));
+    fireEvent.click(within(within(list).getByRole("article", { name: /Rank 1:/ })).getByRole("button"));
+    fireEvent.click(await screen.findByRole("button", { name: "Research this candidate" }));
     const s = useAppStore.getState();
     expect(s.activeTab).toBe("research");
     expect(s.selectedMarsId).toBe("jezero_crater");

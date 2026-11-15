@@ -8,10 +8,13 @@ export function SitePanelShell({
   width,
   onWidthChange,
   children,
+  title = "Site details",
 }: {
   width: number;
   onWidthChange: (width: number) => void;
   children: ReactNode;
+  /** Header label; Find Earth Analogs names it for candidates rather than sites. */
+  title?: string;
 }) {
   const collapsed = width === COLLAPSED_SITE_WIDTH;
   const previous = useRef(DEFAULT_WIDTH);
@@ -91,7 +94,7 @@ export function SitePanelShell({
       >
         {!collapsed && (
           <h2 className="pl-2 text-[11px] font-medium uppercase tracking-widest text-fg-muted">
-            Site details
+            {title}
           </h2>
         )}
         <button

@@ -1,26 +1,37 @@
-import { ResearchStatusBadge } from "./ResearchStatusBadge";
-import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
-import { useDiscoveryStore } from "../store/useDiscoveryStore";
-import { useAppStore } from "@/store/useAppStore";
-// Evidence card for one proposed candidate: current scores from the rank
+// Evidence for one proposed candidate: current scores from the rank
 // response, immutable inputs from the detail endpoint. Every number is the
-// server's; absent context is reported as absent.
+// server's; absent context is reported as absent. Rendered inside the
+// evidence panel (flush) or, standalone, as a card.
 import { ExternalLink, FlaskConical } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { BulletList } from "@/components/ui/Section";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { formatValueWithUnit } from "@/lib/format";
-import { PROPOSED_LABEL, formatKm, noveltyRelation, reviewStatusLabel } from "../lib/copy";
+import { useAppStore } from "@/store/useAppStore";
+import { PROPOSED_LABEL, formatKm, missingFactors, noveltyRelation, reviewStatusLabel, similarityExplanation, similarityReasons } from "../lib/copy";
+import { formatPoint } from "../lib/geo";
+import { ResearchStatusBadge } from "./ResearchStatusBadge";
+import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
+import { useDiscoveryStore } from "../store/useDiscoveryStore";
 import { KeyValues } from "./SurveyFunnel";
 import type { DiscoveryCandidate, DiscoveryCandidateDetail, DiscoveryCriterion, DiscoveryReference } from "../adapter";
 import type { EarthSite } from "@/hooks/useEarthSites";
 
-export function CandidateDetail({ candidate, detail, detailPending, detailError, onRetry, criteria, reference, established, onCompareKnown }: {
+export function CandidateDetail({ candidate, detail, detailPending, detailError, onRetry, criteria, reference, established, onCompareKnown, onResearch, effectiveWeights, flush = false }: {
   candidate: DiscoveryCandidate; detail: DiscoveryCandidateDetail | undefined; detailPending: boolean; detailError: unknown; onRetry: () => void; criteria: DiscoveryCriterion[]; reference: DiscoveryReference; established: EarthSite[];
   /** Open the established-analog view for the nearest known site, when it is in the curated catalogue. */
   onCompareKnown?: (siteId: string) => void;
+  /** Hand the candidate to Research Prospects; defaults to opening the research tab. */
+  onResearch?: (candidateId: string) => void;
+  /** The rank response's normalised weights, for the plain-language index sentence. */
+  effectiveWeights?: Record<string, number>;
+  /** Inside the evidence panel: no card border of its own. */
+  flush?: boolean;
 }) {
   const runId = useDiscoveryStore(s => s.runId);
+  const research = () => { if (onResearch) onResearch(candidate.id); else if (runId) { useCandidateResearchTarget.getState().open(runId, candidate.id); useAppStore.getState().setActiveTab("research"); } };
+  const why = similarityReasons(candidate.feature_distances, reference.name);
+  const notCompared = missingFactors(candidate);
   const nov = noveltyRelation(candidate.novelty);
   const known = established.find(s => s.id === candidate.novelty.nearest_known_site_id);
   const dists = candidate.feature_distances ?? [];
@@ -31,13 +42,18 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
   missing.push("Geology: not assessed. No mineralogy or landform evidence is recorded for this footprint; none is inferred.");
   if (candidate.research_status !== "literature_reviewed") missing.push("Candidate literature review: not completed. Small desktop checks do not establish a researched analog.");
   return (
-    <article aria-label={`Candidate evidence: ${candidate.name}`} className="rounded-xl border border-line-strong bg-bg-elev p-4 text-sm">
+    <article aria-label={`Candidate evidence: ${candidate.name}`} className={flush ? "p-4 text-sm" : "rounded-xl border border-line-strong bg-bg-elev p-4 text-sm"}>
       <p className="rounded-lg border border-info/40 bg-info/10 px-3 py-2 text-xs font-semibold text-info"><FlaskConical className="mr-1 inline h-3.5 w-3.5" aria-hidden />{PROPOSED_LABEL}</p>
-      <div className="mt-3 flex flex-wrap items-center gap-3"><ResearchStatusBadge status={candidate.research_status} /><button type="button" disabled={!runId} className="rounded-lg border border-copper px-3 py-2 text-sm font-semibold text-copper-bright disabled:opacity-40" onClick={() => { if (runId) { useCandidateResearchTarget.getState().open(runId, candidate.id); useAppStore.getState().setActiveTab("research"); } }}>Research this candidate</button></div>
       <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
-        <div><p className="eyebrow">Rank {candidate.display_rank ?? "—"}{candidate.raw_rank != null && candidate.raw_rank !== candidate.display_rank ? ` · raw rank ${candidate.raw_rank} before diversification` : ""}</p><h2 className="mt-1 text-xl font-semibold tracking-tight text-fg">{candidate.name}</h2><p className="num text-xs text-fg-muted">{candidate.lat.toFixed(4)}°, {candidate.lon_east.toFixed(4)}°E · 60 km footprint centre</p></div>
+        <div><p className="eyebrow">Rank {candidate.display_rank ?? "—"}{candidate.raw_rank != null && candidate.raw_rank !== candidate.display_rank ? ` · raw rank ${candidate.raw_rank} before diversification` : ""}</p><h2 className="num mt-1 text-xl font-semibold tracking-tight text-fg">{formatPoint(candidate.lat, candidate.lon_east)}</h2><p className="text-xs text-fg-muted">{candidate.name} · 60 km footprint centre</p></div>
         <div className="text-right"><p className="num text-3xl text-copper-bright">{candidate.similarity_index != null ? candidate.similarity_index.toFixed(1) : "—"}<span className="ml-1 text-sm text-fg-muted">/ 100</span></p><p className="text-[10.5px] text-fg-faint">two-feature terrain index · D = {candidate.distance?.toFixed(3) ?? "—"}</p></div>
       </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2"><ResearchStatusBadge status={candidate.research_status} /><button type="button" disabled={!runId} className="rounded-lg border border-info/60 bg-info/10 px-3 py-1.5 text-xs font-semibold text-info hover:bg-info/20 disabled:opacity-40" onClick={research}>Research this candidate</button></div>
+      {effectiveWeights && <p className="mt-3 text-xs leading-relaxed text-fg-muted">{similarityExplanation(candidate, reference.name, effectiveWeights)}</p>}
+      <dl className="mt-3 grid gap-2 text-xs">
+        <div className="rounded-lg border border-line p-2.5"><dt className="text-[10.5px] uppercase tracking-wide text-ok">Why it resembles {reference.name}</dt><dd className="mt-1 text-fg">{why.similar ?? "No factor breakdown was returned."}</dd></div>
+        <div className="rounded-lg border border-line p-2.5"><dt className="text-[10.5px] uppercase tracking-wide text-warn">Differences and what was not compared</dt><dd className="mt-1 text-fg">{why.differs ?? "Both compared factors are close."} Not compared: {notCompared.join(", ")}.</dd></div>
+      </dl>
 
       <section className="mt-4" aria-labelledby="cd-terrain">
         <h3 id="cd-terrain" className="eyebrow">Regional terrain against {reference.name}</h3>

@@ -55,7 +55,8 @@ export default function App() {
   const activeTab = useAppStore((s) => s.activeTab);
   const setActiveTab = useAppStore((s) => s.setActiveTab);
   const exploreMode = useAppStore((s) => s.exploreMode);
-  // "Find Earth Analogs" is the second Explore experience: full width, its own run-scoped state
+  // "Find Earth Analogs" is the second Explore experience: the same three-column
+  // workspace, drawn by DiscoveryView itself, with its own run-scoped state
   const findAnalogs = activeTab === "explore" && exploreMode === "find_analogs";
   const focusToken = useAppStore((s) => s.selectionRevision);
   const viewedBody = useAppStore((s) => s.viewedBody);
@@ -244,7 +245,7 @@ export default function App() {
 
   useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
   const centre = findAnalogs
-    ? <DiscoveryView />
+    ? <DiscoveryView panelWidth={sitePanelWidth} onPanelWidthChange={setSitePanelWidth} />
     : activeTab === "explore"
     ? <ExploreView key={exploreRevision} initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
@@ -356,7 +357,7 @@ export default function App() {
           </div>
         )}
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || findAnalogs || (activeTab === "research" && candidateResearchTarget != null) ? "hidden " : ""}${activeTab === "explore" && !findAnalogs ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );

@@ -20,6 +20,8 @@ interface DiscoveryState {
   defaultWeights: Shares;
   topK: number;
   view: DiscoveryMapView;
+  /** Bumped on every non-null selection; the globe reads it as its focus token so re-selecting the same candidate flies to it again. */
+  selectionRevision: number;
   runs: Record<string, RunState>;
   setRun: (runId: string | null) => void;
   seedDefaults: (defaults: Record<string, number> | undefined) => void;
@@ -38,7 +40,8 @@ export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   weights: sharesFromDefaults(undefined),
   defaultWeights: sharesFromDefaults(undefined),
   topK: TOP_K_DEFAULT,
-  view: "map",
+  view: "globe",
+  selectionRevision: 0,
   runs: {},
   setRun: (runId) => set((s) => ({ runId, runs: runId && !s.runs[runId] ? { ...s.runs, [runId]: { ...EMPTY_RUN } } : s.runs })),
   seedDefaults: (defaults) => set((s) => {
@@ -51,7 +54,7 @@ export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   setTopK: (n) => set({ topK: clampTopK(n) }),
   setView: (view) => set({ view }),
   requestRank: () => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), ranked: true } } })); },
-  selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id } } })); },
+  selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ selectionRevision: id ? s.selectionRevision + 1 : s.selectionRevision, runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id } } })); },
 }));
 
 export function useRunState(): RunState {
