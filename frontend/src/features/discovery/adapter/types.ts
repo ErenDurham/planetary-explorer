@@ -22,8 +22,12 @@ export type DiscoveryNovelty = S["DiscoveryNovelty"];
 export type DiscoveryContext = S["DiscoveryContext"];
 export type DiscoverySource = S["DiscoverySource"];
 export type DiscoveryProfile = S["DiscoveryProfile"];
-export type DiscoveryWeights = S["DiscoveryWeights"];
+/** Weights name features the chosen survey scores; the service resolves them against its basis. */
+export type DiscoveryWeights = Record<string, number>;
 export type DiscoveryExport = S["DiscoveryExport"];
+export type DiscoveryProbeRequest = S["DiscoveryProbeRequest"];
+export type DiscoveryProbeResponse = S["DiscoveryProbeResponse"];
+export type DiscoveryProbePlacement = S["DiscoveryProbePlacement"];
 
 export type DiscoveryWeightId = keyof DiscoveryWeights;
 export const DISCOVERY_WEIGHT_IDS: readonly DiscoveryWeightId[] = ["slope_regional_median_deg", "roughness_regional_m"];
@@ -36,6 +40,8 @@ export interface DiscoveryService {
   rank(request: DiscoveryRankRequest, signal?: AbortSignal): Promise<DiscoveryRankResponse>;
   detail(runId: string, candidateId: string, signal?: AbortSignal): Promise<DiscoveryCandidateDetail>;
   export(runId: string, signal?: AbortSignal): Promise<DiscoveryExport>;
+  /** Score one user-chosen point with the run's own pipeline; never part of the ranking. */
+  probe(request: DiscoveryProbeRequest, signal?: AbortSignal): Promise<DiscoveryProbeResponse>;
 }
 
 /** The service or its installed artifacts are not available (not deployed,

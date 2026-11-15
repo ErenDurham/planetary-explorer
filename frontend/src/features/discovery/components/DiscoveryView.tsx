@@ -16,6 +16,7 @@ import { isGeoreferenced } from "@/lib/comparison";
 import { useDiscoveryCapabilities } from "../hooks/useDiscoveryCapabilities";
 import { useDiscoveryRank } from "../hooks/useDiscoveryRank";
 import { useDiscoveryCandidate } from "../hooks/useDiscoveryCandidate";
+import { useDiscoveryProbe } from "../hooks/useDiscoveryProbe";
 import { useDiscoveryStore, useRunState } from "../store/useDiscoveryStore";
 import { useCandidateResearchTarget } from "../store/useCandidateResearchTarget";
 import { DiscoveryStage } from "./DiscoveryStage";
@@ -25,6 +26,7 @@ import { DiscoverySurveyPanel } from "./DiscoverySurveyPanel";
 import { CandidateDetail } from "./CandidateDetail";
 import { SurveyPicker } from "./SurveyPicker";
 import { SurveyMap } from "./SurveyMap";
+import { PinProbePanel } from "./PinProbePanel";
 import { DiscoveryGlobe } from "./DiscoveryGlobe";
 import { isDiscoveryNotFound, isDiscoveryRejected, isDiscoveryUnavailable, type DiscoveryReference } from "../adapter";
 
@@ -67,6 +69,11 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   // an explicit selection, a cleared one, or a re-ranking never trigger it again.
   useEffect(() => { const first = candidates?.[0]; if (first && rank.data?.run_id === store.runId) store.autoSelectFirst(first.id); }, [candidates, rank.data?.run_id, store.runId]); // eslint-disable-line react-hooks/exhaustive-deps
   const selected = candidates?.find(c => c.id === run.selectedCandidateId) ?? null;
+  // the dropped pin: scored by the service under the same weights as the ranking, never part of it
+  const pin = run.pin ?? null;
+  const probe = useDiscoveryProbe(store.runId, pin, store.weights, run.ranked && caps.kind === "ready");
+  const pinFootprint = (probe.data?.footprint_geojson as Record<string, unknown> | null | undefined) ?? null;
+  const pinIndex = probe.data?.status === "scored" ? probe.data.similarity_index ?? null : null;
   const detail = useDiscoveryCandidate(store.runId, selected?.id ?? null);
   const activeRun = runs.find(r => r.run_id === store.runId) ?? null;
   const sources = useMemo(() => candidates?.flatMap(c => c.sources) ?? [], [candidates]);
@@ -112,8 +119,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
     : null;
 
   const body = state ?? (store.view === "map"
-    ? <div className="h-full p-3"><SurveyMap run={activeRun!} survey={survey ?? null} candidates={candidates ?? []} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} established={earth.sites} palette={palette} className="h-full" /></div>
-    : <DiscoveryGlobe candidates={candidates ?? []} established={earth.sites} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} palette={palette} runLabel={activeRun!.label} focusToken={focusToken} bounds={activeRun!.bounds} survey={survey ?? null} />);
+    ? <div className="h-full p-3"><SurveyMap run={activeRun!} survey={survey ?? null} candidates={candidates ?? []} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} established={earth.sites} palette={palette} className="h-full" pin={pin} onPin={store.setPin} pinFootprint={pinFootprint} /></div>
+    : <DiscoveryGlobe candidates={candidates ?? []} established={earth.sites} selectedId={run.selectedCandidateId} onSelect={store.selectCandidate} palette={palette} runLabel={activeRun!.label} focusToken={focusToken} bounds={activeRun!.bounds} survey={survey ?? null} pin={pin} onPin={store.setPin} pinFootprint={pinFootprint} pinIndex={pinIndex} />);
 
   const facts = ready ? (
     <>
@@ -144,6 +151,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           runId={store.runId}
           ranking={rank.data}
           weights={weights}
+          pinSection={ready ? <PinProbePanel pin={pin} onPin={store.setPin} probe={probe} criteria={criteria} referenceName={referenceName} enabled={run.ranked} /> : null}
         />
       </aside>
       <div className="relative order-1 lg:order-2 lg:h-full">

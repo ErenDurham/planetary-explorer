@@ -26,7 +26,7 @@ export interface SurfaceRing {
   pickId?: string;
 }
 
-export interface SurfaceDot { id: string; lat: number; lonEast: number; color?: string; muted?: boolean }
+export interface SurfaceDot { id: string; lat: number; lonEast: number; color?: string; muted?: boolean; /** Multiplier on the default dot radius. */ size?: number }
 
 const RING_LIFT = 1.004;
 const FILL_LIFT = 1.003;
@@ -75,7 +75,7 @@ function Dot({ radius, dot }: { radius: number; dot: SurfaceDot }) {
   const pos = useMemo(() => latLonToVector3(dot.lat, dot.lonEast, radius * DOT_LIFT), [dot.lat, dot.lonEast, radius]);
   return (
     <mesh position={pos}>
-      <sphereGeometry args={[radius * 0.0012, 8, 8]} />
+      <sphereGeometry args={[radius * 0.0012 * (dot.size ?? 1), 8, 8]} />
       <meshBasicMaterial color={dot.color ?? "#e8e3d9"} transparent opacity={dot.muted ? 0.45 : 0.9} />
     </mesh>
   );

@@ -32,6 +32,8 @@ export interface PlanetViewerProps {
   onOverlayMaxHeightChange?: (height:number|undefined)=>void;
   autoRotate: boolean;
   onAutoRotateChange: (v: boolean) => void;
+  /** A click on the planet surface itself (not on a marker or an overlay), as geographic coordinates. */
+  onPickSurface?: (p: { lat: number; lonEast: number }) => void;
   /** Change this value to request a camera reset. */
   resetToken: number;
   onRequestReset: () => void;
@@ -54,7 +56,7 @@ export interface PlanetViewerProps {
 const DEFAULT_CAMERA = new Vector3(0, 0.6, 3.1);
 
 export function PlanetViewer(props: PlanetViewerProps) {
-  const { config, markers, selectedId, onSelect, autoRotate, onAutoRotateChange, resetToken, onRequestReset, statusLine, mode = "landing", palette = "roygbiv", onPaletteChange, legendHeading, rankedCount, overlays, focusDistance = 1.65 } = props;
+  const { config, markers, selectedId, onSelect, autoRotate, onAutoRotateChange, resetToken, onRequestReset, statusLine, mode = "landing", palette = "roygbiv", onPaletteChange, legendHeading, rankedCount, overlays, focusDistance = 1.65, onPickSurface } = props;
   const selected = markers.find(m => m.id === selectedId);
   const body = config.displayName;
   const [travelling,setTravelling]=useState(false);
@@ -109,7 +111,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         <directionalLight position={[-6, -1, -3]} intensity={0.18} color="#8aa0c8" />
         <Stars radius={60} depth={30} count={1800} factor={2.2} saturation={0} fade speed={reducedMotion ? 0 : 0.15} />
         <Suspense fallback={<PlaceholderSphere config={config} meshRef={planetRef} />}>
-          <PlanetSphere config={config} meshRef={planetRef} reducedMotion={reducedMotion} />
+          <PlanetSphere config={config} meshRef={planetRef} reducedMotion={reducedMotion} onPick={onPickSurface} />
         </Suspense>
         <Atmosphere radius={config.radius} spec={config.atmosphere} />
         {!travelling && overlays}

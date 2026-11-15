@@ -13,6 +13,8 @@ interface RunState {
   selectedCandidateId: string | null;
   /** The first result was selected once when the first ranking arrived; never repeated, so a cleared or changed selection stays. */
   autoSelected: boolean;
+  /** The user's dropped pin, scored by the service on demand; never a candidate and never in the ranking. */
+  pin?: { lat: number; lon: number } | null;
 }
 
 interface DiscoveryState {
@@ -35,9 +37,12 @@ interface DiscoveryState {
   selectCandidate: (id: string | null) => void;
   /** Select the first result once per run; a no-op when something is already selected or it has run before. */
   autoSelectFirst: (id: string) => void;
+  /** Place, move or clear the dropped pin for the current run. Coordinates are kept to 4 decimals (about 11 m) so a query key is stable. */
+  setPin: (pin: { lat: number; lon: number } | null) => void;
 }
 
-const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null, autoSelected: false };
+const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null, autoSelected: false, pin: null };
+const round4 = (v: number) => Math.round(v * 1e4) / 1e4;
 
 export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   runId: null,
@@ -59,6 +64,7 @@ export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   setView: (view) => set({ view }),
   requestRank: () => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), ranked: true } } })); },
   selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ selectionRevision: id ? s.selectionRevision + 1 : s.selectionRevision, runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id, autoSelected: true } } })); },
+  setPin: (pin) => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), pin: pin ? { lat: round4(pin.lat), lon: round4(pin.lon) } : null } } })); },
   autoSelectFirst: (id) => { const { runId } = get(); if (!runId) return; set((s) => { const r = s.runs[runId] ?? EMPTY_RUN; if (r.autoSelected || r.selectedCandidateId) return {}; return { selectionRevision: s.selectionRevision + 1, runs: { ...s.runs, [runId]: { ...r, selectedCandidateId: id, autoSelected: true } } }; }); },
 }));
 

@@ -8,9 +8,20 @@ describe("discovery store", () => {
     const s = useDiscoveryStore.getState();
     useAppStore.setState({ selectedEarthId: "atacama_yungay" });
     s.setRun("r1"); s.requestRank(); s.selectCandidate("c1");
-    expect(useDiscoveryStore.getState().runs.r1).toEqual({ ranked: true, selectedCandidateId: "c1", autoSelected: true });
+    expect(useDiscoveryStore.getState().runs.r1).toEqual({ ranked: true, selectedCandidateId: "c1", autoSelected: true, pin: null });
     s.setRun("r2");
-    expect(useDiscoveryStore.getState().runs.r2).toEqual({ ranked: false, selectedCandidateId: null, autoSelected: false });
+    expect(useDiscoveryStore.getState().runs.r2).toEqual({ ranked: false, selectedCandidateId: null, autoSelected: false, pin: null });
+    expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
+  });
+  it("keeps the dropped pin per run, rounded to four decimals, and never in the curated selection", () => {
+    const s = useDiscoveryStore.getState();
+    useAppStore.setState({ selectedEarthId: "atacama_yungay" });
+    s.setRun("r1"); s.setPin({ lat: 31.41234567, lon: -2.59876543 });
+    expect(useDiscoveryStore.getState().runs.r1.pin).toEqual({ lat: 31.4123, lon: -2.5988 });
+    s.setRun("r2");
+    expect(useDiscoveryStore.getState().runs.r2.pin).toBeNull();
+    s.setRun("r1"); s.setPin(null);
+    expect(useDiscoveryStore.getState().runs.r1.pin).toBeNull();
     expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
   });
   it("seeds defaults from capabilities without overwriting an edited weight", () => {

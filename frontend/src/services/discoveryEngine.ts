@@ -8,6 +8,8 @@ export type DiscoveryRankResponse = Schemas["DiscoveryRankResponse"];
 export type DiscoveryCandidate = Schemas["DiscoveryCandidate"];
 export type DiscoveryCandidateDetail = Schemas["DiscoveryCandidateDetail"];
 export type DiscoveryExport = Schemas["DiscoveryExport"];
+export type DiscoveryProbeRequest = Schemas["DiscoveryProbeRequest"];
+export type DiscoveryProbeResponse = Schemas["DiscoveryProbeResponse"];
 export type CandidateResearchDossier = Schemas["ResearchDossier"];
 export type CandidateResearchUpdate = Schemas["ResearchUpdate"];
 export type CandidateResearchBrief = Schemas["ResearchBrief"];
@@ -33,6 +35,8 @@ export const discoveryEngine = {
   capabilities: (signal?: AbortSignal) => invoke<DiscoveryCapabilities>("/discovery/capabilities", { signal }),
   rank: (payload: DiscoveryRankRequest, signal?: AbortSignal) => invoke<DiscoveryRankResponse>(
     "/discovery/rank", { method: "POST", body: JSON.stringify(payload), signal }),
+  probe: (payload: DiscoveryProbeRequest, signal?: AbortSignal) => invoke<DiscoveryProbeResponse>(
+    "/discovery/probe", { method: "POST", body: JSON.stringify(payload), signal }),
   detail: (runId: string, candidateId: string, signal?: AbortSignal) => invoke<DiscoveryCandidateDetail>(
     `/discovery/runs/${encodeURIComponent(runId)}/candidates/${encodeURIComponent(candidateId)}`, { signal }),
   export: (runId: string, signal?: AbortSignal) => invoke<DiscoveryExport>(

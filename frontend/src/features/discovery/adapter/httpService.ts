@@ -30,6 +30,7 @@ export class HttpDiscoveryService implements DiscoveryService {
   rank(request: Parameters<DiscoveryService["rank"]>[0], signal?: AbortSignal) { return discoveryEngine.rank(request, signal).catch(translateDiscoveryError); }
   detail(runId: string, candidateId: string, signal?: AbortSignal) { return discoveryEngine.detail(runId, candidateId, signal).catch(translateDiscoveryError); }
   export(runId: string, signal?: AbortSignal) { return discoveryEngine.export(runId, signal).catch(translateDiscoveryError); }
+  probe(request: Parameters<DiscoveryService["probe"]>[0], signal?: AbortSignal) { return discoveryEngine.probe(request, signal).catch(translateDiscoveryError); }
 }
 
 export const isDiscoveryUnavailable = (e: unknown): e is DiscoveryUnavailable => e instanceof DiscoveryUnavailable;

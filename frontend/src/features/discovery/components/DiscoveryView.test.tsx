@@ -8,9 +8,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
 
 vi.mock("@/components/globe/PlanetViewer", () => ({
-  PlanetViewer: (props: { markers: Array<{ id: string; name: string }>; statusLine?: string; onSelect: (id: string) => void; selectedId: string | null; overlays?: unknown; focusDistance?: number }) => (
+  PlanetViewer: (props: { markers: Array<{ id: string; name: string }>; statusLine?: string; onSelect: (id: string) => void; selectedId: string | null; overlays?: unknown; focusDistance?: number; onPickSurface?: (p: { lat: number; lonEast: number }) => void }) => (
     <div data-testid="globe-stub">globe: {props.markers.length} markers · {props.statusLine} · selected {props.selectedId ?? "none"} · overlays {props.overlays ? "drawn" : "none"} · focus {props.focusDistance ?? "default"}
       {props.markers.map(m => <button key={m.id} type="button" onClick={() => props.onSelect(m.id)}>{m.name}</button>)}
+      {props.onPickSurface && <button type="button" onClick={() => props.onPickSurface!({ lat: 31.6, lonEast: -2.4 })}>pick surface</button>}
     </div>
   ),
 }));
@@ -19,6 +20,7 @@ import { DiscoveryView } from "./DiscoveryView";
 import { setDiscoveryService, DiscoveryRequestRejected } from "../adapter";
 import { useDiscoveryStore } from "../store/useDiscoveryStore";
 import { candidates, capabilities, connectedService, deadService, rankResponse, run, unavailableService } from "../test/fixtures";
+import { DiscoveryUnavailable } from "../adapter";
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 const catalog = { locations: [{ body: "earth", id: "atacama_yungay", name: "Atacama Desert - Yungay region", region: "Chile", lat: -24.08, lon_east: -69.95, measurements: [] }, { body: "earth", id: "near_site", name: "A site inside the view", region: "Morocco", lat: 31.5, lon_east: -2.5, measurements: [] }] };
@@ -226,5 +228,75 @@ describe("DiscoveryView", () => {
     const s = useAppStore.getState();
     expect(s.activeTab).toBe("research");
     expect(s.selectedMarsId).toBe("jezero_crater");
+  });
+
+  it("drops a pin on the survey map, scores it under the current weights apart from the ranking, re-scores on a weight change, drags it, and clears it", async () => {
+    const svc = connectedService();
+    setDiscoveryService(svc);
+    mount();
+    const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
+    const panel = screen.getByTestId("pin-probe");
+    expect(panel).toHaveTextContent("Not a candidate");
+    expect(svc.probeCalls).toHaveLength(0);
+    // a click on empty map (press and release without travel) places the pin
+    const frame = screen.getByTestId("survey-map-frame");
+    fireEvent.pointerDown(frame, { clientX: 400, clientY: 210, button: 0 });
+    fireEvent.pointerUp(frame, { clientX: 400, clientY: 210, button: 0 });
+    await screen.findByTestId("pin-scored");
+    expect(svc.probeCalls).toHaveLength(1);
+    expect(svc.probeCalls[0]).toMatchObject({ run_id: run.run_id, reference_id: "jezero_crater", weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 } });
+    const placed = useDiscoveryStore.getState().runs[run.run_id].pin!;
+    expect(placed.lat).toBeGreaterThan(31); expect(placed.lat).toBeLessThan(32); expect(placed.lon).toBeGreaterThan(-3); expect(placed.lon).toBeLessThan(-2);
+    expect(screen.getByTestId("map-pin")).toBeInTheDocument();
+    expect(screen.getByTestId("pin-footprint")).toBeInTheDocument();
+    // the ranked list is untouched: still three candidates, and the pin is nowhere in it
+    expect(within(list).getAllByRole("listitem")).toHaveLength(3);
+    expect(within(list).queryByText(/Dropped pin/)).toBeNull();
+    // the curated selection is untouched too
+    expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
+    // a weight change re-scores the same pin with the new weights
+    fireEvent.change(screen.getByLabelText(/Regional median slope/), { target: { value: "20" } });
+    await waitFor(() => expect(svc.probeCalls).toHaveLength(2));
+    expect(svc.probeCalls[1]).toMatchObject({ lat: placed.lat, lon_east: placed.lon, weights: { slope_regional_median_deg: 20, roughness_regional_m: 80 } });
+    await waitFor(() => expect(screen.getByTestId("pin-placement")).toHaveTextContent("2 of the 3 surveyed candidates sit closer"));
+    // dragging the pin moves it; a click on a footprint still selects the candidate, not the pin
+    const pinGlyph = screen.getByTestId("map-pin");
+    fireEvent.pointerDown(pinGlyph, { clientX: 400, clientY: 190, button: 0 });
+    fireEvent.pointerMove(frame, { clientX: 300, clientY: 150 });
+    fireEvent.pointerUp(frame, { clientX: 300, clientY: 150, button: 0 });
+    const moved = useDiscoveryStore.getState().runs[run.run_id].pin!;
+    expect(moved.lon).toBeLessThan(placed.lon);
+    expect(moved.lat).toBeGreaterThan(placed.lat);
+    const footprint = screen.getAllByTestId("candidate-footprint")[1];
+    fireEvent.pointerDown(footprint, { clientX: 10, clientY: 10, button: 0 });
+    fireEvent.pointerUp(footprint, { clientX: 10, clientY: 10, button: 0 });
+    fireEvent.click(footprint);
+    expect(useDiscoveryStore.getState().runs[run.run_id].pin).toEqual(moved);
+    expect(useDiscoveryStore.getState().runs[run.run_id].selectedCandidateId).toBe(candidates[1].id);
+    fireEvent.click(screen.getByRole("button", { name: "Clear pin" }));
+    expect(useDiscoveryStore.getState().runs[run.run_id].pin).toBeNull();
+    expect(screen.queryByTestId("map-pin")).toBeNull();
+  });
+
+  it("drops a pin by clicking the globe surface, draws it as its own marker, and says when scoring is unavailable without touching the ranking", async () => {
+    const svc = connectedService();
+    setDiscoveryService(svc);
+    useDiscoveryStore.setState({ view: "globe" });
+    const first = mount();
+    await screen.findByRole("list", { name: "Ranked proposed candidates" });
+    fireEvent.click(screen.getByRole("button", { name: "pick surface" }));
+    await screen.findByTestId("pin-scored");
+    expect(svc.probeCalls[0]).toMatchObject({ lat: 31.6, lon_east: -2.4 });
+    expect(screen.getByRole("button", { name: "Dropped pin (not a candidate)" })).toBeInTheDocument();
+    expect(screen.getByTestId("globe-stub")).toHaveTextContent(/click the surface to drop a pin/);
+    // a service without pin scoring (the static Pages build) says so, and the ranking is unaffected
+    first.unmount();
+    setDiscoveryService(connectedService({ probe: async () => { throw new DiscoveryUnavailable("Pin scoring runs only against the local API"); } }));
+    useDiscoveryStore.setState({ runs: {} });
+    mount();
+    await screen.findByRole("list", { name: "Ranked proposed candidates" });
+    fireEvent.click(screen.getByRole("button", { name: "pick surface" }));
+    expect(await screen.findByTestId("pin-unavailable")).toHaveTextContent(/runs only against the local API/);
+    expect(screen.getByRole("list", { name: "Ranked proposed candidates" })).toBeInTheDocument();
   });
 });

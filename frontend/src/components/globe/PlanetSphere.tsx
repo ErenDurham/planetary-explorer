@@ -3,10 +3,13 @@ import { useFrame } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import { Color, ShaderChunk, SRGBColorSpace, type Mesh, type MeshStandardMaterial } from "three";
 import { EARTH_CONFIG, MARS_CONFIG, type PlanetConfig } from "./PlanetConfig";
+import { vector3ToLatLon, type LatLon } from "./geo";
 import { planetDissolve } from "./planetMotion";
 
 /** Both maps share one lit material: no black frame or doubled transparent sphere. */
-export function PlanetSphere({config,meshRef,reducedMotion=false}:{config:PlanetConfig;meshRef?:RefObject<Mesh>;reducedMotion?:boolean}) {
+export function PlanetSphere({config,meshRef,reducedMotion=false,onPick}:{config:PlanetConfig;meshRef?:RefObject<Mesh>;reducedMotion?:boolean;
+  /** A click (not a drag) on the surface, as geographic coordinates. Overlays that stop propagation win. */
+  onPick?:(p:LatLon)=>void}) {
   const [earth,mars]=useTexture([EARTH_CONFIG.textureUrl,MARS_CONFIG.textureUrl]);
   const material=useRef<MeshStandardMaterial>(null);
   const uniforms=useMemo(()=>({otherPlanetMap:{value:mars},planetMix:{value:config.id==="mars"?1:0}}),[earth,mars]);
@@ -20,7 +23,8 @@ export function PlanetSphere({config,meshRef,reducedMotion=false}:{config:Planet
     uniforms.planetMix.value=t.from+(t.to-t.from)*blend;
     if(material.current){const mix=uniforms.planetMix.value;material.current.roughness=.82+.14*mix;material.current.emissive.copy(earthGlow).lerp(marsGlow,mix);material.current.emissiveIntensity=.35-.15*mix;}
   });
-  return <mesh ref={meshRef}><sphereGeometry args={[config.radius,128,96]}/><meshStandardMaterial ref={material} map={earth} roughness={.9} metalness={0} onBeforeCompile={shader=>{
+  // R3F's delta is the pointer travel between down and up; an orbit drag ends on the sphere too and must not drop a pin
+  return <mesh ref={meshRef} onClick={onPick?e=>{if(e.delta>4)return;e.stopPropagation();onPick(vector3ToLatLon(e.object.worldToLocal(e.point.clone())));}:undefined}><sphereGeometry args={[config.radius,128,96]}/><meshStandardMaterial ref={material} map={earth} roughness={.9} metalness={0} onBeforeCompile={shader=>{
     Object.assign(shader.uniforms,uniforms);
     shader.fragmentShader="uniform sampler2D otherPlanetMap;\nuniform float planetMix;\n"+shader.fragmentShader.replace("#include <map_fragment>",ShaderChunk.map_fragment.replace("texture2D( map, vMapUv )","mix( texture2D( map, vMapUv ), texture2D( otherPlanetMap, vMapUv ), planetMix )"));
   }} customProgramCacheKey={()=>"planet-dissolve-v1"}/></mesh>;

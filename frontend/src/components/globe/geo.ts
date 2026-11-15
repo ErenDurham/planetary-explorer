@@ -43,6 +43,15 @@ export function latLonToVector3(lat: number, lonEast: number, radius: number): V
   );
 }
 
+/** The inverse of latLonToVector3 for a point on (or above) the sphere: a click
+ * on the planet mesh back to geographic coordinates, east-positive. */
+export function vector3ToLatLon(v: { x: number; y: number; z: number }): LatLon {
+  const r = Math.hypot(v.x, v.y, v.z) || 1;
+  const lat = Math.asin(Math.max(-1, Math.min(1, v.y / r))) / DEG;
+  const lonEast = normalizeLonEast(Math.atan2(-v.z, v.x) / DEG);
+  return { lat, lonEast };
+}
+
 /** Position slightly above the surface so a marker is not z-fighting the texture. */
 export function markerPosition(lat: number, lonEast: number, radius: number, lift = 1.012): Vector3 {
   return latLonToVector3(lat, lonEast, radius * lift);

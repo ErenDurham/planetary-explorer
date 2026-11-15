@@ -54,6 +54,13 @@ export function project(f: Frame, p: LonLat): { x: number; y: number } {
   return { x: f.offsetX + (p.lon - f.extent.west) * f.scaleX, y: f.offsetY + (f.extent.north - p.lat) * f.scaleY };
 }
 
+/** The inverse of project: a pixel in the frame back to a coordinate, clamped to the globe. */
+export function unproject(f: Frame, q: { x: number; y: number }): LonLat {
+  const lon = f.extent.west + (q.x - f.offsetX) / f.scaleX;
+  const lat = f.extent.north - (q.y - f.offsetY) / f.scaleY;
+  return { lon: Math.max(-180, Math.min(180, lon)), lat: Math.max(-89, Math.min(89, lat)) };
+}
+
 export function boundsPath(f: Frame, b: DiscoveryBounds): string {
   const a = project(f, { lon: b.west, lat: b.north }), c = project(f, { lon: b.east, lat: b.south });
   return `M${a.x.toFixed(1)} ${a.y.toFixed(1)}H${c.x.toFixed(1)}V${c.y.toFixed(1)}H${a.x.toFixed(1)}Z`;

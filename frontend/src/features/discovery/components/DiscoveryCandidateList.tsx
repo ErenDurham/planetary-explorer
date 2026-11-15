@@ -17,7 +17,7 @@ import type { DiscoveryCandidate, DiscoveryCriterion, DiscoveryRankResponse } fr
 
 export interface WeightInputs { shares: Shares; defaults: Shares; criteria: DiscoveryCriterion[]; onChange: (id: string, v: number) => void; onReset: () => void; topK: number; onTopK: (n: number) => void; disabled: boolean }
 
-export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSelect, palette = "roygbiv", pending, error, status, runId, ranking, weights }: {
+export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSelect, palette = "roygbiv", pending, error, status, runId, ranking, weights, pinSection = null }: {
   /** undefined until a ranking has arrived */
   candidates: DiscoveryCandidate[] | undefined;
   /** survey.generated_count, for "4 of 16 evaluated" */
@@ -33,6 +33,8 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
   runId: string | null;
   ranking: DiscoveryRankResponse | undefined;
   weights: WeightInputs | null;
+  /** Rendered beneath the ranked list and above the inputs: the dropped-pin probe. */
+  pinSection?: ReactNode;
 }) {
   const n = candidates?.length ?? 0;
   return (
@@ -75,6 +77,7 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
             </ol>
           )}
       </section>
+      {pinSection}
       {weights && (
         <div className="space-y-3 border-t border-line px-3 py-3">
           <WeightControls {...weights} />

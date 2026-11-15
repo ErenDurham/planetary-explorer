@@ -73,6 +73,35 @@ round trip, a listed survey whose artifacts are missing, a failed save, and the 
 Mission Design, a supported objective leading to Explore candidates, the honest route for an
 unsupported reference, the choose-a-task case, and a return to edit keeping research notes.
 
+## Dropped pin (score any point)
+
+Beneath the ranked candidates sits **Score a dropped pin** (`components/PinProbePanel.tsx`). A click on
+empty survey map or on the globe surface places a pin (`SurveyMap` pointer gestures with a 4 px drag
+threshold; `PlanetViewer`'s new `onPickSurface`, which ignores an orbit drag); dragging the pin on the
+map moves it; the panel's latitude/longitude form is the keyboard route. The pin lives in the discovery
+store per run (`setPin`, kept to four decimals so the query key is stable) and never touches the curated
+selection or the ranked list.
+
+`hooks/useDiscoveryProbe.ts` calls `POST /discovery/probe` with the run, the pin and the SAME weights
+the ranking uses, re-scores when the pin or a weight changes, and keeps the previous result on screen
+only while the same pin is re-weighted. The service measures a 60 km footprint at the pin with the
+survey's own terrain pipeline and scores it with the ranking's formula (DISCOVERY_CONTRACT.md,
+"Dropped-pin probe"). The panel shows exactly what came back: the index, where the pin would sit among
+the surveyed candidates under the current weights (context, not a rank), whether it is inside the
+surveyed area, the catalog relationship, the measured features against the reference, and the
+limitations; when the service could not score it (`terrain_unavailable`, `insufficient_terrain_coverage`,
+`features_unavailable`) the service's reasons are shown and no number is. The map draws the measured
+footprint dashed in the pin colour; the globe draws the pin as its own marker and footprint ring, never
+pickable as a candidate.
+
+By default the API reads terrain from its verified tile cache only, so pins inside or near the surveyed
+regions score and others report terrain unavailable; `DISCOVERY_PROBE_FETCH=true` on a local API enables
+on-demand tile fetching. On the GitHub Pages build (no raster libraries) the panel shows "Pin scoring is
+not available here" and the ranking is unaffected. Tests: `PinProbePanel.test.tsx`, the two pin cases in
+`DiscoveryView.test.tsx`, `store/useDiscoveryStore.test.ts` (per-run pin), `lib/geo.test.ts` (`unproject`),
+`components/globe/geo.test.ts` (`vector3ToLatLon`), and `backend/tests/test_discovery_probe.py`. Screenshots against the
+live local API: `docs/screenshots/discovery-pin-{map,globe}.jpg`.
+
 ## Layout
 
 Find Unresearched Analogs uses the same three-column workspace as Browse Regions, drawn by

@@ -1,9 +1,9 @@
 // Test-only fakes for the discovery service. Never imported by production code.
-import { DiscoveryUnavailable, DiscoveryRequestRejected, type DiscoveryCapabilities, type DiscoveryCandidate, type DiscoveryCandidateDetail, type DiscoveryExport, type DiscoveryRankRequest, type DiscoveryRankResponse, type DiscoveryService } from "../adapter";
+import { DiscoveryUnavailable, DiscoveryRequestRejected, type DiscoveryCapabilities, type DiscoveryCandidate, type DiscoveryCandidateDetail, type DiscoveryExport, type DiscoveryProbeRequest, type DiscoveryProbeResponse, type DiscoveryRankRequest, type DiscoveryRankResponse, type DiscoveryService } from "../adapter";
 
 export const reference = { body: "mars" as const, id: "jezero_crater" as const, name: "Jezero Crater", lat: 18.4447, lon_east: 77.4508 };
-export const criteria = [{ feature_id: "slope_regional_median_deg", label: "Regional median slope", unit: "deg", scale: 1.5 }, { feature_id: "roughness_regional_m", label: "Detrended regional relief", unit: "m", scale: 100 }];
-export const run = { run_id: "pilot_2026_11_14", label: "Eastern Morocco pilot", created_at: "2026-11-14T22:00:00Z", bounds: { west: -3, south: 31, east: -2, north: 32 }, total_sampled: 16, eligible_count: 3 };
+export const criteria = [{ feature_id: "slope_regional_median_deg", label: "Regional median slope", unit: "deg", scale: 1.5, group: "terrain", group_label: "Terrain and landform", rationale: "" }, { feature_id: "roughness_regional_m", label: "Detrended regional relief", unit: "m", scale: 100, group: "terrain", group_label: "Terrain and landform", rationale: "" }];
+export const run = { run_id: "pilot_2026_11_14", label: "Eastern Morocco pilot", created_at: "2026-11-14T22:00:00Z", bounds: { west: -3, south: 31, east: -2, north: 32 }, total_sampled: 16, eligible_count: 3, region_count: 1 };
 export const source = { source_id: "glo90", title: "Copernicus GLO-90 DEM", institution: "ESA / Airbus", url: "https://copernicus-dem-90m.s3.amazonaws.com/readme.html", license: "Copernicus DEM licence", retrieved_at: "2026-11-14", observation_period: "2011-2015 (TanDEM-X)", sha256: null, etag: null };
 
 export const capabilities: DiscoveryCapabilities = { engine_version: "discovery-v1", state: "ready", reference, runs: [run], criteria, default_weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 }, limitations: ["Proposed regional terrain analog candidates; field validation required."] };
@@ -32,10 +32,29 @@ export function detail(id: string): DiscoveryCandidateDetail {
 }
 export const exportPayload: DiscoveryExport = { manifest: { run_id: run.run_id }, specification: {}, survey: rankResponse({ run_id: run.run_id, reference_id: "jezero_crater", top_k: 5 }).survey, reference_profile: { measurements: {}, grid: {}, terrain_valid_fraction: 1, gradient_valid_fraction: 1 }, audit_rows: candidates.map(c => ({ candidate: { ...c, display_rank: null, raw_rank: null, distance: null, similarity_index: null }, profile: null, screening_reasons: [] })), exclusions: { insufficient_terrain_coverage: 2 }, provenance: [source], validation: {} };
 
-export function connectedService(overrides: Partial<DiscoveryService> = {}): DiscoveryService & { calls: DiscoveryRankRequest[] } {
-  const calls: DiscoveryRankRequest[] = [];
-  return { calls, capabilities: async () => capabilities, rank: async (req) => { calls.push(req); return rankResponse(req); }, detail: async (_r, id) => detail(id), export: async () => exportPayload, ...overrides };
+/** A FAKE probe: fixture numbers under the request's weights. A pin beyond 60 degrees of latitude has no terrain tile, so that path is observable too. */
+export function probeResponse(req: DiscoveryProbeRequest): DiscoveryProbeResponse {
+  const w = req.weights ?? { slope_regional_median_deg: 50, roughness_regional_m: 50 };
+  const total = (w.slope_regional_median_deg ?? 0) + (w.roughness_regional_m ?? 0);
+  const ws = (w.slope_regional_median_deg ?? 0) / total, wr = (w.roughness_regional_m ?? 0) / total;
+  const inside = req.lat >= run.bounds.south && req.lat <= run.bounds.north && req.lon_east >= run.bounds.west && req.lon_east <= run.bounds.east;
+  const base = { engine_version: "discovery-v2" as const, run_id: req.run_id, reference, lat: req.lat, lon_east: req.lon_east, effective_weights: { slope_regional_median_deg: ws, roughness_regional_m: wr },
+    novelty: { catalog_version: "known-analogs-v1", nearest_known_site_id: "atacama_yungay", nearest_known_site_distance_km: 8120, buffer_rule: "100 km centre buffer", outside_catalog_buffer: true, review_status: "not_reviewed" as const },
+    limitations: ["Scored on demand at a user-chosen point; it is not part of the preregistered sample and does not enter the ranking."], client_request_id: req.client_request_id ?? null, computed_at: "2026-11-15T00:00:00+00:00", sources: [source], dimension_scores: [] };
+  if (Math.abs(req.lat) > 60) return { ...base, status: "terrain_unavailable", reasons: ["No cached digital-elevation tile covers this footprint, and this API does not download tiles on request."], feature_distances: [], placement: { inside_survey_bounds: inside, nearest_survey_candidate_id: "c_31_25_m2_75", nearest_survey_candidate_distance_km: 4000, closer_survey_candidates: null, eligible_pool_count: 3 } };
+  const slope = { feature_id: "slope_regional_median_deg", earth_value: 0.62, mars_value: 1.077, unit: "deg", scale: 1.5, normalized_weight: ws, distance: 0.305, contribution: 0.305 * ws };
+  const relief = { feature_id: "roughness_regional_m", earth_value: 95, mars_value: 194.4, unit: "m", scale: 100, normalized_weight: wr, distance: 0.994, contribution: 0.994 * wr };
+  const distance = slope.contribution + relief.contribution;
+  return { ...base, status: "scored", reasons: [], footprint_geojson: square(req.lat, req.lon_east), feature_distances: [slope, relief], distance, similarity_index: 100 / (1 + distance),
+    profile: { measurements: { slope_regional_median_deg: { value: 0.62, unit: "deg", measurement_type: "derived" }, roughness_regional_m: { value: 95, unit: "m", measurement_type: "derived" } }, grid: { cell_m: 4000 }, terrain_valid_fraction: 1, gradient_valid_fraction: 1 },
+    placement: { inside_survey_bounds: inside, nearest_survey_candidate_id: "c_31_25_m2_75", nearest_survey_candidate_distance_km: 12.3, closer_survey_candidates: wr > ws ? 2 : 1, eligible_pool_count: 3 } };
 }
-export const unavailableService: DiscoveryService = { capabilities: async () => unavailableCapabilities, rank: async () => { throw new DiscoveryUnavailable("no artifacts"); }, detail: async () => { throw new DiscoveryUnavailable("no artifacts"); }, export: async () => { throw new DiscoveryUnavailable("no artifacts"); } };
-export const deadService: DiscoveryService = { capabilities: async () => { throw new DiscoveryUnavailable("The discovery service could not be reached."); }, rank: async () => { throw new DiscoveryUnavailable("unreachable"); }, detail: async () => { throw new DiscoveryUnavailable("unreachable"); }, export: async () => { throw new DiscoveryUnavailable("unreachable"); } };
+
+export function connectedService(overrides: Partial<DiscoveryService> = {}): DiscoveryService & { calls: DiscoveryRankRequest[]; probeCalls: DiscoveryProbeRequest[] } {
+  const calls: DiscoveryRankRequest[] = [];
+  const probeCalls: DiscoveryProbeRequest[] = [];
+  return { calls, probeCalls, capabilities: async () => capabilities, rank: async (req) => { calls.push(req); return rankResponse(req); }, detail: async (_r, id) => detail(id), export: async () => exportPayload, probe: async (req) => { probeCalls.push(req); return probeResponse(req); }, ...overrides };
+}
+export const unavailableService: DiscoveryService = { capabilities: async () => unavailableCapabilities, rank: async () => { throw new DiscoveryUnavailable("no artifacts"); }, detail: async () => { throw new DiscoveryUnavailable("no artifacts"); }, export: async () => { throw new DiscoveryUnavailable("no artifacts"); }, probe: async () => { throw new DiscoveryUnavailable("no artifacts"); } };
+export const deadService: DiscoveryService = { capabilities: async () => { throw new DiscoveryUnavailable("The discovery service could not be reached."); }, rank: async () => { throw new DiscoveryUnavailable("unreachable"); }, detail: async () => { throw new DiscoveryUnavailable("unreachable"); }, export: async () => { throw new DiscoveryUnavailable("unreachable"); }, probe: async () => { throw new DiscoveryUnavailable("unreachable"); } };
 export const rejecting = new DiscoveryRequestRejected("validation_error", "request failed schema validation: weights must have a positive total");

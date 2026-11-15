@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { footprintRings, makeFrame, project, readSamplingCentre, ringsBounds, extentKm } from "./geo";
+import { footprintRings, makeFrame, project, readSamplingCentre, ringsBounds, extentKm, unproject } from "./geo";
 
 describe("discovery map geometry", () => {
   const b = { west: -3, south: 31, east: -2, north: 32 };
@@ -27,5 +27,13 @@ describe("discovery map geometry", () => {
     const km = extentKm(b);
     expect(Math.round(km.ns)).toBe(111);
     expect(km.ew).toBeLessThan(km.ns);
+  });
+  it("unprojects a pixel back to the coordinate that produced it, clamped to the globe", () => {
+    const f = makeFrame({ west: -3, south: 31, east: -2, north: 32 }, 800, 420);
+    for (const p of [{ lon: -2.5, lat: 31.5 }, { lon: -2.98, lat: 31.02 }, { lon: -2.01, lat: 31.99 }]) {
+      const q = unproject(f, project(f, p));
+      expect(q.lon).toBeCloseTo(p.lon, 9); expect(q.lat).toBeCloseTo(p.lat, 9);
+    }
+    expect(unproject(f, { x: -1e6, y: -1e6 })).toEqual({ lon: -180, lat: 89 });
   });
 });

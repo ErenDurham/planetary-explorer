@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { latLonToVector3, normalizeLonEast } from "./geo";
+import { latLonToVector3, normalizeLonEast, vector3ToLatLon } from "./geo";
 
 const close = (a: number, b: number) => expect(a).toBeCloseTo(b, 6);
 
@@ -49,5 +49,15 @@ describe("normalizeLonEast", () => {
   it("keeps -180..180 inputs unchanged", () => {
     close(normalizeLonEast(77.45), 77.45);
     close(normalizeLonEast(-47.95), -47.95);
+  });
+});
+
+describe("vector3ToLatLon", () => {
+  it("inverts latLonToVector3 everywhere but the poles, at any radius", () => {
+    for (const [lat, lon] of [[0, 0], [18.4447, 77.4508], [-24.08, -69.95], [31.5, -2.5], [60, 179], [-45, -179.5], [0, 90], [0, -90]]) {
+      const p = vector3ToLatLon(latLonToVector3(lat, lon, 1.0123));
+      close(p.lat, lat); close(normalizeLonEast(p.lonEast - lon), 0);
+    }
+    expect(vector3ToLatLon(latLonToVector3(90, 12, 1)).lat).toBeCloseTo(90, 6);
   });
 });

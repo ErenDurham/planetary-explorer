@@ -10,6 +10,10 @@ import type { DiscoveryBounds, DiscoveryCandidate, DiscoverySurvey } from "../ad
 
 /** Same blue as the survey map's dashed boundary. */
 export const SURVEY_BOUNDS_COLOR = "#6ea0d9";
+/** The dropped pin and its measured footprint, distinct from every rank colour. */
+export const PIN_COLOR = "#f0a03c";
+
+export interface PinOverlay { lat: number; lon: number; footprint?: Record<string, unknown> | null }
 
 /** The bounds rectangle sampled along each edge so it follows the sphere. */
 export function boundsRing(b: DiscoveryBounds, steps = 12): SurfacePoint[] {
@@ -22,12 +26,14 @@ export function boundsRing(b: DiscoveryBounds, steps = 12): SurfacePoint[] {
   return pts;
 }
 
-export function discoveryOverlays({ bounds, survey, candidates, selectedId, palette = "roygbiv" }: {
+export function discoveryOverlays({ bounds, survey, candidates, selectedId, palette = "roygbiv", pin = null }: {
   bounds: DiscoveryBounds | null | undefined;
   survey: DiscoverySurvey | null | undefined;
   candidates: DiscoveryCandidate[];
   selectedId: string | null;
   palette?: RankPalette;
+  /** The user's dropped pin and, once the service has measured it, its footprint. Not pickable: it is not a candidate. */
+  pin?: PinOverlay | null;
 }): { rings: SurfaceRing[]; dots: SurfaceDot[] } {
   const n = candidates.length;
   const rings: SurfaceRing[] = [];
@@ -41,5 +47,9 @@ export function discoveryOverlays({ bounds, survey, candidates, selectedId, pale
     .map(readSamplingCentre)
     .filter((s): s is NonNullable<typeof s> => !!s)
     .map((s, i) => ({ id: s.id ?? `centre-${i}`, lat: s.lat, lonEast: s.lon, muted: s.status === "excluded" }));
+  if (pin) {
+    if (pin.footprint) footprintRings(pin.footprint).forEach((ring, i) => rings.push({ id: `pin:${i}`, points: ring.map(p => ({ lat: p.lat, lonEast: p.lon })), color: PIN_COLOR, dashed: true, width: 2 }));
+    dots.push({ id: "pin", lat: pin.lat, lonEast: pin.lon, color: PIN_COLOR, size: 2.4 });
+  }
   return { rings, dots };
 }
