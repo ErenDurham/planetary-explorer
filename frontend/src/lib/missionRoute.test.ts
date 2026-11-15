@@ -10,7 +10,7 @@ describe("where an applied mission goes next", () => {
     const r = routeForMission({ objective: DEFAULT_MISSION_OBJECTIVE, task: "analog_site_selection", reference: jezero, focusBody: "earth", discoveryReady: true });
     expect(r.kind).toBe("discovery");
     expect(r.cta).toBe("Explore candidates");
-    expect(r.detail).toMatch(/bounded set of surveyed Earth footprints.*Jezero Crater.*regional median slope and detrended relief.*not a global search/);
+    expect(r.detail).toMatch(/fixed set of surveyed Earth footprints.*Jezero Crater.*terrain, illumination and aridity.*not a global search/);
     expect(r.unsupported).toBeUndefined();
   });
 

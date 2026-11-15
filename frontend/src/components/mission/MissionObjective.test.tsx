@@ -608,7 +608,7 @@ describe("Mission Design next step", () => {
     fireEvent.keyDown(box, { key: "Enter" });
     const next = await screen.findByTestId("mission-next-step");
     await waitFor(() => expect(next).toHaveAttribute("data-route", "discovery"));
-    expect(next).toHaveTextContent(/bounded set of surveyed Earth footprints.*Jezero Crater.*not a global search/);
+    expect(next).toHaveTextContent(/fixed set of surveyed Earth footprints.*Jezero Crater.*not a global search/);
     expect(screen.queryByTestId("mission-unsupported")).toBeNull();
     fireEvent.click(within(next).getByRole("button", { name: /Explore candidates/ }));
     expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "find_analogs" });
