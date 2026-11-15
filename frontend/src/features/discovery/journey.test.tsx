@@ -56,7 +56,7 @@ describe("discovery journey", () => {
     const nav = screen.getByRole("navigation", { name: "Primary" });
     expect(within(nav).getByRole("button", { name: "Explore" })).toHaveAttribute("aria-current", "page");
     expect(within(nav).getByRole("button", { name: "Research" })).toBeInTheDocument();
-    expect(within(nav).queryByRole("button", { name: "Mission Design" })).toBeNull();
+    expect(within(nav).getByRole("button", { name: "Mission Design" })).toBeInTheDocument();
     expect(await screen.findByRole("heading", { name: "Find Earth terrain resembling Jezero." })).toBeInTheDocument();
     const list = await screen.findByRole("list", { name: "Ranked proposed candidates" });
     // the first result is selected once and its evidence is in the panel
@@ -126,14 +126,15 @@ describe("discovery journey", () => {
     expect(screen.getByLabelText("Review summary and remaining gaps")).toHaveValue("Keep me.");
   });
 
-  it("keeps Mission Design, Analyze and Compare reachable behind Advanced", async () => {
+  it("keeps Analyze and Compare reachable behind Advanced", async () => {
     setDiscoveryService(connectedService());
     mount();
     fireEvent.click(screen.getByTestId("advanced-nav"));
     const menu = screen.getByRole("menu", { name: "Advanced tools" });
-    expect(within(menu).getAllByRole("menuitem").map(m => m.textContent?.split(/[A-Z][a-z]+ [a-z]/)[0])).toEqual(expect.arrayContaining([expect.stringContaining("Mission Design"), expect.stringContaining("Analyze"), expect.stringContaining("Compare")]));
-    fireEvent.click(within(menu).getByRole("menuitem", { name: /^Mission Design/ }));
-    expect(useAppStore.getState().activeTab).toBe("mission");
-    expect(screen.getByTestId("advanced-nav")).toHaveTextContent(/Advanced · Mission Design/);
+    expect(within(menu).getAllByRole("menuitem").map(m => m.textContent?.split(/[A-Z][a-z]+ [a-z]/)[0])).toEqual(expect.arrayContaining([expect.stringContaining("Analyze"), expect.stringContaining("Compare")]));
+    expect(within(menu).queryByRole("menuitem", { name: /Mission Design/ })).toBeNull();
+    fireEvent.click(within(menu).getByRole("menuitem", { name: /^Analyze/ }));
+    expect(useAppStore.getState().activeTab).toBe("analyze");
+    expect(screen.getByTestId("advanced-nav")).toHaveTextContent(/Advanced · Analyze/);
   });
 });

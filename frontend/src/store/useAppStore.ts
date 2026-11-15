@@ -353,7 +353,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   setComparisonPair: (comparisonPair) => set({comparisonPair}),
   comparison: { mode: "all", earthId: "haughton_crater", moonId: "apollo_11", section: "all", details: false },
   setComparison: (patch) => set(s => ({ comparison: { ...s.comparison, ...patch } })),
-  activeTab: "explore",
+  // a fresh session opens on Mission Design: objective first, then Explore, then Research
+  activeTab: "mission",
   setActiveTab: (tab) => set({ activeTab: tab }),
   // Explore opens on the supported discovery pilot; Browse Regions (established analogs, mission scoring) is the secondary mode
   exploreMode: "find_analogs",

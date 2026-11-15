@@ -1,15 +1,17 @@
-// The "Mission Design" tab. It opens on the chat box alone; saving a mission
-// has the language model read it ONCE for both planets: the Mars landing
-// priorities and the Earth priorities, on the same factors (each with reasons
-// and cited research). The sliders (most of the width) then slide in beside the
-// priority pie. Mission focus (Earth / Mars) switches between the two sets;
-// each keeps its own values, and both use the same slider, pie and "Why"
-// components. The reading's task half (which planet, which reference site)
-// is always settled by the backend - the model guesses rather than asking. It
-// also tells the store which Mars factors the latest evaluation excluded, so
-// no-data factors are hidden and left out of the shares.
+// The "Mission Design" pane, the first step of the journey. It opens on the
+// composer alone; applying a mission has the backend read it ONCE for both
+// planets: the Mars landing priorities and the Earth priorities, on the same
+// factors (each with reasons and cited research). What comes next is then the
+// prominent thing on the page - MissionNextStep says where the applied
+// objective leads and what that view can and cannot do - while the scoring
+// priorities and mission focus sit under a disclosure for whoever wants to
+// adjust them. Mission focus (Earth / Mars) switches between the two priority
+// sets; each keeps its own values. The reading's task half is always settled
+// by the backend; the pane never guesses a task. It also tells the store which
+// Mars factors the latest evaluation excluded, so no-data factors are hidden.
 import { useEffect, useState } from "react";
 import { MissionFocus } from "@/components/mission/MissionFocus";
+import { MissionNextStep } from "@/components/mission/MissionNextStep";
 import { SpaceDecor } from "@/components/mission/SpaceDecor";
 import { earthFactors, marsFactors } from "@/components/mission/priorityFactors";
 import { MissionObjective } from "@/components/mission/MissionObjective";
@@ -28,9 +30,13 @@ interface Props {
   defaultsError: unknown;
   evaluation: EvaluateResponse | undefined;
   evaluationError: Error | null;
+  /** Open Explore on the mission's body for the established catalogs; App supplies the first site to select. */
+  onExploreMission?: () => void;
+  /** The scores that view needs have loaded. */
+  exploreReady?: boolean;
 }
 
-export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationError }: Props) {
+export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationError, onExploreMission, exploreReady = false }: Props) {
   const excludedIds = useAppStore((s) => s.excludedCriteria);
   const setExcludedCriteria = useAppStore((s) => s.setExcludedCriteria);
   const canSave = useAppStore((s) => Object.keys(s.defaultWeights).length > 0);
@@ -62,7 +68,7 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
 
   const interpret = useInterpretObjective();
   const [missionText, setMissionText] = useState<string | null>(null);
-  /** True once the first saved mission has been applied, so the sliders slide in with its shares. */
+  /** True once the first applied mission has been read, so the next step and the priorities appear. */
   const [designed, setDesigned] = useState(false);
   const pending = interpret.status === "pending";
 
@@ -85,6 +91,11 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
     setDesigned(true);
   };
 
+  const mars = missionType === "landing";
+  const shares = mars ? weights : earthShares;
+  const factors = defaults ? (mars ? marsFactors(defaults.criteria, excludedIds) : earthFactors(defaults.criteria, excludedIds)) : [];
+  const top = factors.map(f => ({ label: f.name, share: shares[f.id] ?? 0 })).sort((a, b) => b.share - a.share).slice(0, 2);
+
   return (
     <div data-pane="mission" aria-label="Mission settings" className="mission-panel relative min-h-full bg-bg-elev">
       <SpaceDecor openSky={!designed} />
@@ -93,18 +104,19 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
         <div className="mx-auto max-w-2xl px-4"><ErrorNote error={defaultsError} context="scoring/default-mission" /></div>
       ) : null}
       {designed && (
-        <div className="mission-enter">
-        <div className="mx-auto w-full max-w-3xl border-t border-line"><MissionFocus /></div>
-        {defaultsError ? (
-          <div className="border-t border-line p-4"><ErrorNote error={defaultsError} context="scoring/default-mission" /></div>
-        ) : !defaults ? (
-          <div className="border-t border-line p-4"><Spinner label="Loading scoring defaults" /></div>
-        ) : (
-          (() => {
-            const mars = missionType === "landing";
-            const factors = mars ? marsFactors(defaults.criteria, excludedIds) : earthFactors(defaults.criteria, excludedIds);
-            const shares = mars ? weights : earthShares;
-            return (
+        <div className="mission-enter px-4">
+          <MissionNextStep onExploreMission={onExploreMission ?? (() => {})} exploreReady={exploreReady} pending={pending} />
+          <details className="mission-advanced" data-testid="mission-advanced">
+            <summary>
+              <span className="font-medium text-fg">Scoring priorities and mission focus</span>
+              <span className="ml-2 text-fg-muted">{top.length ? `· ${top.map(t => `${t.label} ${Math.round(t.share)}%`).join(", ")} · adjust if you want` : "· adjust if you want"}</span>
+            </summary>
+            <div className="mx-auto w-full max-w-3xl border-t border-line"><MissionFocus /></div>
+            {defaultsError ? (
+              <div className="border-t border-line p-4"><ErrorNote error={defaultsError} context="scoring/default-mission" /></div>
+            ) : !defaults ? (
+              <div className="border-t border-line p-4"><Spinner label="Loading scoring defaults" /></div>
+            ) : (
               <div className="grid border-t border-line lg:grid-cols-[minmax(0,1fr)_minmax(300px,380px)]" data-testid={mars ? "mars-priorities" : "earth-priorities"}>
                 {/* disabled while a re-saved mission is read, so a slider move is not overwritten */}
                 <fieldset disabled={pending} aria-busy={pending} className="m-0 min-w-0 border-0 p-0">
@@ -134,9 +146,8 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
                   <PriorityPie factors={factors} shares={shares} />
                 </div>
               </div>
-            );
-          })()
-        )}
+            )}
+          </details>
         </div>
       )}
     </div>

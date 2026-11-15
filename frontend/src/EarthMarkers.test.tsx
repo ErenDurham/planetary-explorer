@@ -19,11 +19,6 @@ vi.mock("@/components/globe/PlanetViewer", () => ({
 
 import App from "./App";
 
-/** Mission Design, Analyze and Compare live behind the Advanced menu in the primary navigation. */
-function openAdvanced(label: string) {
-  fireEvent.click(screen.getByTestId("advanced-nav"));
-  fireEvent.click(screen.getByRole("menuitem", { name: new RegExp(`^${label}`) }));
-}
 
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -101,11 +96,11 @@ describe("Earth and Mars markers", () => {
   });
   it("explicit Earth focus opens scored mission profiles, then ranks Mars analogs against the Earth selection", async () => {
     renderApp();
-    openAdvanced("Mission Design");
+    fireEvent.click(screen.getByRole("button", { name: "Mission Design" }));
     // the tab opens on the chat box alone; Mission focus appears once a mission is saved
     const box=screen.getByLabelText("Your mission objective");
     fireEvent.change(box,{target:{value:"Test a rover on Earth terrain"}});
-    await waitFor(()=>expect(screen.getByRole("button",{name:"Save"})).toBeEnabled());
+    await waitFor(()=>expect(screen.getByRole("button",{ name: /Apply objective|Apply changes/ })).toBeEnabled());
     fireEvent.keyDown(box,{key:"Enter"});
     fireEvent.click(await screen.findByRole("button",{name:"Earth"}));
     expect(screen.getByRole("heading",{name:"Mission priorities"})).toBeInTheDocument();
@@ -113,7 +108,7 @@ describe("Earth and Mars markers", () => {
     fireEvent.change(screen.getByLabelText("Low slopes share of priorities"),{target:{value:"40"}});
     expect(useAppStore.getState().earthWeights.terrain_safety).toBe(40);
     expect(useAppStore.getState().missionProfileWeights.rover_field_test).toEqual(roverSharesFrom(useAppStore.getState().earthWeights));
-    const start=screen.getByRole("button",{name:"Head to explore mission →"});
+    const start=screen.getByRole("button",{ name: "Established Earth analogs" });
     await waitFor(()=>expect(start).toBeEnabled());
     fireEvent.click(start);
     await waitFor(()=>expect(screen.getByTestId("globe-stub")).toHaveAttribute("data-mode","mission"));
