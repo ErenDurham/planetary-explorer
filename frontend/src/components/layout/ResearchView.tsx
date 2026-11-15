@@ -1,3 +1,7 @@
+// Research prospects for the selected Mars site: the citation-backed digest,
+// and from it the Expedition Planner (features/expedition), which opens in
+// place with the same region, body and research context. The Earth mode shows
+// the established analogs for that same site, then the discovery candidate notebook.
 import { useState } from "react";
 import { CandidateResearchPanel } from "@/features/discovery/components/CandidateResearchPanel";
 import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
@@ -18,7 +22,7 @@ export function ResearchView({ sites, selectedId, onSelect, mission }: { sites: 
   const openPlanner = useExpeditionStore(s => s.openPlanner);
   const planning = plannerOpen && !!site && researchMode === "mars";
   const modeControls = <div role="group" aria-label="Research subject" className="flex flex-wrap gap-3"><button type="button" aria-pressed={researchMode === "mars"} className={`rounded-lg border px-3 py-2 text-sm ${researchMode === "mars" ? "border-amber-500 bg-amber-500/15 text-amber-300" : "border-line-strong text-fg"}`} onClick={() => setResearchMode("mars")}>Mars site research</button><button type="button" aria-pressed={researchMode === "earth"} className={`rounded-lg border px-3 py-2 text-sm ${researchMode === "earth" ? "border-amber-500 bg-amber-500/15 text-amber-300" : "border-line-strong text-fg"}`} onClick={() => setResearchMode("earth")}>Earth candidate research</button></div>;
-  if (researchMode === "earth") return <div className="scroll-thin h-full overflow-y-auto"><div className="border-b border-line bg-bg-elev p-4"><div className="mx-auto max-w-7xl">{modeControls}</div></div><EarthAnalogDashboard /><div className="mx-auto max-w-7xl space-y-4 p-4"><h2 className="text-lg font-semibold text-fg">Earth candidate research</h2><CandidateResearchPanel /></div></div>;
+  if (researchMode === "earth") return <div className="scroll-thin h-full overflow-y-auto"><div className="border-b border-line bg-bg-elev p-4"><div className="mx-auto max-w-7xl">{modeControls}</div></div><EarthAnalogDashboard marsSiteId={selectedId} /><div className="mx-auto max-w-7xl space-y-4 p-4"><h2 className="text-lg font-semibold text-fg">Earth candidate research</h2><CandidateResearchPanel /></div></div>;
   return <AtlasSurface enabled={!planning}>
     <div className="border-b border-line bg-bg-elev p-4">
       <div className="mx-auto max-w-7xl">
