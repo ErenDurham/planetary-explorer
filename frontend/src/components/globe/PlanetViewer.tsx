@@ -12,6 +12,7 @@ import { PlanetSphere, PlaceholderSphere } from "./PlanetSphere";
 import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
+import { token } from "@/lib/theme";
 import { GlobeLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
@@ -65,7 +66,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
   const deselect = useRef(props.onDeselect);
   deselect.current = props.onDeselect;
   return (
-    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-[#06090d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
+    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
       onKeyDown={e => {
         if (e.target !== e.currentTarget || e.altKey || e.ctrlKey || e.metaKey) return;
         const key = e.key.toLowerCase();
@@ -84,7 +85,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         gl={{ antialias: true, alpha: false }}
         onPointerMissed={(event) => { if (event.type === "click") { deselect.current?.(); containerRef.current?.focus({preventScroll:true}); } }}
       >
-        <color attach="background" args={["#06090d"]} />
+        <color attach="background" args={[token("--color-canvas")]} />
         <ambientLight intensity={config.id === "earth" ? 2.2 : 1.1} />
         <directionalLight position={[5, 2, 4]} intensity={2.2} color="#fff2e0" />
         <directionalLight position={[-6, -1, -3]} intensity={0.25} color="#8aa0c8" />
@@ -148,7 +149,7 @@ function LoadingOverlay({ body }: { body: string }) {
   }, [active, progress]);
   if (!show) return null;
   return (
-    <div role="status" aria-live="polite" className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#06090d]/60">
+    <div role="status" aria-live="polite" className="pointer-events-none absolute inset-0 flex items-center justify-center bg-canvas/60">
       <div className="rounded border border-line bg-bg-elev/90 px-4 py-2 text-xs text-fg-muted">
         Loading {body} texture… <span className="num">{Math.round(progress)}%</span>
       </div>

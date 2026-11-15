@@ -66,7 +66,7 @@ export function SpaceDecor({ openSky }: { openSky: boolean }) {
       <svg viewBox="0 0 64 64" className="rocket-float absolute right-3 top-3 h-11 w-11 sm:right-8 sm:top-6 sm:h-16 sm:w-16" data-testid="decor-rocket">
         <g transform="rotate(45 32 32)">
           <path className="rocket-flame" d="M28.5 49h7L32 59z" fill="var(--color-copper-bright)" />
-          <path d="M27 44h10l-1.6 5h-6.8z" fill="#9aa5b4" />
+          <path d="M27 44h10l-1.6 5h-6.8z" style={{ fill: "var(--color-fg-muted)" }} />
           <path d="M22 33l-8 10.5V48l8-3.5z" fill="var(--color-copper)" />
           <path d="M42 33l8 10.5V48l-8-3.5z" fill="var(--color-copper)" />
           <path d="M32 5c7 6 10 15.5 10 27v12H22V32c0-11.5 3-21 10-27z" fill="var(--color-fg)" />

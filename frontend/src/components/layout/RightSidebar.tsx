@@ -46,7 +46,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     if (window.matchMedia?.("(max-width: 1023px)")?.matches) panel.current.scrollIntoView?.({ behavior: reduced ? "auto" : "smooth", block: "start" });
     if (!reduced) {
-      panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px #f0a03c", backgroundColor: "#313131" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });
+      panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px var(--color-copper-bright)", backgroundColor: "var(--color-bg-elev-2)" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });
     }
   }, [selectedId, revision]);
   const result = evaluation?.results.find((r) => r.site_id === selectedId);

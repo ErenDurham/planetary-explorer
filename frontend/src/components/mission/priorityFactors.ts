@@ -1,3 +1,4 @@
+import { token } from "@/lib/theme";
 // What the Mission Design priority views need to know about one factor,
 // whichever planet it belongs to. Both planets use the same scoring criteria
 // (no-data ones left out); Earth only changes what the (i) box says. The slider, pie,
@@ -27,7 +28,7 @@ export function marsFactors(criteria: CriterionSpec[], excluded: string[]): Prio
     return {
       id: c.criterion_id,
       name: factorName(c.criterion_id, c.label),
-      color: g?.color ?? "#9aa5b4",
+      color: g?.color ?? token("--color-fg-muted"),
       preference: g?.preference ?? c.rationale,
       description: g?.description ?? c.label,
       quantity: g?.quantity ?? `${c.feature_id.replace(/_/g, " ")}${c.unit ? ` (${c.unit})` : ""}`,

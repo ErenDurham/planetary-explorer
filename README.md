@@ -74,6 +74,10 @@ the UI estimates nothing. See [docs/EXPEDITION_PLANNER_UI.md](docs/EXPEDITION_PL
 |---|---|
 | ![Expedition workspace](docs/screenshots/expedition-workspace.jpg) | ![Mission report](docs/screenshots/expedition-report.jpg) |
 
+## Theme
+
+The whole interface reads one token file, `frontend/src/theme.css`; see [docs/THEME.md](docs/THEME.md).
+
 ## Quick start
 
 ```bash

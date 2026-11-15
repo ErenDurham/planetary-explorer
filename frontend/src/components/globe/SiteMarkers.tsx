@@ -19,7 +19,7 @@ interface Props {
 }
 
 const BASE = 0.022;
-const DARK = "#0b0f14";
+const DARK = "var(--color-canvas)";
 
 export function SiteMarkers({ config, markers, selectedId, onSelect, onHoverChange, planetRef }: Props) {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -161,7 +161,7 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
           <span
             aria-hidden
             className="num inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 px-1 text-[11px] font-semibold leading-none shadow"
-            style={{ backgroundColor: "rgba(11,15,20,0.88)", borderColor: datum.rank == null ? color : "#ffffff", color: datum.rank == null ? color : "#ffffff" }}
+            style={{ backgroundColor: "var(--overlay-bg)", borderColor: datum.rank == null ? color : "#ffffff", color: datum.rank == null ? color : "#ffffff" }}
           >
             {datum.rank ?? "NR"}
           </span>

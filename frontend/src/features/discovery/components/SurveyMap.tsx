@@ -4,7 +4,7 @@
 // view. There is no imagery under it, and it says so; footprints are coloured
 // by display rank only.
 import { useMemo, useRef, useState, useLayoutEffect } from "react";
-import { rankColor, rankPosition, RANK_LEGEND_SENTENCE, type RankPalette } from "@/lib/rankColor";
+import { NOT_RANKED_COLOR, rankColor, rankPosition, RANK_LEGEND_SENTENCE, type RankPalette } from "@/lib/rankColor";
 import type { EarthSite } from "@/hooks/useEarthSites";
 import { boundsPath, footprintRings, makeFrame, padBounds, project, pxPerKm, readSamplingCentre, ringPath, ringsBounds, unionBounds, type Frame } from "../lib/geo";
 import type { DiscoveryCandidate, DiscoveryRunSummary, DiscoverySurvey } from "../adapter";
@@ -33,25 +33,25 @@ export function SurveyMap({ run, survey, candidates, selectedId, onSelect, estab
   const byId = new Map(candidates.map(c => [c.id, c]));
 
   return (
-    <div className={`relative overflow-hidden rounded-xl border border-line-strong bg-[#0a1118] ${className}`}>
+    <div className={`relative overflow-hidden rounded-xl border border-line-strong bg-canvas ${className}`}>
       <div ref={ref} className="absolute inset-0" data-testid="survey-map-frame">
         <svg width="100%" height="100%" viewBox={`0 0 ${size.w} ${size.h}`} role="img" aria-label={`Schematic map of survey ${run.label}: boundary, ${centres.length} sampling centres, ${n} candidate footprints and ${known.length} established catalog sites in view. No imagery.`}>
-          <defs><pattern id="survey-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#17202b" strokeWidth="1" /></pattern></defs>
+          <defs><pattern id="survey-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" style={{ stroke: "var(--color-line)" }} strokeWidth="1" /></pattern></defs>
           <rect width="100%" height="100%" fill="url(#survey-grid)" />
           {/* surveyed boundary */}
           <path d={boundsPath(frame, run.bounds)} fill="rgba(110,160,217,0.06)" stroke="#6ea0d9" strokeWidth={1.5} strokeDasharray="6 4" data-testid="survey-boundary" />
           {/* footprints */}
-          {rings.map(r => { const c = byId.get(r.id); if (!c || !r.rings.length) return null; const pos = rankPosition(c.display_rank, n); const color = rankColor(pos, palette) ?? "#8a919c"; const sel = r.id === selectedId; return (
+          {rings.map(r => { const c = byId.get(r.id); if (!c || !r.rings.length) return null; const pos = rankPosition(c.display_rank, n); const color = rankColor(pos, palette) ?? NOT_RANKED_COLOR; const sel = r.id === selectedId; return (
             <g key={r.id} role="button" tabIndex={0} aria-label={`Footprint of ${c.name}, rank ${c.display_rank ?? "—"}${sel ? ", selected" : ""}`} aria-pressed={sel} onClick={() => onSelect(r.id)} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(r.id); } }} className="cursor-pointer outline-none focus-visible:[&>path]:stroke-white" data-testid="candidate-footprint">
               {r.rings.map((ring, i) => <path key={i} d={ringPath(frame, ring)} fill={color} fillOpacity={sel ? 0.42 : 0.2} stroke={color} strokeWidth={sel ? 3 : 1.5} />)}
             </g>
           ); })}
           {/* sampling centres */}
-          {centres.map((c, i) => { const q = project(frame, { lon: c.lon, lat: c.lat }); const excluded = c.status === "excluded"; return <circle key={`${c.id ?? i}`} cx={q.x} cy={q.y} r={excluded ? 2.5 : 3} fill={excluded ? "none" : "#e6e9ee"} stroke={excluded ? "#9aa5b4" : "#0b0f14"} strokeWidth={1} opacity={0.9} data-testid="sampling-centre"><title>{`Sampling centre ${c.id ?? i + 1}: ${c.lat.toFixed(3)}°, ${c.lon.toFixed(3)}°E${c.status ? ` · ${c.status}` : ""}`}</title></circle>; })}
+          {centres.map((c, i) => { const q = project(frame, { lon: c.lon, lat: c.lat }); const excluded = c.status === "excluded"; return <circle key={`${c.id ?? i}`} cx={q.x} cy={q.y} r={excluded ? 2.5 : 3} style={{ fill: excluded ? "none" : "var(--color-fg)", stroke: excluded ? "var(--color-fg-muted)" : "var(--color-canvas)" }} strokeWidth={1} opacity={0.9} data-testid="sampling-centre"><title>{`Sampling centre ${c.id ?? i + 1}: ${c.lat.toFixed(3)}°, ${c.lon.toFixed(3)}°E${c.status ? ` · ${c.status}` : ""}`}</title></circle>; })}
           {/* candidate centres with rank labels */}
-          {candidates.map(c => { const q = project(frame, { lon: c.lon_east, lat: c.lat }); return <g key={`c-${c.id}`} pointerEvents="none"><circle cx={q.x} cy={q.y} r={9} fill="#0b0f14" fillOpacity={0.8} /><text x={q.x} y={q.y + 3.5} textAnchor="middle" fontSize="10" fontFamily="IBM Plex Mono, monospace" fill="#e6e9ee">{c.display_rank ?? "·"}</text></g>; })}
+          {candidates.map(c => { const q = project(frame, { lon: c.lon_east, lat: c.lat }); return <g key={`c-${c.id}`} pointerEvents="none"><circle cx={q.x} cy={q.y} r={9} style={{ fill: "var(--color-canvas)" }} fillOpacity={0.8} /><text x={q.x} y={q.y + 3.5} textAnchor="middle" fontSize="10" style={{ fill: "var(--color-fg)", fontFamily: "var(--font-mono)" }}>{c.display_rank ?? "·"}</text></g>; })}
           {/* established catalog sites */}
-          {known.map(s => { const q = project(frame, { lon: s.lonEast, lat: s.lat }); return <g key={`k-${s.id}`} data-testid="established-site"><path d={`M${q.x - 6} ${q.y}H${q.x + 6}M${q.x} ${q.y - 6}V${q.y + 6}`} stroke="#9aa5b4" strokeWidth={2} /><title>{`Established analog (catalog): ${s.name}`}</title></g>; })}
+          {known.map(s => { const q = project(frame, { lon: s.lonEast, lat: s.lat }); return <g key={`k-${s.id}`} data-testid="established-site"><path d={`M${q.x - 6} ${q.y}H${q.x + 6}M${q.x} ${q.y - 6}V${q.y + 6}`} style={{ stroke: "var(--color-fg-muted)" }} strokeWidth={2} /><title>{`Established analog (catalog): ${s.name}`}</title></g>; })}
         </svg>
       </div>
       <div className="pointer-events-none absolute left-3 top-3 rounded bg-black/70 px-2 py-1 text-[10.5px] text-fg-muted">Only the dashed area was searched · schematic, no imagery</div>

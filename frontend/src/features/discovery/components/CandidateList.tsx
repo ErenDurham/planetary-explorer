@@ -3,7 +3,7 @@
 // the review status, and the actions. Every figure is the service's.
 import { MapPin, Microscope } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { rankColor, rankPosition, type RankPalette } from "@/lib/rankColor";
+import { NOT_RANKED_COLOR, rankColor, rankPosition, type RankPalette } from "@/lib/rankColor";
 import { PROPOSED_LABEL, missingFactors, noveltyRelation, similarityExplanation, similarityReasons } from "../lib/copy";
 import { ResearchStatusBadge } from "./ResearchStatusBadge";
 import type { DiscoveryCandidate } from "../adapter";
@@ -21,7 +21,7 @@ export function CandidateList({ candidates, selectedId, onSelect, onResearch, re
       {n === 0 ? <p className="rounded-xl border border-dashed border-line px-4 py-3 text-sm text-fg-muted">No footprint in this survey passed screening, so there is nothing to rank. The coverage section lists why each sampled footprint was excluded.</p> : (
         <ol className="space-y-3" aria-label="Ranked proposed candidates">
           {candidates.map(c => {
-            const sel = c.id === selectedId; const pos = rankPosition(c.display_rank, n); const color = rankColor(pos, palette) ?? "#8a919c"; const nov = noveltyRelation(c.novelty); const why = similarityReasons(c.feature_distances, referenceName); const missing = missingFactors(c);
+            const sel = c.id === selectedId; const pos = rankPosition(c.display_rank, n); const color = rankColor(pos, palette) ?? NOT_RANKED_COLOR; const nov = noveltyRelation(c.novelty); const why = similarityReasons(c.feature_distances, referenceName); const missing = missingFactors(c);
             return (
               <li key={c.id}>
                 <article aria-label={`Rank ${c.display_rank ?? "—"}: ${c.name}, similarity index ${c.similarity_index?.toFixed(1) ?? "not ranked"}`} className={`rounded-2xl border bg-bg-elev p-4 transition-colors ${sel ? "border-copper ring-1 ring-copper/40" : "border-line hover:border-line-strong"}`}>

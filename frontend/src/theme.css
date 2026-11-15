@@ -1,0 +1,63 @@
+/* =============================================================================
+   PLANETARY EXPLORER THEME — the one place to edit the look of the whole app.
+
+   Every panel, button, chart axis, map canvas and the globe chrome read these
+   tokens (Tailwind utilities such as bg-bg, text-fg-muted, border-line come
+   from them too). Change a value here and it changes everywhere.
+
+   The palette is the "atlas" look that first shipped on Compare and Research:
+   warm near-black, soft off-white type, copper accent, Manrope for text and
+   IBM Plex Mono for numbers.
+
+   Deliberately NOT here: colours that encode data. The rank scale
+   (lib/rankColor.ts), the landing-score scale (components/globe/colors.ts),
+   route risk classes (features/expedition/lib/risk.ts) and the body colours
+   (components/imagery/assetUrl.ts) are scientific encodings and must stay
+   stable whatever the chrome looks like.
+   ============================================================================= */
+/* Fonts are loaded once in index.html (Manrope + IBM Plex Mono). */
+
+@theme {
+  /* --- surfaces --------------------------------------------------------- */
+  --color-bg: #181818;          /* page background */
+  --color-bg-elev: #1f1f1f;     /* panels, headers, cards */
+  --color-bg-elev-2: #272727;   /* hover and nested surfaces */
+  --color-canvas: #121212;      /* globe, maps and image frames */
+
+  /* --- lines ------------------------------------------------------------ */
+  --color-line: #313131;        /* dividers, quiet borders */
+  --color-line-strong: #51514b; /* input and card borders */
+
+  /* --- text ------------------------------------------------------------- */
+  --color-fg: #ecebe6;          /* primary text */
+  --color-fg-muted: #b8b8af;    /* secondary text */
+  --color-fg-faint: #a09f96;    /* labels, eyebrows, hints */
+
+  /* --- accent ----------------------------------------------------------- */
+  --color-copper: #c2622b;        /* primary action */
+  --color-copper-bright: #f0a03c; /* highlights, selected state, focus ring */
+  --color-copper-dim: #7a3f1f;
+
+  /* --- status ----------------------------------------------------------- */
+  --color-ok: #6fb98f;
+  --color-warn: #d9a441;
+  --color-danger: #d16a5a;
+  --color-info: #6ea0d9;
+  /* the Research Traverse objective accent and the lavender priority factor */
+  --color-teal: #5fb8b0;
+  --color-lavender: #c4a4e8;
+
+  /* --- type ------------------------------------------------------------- */
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- shape ------------------------------------------------------------ */
+  --radius-panel: 8px;
+}
+
+/* Overlay chrome drawn over imagery and maps (labels, scale bars, legends). */
+:root {
+  --overlay-bg: rgba(18, 18, 18, 0.78);
+  --overlay-fg: var(--color-fg);
+  --focus-ring: var(--color-copper-bright);
+}
