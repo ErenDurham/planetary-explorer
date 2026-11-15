@@ -1,4 +1,4 @@
-// The discovery UI's view of the backend-owned discovery-v1 contract
+// The discovery UI's view of the backend-owned discovery contract
 // (DISCOVERY_CONTRACT.md). Wire types are ALIASES of the generated schema in
 // src/types/discovery-api.ts, so the contract has one owner. The UI computes no
 // scientific value: every score, distance, count and measurement on screen is a
@@ -22,11 +22,12 @@ export type DiscoveryNovelty = S["DiscoveryNovelty"];
 export type DiscoveryContext = S["DiscoveryContext"];
 export type DiscoverySource = S["DiscoverySource"];
 export type DiscoveryProfile = S["DiscoveryProfile"];
-export type DiscoveryWeights = S["DiscoveryWeights"];
 export type DiscoveryExport = S["DiscoveryExport"];
+export type DiscoveryDimensionScore = S["DiscoveryDimensionScore"];
+export type DiscoveryContextMeasurement = S["DiscoveryContextMeasurement"];
 
-export type DiscoveryWeightId = keyof DiscoveryWeights;
-export const DISCOVERY_WEIGHT_IDS: readonly DiscoveryWeightId[] = ["slope_regional_median_deg", "roughness_regional_m"];
+/** Weights name features the chosen survey scores; the basis comes from its criteria. */
+export type DiscoveryWeights = Record<string, number>;
 
 /** The service as the UI consumes it. `HttpDiscoveryService` wraps the
  * backend-owned `discoveryEngine` client; tests inject fakes through

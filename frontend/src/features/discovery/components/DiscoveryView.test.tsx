@@ -42,7 +42,7 @@ describe("DiscoveryView", () => {
     const svc = connectedService();
     setDiscoveryService(svc);
     mount();
-    expect(await screen.findByText("Survey installed · discovery-v1")).toBeInTheDocument();
+    expect(await screen.findByText("Survey installed · discovery-v2")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Find unresearched analogs for Jezero." })).toBeInTheDocument();
     expect(screen.getByRole("radiogroup", { name: "Explore mode" })).toBeInTheDocument();
     // the one installed survey is named, the area searched is stated, and ranking starts on its own
@@ -54,7 +54,7 @@ describe("DiscoveryView", () => {
     expect(svc.calls).toHaveLength(1);
     // the scope line is bound to the run and the response: sampled count, area, reference, features, results shown
     expect(screen.getByText("16 surveyed locations compared with Jezero Crater using regional slope and relief. 3 candidate regions selected for review.")).toBeInTheDocument();
-    expect(svc.calls[0]).toMatchObject({ run_id: run.run_id, reference_id: "jezero_crater", top_k: 5, weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 } });
+    expect(svc.calls[0]).toMatchObject({ run_id: run.run_id, reference_id: "jezero_crater", top_k: 5, weights: { slope_regional_median_deg: 40, roughness_regional_m: 40, precipitation_mm_day: 20 } });
     // headline numbers bound to the response: evaluated, presented, footprint, resolution
     const stats = screen.getByTestId("survey-stats");
     expect(stats).toHaveTextContent(/16locations evaluated/);
@@ -100,7 +100,7 @@ describe("DiscoveryView", () => {
     expect(within(panel).getByRole("article", { name: /Candidate evidence/ })).toBe(card);
     expect(card).not.toHaveTextContent("Proposed terrain analog candidate");   // removed as fluff
     expect(card).toHaveTextContent("61.4");
-    expect(card).toHaveTextContent(/Terrain similarity: 61\.4\/100\. This reflects how closely the region's measured slope and relief match Jezero Crater under the selected weighting \(slope 50%, relief 50%\)\. It is not a probability/);
+    expect(card).toHaveTextContent(/Terrain similarity: 61\.4\/100\. This reflects how closely the region's measured slope and relief match Jezero Crater under the selected weighting \(slope 40%, relief 40%\)\. It is not a probability/);
     expect(card).toHaveTextContent(/Regional (slope|relief) is close: .* at Jezero Crater/);
     expect(card).toHaveTextContent(/Not compared: climate, land cover, geology and materials/);
     expect(card).toHaveTextContent(/The catalog is incomplete/);
@@ -116,7 +116,9 @@ describe("DiscoveryView", () => {
     // re-weight: new request keyed on the new weights; the fake reverses the order when relief dominates; the explicit selection survives
     fireEvent.change(screen.getByRole("slider", { name: /Detrended regional relief weight share/ }), { target: { value: "80" } });
     await waitFor(() => expect(svc.calls).toHaveLength(3));
-    expect(svc.calls[2].weights).toEqual({ slope_regional_median_deg: 20, roughness_regional_m: 80 });
+    // the moved share is exact and the remaining features rebalance to what is left of 100
+    expect(svc.calls[2].weights).toMatchObject({ roughness_regional_m: 80 });
+    expect(Object.values(svc.calls[2].weights as Record<string, number>).reduce((a, b) => a + b, 0)).toBe(100);
     await waitFor(() => expect(within(screen.getByRole("list", { name: "Ranked proposed candidates" })).getByRole("article", { name: /Rank 1: Footprint c_31_25_m2_25/ })).toBeInTheDocument());
     // the selected candidate's detail follows the new rank response
     expect(screen.getByRole("article", { name: /Candidate evidence/ })).toHaveTextContent("Rank 2");
@@ -204,7 +206,7 @@ describe("DiscoveryView", () => {
   it("routes to the established analogs under Browse Regions without carrying a discovery candidate into the curated selection", async () => {
     setDiscoveryService(connectedService({ capabilities: async () => ({ ...capabilities }) }));
     mount();
-    await screen.findByText("Survey installed · discovery-v1");
+    await screen.findByText("Survey installed · discovery-v2");
     expect(screen.queryByRole("button",{name:/See the established analogs/})).toBeNull();
     const before=useAppStore.getState();
     fireEvent.click(screen.getByRole("radio", { name: "Browse Regions" }));

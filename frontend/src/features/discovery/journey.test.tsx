@@ -33,7 +33,7 @@ function mount() {
 describe("discovery journey", () => {
   beforeEach(() => {
     record = { status: "unresearched", notes: "", findings: [], run_id: run.run_id, candidate_id: candidates[0].id, updated_at: null };
-    useDiscoveryStore.setState({ runId: null, runs: {}, weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 }, defaultWeights: { slope_regional_median_deg: 50, roughness_regional_m: 50 }, topK: 5, view: "map", selectionRevision: 0 });
+    useDiscoveryStore.setState({ runId: null, runs: {}, weights: {}, defaultWeights: {}, topK: 5, view: "map", selectionRevision: 0 });
     useCandidateResearchTarget.setState({ target: null, drafts: {} });
     useAppStore.setState({ activeTab: "explore", exploreMode: "find_analogs", selectedEarthId: null, selectedMarsId: null, selectedSiteId: null, missionDesigned: false, appliedObjective: "" });
     engine.research.mockImplementation(async (_run: string, id: string) => dossierFor(id));
@@ -71,8 +71,10 @@ describe("discovery journey", () => {
     await waitFor(() => expect(svc.calls).toHaveLength(2));
     await waitFor(() => expect(within(list).getByRole("button", { name: /Footprint c_31_75_m2_25/ })).toHaveAttribute("aria-pressed", "true"));
     expect(within(panel).getByRole("article", { name: /Candidate evidence: Footprint c_31_75_m2_25/ })).toBeInTheDocument();
-    // back to the default weights: the first ranking is served from the cache, no new request
-    fireEvent.change(screen.getByRole("slider", { name: /Detrended regional relief weight share/ }), { target: { value: "50" } });
+    // back to the default weights: the first ranking is served from the cache, no new request.
+    // Reset rather than dragging one slider back: with more than two features, returning
+    // one share to its old value does not restore the others.
+    fireEvent.click(screen.getByRole("button", { name: "Defaults" }));
     await waitFor(() => expect(within(list).getByRole("button", { name: /Rank 1.*Footprint c_31_25_m2_75/ })).toBeInTheDocument());
     expect(svc.calls).toHaveLength(2);
     fireEvent.click(within(list).getByRole("button", { name: /Rank 1.*Footprint c_31_25_m2_75/ }));

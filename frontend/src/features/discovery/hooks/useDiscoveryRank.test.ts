@@ -33,6 +33,6 @@ describe("fetchDiscoveryRank", () => {
   it("keys the cache by engine, run, reference, weights and top_k", () => {
     const a = rankQueryKey("r1", shares, 5), b = rankQueryKey("r1", { slope_regional_median_deg: 60, roughness_regional_m: 40 }, 5), c = rankQueryKey("r1", shares, 10);
     expect(a).not.toEqual(b); expect(a).not.toEqual(c);
-    expect(a).toContain("discovery-v1"); expect(a).toContain("jezero_crater");
+    expect(a).toContain("discovery-v2"); expect(a).toContain("jezero_crater");
   });
 });
