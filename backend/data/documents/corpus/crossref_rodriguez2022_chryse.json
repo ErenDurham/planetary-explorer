@@ -9,6 +9,7 @@
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1038/s41598-022-18082-2",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "chryse_planitia"
  ],

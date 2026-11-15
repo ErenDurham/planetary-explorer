@@ -82,12 +82,17 @@ def _patch_profile(profile: dict, site: dict, lit: dict) -> None:
                          notes=citation_note(site, fid, sources))
             else:
                 m.update(value=None, source_id=None, measurement_type="literature", quality_flag="missing", is_missing=True,
-                         notes="No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given.")
+                         notes=site.get("evidence_gap") or "No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given.")
         elif fid == "latitude_abs_deg" and site["planet"] == "earth":
-            # the build cites the site's first source here (candidates.json "sources"[0])
-            m["source_id"] = site_sources(site)[0]
+            # the build cites the site's first source here (candidates.json "sources"[0]);
+            # a site with no literature keeps the coordinate source the build used
+            if site_sources(site):
+                m["source_id"] = site_sources(site)[0]
         elif fid == "water_ice_evidence" and site.get("water_ice_evidence"):
             m.update(value=site["water_ice_evidence"], source_id=primary_source(site, "mineralogy_tags") or primary_source(site, "terrain_morphology"))
+        elif fid == "water_ice_evidence":
+            m.update(value=None, source_id=None, quality_flag="missing", is_missing=True,
+                     notes="No water or ice evidence is stated in this site's approved literature sources.")
     # every source behind a label is listed, not only each measurement's primary one
     used = {m["source_id"] for m in profile["measurements"] if m.get("source_id")} | set(site_sources(site))
     srcs = {k: v for k, v in profile.get("sources", {}).items() if k in used and k not in sources}
@@ -104,13 +109,13 @@ def _patch_profile(profile: dict, site: dict, lit: dict) -> None:
 
 
 def apply() -> None:
-    lit = json.loads(LIT.read_text())
+    lit = json.loads(LIT.read_text(encoding="utf-8"))
     sources = lit["sources"]
     all_lit = set(sources)
 
     # Site files: labels, text and source lists; drop literature sources no site uses any more.
     for path, key, planet in ((DATA / "earth" / "candidates.json", "candidates", "earth"), (DATA / "mars" / "sites.json", "sites", "mars")):
-        cfg = json.loads(path.read_text())
+        cfg = json.loads(path.read_text(encoding="utf-8"))
         used: set[str] = set()
         for s in cfg[key]:
             site = lit["sites"][s["id"]]
@@ -123,19 +128,21 @@ def apply() -> None:
                 used |= set(s["sources"])
             else:
                 s["water_ice_evidence"] = site["water_ice_evidence"]
-                s["composition_sources"] = [primary_source(site, "mineralogy_tags") or primary_source(site, "terrain_morphology")]
+                primary = primary_source(site, "mineralogy_tags") or primary_source(site, "terrain_morphology")
+                s["composition_sources"] = [primary] if primary else []
                 s["literature_sources"] = site_sources(site)
                 used |= set(s["literature_sources"]) | set(s.get("coordinate_sources", []))
         # keep the data sources (DEM, climate) and every source a site still cites; literature
         # sources come from the literature file, so an old or generic one no site uses is dropped
-        keep = {k: v for k, v in cfg["sources"].items() if (k in used or k in ("copernicus_glo90", "nasa_power")) and k not in all_lit}
+        keep = {k: v for k, v in cfg["sources"].items()
+                if (k in used or k in ("copernicus_glo90", "nasa_power", "workbook_lesser_known_sites")) and k not in all_lit}
         for sid in sorted(used & all_lit):
             keep[sid] = provenance(sid, sources[sid])
         cfg["sources"] = keep
         _write(path, cfg)
 
     for path in (DATA / "earth" / "candidate_profiles.v1.json", DATA / "mars" / "site_profiles.v1.json"):
-        doc = json.loads(path.read_text())
+        doc = json.loads(path.read_text(encoding="utf-8"))
         for p in doc["profiles"]:
             _patch_profile(p, lit["sites"][p["site_id"]], lit)
         _write(path, doc)

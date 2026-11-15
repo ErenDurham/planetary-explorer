@@ -9,6 +9,7 @@
  "content_type": "application/json",
  "kind": "crossref",
  "topic": "Bibliographic record for DOI 10.1126/science.abo2196",
+ "excluded_paragraph_terms": [],
  "default_geographic_relevance": [
   "jezero_crater"
  ],

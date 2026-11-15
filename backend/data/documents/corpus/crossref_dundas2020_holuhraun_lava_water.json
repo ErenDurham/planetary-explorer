@@ -1,0 +1,22 @@
+{
+ "document_id": "crossref_dundas2020_holuhraun_lava_water",
+ "title": "Lava–water interaction and hydrothermal activity within the 2014–2015 Holuhraun Lava Flow Field, Iceland",
+ "institution": "Journal of Volcanology and Geothermal Research / Elsevier BV",
+ "url": "https://api.crossref.org/works/10.1016/j.jvolgeores.2020.107100",
+ "final_url": "https://api.crossref.org/works/10.1016/j.jvolgeores.2020.107100",
+ "publication_date": "2020-12",
+ "retrieved_at": "2026-11-15",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "Lava-water interaction and hydrothermal activity within the 2014-2015 Holuhraun lava flow field, Iceland",
+ "excluded_paragraph_terms": [],
+ "default_geographic_relevance": [
+  "holuhraun_iceland",
+  "elysium_planitia"
+ ],
+ "sha256": "6960d00e0f904e0ff2b6845ac2fdccd08e798afd97552c3f47d261fa537c4ca4",
+ "char_count": 810,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): Lava–water interaction and hydrothermal activity within the 2014–2015 Holuhraun Lava Flow Field, Iceland.\n\nAuthors: Colin M. Dundas, Laszlo Keszthelyi, Einat Lev, M. Elise Rumpf, Christopher W. Hamilton, Ármann Höskuldsson, Thorvaldur Thordarson.\n\nPublished in Journal of Volcanology and Geothermal Research, volume 408, pages 107100 (2020), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.jvolgeores.2020.107100.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_text": "Bibliographic record (Crossref metadata, not the paper's full text): Lava–water interaction and hydrothermal activity within the 2014–2015 Holuhraun Lava Flow Field, Iceland.\n\nAuthors: Colin M. Dundas, Laszlo Keszthelyi, Einat Lev, M. Elise Rumpf, Christopher W. Hamilton, Ármann Höskuldsson, Thorvaldur Thordarson.\n\nPublished in Journal of Volcanology and Geothermal Research, volume 408, pages 107100 (2020), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.jvolgeores.2020.107100.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_char_count": 810
+}

@@ -1,0 +1,21 @@
+{
+ "document_id": "crossref_hauber2009_xanthe_deltas",
+ "title": "Sedimentary deposits in Xanthe Terra: Implications for the ancient climate on Mars",
+ "institution": "Planetary and Space Science / Elsevier BV",
+ "url": "https://api.crossref.org/works/10.1016/j.pss.2008.06.009",
+ "final_url": "https://api.crossref.org/works/10.1016/j.pss.2008.06.009",
+ "publication_date": "2009-07",
+ "retrieved_at": "2026-11-15",
+ "content_type": "application/json",
+ "kind": "crossref",
+ "topic": "Sedimentary deposits in Xanthe Terra: implications for the ancient climate on Mars",
+ "excluded_paragraph_terms": [],
+ "default_geographic_relevance": [
+  "xanthe_terra_tyras"
+ ],
+ "sha256": "c6ccee6d49d18dc6f80a7c564f1754b5b2426c77d32df13e0413a177eee30d68",
+ "char_count": 767,
+ "text": "Bibliographic record (Crossref metadata, not the paper's full text): Sedimentary deposits in Xanthe Terra: Implications for the ancient climate on Mars.\n\nAuthors: E. Hauber, K. Gwinner, M. Kleinhans, D. Reiss, G. Di Achille, G.-G. Ori, F. Scholten, L. Marinangeli, R. Jaumann, G. Neukum.\n\nPublished in Planetary and Space Science, volume 57, issue 8-9, pages 944-957 (2009), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.pss.2008.06.009.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_text": "Bibliographic record (Crossref metadata, not the paper's full text): Sedimentary deposits in Xanthe Terra: Implications for the ancient climate on Mars.\n\nAuthors: E. Hauber, K. Gwinner, M. Kleinhans, D. Reiss, G. Di Achille, G.-G. Ori, F. Scholten, L. Marinangeli, R. Jaumann, G. Neukum.\n\nPublished in Planetary and Space Science, volume 57, issue 8-9, pages 944-957 (2009), publisher Elsevier BV. DOI: https://doi.org/10.1016/j.pss.2008.06.009.\n\nThis record describes what the publication is about; the peer-reviewed full text is behind the DOI and was not ingested. Claims about the site's geology or history that cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.",
+ "raw_char_count": 767
+}
