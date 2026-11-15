@@ -2,6 +2,7 @@
 // selections: a discovery candidate id is never written to selectedEarthId,
 // and curated analog weights are never read here.
 import { create } from "zustand";
+import type { DiscoveryCandidate } from "../adapter";
 import type { Shares } from "@/lib/allocation";
 import { TOP_K_DEFAULT, clampTopK, setDiscoveryShare, sharesFromDefaults } from "../lib/weights";
 
@@ -11,6 +12,7 @@ interface RunState {
   /** The user asked for this run to be ranked (ranking is never automatic on load). */
   ranked: boolean;
   selectedCandidateId: string | null;
+  shortlist: DiscoveryCandidate[];
 }
 
 interface DiscoveryState {
@@ -29,9 +31,10 @@ interface DiscoveryState {
   setView: (v: DiscoveryMapView) => void;
   requestRank: () => void;
   selectCandidate: (id: string | null) => void;
+  toggleShortlist: (candidate: DiscoveryCandidate) => void;
 }
 
-const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null };
+const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null, shortlist: [] };
 
 export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   runId: null,
@@ -51,6 +54,15 @@ export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   setTopK: (n) => set({ topK: clampTopK(n) }),
   setView: (view) => set({ view }),
   requestRank: () => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), ranked: true } } })); },
+  toggleShortlist: (candidate) => {
+    const { runId } = get(); if (!runId) return;
+    set(s => {
+      const run = s.runs[runId] ?? EMPTY_RUN, saved = run.shortlist ?? [];
+      const exists = saved.some(c => c.id === candidate.id);
+      if (!exists && saved.length >= 3) return {};
+      return { runs: { ...s.runs, [runId]: { ...run, shortlist: exists ? saved.filter(c => c.id !== candidate.id) : [...saved, candidate] } } };
+    });
+  },
   selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id } } })); },
 }));
 

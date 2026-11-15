@@ -5,12 +5,12 @@ import { useAppStore } from "@/store/useAppStore";
 // Evidence card for one proposed candidate: current scores from the rank
 // response, immutable inputs from the detail endpoint. Every number is the
 // server's; absent context is reported as absent.
-import { ExternalLink, FlaskConical } from "lucide-react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { BulletList } from "@/components/ui/Section";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { formatValueWithUnit } from "@/lib/format";
-import { PROPOSED_LABEL, formatKm, noveltyRelation, reviewStatusLabel } from "../lib/copy";
+import { candidateTitle, coordinates, formatKm, noveltyRelation, reviewStatusLabel } from "../lib/copy";
 import { KeyValues } from "./SurveyFunnel";
 import type { DiscoveryCandidate, DiscoveryCandidateDetail, DiscoveryCriterion, DiscoveryReference } from "../adapter";
 import type { EarthSite } from "@/hooks/useEarthSites";
@@ -32,44 +32,45 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
   if (candidate.research_status !== "literature_reviewed") missing.push("Candidate literature review: not completed. Small desktop checks do not establish a researched analog.");
   return (
     <article aria-label={`Candidate evidence: ${candidate.name}`} className="rounded-xl border border-line-strong bg-bg-elev p-4 text-sm">
-      <p className="rounded-lg border border-info/40 bg-info/10 px-3 py-2 text-xs font-semibold text-info"><FlaskConical className="mr-1 inline h-3.5 w-3.5" aria-hidden />{PROPOSED_LABEL}</p>
-      <div className="mt-3 flex flex-wrap items-center gap-3"><ResearchStatusBadge status={candidate.research_status} /><button type="button" disabled={!runId} className="rounded-lg border border-copper px-3 py-2 text-sm font-semibold text-copper-bright disabled:opacity-40" onClick={() => { if (runId) { useCandidateResearchTarget.getState().open(runId, candidate.id); useAppStore.getState().setActiveTab("research"); } }}>Research this candidate</button></div>
-      <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
-        <div><p className="eyebrow">Rank {candidate.display_rank ?? "—"}{candidate.raw_rank != null && candidate.raw_rank !== candidate.display_rank ? ` · raw rank ${candidate.raw_rank} before diversification` : ""}</p><h2 className="mt-1 text-xl font-semibold tracking-tight text-fg">{candidate.name}</h2><p className="num text-xs text-fg-muted">{candidate.lat.toFixed(4)}°, {candidate.lon_east.toFixed(4)}°E · 60 km footprint centre</p></div>
-        <div className="text-right"><p className="num text-3xl text-copper-bright">{candidate.similarity_index != null ? candidate.similarity_index.toFixed(1) : "—"}<span className="ml-1 text-sm text-fg-muted">/ 100</span></p><p className="text-[10.5px] text-fg-faint">two-feature terrain index · D = {candidate.distance?.toFixed(3) ?? "—"}</p></div>
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-4">
+        <div className="min-w-0"><p className="text-xs font-medium text-copper-bright">3. Review evidence · Region {candidate.display_rank ?? "—"}</p><h2 className="mt-2 text-xl font-semibold tracking-tight text-fg sm:text-2xl">{candidateTitle(candidate)}</h2><p className="mt-1 text-xs text-fg-muted">{candidate.name.startsWith("Survey footprint ") ? "Earth survey footprint · regional terrain screening" : coordinates(candidate.lat, candidate.lon_east)}</p></div>
+        <div className="flex flex-wrap items-center gap-5"><div><p className="num text-2xl font-semibold text-fg">{candidate.similarity_index?.toFixed(1) ?? "—"}<span className="ml-1 text-xs font-normal text-fg-muted">/ 100</span></p><p className="text-[11px] text-fg-muted">Terrain similarity</p></div><button type="button" disabled={!runId} className="inline-flex items-center gap-2 rounded-lg border border-copper bg-copper px-4 py-2.5 text-sm font-semibold text-white hover:bg-copper-bright hover:text-bg disabled:opacity-40" onClick={() => { if (runId) { useCandidateResearchTarget.getState().open(runId, candidate.id); useAppStore.getState().setActiveTab("research"); } }}>Research this candidate <ArrowUpRight className="h-4 w-4" aria-hidden /></button></div>
       </div>
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2"><ResearchStatusBadge status={candidate.research_status} /><p className="text-xs text-fg-muted">Proposed terrain analog candidate; field validation required.</p></div>
 
-      <section className="mt-4" aria-labelledby="cd-terrain">
-        <h3 id="cd-terrain" className="eyebrow">Regional terrain against {reference.name}</h3>
-        <table className="mt-2 w-full text-left text-xs"><thead className="text-fg-muted"><tr><th className="py-1 pr-2 font-medium">Feature</th><th className="py-1 pr-2 font-medium">Earth</th><th className="py-1 pr-2 font-medium">{reference.name}</th><th className="py-1 pr-2 font-medium">Scale</th><th className="py-1 pr-2 font-medium">Weight</th><th className="py-1 pr-2 font-medium">Distance</th><th className="py-1 font-medium">Contribution</th></tr></thead>
-          <tbody className="divide-y divide-line">{dists.map(d => { const c = criteria.find(x => x.feature_id === d.feature_id); const maxv = Math.max(Math.abs(d.earth_value), Math.abs(d.mars_value), 1e-9); return (
-            <tr key={d.feature_id}><td className="py-1.5 pr-2 text-fg">{c?.label ?? d.feature_id}<span className="mt-1 block h-1.5 w-28 overflow-hidden rounded bg-line" aria-hidden><span className="block h-full bg-info" style={{ width: `${(Math.abs(d.earth_value) / maxv) * 100}%` }} /><span className="-mt-1.5 block h-full bg-copper opacity-70" style={{ width: `${(Math.abs(d.mars_value) / maxv) * 100}%` }} /></span></td><td className="num py-1.5 pr-2 text-fg">{formatValueWithUnit(d.earth_value, d.unit)}</td><td className="num py-1.5 pr-2 text-fg">{formatValueWithUnit(d.mars_value, d.unit)}</td><td className="num py-1.5 pr-2 text-fg-muted">{d.scale} {d.unit}</td><td className="num py-1.5 pr-2 text-fg-muted">{(d.normalized_weight * 100).toFixed(0)}%</td><td className="num py-1.5 pr-2 text-fg-muted">{d.distance.toFixed(3)}</td><td className="num py-1.5 text-fg-muted">{d.contribution.toFixed(3)}</td></tr>
-          ); })}</tbody></table>
-        {dists.length === 0 && <p className="mt-2 text-xs text-fg-muted">No factor breakdown was returned for this candidate.</p>}
-        <p className="mt-2 text-[10.5px] text-fg-faint">Values are footprint medians on 4 km cells (regional). Blue bar Earth, copper bar Jezero. Scales are the service's fixed, unvalidated normalisation constants.</p>
+      <section className="mt-5" aria-labelledby="cd-terrain">
+        <h3 id="cd-terrain" className="text-sm font-semibold text-fg">What the terrain comparison shows</h3>
+        <p className="mt-1 text-xs leading-relaxed text-fg-muted">Compare these regional measurements with {reference.name}. The index combines their differences under your chosen emphasis.</p>
+        <div className="scroll-thin mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label="Regional terrain comparison">
+          <table className="w-full min-w-[430px] text-left text-sm"><thead className="border-b border-line text-xs text-fg-muted"><tr><th className="pb-3 pr-4 font-medium">Measured terrain</th><th className="pb-3 pr-4 font-medium">Earth region</th><th className="pb-3 pr-4 font-medium text-copper-bright">{reference.name}</th><th className="pb-3 font-medium">Emphasis</th></tr></thead><tbody className="divide-y divide-line">{dists.map(d => <tr key={d.feature_id}><th className="py-3 pr-4 font-normal text-fg">{criteria.find(c => c.feature_id === d.feature_id)?.label ?? d.feature_id}</th><td className="num py-3 pr-4 text-fg">{formatValueWithUnit(d.earth_value, d.unit)}</td><td className="num py-3 pr-4 text-copper-bright">{formatValueWithUnit(d.mars_value, d.unit)}</td><td className="num py-3 text-fg-muted">{(d.normalized_weight * 100).toFixed(0)}%</td></tr>)}</tbody></table>
+        </div>
+        {!dists.length && <p className="mt-2 text-xs text-fg-muted">No factor breakdown was returned for this candidate.</p>}
+        <p className="mt-2 text-xs text-fg-faint">Footprint medians on 4 km cells. These measurements cannot resolve rocks, local slopes or rover trafficability.</p>
+        <details className="mt-3 text-xs"><summary className="w-fit cursor-pointer text-fg-muted hover:text-fg">Score calculation and original ranking</summary><p className="mt-2 text-fg-muted">Raw rank {candidate.raw_rank ?? "—"} before geographic diversification · weighted distance {candidate.distance?.toFixed(3) ?? "—"}. Normalisation scales are fixed service assumptions, not validated operating limits.</p><ul className="mt-2 space-y-1 text-fg-muted">{dists.map(d => <li key={d.feature_id}>{criteria.find(c => c.feature_id === d.feature_id)?.label ?? d.feature_id}: scale {d.scale} {d.unit} · normalised distance {d.distance.toFixed(3)} · weighted contribution {d.contribution.toFixed(3)}</li>)}</ul></details>
       </section>
 
-      <section className="mt-4 grid gap-3 sm:grid-cols-2" aria-label="Coverage and catalog relationship">
+      <section className="mt-5 grid gap-3 sm:grid-cols-[200px_minmax(0,1fr)]" aria-label="Coverage and catalog relationship">
         <div className="rounded-lg border border-line p-3 text-xs"><p className="eyebrow">Terrain coverage</p><p className="num mt-1 text-lg text-fg">{(candidate.terrain_valid_fraction * 100).toFixed(1)}%</p><p className="text-fg-muted">valid analysis cells{detail?.profile ? ` · gradient support ${(detail.profile.gradient_valid_fraction * 100).toFixed(1)}%` : ""}</p></div>
         <div className="rounded-lg border border-line p-3 text-xs"><p className="eyebrow">Known-analog catalog</p><p className="mt-1"><Badge tone={nov.tone}>{nov.label}</Badge></p><p className="mt-1.5 text-fg-muted">{nov.sentence}</p><p className="mt-1 text-fg-muted">{reviewStatusLabel(candidate.novelty.review_status)}.</p>{known && onCompareKnown && <button type="button" onClick={() => onCompareKnown(known.id)} className="mt-1.5 text-info underline underline-offset-2">Open {known.name} among the established analogs</button>}{!known && <p className="mt-1 text-[10.5px] text-fg-faint">Nearest catalog site {candidate.novelty.nearest_known_site_id} ({formatKm(candidate.novelty.nearest_known_site_distance_km)}) is in the versioned catalog but not in this app's curated seven.</p>}</div>
       </section>
 
-      <section className="mt-4" aria-labelledby="cd-context"><h3 id="cd-context" className="eyebrow">Context (not scored)</h3>
+      <details className="mt-5 rounded-lg border border-line p-3"><summary className="cursor-pointer text-sm text-fg-muted">Climate and land-cover context (not scored)</summary>
         <div className="mt-2 grid gap-2 sm:grid-cols-2 text-xs">
           <div className="rounded-lg border border-line p-2.5"><p className="text-fg-faint">Climate</p>{ctx?.climate ? <ClimateContext climate={ctx.climate as Record<string, unknown>} /> : <p className="mt-1 text-fg-muted">Not available.</p>}</div>
           <div className="rounded-lg border border-line p-2.5"><p className="text-fg-faint">Land cover</p>{ctx?.land_cover ? <KeyValues dict={ctx.land_cover as Record<string, unknown>} /> : <p className="mt-1 text-fg-muted">Not available.</p>}</div>
         </div>
         <p className="mt-2 text-xs text-fg-muted">Geology: <span className="text-fg">not assessed</span>.</p>
-      </section>
+      </details>
 
-      <section className="mt-4" aria-labelledby="cd-missing"><h3 id="cd-missing" className="eyebrow text-warn">Missing evidence</h3><div className="mt-2"><BulletList items={missing} tone="warn" /></div></section>
+      <div className="mt-5 grid gap-5 md:grid-cols-2"><section aria-labelledby="cd-missing"><h3 id="cd-missing" className="eyebrow text-warn">Missing evidence</h3><div className="mt-2"><BulletList items={missing} tone="warn" /></div></section>
 
-      <section className="mt-4" aria-labelledby="cd-validation"><h3 id="cd-validation" className="eyebrow">Proposed field validation</h3>
+      <section aria-labelledby="cd-validation"><h3 id="cd-validation" className="eyebrow">Proposed field validation</h3>
         {detailPending && <p className="mt-2 text-xs text-fg-muted" role="status">Loading candidate inputs…</p>}
         {detailError ? <div className="mt-2"><ErrorNote error={detailError} context="discovery/candidate" /><button type="button" onClick={onRetry} className="mt-2 text-xs text-info underline">Retry</button></div> : null}
         {detail && <div className="mt-2"><BulletList items={detail.proposed_field_validation} empty="The service lists no validation steps for this candidate." /></div>}
       </section>
 
+      </div>
       {detail && (
         <section className="mt-4 space-y-2 text-xs" aria-label="Immutable inputs">
           <details className="rounded-lg border border-line px-3 py-2"><summary className="cursor-pointer text-fg-muted">Measured profile ({Object.keys(detail.profile?.measurements ?? {}).length} measurements) and grid</summary>
@@ -79,9 +80,9 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
         </section>
       )}
 
-      <section className="mt-4" aria-labelledby="cd-sources"><h3 id="cd-sources" className="eyebrow">Data sources</h3>
+      <details className="mt-5 rounded-lg border border-line p-3"><summary className="cursor-pointer text-sm text-fg-muted">Data sources and provenance</summary>
         <ul className="mt-2 space-y-1.5 text-xs">{(detail?.source_manifest?.length ? detail.source_manifest : candidate.sources).map(s => <li key={s.source_id} className="text-fg-muted"><span className="text-fg">{s.title}</span> — {s.institution} · {s.license} · observed {s.observation_period} · retrieved {s.retrieved_at}{s.url && <a href={s.url} target="_blank" rel="noreferrer" className="ml-1 inline-flex items-center gap-0.5 text-copper-bright" aria-label={`Open ${s.title}`}><ExternalLink className="h-3 w-3" aria-hidden /></a>}</li>)}</ul>
-      </section>
+      </details>
 
       <section className="mt-4" aria-labelledby="cd-limits"><h3 id="cd-limits" className="eyebrow">Limitations</h3><div className="mt-2"><BulletList items={candidate.limitations} tone="warn" empty="None stated." /></div></section>
     </article>

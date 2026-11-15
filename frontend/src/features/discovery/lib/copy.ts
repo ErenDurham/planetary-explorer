@@ -20,3 +20,12 @@ export function reviewStatusLabel(s: DiscoveryNovelty["review_status"]): string 
 export function formatKm(km: number): string {
   return km >= 100 ? `${Math.round(km).toLocaleString("en-US")} km` : `${km.toFixed(1)} km`;
 }
+
+
+export function coordinates(lat: number, lon: number): string {
+  return `${Math.abs(lat).toFixed(3)}°${lat < 0 ? "S" : "N"} · ${Math.abs(lon).toFixed(3)}°${lon < 0 ? "W" : "E"}`;
+}
+
+export function candidateTitle(candidate: { name: string; lat: number; lon_east: number }): string {
+  return candidate.name.startsWith("Survey footprint ") ? coordinates(candidate.lat, candidate.lon_east) : candidate.name;
+}

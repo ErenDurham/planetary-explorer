@@ -23,8 +23,8 @@ export function ExportPanel({ runId, ranking }: { runId: string | null; ranking:
     <section aria-labelledby="export-panel" className="rounded-xl border border-line-strong bg-bg-elev p-4 text-xs">
       <h2 id="export-panel" className="eyebrow">Export</h2>
       <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" onClick={() => void exportAudit()} disabled={!runId || busy} className="inline-flex items-center gap-1.5 rounded-lg border border-copper px-3 py-2 text-copper-bright hover:bg-copper/10 disabled:opacity-40"><Download className="h-3.5 w-3.5" aria-hidden />{busy ? "Fetching audit artifact…" : "Survey audit artifact (server JSON)"}</button>
-        <button type="button" onClick={() => ranking && downloadJson(`discovery-${ranking.run_id}-ranking-${ranking.client_request_id ?? "current"}.json`, ranking)} disabled={!ranking} className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong px-3 py-2 text-fg hover:border-copper disabled:opacity-40"><Download className="h-3.5 w-3.5" aria-hidden />This ranking as returned</button>
+        <button type="button" onClick={() => void exportAudit()} disabled={!runId || busy} className="inline-flex items-center gap-1.5 rounded-lg border border-copper px-3 py-2 text-copper-bright hover:bg-copper/10 disabled:opacity-40"><Download className="h-3.5 w-3.5" aria-hidden />{busy ? "Fetching audit artifact…" : "Download survey audit"}</button>
+        <button type="button" onClick={() => ranking && downloadJson(`discovery-${ranking.run_id}-ranking-${ranking.client_request_id ?? "current"}.json`, ranking)} disabled={!ranking} className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong px-3 py-2 text-fg hover:border-copper disabled:opacity-40"><Download className="h-3.5 w-3.5" aria-hidden />Download full ranking</button>
       </div>
       {done && <p className="mt-2 text-ok" role="status">{done}</p>}
       {error != null ? <div className="mt-2"><ErrorNote error={error} context="discovery/export" /></div> : null}
