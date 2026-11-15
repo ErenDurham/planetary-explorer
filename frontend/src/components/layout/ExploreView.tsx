@@ -1,8 +1,9 @@
+import { imageryAssetUrl } from "@/components/imagery/assetUrl";
 // Explore keeps imagery controls above the workspace and a single destination
 // planet button inside it. Planet navigation preserves mission focus and selections.
 import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { api, API_BASE_URL } from "@/services/api";
+import { api } from "@/services/api";
 import { EmptyNote } from "@/components/ui/Section";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { AnalogPreferences, type RankChange } from "@/components/mission/AnalogPreferences";
@@ -139,7 +140,7 @@ function SiteImages({site,view,enabled}: {site: ImagerySubject; view: "orbital" 
     {failed !== entry.entry_id && loaded !== entry.entry_id && <p role="status" className="mb-2 text-xs text-fg-muted">Loading image…</p>}
     {failed === entry.entry_id ? <div role="alert" className="rounded-lg border border-line p-4 text-sm">Image could not be loaded.<button type="button" className="ml-3 text-info underline" onClick={()=>{setAttempt(n=>n+1);setFailed(null);}}>Retry image</button></div> : <div tabIndex={0} aria-label="Image area; arrow keys scroll" className="max-h-[52vh] overflow-auto rounded-lg border border-line bg-black">
       <div className="relative mx-auto" style={{width: entry.width_px && entry.height_px ? `min(${zoom*100}%, ${entry.width_px/entry.height_px*52*zoom}vh)` : `${zoom*100}%`}}>
-        <img key={`${entry.entry_id}:${attempt}`} src={`${API_BASE_URL}/api/v1/imagery/${encodeURIComponent(entry.entry_id)}/asset?retry=${attempt}`} alt={`${entry.title}. ${entry.relevance}`} className="block h-auto w-full" onLoad={()=>setLoaded(entry.entry_id)} onError={()=>setFailed(entry.entry_id)} />
+        <img key={`${entry.entry_id}:${attempt}`} src={imageryAssetUrl(entry.entry_id,attempt)} alt={`${entry.title}. ${entry.relevance}`} className="block h-auto w-full" onLoad={()=>setLoaded(entry.entry_id)} onError={()=>setFailed(entry.entry_id)} />
         {contains && bounds && <span title="Candidate coordinate (not a landing ellipse)" aria-label="Candidate coordinate" className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-copper shadow" style={{left:`${(site.lon_east-bounds.west)/(bounds.east-bounds.west)*100}%`,top:`${(bounds.north-site.lat)/(bounds.north-bounds.south)*100}%`}} />}
       </div>
     </div>}

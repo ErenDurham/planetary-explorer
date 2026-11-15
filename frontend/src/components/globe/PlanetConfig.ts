@@ -30,7 +30,7 @@ export interface PlanetConfig {
 export const MARS_CONFIG: PlanetConfig = {
   id: "mars",
   displayName: "Mars",
-  textureUrl: "/textures/mars_viking_4k.jpg",
+  textureUrl: `${import.meta.env.BASE_URL}textures/mars_viking_4k.jpg`,
   radius: 1,
   bodyRadiusKm: 3389.5,
   markerConvention: "east_-180_180_three_default_uv",
@@ -43,7 +43,7 @@ export const MARS_CONFIG: PlanetConfig = {
 export const EARTH_CONFIG: PlanetConfig = {
   id: "earth",
   displayName: "Earth",
-  textureUrl: "/textures/earth_bluemarble_4k.jpg",
+  textureUrl: `${import.meta.env.BASE_URL}textures/earth_bluemarble_4k.jpg`,
   radius: 1,
   bodyRadiusKm: 6371.0,
   markerConvention: "east_-180_180_three_default_uv",

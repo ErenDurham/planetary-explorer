@@ -27,3 +27,8 @@ backend/data/raw/discovery/
 
 # Local analyst research notes, separate from immutable discovery runs
 backend/data/discovery/research/
+
+# Generated public browser runtime (built during Pages deployment)
+frontend/public/pages-data/
+
+work-pages-dist/
