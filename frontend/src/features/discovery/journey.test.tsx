@@ -135,6 +135,6 @@ describe("discovery journey", () => {
     expect(within(menu).queryByRole("menuitem", { name: /Mission Design/ })).toBeNull();
     fireEvent.click(within(menu).getByRole("menuitem", { name: /^Analyze/ }));
     expect(useAppStore.getState().activeTab).toBe("analyze");
-    expect(screen.getByTestId("advanced-nav")).toHaveTextContent(/Advanced · Analyze/);
+    expect(screen.getByTestId("advanced-nav")).toHaveTextContent(/^Analyze$/);
   });
 });

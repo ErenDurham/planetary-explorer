@@ -6,4 +6,4 @@ export function planetTravel(elapsed:number,startDistance:number,endDistance:num
   const clearance=Math.max(radius*3.6,startDistance,endDistance);
   return {turn:smooth((t-.18)/.64),distance:t<.3 ? startDistance+(clearance-startDistance)*smooth(t/.3) : clearance+(endDistance-clearance)*smooth((t-.3)/.7),done:t>=1};
 }
-export const planetDissolve=(elapsed:number)=>smooth((elapsed-.18)/.85);
+export const planetDissolve=(elapsed:number)=>smooth((elapsed-.5)/.6);

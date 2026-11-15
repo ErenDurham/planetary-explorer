@@ -1,3 +1,4 @@
+import { useMotionPreference } from "@/lib/motion/preferences";
 import { planetTravel, PLANET_TRAVEL_SECONDS } from "./planetMotion";
 // PlanetViewer: the React Three Fiber scene. Camera, hover and rotation state
 // live inside this tree (R3F local state) and never pass through the Zustand
@@ -77,12 +78,12 @@ export function PlanetViewer(props: PlanetViewerProps) {
   deselect.current = props.onDeselect;
   // no WebGL (or a renderer that fails later) gets the flat map with the same markers and legend
   const webgl = useMemo(() => hasWebGL(), []);
-  const reducedMotion = prefersReducedMotion();
+  const reducedMotion = useMotionPreference();
   const legend = <GlobeLegend config={config} mode={mode} palette={palette} onPaletteChange={onPaletteChange} heading={legendHeading} rankedCount={rankedCount} roles={props.roles} />;
   if (!webgl) return <GlobeFallback config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} reason="This browser cannot draw 3D graphics (WebGL is unavailable)." legend={legend} />;
   return (
     <GlobeErrorBoundary fallback={(error) => <GlobeFallback config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} reason={`The 3D renderer stopped (${error.message}).`} legend={legend} />}>
-    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 42%, var(--color-bg-elev) 0%, var(--color-canvas) 65%)" }}
+    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} data-travelling={travelling} className="planet-viewport relative h-full w-full min-h-[320px] overflow-hidden bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2" style={{ background: "var(--color-canvas)" }}
       onKeyDown={e => {
         if (e.target !== e.currentTarget || e.altKey || e.ctrlKey || e.metaKey) return;
         const key = e.key.toLowerCase();
@@ -107,7 +108,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         <PlanetLighting config={config} />
         <KeyLight intensity={config.lighting.keyIntensity} color={config.lighting.key} />
         <directionalLight position={[-6, -1, -3]} intensity={0.18} color="#8aa0c8" />
-        <Stars radius={60} depth={30} count={1800} factor={2.2} saturation={0} fade speed={reducedMotion ? 0 : 0.15} />
+        <Stars radius={60} depth={30} count={850} factor={1.2} saturation={0} fade speed={reducedMotion ? 0 : 0.15} />
         <Suspense fallback={<PlaceholderSphere config={config} meshRef={planetRef} />}>
           <PlanetSphere config={config} meshRef={planetRef} reducedMotion={reducedMotion} />
         </Suspense>
@@ -118,6 +119,9 @@ export function PlanetViewer(props: PlanetViewerProps) {
       </Canvas>
 
       <LoadingOverlay body={body} />
+      <div className="planet-identity" aria-hidden="true"><span>{config.id === "earth" ? "Terrestrial environment" : "Planetary reference"}</span><strong>{body}</strong>{selected && <p>{selected.name}</p>}</div>
+      {travelling && <div className="planet-transit" role="status"><span>Changing view <span aria-hidden>↗</span> {body}</span><i aria-hidden /></div>}
+
 
       {/* HUD */}
       <div className="pointer-events-none absolute left-0 right-36 top-0 flex items-start p-3">
@@ -221,7 +225,8 @@ function Controls({ onTravel, bodyId, autoRotate, resetToken, radius, selectedId
   const { camera } = useThree();
   const [interacting, setInteracting] = useState(false);
   const idleTimer = useRef<number | null>(null);
-  const flight = useRef<{ kind:"focus"|"planet"; start: Vector3; turn: Quaternion; distance: number; endDistance:number; elapsed: number } | null>(null);
+  const flight = useRef<{ kind:"focus"|"planet"; start: Vector3; turn: Quaternion; distance: number; endDistance:number; elapsed: number; awaitingSelection?: boolean } | null>(null);
+  const queuedFocus=useRef<Vector3|null>(null);
   const bodyChanged=useRef(false);
   const previousSelection=useRef(selectedId);
   const direction = useRef(new Vector3());
@@ -234,14 +239,14 @@ function Controls({ onTravel, bodyId, autoRotate, resetToken, radius, selectedId
     const c = ref.current;
     if (!c || lastBody.current === bodyId) return;
     if(flight.current?.kind!=="planet")memory.current.set(lastBody.current,{position:camera.position.clone(),target:c.target.clone(),selection:previousSelection.current});
-    lastBody.current=bodyId;bodyChanged.current=true;
+    lastBody.current=bodyId;bodyChanged.current=true;queuedFocus.current=null;
     const saved=memory.current.get(bodyId);
     const end=saved && saved.selection===selectedId ? saved.position.clone() : selectedId && lat!==undefined && lonEast!==undefined ? latLonToVector3(lat,lonEast,radius*focusDistance) : DEFAULT_CAMERA.clone();
     if(prefersReducedMotion()){
       camera.position.copy(end);c.target.copy(saved?.target ?? new Vector3());c.update();flight.current=null;onTravel(false);
     }else{
       const start=camera.position.clone().normalize();
-      flight.current={kind:"planet",start,turn:new Quaternion().setFromUnitVectors(start,end.clone().normalize()),distance:camera.position.length(),endDistance:end.length(),elapsed:0};
+      flight.current={kind:"planet",start,turn:new Quaternion().setFromUnitVectors(start,end.clone().normalize()),distance:camera.position.length(),endDistance:end.length(),elapsed:0,awaitingSelection:!(saved && saved.selection===selectedId) && !!selectedId && (lat===undefined || lonEast===undefined)};
       onTravel(true);
     }
   }, [bodyId, camera]);
@@ -249,16 +254,24 @@ function Controls({ onTravel, bodyId, autoRotate, resetToken, radius, selectedId
   useEffect(() => {
     const c = ref.current;
     if (!c) return;
-    flight.current = null;onTravel(false);
+    flight.current = null;queuedFocus.current=null;onTravel(false);
     camera.position.copy(DEFAULT_CAMERA);
     c.target.set(0, 0, 0);
     c.update();
   }, [resetToken, camera]);
 
   useEffect(() => {
+    const selectionChanged = previousSelection.current !== selectedId;
     previousSelection.current=selectedId;
     if(bodyChanged.current){bodyChanged.current=false;return;}
-    if (!selectedId) { if(flight.current?.kind!=="planet")flight.current = null; return; }
+    if (flight.current?.kind === "planet") {
+      // Ranking may deliver this body's coordinates after departure. Let the body
+      // handoff finish before focusing; never cancel the flight halfway through a texture blend.
+      if (!selectedId) queuedFocus.current=null;
+      else if ((selectionChanged || flight.current.awaitingSelection) && lat!==undefined && lonEast!==undefined) queuedFocus.current=latLonToVector3(lat,lonEast,radius*focusDistance);
+      return;
+    }
+    if (!selectedId) { flight.current = null; return; }
     if (lat === undefined || lonEast === undefined || !ref.current) return;
     onTravel(false);
     const target = latLonToVector3(lat, lonEast, 1).normalize();
@@ -276,7 +289,7 @@ function Controls({ onTravel, bodyId, autoRotate, resetToken, radius, selectedId
 
   useEffect(() => {
     if (!navigation.id || !ref.current) return;
-    flight.current = null;
+    flight.current = null;queuedFocus.current=null;
     onTravel(false);
     const spherical = new Spherical().setFromVector3(camera.position);
     const key = navigation.action;
@@ -296,7 +309,7 @@ function Controls({ onTravel, bodyId, autoRotate, resetToken, radius, selectedId
     const f = flight.current;
     const controls = ref.current;
     if (!f || !controls) return;
-    f.elapsed += Math.min(delta, 0.1);
+    f.elapsed = prefersReducedMotion() ? PLANET_TRAVEL_SECONDS : f.elapsed + Math.min(delta, 0.1);
     const t = Math.min(f.elapsed / (f.kind==="planet" ? PLANET_TRAVEL_SECONDS : 1.2), 1);
     const travel=f.kind==="planet" ? planetTravel(f.elapsed,f.distance,f.endDistance,radius) : null;
     const eased = travel?.turn ?? t * t * (3 - 2 * t);
@@ -306,7 +319,18 @@ function Controls({ onTravel, bodyId, autoRotate, resetToken, radius, selectedId
     camera.position.copy(direction.current.multiplyScalar(travel?.distance ?? (f.distance + (f.endDistance - f.distance) * eased)));
     controls.target.set(0, 0, 0);
     controls.update();
-    if (t === 1) {flight.current = null;onTravel(false);memory.current.set(bodyId,{position:camera.position.clone(),target:controls.target.clone(),selection:selectedId});}
+    if (t === 1) {
+      const arrival = queuedFocus.current;
+      queuedFocus.current = null;
+      onTravel(false);
+      if (f.kind === "planet" && arrival && arrival.distanceTo(camera.position) > .02) {
+        const start = camera.position.clone().normalize();
+        flight.current = { kind:"focus", start, turn:new Quaternion().setFromUnitVectors(start,arrival.clone().normalize()), distance:camera.position.length(), endDistance:arrival.length(), elapsed:0 };
+      } else {
+        flight.current = null;
+        memory.current.set(bodyId,{position:camera.position.clone(),target:controls.target.clone(),selection:selectedId});
+      }
+    }
   });
 
   return (
@@ -323,7 +347,7 @@ function Controls({ onTravel, bodyId, autoRotate, resetToken, radius, selectedId
       autoRotate={autoRotate && !interacting}
       autoRotateSpeed={0.35}
       onStart={() => {
-        flight.current = null;onTravel(false);
+        flight.current = null;queuedFocus.current=null;onTravel(false);
         setInteracting(true);
         if (idleTimer.current) window.clearTimeout(idleTimer.current);
       }}

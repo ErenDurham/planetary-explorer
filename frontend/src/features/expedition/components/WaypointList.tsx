@@ -37,7 +37,7 @@ export function WaypointList({ waypoints, selectedId, bounds, start, onSelect, o
         return (
           <li key={w.id} className={`rounded-lg border px-2.5 py-2 text-xs transition-colors ${sel ? "border-copper bg-copper/10" : "border-line hover:border-line-strong"}`}>
             <div className="flex items-center gap-2">
-              <button type="button" onClick={() => onSelect(sel ? null : w.id)} aria-pressed={sel} aria-label={`Select waypoint ${i + 1}`} className="num flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/70 bg-copper text-[10px] font-semibold text-white">{i + 1}</button>
+              <button type="button" onClick={() => onSelect(sel ? null : w.id)} aria-pressed={sel} aria-label={`Select waypoint ${i + 1}`} className="num flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/70 bg-copper text-[10px] font-semibold text-bg">{i + 1}</button>
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-fg">Waypoint {i + 1}{off && <span className="ml-2 text-warn">· outside basemap</span>}</p>
                 {!readOnly && sel ? (

@@ -23,6 +23,7 @@ describe("Explore established-analogs cue", () => {
     useAppStore.setState({ viewedBody: "mars", mapMode: "landing_suitability", activeTab: "explore", exploreMode: "browse" });
     render(<QueryClientProvider client={new QueryClient()}><ExploreView globe={<p>globe</p>} /></QueryClientProvider>);
     const group = screen.getByRole("radiogroup", { name: "Explore mode" });
+    expect(within(group).getAllByRole("radio")[0]).toHaveTextContent("Browse Regions");
     expect(within(group).getByRole("radio", { name: "Browse Regions" })).toHaveAttribute("aria-checked", "true");
     fireEvent.click(within(group).getByRole("radio", { name: "Find Unresearched Analogs" }));
     expect(useAppStore.getState().exploreMode).toBe("find_analogs");

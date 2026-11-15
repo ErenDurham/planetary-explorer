@@ -164,7 +164,7 @@ export function CandidateDetail({ candidate, detail, detailPending, detailError,
                       <td className="num py-1.5 pr-2 align-top text-fg">{fmt(d, d.earth_value)}</td>
                       <td className="num py-1.5 pr-2 align-top text-fg">{fmt(d, d.mars_value)}</td>
                       <td className="num py-1.5 pr-2 align-top text-fg-muted">{(d.normalized_weight * 100).toFixed(0)}%</td>
-                      <td className="py-1.5 align-top"><span className="num text-fg">{(share * 100).toFixed(0)}%</span><span className="mt-1 block h-1.5 w-full overflow-hidden rounded bg-line" aria-hidden><span className="block h-full bg-copper" style={{ width: `${share * 100}%` }} /></span><span className="num block text-[10.5px] text-fg-faint">{d.contribution.toFixed(3)}</span></td>
+                      <td className="py-1.5 align-top"><span className="num text-fg">{(share * 100).toFixed(0)}%</span><span className="mt-1 block h-1.5 w-full overflow-hidden rounded bg-line" aria-hidden><span className="block h-full bg-data-contribution" style={{ width: `${share * 100}%` }} /></span><span className="num block text-[10.5px] text-fg-faint">{d.contribution.toFixed(3)}</span></td>
                     </tr>
                   );
                 })}

@@ -57,9 +57,9 @@ export function DiscoveryCandidateList({ candidates, evaluated, selectedId, onSe
                 return (
                   <li key={c.id}>
                     <article aria-label={`Rank ${c.display_rank ?? "—"}: ${c.name}, similarity index ${c.similarity_index?.toFixed(1) ?? "not ranked"}`}>
-                      <button type="button" onClick={() => onSelect(c.id)} aria-pressed={sel} className={`w-full rounded-lg border px-2.5 py-2 text-left transition-colors ${sel ? "border-copper bg-copper/10" : "border-transparent hover:border-line-strong"}`}>
+                      <button type="button" onClick={() => onSelect(c.id)} aria-pressed={sel} className={`discovery-row w-full rounded-lg border px-2.5 py-2 text-left transition-colors ${sel ? "border-copper bg-copper/10" : "border-transparent hover:border-line-strong"}`}>
                         <span className="flex items-start gap-2.5">
-                          <span className="num mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-black" style={{ background: color }} aria-label={`Rank ${c.display_rank ?? "unranked"}`}>{c.display_rank ?? "—"}</span>
+                          <span className="num mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-[11px] font-semibold text-black" style={{ background: color }} aria-label={`Rank ${c.display_rank ?? "unranked"}`}>{c.display_rank ?? "—"}</span>
                           <span className="min-w-0 flex-1">
                             <span className="num block text-[11px] leading-tight text-fg">{formatPoint(c.lat, c.lon_east)}</span>
                             <span className="block truncate text-[10.5px] text-fg-muted">{c.name}</span>

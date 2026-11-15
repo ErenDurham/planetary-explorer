@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { useDiscoveryStore } from "./useDiscoveryStore";
+import { candidates } from "../test/fixtures";
 import { useAppStore } from "@/store/useAppStore";
 
 describe("discovery store", () => {
@@ -23,4 +24,17 @@ describe("discovery store", () => {
     s.resetWeights();
     expect(useDiscoveryStore.getState().weights).toEqual({ slope_regional_median_deg: 50, roughness_regional_m: 50 });
   });
+});
+
+it("retains a separate three-region shortlist for each survey", () => {
+  const store = useDiscoveryStore.getState();
+  store.setRun("first");
+  for (const c of candidates) store.toggleShortlist(c);
+  store.toggleShortlist({ ...candidates[0], id: "fourth" });
+  expect(useDiscoveryStore.getState().runs.first.shortlist).toHaveLength(3);
+  store.setRun("second");
+  expect(useDiscoveryStore.getState().runs.second.shortlist).toEqual([]);
+  store.setRun("first");
+  store.toggleShortlist(candidates[0]);
+  expect(useDiscoveryStore.getState().runs.first.shortlist.map(c => c.id)).toEqual(candidates.slice(1).map(c => c.id));
 });

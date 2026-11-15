@@ -20,6 +20,14 @@ describe("GlobeLegend disclosure", () => {
     expect(screen.queryByRole("checkbox")).toBeNull();
     expect(screen.queryByRole("link")).toBeNull();
   });
+  it("keeps role controls inside the rank disclosure and preserves their action", () => {
+    const onChange = vi.fn();
+    render(<GlobeLegend config={MARS_CONFIG} roles={{ counts: { "Base candidate": 2, "Resource site": 0, "To evaluate": 0, "Instrument testing": 0, "Context only": 0 }, selected: "all", onChange }} />);
+    expect(screen.queryByRole("group", { name: "Show sites by role" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Mission suitability rank" }));
+    fireEvent.click(screen.getByRole("button", { name: "Base candidate · 2" }));
+    expect(onChange).toHaveBeenCalledWith("Base candidate");
+  });
   it("also keeps the analog rank legend compact by default", () => {
     render(<GlobeLegend config={MARS_CONFIG} mode="analog" heading="Mars matches to MDRS" />);
     expect(screen.getByRole("button", { name: "Analog match rank" })).toHaveAttribute("aria-expanded", "false");

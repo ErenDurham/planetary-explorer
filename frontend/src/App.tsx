@@ -1,3 +1,5 @@
+import { useViewArrival } from "@/lib/motion/useViewArrival";
+import { HomeView } from "@/components/home/HomeView";
 import { RegionAnalysis } from "@/features/regions/RegionAnalysis";
 import { useRegionTarget } from "@/features/regions/store";
 import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
@@ -61,6 +63,7 @@ export default function App() {
   const missionDesigned = useAppStore((s) => s.missionDesigned);
   const exploreRevision = useAppStore(s => s.exploreRevision);
   const activeTab = useAppStore((s) => s.activeTab);
+  const workspaceRef = useViewArrival(activeTab);
   const regionActive = regionTarget != null && (activeTab === "analyze" || activeTab === "compare");
   const setActiveTab = useAppStore((s) => s.setActiveTab);
   const exploreMode = useAppStore((s) => s.exploreMode);
@@ -274,7 +277,9 @@ export default function App() {
     : (rankData?.candidate_body === "earth" ? rankData.candidates.find(c => c.rank === 1)?.location.id : undefined) ?? earth.sites[0]?.id;
 
   useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
-  const centre = findAnalogs
+  const centre = activeTab === "home"
+    ? <HomeView />
+    : findAnalogs
     ? <DiscoveryView panelWidth={discoveryPanelWidth} onPanelWidthChange={setDiscoveryPanelWidth} />
     : activeTab === "explore"
     ? <ExploreView initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
@@ -363,7 +368,7 @@ export default function App() {
       }} />
       <StatusBanner />
       {((activeTab === "explore" && !findAnalogs) || (activeTab === "analyze" && !regionActive)) && (
-        <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 xl:hidden">
           <label htmlFor="mobile-candidate" className="text-sm text-fg-muted">{exploreAnalog ? `${BODY_NAME[viewedBody]} candidate` : "Candidate"}</label>
           <select id="mobile-candidate" value={mobileSelected ?? ""} onChange={e => (taskCandidates ? selectLocation(missionBody,e.target.value || null) : exploreAnalog ? selectLocation(viewedBody,e.target.value || null) : selectSite(e.target.value || null))} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="">No location selected</option>{mobileOptions.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}</select>
           {exploreAnalog && (
@@ -374,7 +379,7 @@ export default function App() {
           )}
         </div>
       )}
-      <div className="flex min-h-0 flex-1"><main style={{"--site-panel-width":`${sitePanelWidth}px`} as React.CSSProperties} id="workspace" tabIndex={-1} className="relative min-w-0 min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1"><main ref={workspaceRef} style={{"--site-panel-width":`${sitePanelWidth}px`,"--active-panel-width":`${findAnalogs ? discoveryPanelWidth : sitePanelWidth}px`} as React.CSSProperties} id="workspace" data-view={activeTab} tabIndex={-1} className="relative min-w-0 min-h-0 flex-1">
         {/* Mission Design stays mounted (only hidden) on other tabs, as the old
             drawer did, so a draft objective and the excluded-factor sync survive
             switching tabs. */}
@@ -382,24 +387,24 @@ export default function App() {
           {/* the next step (Explore candidates / established analogs / Mars sites) lives inside the pane, under the applied objective */}
           <div className="scroll-thin min-h-0 flex-1 overflow-y-auto"><LeftSidebar defaults={defaults.data} defaultsError={defaults.error} evaluation={evaluation.data} evaluationError={evaluation.error} onExploreMission={() => navigateExplore("mission", initialMissionId)} exploreReady={!!initialMissionId && !(missionType === "landing" ? evaluation.isPending : assessment.isPending)} /></div>
         </div>
-        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" || (activeTab === "analyze" && regionTarget != null) || findAnalogs ? (
+        {activeTab === "mission" ? null : activeTab === "home" || activeTab === "compare" || activeTab === "research" || (activeTab === "analyze" && regionTarget != null) || findAnalogs ? (
           <div className="h-full">{centre}</div>
         ) : (
           // Candidates scroll independently of mission settings and reasoning.
-          <div className={`grid h-full grid-cols-1 overflow-y-auto lg:overflow-hidden ${activeTab === "analyze" ? "lg:grid-cols-[280px_minmax(0,1fr)]" : "lg:grid-cols-[250px_minmax(0,1fr)_var(--site-panel-width)]"}`}>
-            <aside id="ranked-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 hidden h-full min-h-0 overflow-hidden border-r border-line bg-bg-elev lg:order-1 lg:block">
+          <div className={`workspace-grid grid h-full grid-cols-1 overflow-y-auto xl:overflow-hidden ${activeTab === "analyze" ? "xl:grid-cols-[280px_minmax(0,1fr)]" : "xl:grid-cols-[270px_minmax(0,1fr)_var(--site-panel-width)]"}`}>
+            <aside id="ranked-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 hidden h-full min-h-0 overflow-hidden border-r border-line bg-bg-elev xl:order-1 xl:block">
               {candidatePane}
             </aside>
-            <div className={`relative order-1 min-h-[320px] lg:order-2 lg:h-full ${activeTab === "analyze" ? "h-[75vh]" : "h-[72vh]"}`}>
+            <div data-pane="viewer" className={`relative order-1 min-h-[320px] xl:order-2 xl:h-full ${activeTab === "analyze" ? "h-[75vh]" : "h-[72vh]"}`}>
               <div className="h-full">{centre}</div>
             </div>
-            {activeTab === "explore" && <div className="order-3 min-h-0 border-t border-line bg-bg-elev lg:border-l lg:border-t-0">
+            {activeTab === "explore" && <div className="order-3 min-h-0 border-t border-line bg-bg-elev xl:border-l xl:border-t-0">
                 <SitePanelShell width={sitePanelWidth} onWidthChange={setSitePanelWidth}>{taskMissionView ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===selectedId)} location={missionLocation} pending={assessment.isPending}/> : <RightSidebar body={viewedBody} selectedId={selectedId} evaluation={evaluation.data} evaluationPending={evaluation.isPending} mission={evaluation.mission} earthLocation={earthLocation} earthPending={earth.isPending} analog={analog ? { response: rankData, referenceName, palette: rankPalette } : null} />}</SitePanelShell>
             </div>}
           </div>
         )}
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) || ((activeTab === "analyze" || activeTab === "compare") && regionTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${activeTab === "home" || (activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) || ((activeTab === "analyze" || activeTab === "compare") && regionTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "xl:left-[294px] xl:right-[calc(var(--active-panel-width)+24px)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );

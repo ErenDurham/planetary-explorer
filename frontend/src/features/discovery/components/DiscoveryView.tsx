@@ -131,8 +131,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const weights = ready ? { shares: store.weights, defaults: store.defaultWeights, criteria, onChange: store.setWeight, onReset: store.resetWeights, topK: store.topK, onTopK: store.setTopK, disabled: !run.ranked } : null;
 
   return (
-    <div className="grid h-full grid-cols-1 overflow-y-auto lg:grid-cols-[250px_minmax(0,1fr)_var(--discovery-panel-width)] lg:overflow-hidden" style={{ "--discovery-panel-width": `${width}px` } as CSSProperties} data-testid="discovery-view">
-      <aside id="discovery-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 max-h-[45vh] min-h-0 overflow-hidden border-b border-line bg-bg-elev lg:order-1 lg:max-h-none lg:h-full lg:border-b-0 lg:border-r">
+    <div className="workspace-grid flex h-full flex-col xl:grid overflow-y-auto xl:grid-cols-[270px_minmax(0,1fr)_var(--discovery-panel-width)] xl:overflow-hidden" style={{ "--discovery-panel-width": `${width}px` } as CSSProperties} data-testid="discovery-view">
+      <aside id="discovery-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 h-[40dvh] max-h-[380px] shrink-0 min-h-0 overflow-hidden border-b border-line bg-bg-elev xl:order-1 xl:max-h-none xl:h-full xl:border-b-0 xl:border-r">
         <DiscoveryCandidateList
           candidates={candidates}
           evaluated={evaluated}
@@ -147,7 +147,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           weights={weights}
         />
       </aside>
-      <div className="relative order-1 lg:order-2 lg:h-full">
+      <div data-pane="viewer" className="relative order-1 shrink-0 xl:order-2 xl:h-full">
         <DiscoveryStage
           badge={badge}
           title={`Find unresearched analogs for ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
@@ -164,7 +164,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           {body}
         </DiscoveryStage>
       </div>
-      <div className="order-3 min-h-0 border-t border-line bg-bg-elev lg:border-l lg:border-t-0">
+      <div className="order-3 shrink-0 min-h-0 border-t border-line bg-bg-elev xl:border-l xl:border-t-0">
         <SitePanelShell width={width} onWidthChange={setWidth} title="Candidate details">
           <DiscoveryPanel
             selected={!!selected}

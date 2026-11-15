@@ -104,6 +104,19 @@ describe("candidate deep research", () => {
     expect(screen.getByTestId("draft-indicator")).toBeInTheDocument();
   });
 
+  it("keeps newer edits when an older save finishes", async () => {
+    let resolveSave!: (value: unknown) => void;
+    mocks.saveResearch.mockImplementationOnce(() => new Promise(resolve => { resolveSave = resolve; }));
+    mount(); await screen.findByText("Deep research: Proposed region");
+    fireEvent.change(screen.getByLabelText("Review summary and remaining gaps"), { target: { value: "Submitted notes" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save research notes" }));
+    await waitFor(() => expect(mocks.saveResearch).toHaveBeenCalled());
+    fireEvent.change(screen.getByLabelText("Review summary and remaining gaps"), { target: { value: "Newer notes must survive" } });
+    resolveSave({ status: "unresearched" });
+    await waitFor(() => expect(screen.queryByText("Saving research notes…")).not.toBeInTheDocument());
+    expect(screen.getByLabelText("Review summary and remaining gaps")).toHaveValue("Newer notes must survive");
+  });
+
   it("goes back to the same candidate in Explore", async () => {
     useAppStore.setState({ activeTab: "research", exploreMode: "browse" });
     mount(); await screen.findByText("Deep research: Proposed region");
