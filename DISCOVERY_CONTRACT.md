@@ -103,3 +103,18 @@ Notebooks persist separately in ignored `data/discovery/research/{run}/{candidat
 immutable run/profile files and terrain scores do not change. Deployments need a durable
 writable volume for notes. Exports include saved records under
 `validation.candidate_research`; do not publish private notes without reviewing them.
+
+### Saved candidate research brief (additive)
+
+`GET /api/v1/discovery/runs/{run_id}/candidates/{candidate_id}/research/export`
+returns `ResearchBrief` (`research-brief-v1`): `run_id`, `candidate_id`, safe
+`filename`, `markdown`, saved `record`, reproducible `discovery` survey snapshot,
+and `limitations`. Generated types and `discoveryEngine.exportResearch` expose it.
+This is read-only and does not retrieve literature, alter status, or require an
+LLM. Unsaved drafts and current UI ranking/custom weights are deliberately not
+represented. The Markdown embeds measured candidate data and complete survey
+context, with provenance and exclusions. Analyst citations remain unverified.
+Unknown IDs return 404; unavailable artifacts or unreadable selected notebooks
+return 503. Other candidates' notebooks are excluded and cannot block this export.
+Fable should save pending edits before requesting this export, or explicitly
+label the download as the last saved version. Offer raw JSON alongside Markdown.

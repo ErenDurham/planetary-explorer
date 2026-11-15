@@ -69,3 +69,54 @@ def test_malformed_notebook_fails_without_claiming_a_completed_review(client,not
     path=discovery_research.record_path(*notebook);path.parent.mkdir(parents=True);path.write_text('{bad json')
     r=client.get(url(notebook))
     assert r.status_code==503 and r.json()["error"]["code"]=="data_unavailable"
+
+
+def test_brief_export_is_read_only_deterministic_and_honest(client, notebook, monkeypatch):
+    def forbidden():
+        raise AssertionError("Export must not retrieve background literature")
+    monkeypatch.setattr(discovery_research, "get_retriever", forbidden)
+    endpoint = url(notebook) + "/export"
+    first = client.get(endpoint)
+    assert first.status_code == 200
+    data = first.json()
+    assert data == client.get(endpoint).json()
+    assert data["record"]["status"] == "unresearched"
+    assert data["record"]["updated_at"] is None
+    assert not discovery_research.record_path(*notebook).exists()
+    assert "draft" in data["markdown"].lower()
+    assert "not the current UI ranking" in " ".join(data["limitations"])
+    assert data["discovery"]["provenance"]
+    assert data["discovery"]["reference_profile"]
+    assert "candidate_research" not in data["discovery"]["validation"]
+
+
+def test_brief_includes_saved_contradictions_without_changing_status(client, notebook):
+    payload = {"status": "literature_reviewed",
+        "notes": "Reviewed candidate evidence and found reasons this proposed analogy may not transfer.",
+        "findings": [{"title": "Contradictory observation", "url": "https://example.org/study",
+            "finding": "An analyst records a contradiction requiring independent verification.", "scope": "contradictory"}]}
+    saved = client.post(url(notebook), json=payload).json()
+    brief = client.get(url(notebook) + "/export").json()
+    assert brief["record"] == saved
+    assert payload["notes"] in brief["markdown"]
+    assert "https://example.org/study" in brief["markdown"]
+    assert "contradictory" in brief["markdown"]
+    assert client.get(url((notebook[0], "unknown")) + "/export").status_code == 404
+    other = discovery_research.record_path(notebook[0], "region-00-00")
+    other.parent.mkdir(parents=True, exist_ok=True)
+    other.write_text("broken unrelated notebook")
+    assert client.get(url(notebook) + "/export").status_code == 200
+    discovery_research.record_path(*notebook).write_text("broken selected notebook")
+    assert client.get(url(notebook) + "/export").status_code == 503
+
+
+def test_failed_atomic_save_preserves_previous_notebook(client, notebook, monkeypatch):
+    original = client.post(url(notebook), json={"status": "in_progress", "notes": "Original saved evidence."}).json()
+    def fail_replace(*args):
+        raise OSError("Storage full")
+    monkeypatch.setattr(discovery_research.os, "replace", fail_replace)
+    response = client.post(url(notebook), json={"status": "in_progress", "notes": "New unsaved evidence."})
+    assert response.status_code == 503
+    assert "could not be saved" in response.json()["error"]["message"]
+    assert discovery_research.get_record(*notebook).model_dump() == original
+    assert not list(discovery_research.record_path(*notebook).parent.glob("*.tmp"))

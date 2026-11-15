@@ -8,6 +8,13 @@ export const browserRuntimeStatus={get:()=>status,subscribe:(fn:()=>void)=>{subs
 function update(next:Status){status=next;subscribers.forEach(fn=>fn());}
 let worker:Worker|undefined,ready:Promise<void>|undefined,counter=0;
 const waiting=new Map<number,{resolve:(r:Response)=>void;reject:(e:Error)=>void;cleanup:()=>void;path:string;method:string}>();
+let fatalError:Error|undefined;
+function fail(error:Error){
+  fatalError=error;
+  update({phase:"error",message:error.message});
+  for(const request of waiting.values()){request.cleanup();request.reject(error);}
+  waiting.clear();
+}
 function initialize():Promise<void>{
   if(ready)return ready;
   ready=new Promise((resolve,reject)=>{
@@ -20,7 +27,7 @@ function initialize():Promise<void>{
       if(value.type==="error"){
         const error=new Error(value.message);
         if(value.id!=null){const request=waiting.get(value.id);request?.cleanup();request?.reject(error);waiting.delete(value.id);}
-        else{update({phase:"error",message:value.message});reject(error);}
+        else{fail(error);reject(error);}
         return;
       }
       const request=waiting.get(value.id);if(!request)return;
@@ -31,7 +38,7 @@ function initialize():Promise<void>{
       }
       request.resolve(new Response(value.body,{status:value.status,headers:{"Content-Type":"application/json"}}));
     };
-    worker.onerror=()=>{const error=new Error("The local calculation engine could not start. Reload the page or check your connection.");update({phase:"error",message:error.message});reject(error);};
+    worker.onerror=()=>{const error=new Error("The local calculation engine could not start. Reload the page or check your connection.");fail(error);reject(error);};
     let records:unknown[]=[];try{records=Object.values(JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}"));}catch{/* A corrupt browser cache is not evidence. */}
     worker.postMessage({type:"initialize",dataBase:new URL(`${import.meta.env.BASE_URL}pages-data/`,window.location.origin).href,records});
   });
@@ -39,7 +46,9 @@ function initialize():Promise<void>{
 }
 export async function browserRequest(path:string,init:RequestInit={}):Promise<Response>{
   if(init.signal?.aborted)throw new DOMException("Request aborted","AbortError");
+  if(fatalError)throw fatalError;
   await initialize();
+  if(fatalError)throw fatalError;
   if(init.signal?.aborted)throw new DOMException("Request aborted","AbortError");
   return new Promise((resolve,reject)=>{
     const id=++counter;

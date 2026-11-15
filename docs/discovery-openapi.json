@@ -280,6 +280,57 @@
           }
         }
       }
+    },
+    "/api/v1/discovery/runs/{run_id}/candidates/{candidate_id}/research/export": {
+      "get": {
+        "tags": [
+          "discovery"
+        ],
+        "summary": "Export Research",
+        "operationId": "export_research_api_v1_discovery_runs__run_id__candidates__candidate_id__research_export_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchBrief"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1400,6 +1451,59 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "ResearchBrief": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "research-brief-v1",
+            "title": "Schema Version",
+            "default": "research-brief-v1"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "markdown": {
+            "type": "string",
+            "title": "Markdown"
+          },
+          "record": {
+            "$ref": "#/components/schemas/ResearchRecord"
+          },
+          "discovery": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Discovery"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "candidate_id",
+          "filename",
+          "markdown",
+          "record",
+          "discovery",
+          "limitations"
+        ],
+        "title": "ResearchBrief"
       },
       "ResearchDossier": {
         "properties": {
