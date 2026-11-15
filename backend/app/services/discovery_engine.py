@@ -35,8 +35,8 @@ FEATURE_REGISTRY = {
         "Relief left after removing the regional plane: surface texture rather than overall tilt."),
     "elevation_range_m": ("Elevation range (p90 minus p10)", "m", 400.0, "terrain",
         "Vertical amplitude across the footprint: how dissected the region is, and the depth of any basin or valley in it."),
-    "insolation_toa_annual_mean_wm2": ("Annual-mean insolation (top of atmosphere)", "W/m2", 40.0, "illumination",
-        "Latitude-driven energy budget. Computed the same analytic way on both bodies, so it compares directly."),
+    "latitude_abs_deg": ("Distance from the equator", "deg", 15.0, "illumination",
+        "Illumination geometry and seasonality. Absolute insolation cannot match -- Earth receives about 2.2 times Mars's flux -- but the latitude regime transfers, so it is latitude that is scored and the flux gap that is reported as context."),
     "precipitation_mm_day": ("Mean precipitation", "mm/day", 1.0, "water",
         "Liquid water reaching the surface today: the aridity axis that separates a dry analog from a merely rocky one."),
 }
