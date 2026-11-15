@@ -1,6 +1,8 @@
 # Plan: make Find Earth Analogs use the Browse Regions layout
 
-Status: proposal, 2026-11-15. Nothing here is built yet. Scope is frontend only;
+Status: implemented 2026-11-15 (steps 1 to 7); the as-built description is in
+[`DISCOVERY_UI.md`](DISCOVERY_UI.md) and §5 remains the list of contract asks.
+Written as a proposal; the text below is kept as the rationale. Scope is frontend only;
 every value shown comes from discovery-v1 as it exists today (checked against
 the live Morocco run). Where the contract does not carry something, this plan
 says so and leaves it out rather than inventing it.
