@@ -1,3 +1,4 @@
+import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 // Zustand store: synchronous UI state shared across panels. Server data lives
 // in TanStack Query (src/hooks), and camera/hover state stays inside the R3F
 // tree (src/components/globe) so it never forces a React re-render per frame.
@@ -270,7 +271,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       ...(id ? s.selectionBody === "earth" ? { selectedEarthId: id } : { selectedMarsId: id, selectedSiteId: id } : {}),
       exploreRevision: s.exploreRevision + 1, selectionRevision: s.selectionRevision + 1, cameraResetToken: s.cameraResetToken + 1, autoRotate: false };
   }),
-  missionObjective: "Find a safe landing site with reliable solar energy.",
+  missionObjective: DEFAULT_MISSION_OBJECTIVE,
   appliedObjective: "",
   recommendedWeights: {},
   objectiveNotes: [],

@@ -1,3 +1,4 @@
+import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 // POST /mission/interpret with an offline fallback.
 //
 // "Suggest priorities" sends the draft objective, the current slider shares
@@ -189,7 +190,16 @@ export function applicationFromInterpretation(
     ...(r.unsupported_needs ?? []).map((n) => `Cannot be scored by this model: ${n}`),
     ...(editedByUser ? ["You edited the proposed shares before applying them."] : []),
   ];
-  const taskApplication = taskApplicationFromInterpretation(r.task_interpretation, r.objective_hash, resolution);
+  // This exact built-in preset has a known direction even without the backend.
+  // Do not guess task semantics for arbitrary user text.
+  const taskApplication = taskApplicationFromInterpretation(r.task_interpretation, r.objective_hash, resolution)
+    ?? (r.objective.trim() === DEFAULT_MISSION_OBJECTIVE ? {
+      task: "analog_site_selection" as const, focusBody: "earth" as const,
+      missionDestination: "mars" as const,
+      reference: { body: "mars" as const, id: "jezero_crater", name: "Jezero Crater" },
+      analogWeights: { slope_regional_median_deg: 30, roughness_regional_m: 30, terrain_morphology: 25, mineralogy_tags: 10, precipitation_mm_day: 5 },
+      objectiveHash: r.objective_hash,
+    } : null);
   return { weights, notes, meta: { objectiveHash: r.objective_hash, source, model: r.model ?? null, interpretation, taskApplication } };
 }
 
