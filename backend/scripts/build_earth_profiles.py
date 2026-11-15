@@ -171,6 +171,10 @@ def main() -> int:
     out = DATA / "earth" / f"candidate_profiles.{PROFILE_VERSION}.json"
     out.write_text(json.dumps({"profile_version": PROFILE_VERSION, "generated_at": now, "footprint_definition": cfg["footprint_definition"], "profiles": profiles}, indent=2) + "\n")
     print("wrote", out)
+    # literature labels, text and their sources come from data/site_literature.v1.json
+    from apply_site_literature import apply
+    apply()
+    print("applied data/site_literature.v1.json")
     return 0
 
 

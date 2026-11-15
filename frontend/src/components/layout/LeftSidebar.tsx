@@ -78,6 +78,8 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
     apply(result.requestedText, app.weights, app.notes, app.meta);
     // the same reading's Earth weights (the Mars ones if the backend was unreachable)
     useAppStore.getState().applyEarthSuggestion(app.earthWeights ?? app.weights);
+    // Earth sites are ranked by their analog similarity to the paired Mars site
+    useAppStore.getState().setEarthReference(result.response.analog_check?.mars_site_id ?? null);
     setMissionDraftDirty(false);
     setMissionDesigned(true);
     setDesigned(true);
@@ -122,6 +124,8 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
                       unsupported={mars ? interp?.unsupportedNeeds : undefined}
                       constraints={mars ? defaults.mission.hard_constraints ?? [] : undefined}
                       constraintEvidence={interp?.constraintEvidence}
+                      analog={interp?.analog}
+                      planet={mars ? "mars" : "earth"}
                     />}
                   />
                   {mars && evaluationError && <div className="px-4 pb-3"><ErrorNote error={evaluationError} context="scoring/evaluate" /></div>}

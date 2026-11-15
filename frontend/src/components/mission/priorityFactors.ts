@@ -43,10 +43,10 @@ export function marsFactors(criteria: CriterionSpec[], excluded: string[]): Prio
 export function earthFactors(criteria: CriterionSpec[], excluded: string[]): PriorityFactor[] {
   const source = "Earth sites: Copernicus GLO-90 elevation model, averaged to ~3.7 km cells so it compares directly with the Mars (MOLA) values.";
   const earth: Record<string, { quantity: string; rule: string }> = {
-    terrain_safety: { quantity: `Median regional slope. ${source}`, rule: "Drives the Earth site ranking as its slope share (closeness to the target slope)." },
-    surface_roughness: { quantity: `Detrended regional relief. ${source}`, rule: "Drives the Earth site ranking as its relief share (closeness to the target relief)." },
-    elevation_suitability: { quantity: `Median elevation. ${source}`, rule: "Recorded as an Earth priority; the Earth site ranking does not score elevation yet." },
-    solar_illumination: { quantity: "Annual-mean top-of-atmosphere sunlight from latitude, as for Mars.", rule: "Recorded as an Earth priority; the Earth site ranking does not score sunlight yet." },
+    terrain_safety: { quantity: `Median regional slope. ${source}`, rule: "Earth sites are ranked by similarity to the paired Mars site (slope, relief, landforms, minerals, dryness). This slider and Less rugged ground split the terrain half of that score." },
+    surface_roughness: { quantity: `Detrended regional relief. ${source}`, rule: "Earth sites are ranked by similarity to the paired Mars site (slope, relief, landforms, minerals, dryness). This slider and Low slopes split the terrain half of that score." },
+    elevation_suitability: { quantity: `Median elevation. ${source}`, rule: "Not used to rank Earth sites: Earth and Mars elevations use different datums, so they are never compared." },
+    solar_illumination: { quantity: "Annual-mean top-of-atmosphere sunlight from latitude, as for Mars.", rule: "Not used to rank Earth sites: Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet), so no Earth site matches it." },
   };
   return marsFactors(criteria, excluded).map((f) => ({ ...f, ...(earth[f.id] ?? { rule: "Recorded as an Earth priority; not scored for Earth sites." }) }));
 }

@@ -24,7 +24,18 @@
       "Target 1 degree with tolerance 5 degrees and target relief 100 m with tolerance 300 m are editable example preferences, not validated rover operating limits.",
       "Both terrain metrics use roughly 3.7 km cells. They cannot resolve rocks, metre-scale slopes, trafficability or wheel–soil interactions.",
       "The index measures regional environment fit for planning a test, not vehicle performance or safety."
-    ]
+    ],
+    "analog_reference": {
+      "label": "Similarity to {mars_name} (Mars)",
+      "method": "Similarity = 100 / (1 + D), where D is the weighted mean of per-feature distances between each Earth site and {mars_name}: regional slope and relief (scaled differences at the same ~3.7 km baseline), landforms and minerals (Jaccard distance of literature tags) and dryness (precipitation difference). This is the same calculation as Explore's analog ranking (spec {analog_version}). Each factor's points show how much of the 100 it cost.",
+      "assumptions": [
+        "The Mars site is the one paired with your mission in Mission Design.",
+        "Slope and relief together keep the analog spec's terrain share; the Earth Low slopes and Less rugged ground sliders only set the split between them. Landforms, minerals and dryness keep the analog spec weights.",
+        "Elevation and sunlight are not compared: elevations use different datums on the two planets, and Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet).",
+        "Terrain metrics use roughly 3.7 km cells on both planets; they cannot resolve rocks, metre-scale slopes or trafficability. Landform and mineral tags are literature labels, not spectral measurements.",
+        "The index is a heuristic similarity, not a probability or a validated test-site rating."
+      ]
+    }
   },
   "base_planning": {
     "label": "Base-planning evidence review",

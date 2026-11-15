@@ -26,9 +26,9 @@ export interface PriorityGuide {
 
 export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
   terrain_safety: {
-    name: "Gentler terrain",
+    name: "Low slopes",
     color: token("--color-copper-bright"),
-    preference: "Prefers sites whose broad regional ground tilt is small.",
+    preference: "Prefers sites where the ground is flatter, with less tilt.",
     description: "How gently the ground tilts across the landing region, since steep slopes can tip a lander over.",
     quantity: "Median slope between neighbouring ~3.7 km MOLA cells over the ~59 km footprint.",
     caveat: "Cannot see boulders, craters or metre-scale slopes.",
@@ -36,10 +36,10 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
     tradeoff: "Regional slopes cannot resolve boulders or small landing hazards.",
   },
   surface_roughness: {
-    name: "Smoother terrain",
+    name: "Less rugged ground",
     color: token("--color-ok"),
-    preference: "Prefers less unevenness once the broad tilt is removed.",
-    description: "How bumpy the ground is once its overall tilt is set aside, a sign of uneven terrain at landing scale.",
+    preference: "Prefers ground that is less rough and bumpy (the overall tilt aside).",
+    description: "How rough and bumpy the ground is once its overall tilt is set aside; rugged ground is harder to land and drive on.",
     quantity: "Detrended relief: standard deviation of MOLA elevation after a best-fit plane, over the footprint.",
     caveat: "Not rock abundance or trafficability. Related to slope but distinct: tilt versus bumpiness.",
     effect: "Rewards less regional relief after removing the broad terrain tilt.",

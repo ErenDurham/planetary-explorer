@@ -82,6 +82,11 @@ def for_criterion(criterion_id: str, mission_profile: str, limit: int = 2) -> li
     return [citation(eid) for _, _, eid in sorted(ranked)[:limit]]
 
 
+def for_site(site_id: str) -> list[EvidenceCitation]:
+    """Research showing an Earth site has been used to stand in for Mars."""
+    return [citation(e["evidence_id"]) for e in active() if site_id in e.get("sites", [])]
+
+
 def for_constraints() -> dict[str, list[EvidenceCitation]]:
     out: dict[str, list[EvidenceCitation]] = {}
     for e in active():
@@ -94,7 +99,13 @@ def prompt_block() -> str:
     """The registry as the model sees it: id, what it bears on, the fact and
     the source. Static, so it sits in the cached system prompt."""
     src = _sources()
-    rows = [{"id": e["evidence_id"], "criteria": e["criteria"], "missions": e["missions"], "fact": e["fact"],
-             "source": f'{src[e["source_id"]]["cite"]} ({src[e["source_id"]]["kind"].replace("_", "-")})'}
-            for e in active() if e["criteria"]]
+    rows = []
+    for e in active():
+        if not (e["criteria"] or e.get("sites")):
+            continue
+        row = {"id": e["evidence_id"], "criteria": e["criteria"], "missions": e["missions"], "fact": e["fact"],
+               "source": f'{src[e["source_id"]]["cite"]} ({src[e["source_id"]]["kind"].replace("_", "-")})'}
+        if e.get("sites"):
+            row["earth_sites"] = e["sites"]
+        rows.append(row)
     return json.dumps(rows, ensure_ascii=False, separators=(",", ":"))

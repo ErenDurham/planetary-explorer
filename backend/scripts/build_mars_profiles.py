@@ -158,6 +158,10 @@ def main() -> int:
         g = {m["feature_id"]: m["value"] for m in p["measurements"]}
         print(f"{p['site_id']:<20} elev {g['elevation_median_m']:>8} m  slope {g['slope_regional_median_deg']:>6} deg  rough {g['roughness_regional_m']:>6} m  insol {g['insolation_toa_annual_mean_wm2']:>6} W/m2")
     print("wrote", out)
+    # literature labels, text and their sources come from data/site_literature.v1.json
+    from apply_site_literature import apply
+    apply()
+    print("applied data/site_literature.v1.json")
     return 0
 
 

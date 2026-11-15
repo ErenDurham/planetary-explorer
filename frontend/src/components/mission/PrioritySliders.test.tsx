@@ -16,7 +16,7 @@ afterEach(()=>vi.restoreAllMocks());
 describe("Priority shares",()=>{
   it("keeps shares at 100 and Reset restores the suggestion, without any network request",()=>{
     const fetchSpy=vi.spyOn(globalThis,"fetch");
-    mount();const slider=screen.getByLabelText("Gentler terrain share of priorities");
+    mount();const slider=screen.getByLabelText("Low slopes share of priorities");
     fireEvent.pointerDown(slider);
     for(const v of [30,35,40])fireEvent.change(slider,{target:{value:String(v)}});
     expect(Object.values(useAppStore.getState().weights).reduce((a,b)=>a+b,0)).toBe(100);
@@ -45,7 +45,7 @@ describe("Priority shares",()=>{
     render(<QueryClientProvider client={new QueryClient()}><LeftSidebar defaults={defaults} defaultsError={null} evaluation={ev} evaluationError={null}/></QueryClientProvider>);
     const box=screen.getByLabelText("Your mission objective");
     fireEvent.change(box,{target:{value:"We want to land on Mars to establish a Research Base."}});fireEvent.keyDown(box,{key:"Enter"});
-    const slider=await screen.findByLabelText("Gentler terrain share of priorities");
+    const slider=await screen.findByLabelText("Low slopes share of priorities");
     act(()=>useAppStore.setState({weights:{...start,terrain_safety:0,solar_illumination:58}}));
     expect(slider).toBeEnabled();
     fireEvent.change(slider,{target:{value:"20"}});expect(useAppStore.getState().weights.terrain_safety).toBe(20);

@@ -1,7 +1,7 @@
 {
   "version": "landing-evidence-v1",
   "verified_at": "2026-11-14",
-  "note": "Curated evidence for weighting the landing-site priorities. Every source is a NASA publication or a peer-reviewed paper. Each item's `fact` is a short display line; every number in it appears in the item's verbatim `quotes`, copied from the text at `verified_from` (tests enforce the number rule). The language model may only cite these items by id; it never supplies numbers of its own. Only sources published within the last 15 years are served to the model or shown (services/evidence.py, MAX_SOURCE_AGE_YEARS); older entries stay here for the record.",
+  "note": "Curated evidence for weighting the mission priorities: Mars landing findings, and Earth analog-site findings (`sites`) showing which Earth sites research has used to stand in for Mars. Every source is a NASA publication or a peer-reviewed paper. Each item's `fact` is a short display line; every number in it appears in the item's verbatim `quotes`, copied from the text at `verified_from` (tests enforce the number rule). The language model may only cite these items by id; it never supplies numbers of its own. Only sources published within the last 15 years are served to the model or shown (services/evidence.py, MAX_SOURCE_AGE_YEARS); older entries stay here for the record.",
   "sources": [
     {
       "source_id": "golombek2003_mer",
@@ -73,6 +73,76 @@
       "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
       "verified_from": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
       "year_note": "Page states 'Last Updated: 19 May 2025'."
+    },
+    {
+      "source_id": "stockton2019_holuhraun",
+      "cite": "Stockton et al., 2019",
+      "title": "A Recent Volcanic Eruption, Holuhraun, in the Central Highlands of Iceland as a Mars analog: The 2018 Field Campaign of FELDSPAR",
+      "venue": "Conference abstract (NASA NTRS 20190029583)",
+      "year": 2019,
+      "kind": "nasa",
+      "url": "https://ntrs.nasa.gov/citations/20190029583",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20190029583"
+    },
+    {
+      "source_id": "graham2013_maunakea",
+      "cite": "Graham & Graff, 2013",
+      "title": "Rover-Based Instrumentation and Scientific Investigations During the 2012 Analog Field Test on Mauna Kea Volcano, Hawaii",
+      "venue": "Conference paper (NASA NTRS 20130009908)",
+      "year": 2013,
+      "kind": "nasa",
+      "url": "https://ntrs.nasa.gov/citations/20130009908",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20130009908"
+    },
+    {
+      "source_id": "heldmann2015_dryvalleys",
+      "cite": "Heldmann et al., 2015",
+      "title": "Mars: Periglacial Morphology and Implications for Future Landing Sites",
+      "venue": "Abstract (NASA NTRS 20150023012)",
+      "year": 2015,
+      "kind": "nasa",
+      "url": "https://ntrs.nasa.gov/citations/20150023012",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20150023012"
+    },
+    {
+      "source_id": "warrenrhodes2022_deserts",
+      "cite": "Warren-Rhodes et al., 2022",
+      "title": "Insights of Extreme Desert Ecology to the Habitats and Habitability of Mars",
+      "venue": "Microbiology of Hot Deserts, Ecological Studies (NASA NTRS 20220011941)",
+      "year": 2022,
+      "kind": "nasa",
+      "url": "https://ntrs.nasa.gov/citations/20220011941",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20220011941"
+    },
+    {
+      "source_id": "bretzfelder2026_ibex",
+      "cite": "Bretzfelder et al., 2026",
+      "title": "The Ibex Dune Field of Death Valley National Park, California: Characterization and Assessment for Use as A Martian Analog",
+      "venue": "Aeolian Research (NASA NTRS 20260000452)",
+      "year": 2026,
+      "kind": "peer_reviewed",
+      "url": "https://ntrs.nasa.gov/citations/20260000452",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20260000452"
+    },
+    {
+      "source_id": "kobrick2018_mdrs",
+      "cite": "Kobrick & Agui, 2018",
+      "title": "Preparing for Planetary Surface Exploration by Measuring Habitat Dust Intrusion with Filter Tests During an Analogue Mars Mission",
+      "venue": "Conference paper (NASA NTRS 20190000931)",
+      "year": 2018,
+      "kind": "nasa",
+      "url": "https://ntrs.nasa.gov/citations/20190000931",
+      "verified_from": "https://ntrs.nasa.gov/api/citations/20190000931"
+    },
+    {
+      "source_id": "nasa_arads2019",
+      "cite": "NASA ARADS, 2019",
+      "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
+      "venue": "NASA Ames Research Center",
+      "year": 2019,
+      "kind": "nasa",
+      "url": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/",
+      "verified_from": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/ (page dated 2019-09-19)"
     }
   ],
   "evidence": [
@@ -91,7 +161,8 @@
       "quotes": [
         "Steep slopes can spoof the radar altimeter and cause premature or late firing of the solid rockets and airbag inflation.",
         "As a result, surface slopes should be <2° over 1 km; <5° over 100 m, and <15° over 5 m."
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "slope_msl",
@@ -106,7 +177,8 @@
       "fact": "Slopes <30° at 2-5 m baselines for rover stability at touchdown.",
       "quotes": [
         "(4) slopes of <30° at baselines of 2-5 m for rover stability at touchdown"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "slope_insight",
@@ -121,7 +193,8 @@
       "fact": "Slopes <15° at 84 m and 2 m length scales for radar tracking and touchdown stability.",
       "quotes": [
         "with slopes <15° at 84 m and 2 m length scales for radar tracking and touchdown stability"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "edl_m2020",
@@ -137,7 +210,8 @@
       "fact": "Perseverance rover: with the new EDL capabilities, elevation and latitude limits no longer decided site viability; more than 30 candidate sites were considered.",
       "quotes": [
         "Mission engineering constraints on elevation and latitude were used to identify candidate landing sites that addressed the scientific objectives of the mission. However, for the first time these constraints did not have a major influence on the viability of candidate sites and, with the new entry, descent, and landing capabilities included in the baseline mission, the vast majority of sites were evaluated and down-selected on the basis of science merit. More than 30 candidate sites with likely acceptable surface and atmospheric conditions were considered"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "elev_mer",
@@ -153,7 +227,8 @@
       "fact": "MER could land only below –1.3 km (MOLA): the parachute needs an adequate atmospheric density column.",
       "quotes": [
         "the MER spacecraft are capable of landing below –1.3 km, with respect to the MOLA defined geoid [1, 2, 3]. This requirement stems mostly from the need for an adequate atmospheric density column for the parachute"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "elev_msl",
@@ -168,7 +243,8 @@
       "fact": "Elevation <-1 km for sufficient atmosphere to slow the spacecraft.",
       "quotes": [
         "(2) elevation (<-1 km) for sufficient atmosphere to slow the spacecraft"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "elev_insight",
@@ -183,7 +259,8 @@
       "fact": "Elevation ≤−2.5 km for sufficient atmosphere to slow the lander.",
       "quotes": [
         "≤−2.5 km for sufficient atmosphere to slow the lander"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "elev_heritage",
@@ -199,7 +276,8 @@
       "fact": "All five successful US landers: landed mass <0.6 t, footprints of hundreds of km, sites below -1 km MOLA for sufficient atmospheric density.",
       "quotes": [
         "The United States has successfully landed five robotic systems on the surface of Mars. These systems all had landed mass below 0.6 metric tons (t), had landed footprints on the order of hundreds of km and landed at sites below -1 km MOLA elevation due the need to perform entry, descent and landing operations in an environment with sufficient atmospheric density."
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "mass_human",
@@ -216,7 +294,8 @@
       "quotes": [
         "These systems all had landed mass below 0.6 metric tons (t)",
         "Current plans for human exploration of Mars call for the landing of 40-80 t surface elements at scientifically interesting locations within close proximity (10's of m) of pre-positioned robotic assets."
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "pressure_mars",
@@ -231,7 +310,8 @@
       "fact": "Mean surface pressure 6.36 mb at mean radius (4.0-8.7 mb with season).",
       "quotes": [
         "Surface pressure: 6.36 mb at mean radius (variable from 4.0 to 8.7 mb depending on season)"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "relief_msl",
@@ -246,7 +326,8 @@
       "fact": "Relief <100-130 m at 1-1000 m baselines for control authority and fuel during powered descent.",
       "quotes": [
         "(3) relief of <100-130 m at baselines of 1-1000 m for control authority and sufficient fuel during powered descent"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "rocks_mer",
@@ -263,7 +344,8 @@
       "quotes": [
         "The MER airbags have been qualified to protect the lander from damage when landing on 0.5 m high rocks in any orientation. This requires a landing site with less than 1% of the surface covered by rocks greater than 0.5 m high.",
         "requirement can be satisfied at locations with total rock coverage of <20% as derived from thermal infrared measurements"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "rocks_insight",
@@ -278,7 +360,8 @@
       "fact": "Rock abundance <10% to avoid impact and spacecraft tip-over.",
       "quotes": [
         "low rock abundance (<10 %) to avoid impact and spacecraft tip over"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "surface_msl",
@@ -294,7 +377,8 @@
       "quotes": [
         "(5) moderate rock abundance to avoid impacting the belly pan during touchdown",
         "(6) a radar-reflective, load-bearing, and trafficable surface that is safe for landing and roving and not dominated by fine-grained dust"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "traverse_human",
@@ -309,7 +393,8 @@
       "fact": "Crew surface traverses planned out to a 100 km radius, 2-week duration.",
       "quotes": [
         "Surface traversing capability out to 100 km radius and 2-week duration"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "irradiance_mars",
@@ -324,7 +409,8 @@
       "fact": "Solar irradiance 586.2 W/m² at Mars vs 1361.0 W/m² at Earth (ratio 0.431).",
       "quotes": [
         "Solar irradiance (W/m 2 ) 586.2 1361.0 0.431"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "lat_mer",
@@ -340,7 +426,8 @@
       "fact": "Power and thermal cycling over the 90-sol mission held MER near the subsolar latitude: 5°N-15°S (MER-A), 10°N-10°S (MER-B).",
       "quotes": [
         "Analyses of power generation/usage and thermal cycling of the rovers for the required 90 Sols restricts the landing sites to near the subsolar latitude at arrival. This translates to 5°N to 15°S for MER-A and 10°N to 10°S for MER-B"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "lat_insight",
@@ -356,7 +443,8 @@
       "fact": "Latitude band narrowed from 15°S-5°N to 3°N-5°N for solar power and thermal management.",
       "quotes": [
         "latitude (initially 15°S–5°N and later 3°N–5°N for solar power and thermal management of the spacecraft)"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "dust_mer",
@@ -373,7 +461,8 @@
       "quotes": [
         "excessive dust would coat rocks, which are of prime scientific interest (but which can impede mobility), and could reduce surface lifetime by covering the solar panels.",
         "Areas with fine component thermal inertia of less than 125-165 J m-2 s-0.5 K-1 or SI units should therefore be avoided"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "latitude_tradeoff_human",
@@ -389,7 +478,8 @@
       "quotes": [
         "Landing and ascent technology options place boundaries on surface locations leading to a preference for mid- to low- latitudes and mid- to low- elevations",
         "Accessing water ice for science and ISRU purposes is attractive, leading to a preference for higher latitudes"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "lat_msl",
@@ -404,7 +494,8 @@
       "fact": "Latitude within ±30° for thermal management of the rover and instruments.",
       "quotes": [
         "(1) latitude (±30°) for thermal management of the rover and instruments"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "cold_mer",
@@ -420,7 +511,8 @@
       "fact": "Low-thermal-inertia, high-albedo sites imply extreme cold: bulk thermal inertia >250 and >200 SI with albedo <0.26 and <0.18.",
       "quotes": [
         "Extremely low temperatures likely at low thermal inertia, high albedo sites further requires bulk thermal inertia to be >250 and >200 SI units with albedos <0.26 and <0.18, respectively."
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "elev_limit_human",
@@ -437,7 +529,8 @@
       "fact": "Human Exploration Zones: preliminary elevation limit no higher than +2 km (MOLA).",
       "quotes": [
         "Preliminary elevation boundary set at no higher than +2 km (MOLA reference)"
-      ]
+      ],
+      "sites": []
     },
     {
       "evidence_id": "lat_limit_human",
@@ -453,6 +546,127 @@
       "quotes": [
         "Preliminary latitude boundaries set at +/- 50 degrees",
         "Forty-five individuals or teams proposed 47 EZs"
+      ],
+      "sites": []
+    },
+    {
+      "evidence_id": "analog_holuhraun",
+      "source_id": "stockton2019_holuhraun",
+      "criteria": [],
+      "constraints": [],
+      "sites": [
+        "holuhraun_iceland"
+      ],
+      "missions": [
+        "any"
+      ],
+      "fact": "Holuhraun (erupted August 2014 to February 2015) was the primary Mars analog site of the 2018 FELDSPAR sampling campaign.",
+      "quotes": [
+        "that erupted from August 2014 to February 2015",
+        "thus served as the primaryMars analog site for the 2018 FELDSPAR field campaign"
+      ]
+    },
+    {
+      "evidence_id": "analog_maunakea_rover",
+      "source_id": "graham2013_maunakea",
+      "criteria": [],
+      "constraints": [],
+      "sites": [
+        "mauna_kea_summit"
+      ],
+      "missions": [
+        "rover"
+      ],
+      "fact": "2012 Moon and Mars analog rover test on Mauna Kea: a three day traverse at ~11,500 feet.",
+      "quotes": [
+        "Rover-based 2012 Moon and Mars Analog Mission Activities (MMAMA) were recently completed on Mauna Kea Volcano, Hawaii.",
+        "The rover traverse and associated science investigations were conducted over a three day period on the southeast flank of the Mauna Kea Volcano, Hawaii. The test area was at an elevation of ~11,500 feet"
+      ]
+    },
+    {
+      "evidence_id": "analog_dryvalleys_ice",
+      "source_id": "heldmann2015_dryvalleys",
+      "criteria": [],
+      "constraints": [],
+      "sites": [
+        "mcmurdo_dry_valleys"
+      ],
+      "missions": [
+        "any"
+      ],
+      "fact": "Best Earth analog of Martian ground ice; above 1500 m (University Valley) air temperatures do not exceed 0 C.",
+      "quotes": [
+        "The high elevation Dry Valleys of Antarctica provide the best analog on Earth of Martian ground ice.",
+        "in locations above 1500 m elevation, such as University Valley, air temperatures do not exceed 0 C"
+      ]
+    },
+    {
+      "evidence_id": "analog_deserts_life",
+      "source_id": "warrenrhodes2022_deserts",
+      "criteria": [],
+      "constraints": [],
+      "sites": [
+        "atacama_yungay",
+        "mcmurdo_dry_valleys"
+      ],
+      "missions": [
+        "any"
+      ],
+      "fact": "The hyperarid Atacama and the Antarctic Dry Valleys are the driest and coldest limits for life on Earth: key Mars analog habitats.",
+      "quotes": [
+        "Desert ecosystems are a key repository for important Mars analog habitats",
+        "the hyperarid Atacama Desert and Dry Valleys of Antarctica, the driest and coldest limits for life on Earth"
+      ]
+    },
+    {
+      "evidence_id": "analog_ibex_dunes",
+      "source_id": "bretzfelder2026_ibex",
+      "criteria": [],
+      "constraints": [],
+      "sites": [
+        "death_valley"
+      ],
+      "missions": [
+        "any"
+      ],
+      "fact": "Death Valley's Ibex Dune Field, in the driest place in North America, has bedforms comparable to many areas on the Martian surface.",
+      "quotes": [
+        "is the driest place in North America",
+        "This area hosts a variety of bedforms of different scales in close proximity, comparable to many areas on the Martian surface"
+      ]
+    },
+    {
+      "evidence_id": "analog_mdrs_dust",
+      "source_id": "kobrick2018_mdrs",
+      "criteria": [],
+      "constraints": [],
+      "sites": [
+        "mdrs_utah"
+      ],
+      "missions": [
+        "human"
+      ],
+      "fact": "NASA Glenn measured habitat dust intrusion with analog Crew 188 at the Mars Desert Research Station, Utah.",
+      "quotes": [
+        "collaborated with Crew 188 at the Mars Desert Research Station (MDRS) in Utah"
+      ]
+    },
+    {
+      "evidence_id": "analog_atacama_drill",
+      "source_id": "nasa_arads2019",
+      "criteria": [],
+      "constraints": [],
+      "sites": [
+        "atacama_yungay"
+      ],
+      "missions": [
+        "rover"
+      ],
+      "fact": "NASA's K-REX2 rover tested a life-detection drill reaching two meters (6.5 feet) in the Atacama, one month each year from 2016 to 2019.",
+      "quotes": [
+        "Each year from 2016 to 2019, the ARADS team, led by Brian Glass of NASA’s Ames Research Center, in California’s Silicon Valley, is spending one month working in the heart of the Atacama.",
+        "Called K-REX2, it is equipped with a drill capable of reaching two meters (6.5 feet) down through salt, rock layers and parched soil to retrieve a sample for analysis.",
+        "NASA is Testing a Drill to Search for Life on Mars"
       ]
     }
   ]

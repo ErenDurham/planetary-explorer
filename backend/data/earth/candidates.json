@@ -3,34 +3,6 @@
   "coordinate_convention": "WGS84 (EPSG:4326) latitude and east-positive longitude in -180..180.",
   "footprint_definition": "Square footprint of half-width 0.25 degrees (about 56 km N-S full width, 56*cos(lat) km E-W) centred on the site. Smaller than the Mars footprint because Earth analog field sites are typically a few tens of km across; terrain statistics are computed on a grid block-averaged to the MOLA 16 ppd cell size (~3.7 km, separately per axis) so they are comparable to the Mars values.",
   "sources": {
-    "nasa_analogs_overview": {
-      "source_id": "nasa_analogs_overview",
-      "title": "NASA Analog Missions",
-      "institution": "NASA",
-      "url": "https://www.nasa.gov/analog-missions/",
-      "access_method": "web page"
-    },
-    "nasa_hmp": {
-      "source_id": "nasa_hmp",
-      "title": "Haughton-Mars Project (Devon Island)",
-      "institution": "NASA Ames / Mars Institute",
-      "url": "https://www.marsinstitute.no/hmp",
-      "access_method": "web page"
-    },
-    "nasa_arads": {
-      "source_id": "nasa_arads",
-      "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
-      "institution": "NASA Ames",
-      "url": "https://www.nasa.gov/ames/arads",
-      "access_method": "web page"
-    },
-    "mdrs": {
-      "source_id": "mdrs",
-      "title": "Mars Desert Research Station",
-      "institution": "The Mars Society",
-      "url": "https://mdrs.marssociety.org/",
-      "access_method": "web page"
-    },
     "copernicus_glo90": {
       "source_id": "copernicus_glo90",
       "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
@@ -57,33 +29,175 @@
       "access_method": "REST API, no login",
       "license": "Public domain (NASA)"
     },
-    "lit_yungay": {
-      "source_id": "lit_yungay",
-      "title": "Navarro-Gonzalez et al. (2003), Mars-like soils in the Atacama Desert, Chile, and the dry limit of microbial life, Science 302",
-      "institution": "AAAS (peer-reviewed literature)",
-      "url": "https://doi.org/10.1126/science.1089143",
-      "access_method": "DOI"
+    "adams2014_maunakea": {
+      "source_id": "adams2014_maunakea",
+      "title": "Pu'u Poli'ahu, Mauna Kea: A Possible Analog for the Hematite Bearing Layer Located in Gale Crater, Mars",
+      "institution": "NASA Technical Reports Server 20140010577",
+      "url": "https://ntrs.nasa.gov/citations/20140010577",
+      "access_method": "publication",
+      "cite": "Adams, 2014",
+      "year": 2014,
+      "kind": "nasa"
     },
-    "lit_dry_valleys": {
-      "source_id": "lit_dry_valleys",
-      "title": "Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, Icarus 192",
-      "institution": "Elsevier (peer-reviewed literature)",
-      "url": "https://doi.org/10.1016/j.icarus.2007.06.018",
-      "access_method": "DOI"
+    "clarke2011_hanksville": {
+      "source_id": "clarke2011_hanksville",
+      "title": "Concretions in Exhumed Channels Near Hanksville Utah: Implications for Mars",
+      "institution": "NASA Technical Reports Server 20110023235",
+      "url": "https://ntrs.nasa.gov/citations/20110023235",
+      "access_method": "publication",
+      "cite": "Clarke & Stoker, 2011",
+      "year": 2011,
+      "kind": "nasa"
     },
-    "lit_haughton": {
-      "source_id": "lit_haughton",
-      "title": "Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, Meteoritics & Planetary Science 40",
-      "institution": "Wiley (peer-reviewed literature)",
-      "url": "https://doi.org/10.1111/j.1945-5100.2005.tb00147.x",
-      "access_method": "DOI"
+    "das2026_deathvalley": {
+      "source_id": "das2026_deathvalley",
+      "title": "Estimating past fluid pH and evaporative conditions in Gale crater using terrestrial analog samples from Death Valley, CA",
+      "institution": "Meteoritics & Planetary Science",
+      "url": "https://doi.org/10.1111/maps.70237",
+      "access_method": "publication",
+      "cite": "Das et al., 2026",
+      "year": 2026,
+      "kind": "peer_reviewed"
+    },
+    "elmaarry2015_playas": {
+      "source_id": "elmaarry2015_playas",
+      "title": "Field investigation of dried lakes in western United States as an analogue to desiccation fractures on Mars",
+      "institution": "Journal of Geophysical Research: Planets",
+      "url": "https://doi.org/10.1002/2015JE004895",
+      "access_method": "publication",
+      "cite": "El-Maarry et al., 2015",
+      "year": 2015,
+      "kind": "peer_reviewed"
+    },
+    "goordial2016_university_valley": {
+      "source_id": "goordial2016_university_valley",
+      "title": "Nearing the cold-arid limits of microbial life in permafrost of an upper dry valley, Antarctica",
+      "institution": "The ISME Journal",
+      "url": "https://doi.org/10.1038/ismej.2015.239",
+      "access_method": "publication",
+      "cite": "Goordial et al., 2016",
+      "year": 2016,
+      "kind": "peer_reviewed"
+    },
+    "graham2013_maunakea": {
+      "source_id": "graham2013_maunakea",
+      "title": "Rover-Based Instrumentation and Scientific Investigations During the 2012 Analog Field Test on Mauna Kea Volcano, Hawaii",
+      "institution": "NASA Technical Reports Server 20130009908",
+      "url": "https://ntrs.nasa.gov/citations/20130009908",
+      "access_method": "publication",
+      "cite": "Graham & Graff, 2013",
+      "year": 2013,
+      "kind": "nasa"
+    },
+    "hartley2018_holuhraun": {
+      "source_id": "hartley2018_holuhraun",
+      "title": "Melt inclusion constraints on petrogenesis of the 2014-2015 Holuhraun eruption, Iceland",
+      "institution": "Contributions to Mineralogy and Petrology",
+      "url": "https://doi.org/10.1007/s00410-017-1435-0",
+      "access_method": "publication",
+      "cite": "Hartley et al., 2018",
+      "year": 2018,
+      "kind": "peer_reviewed"
+    },
+    "heldmann2015_dryvalleys": {
+      "source_id": "heldmann2015_dryvalleys",
+      "title": "Mars: Periglacial Morphology and Implications for Future Landing Sites",
+      "institution": "NASA Technical Reports Server 20150023012",
+      "url": "https://ntrs.nasa.gov/citations/20150023012",
+      "access_method": "publication",
+      "cite": "Heldmann et al., 2015",
+      "year": 2015,
+      "kind": "nasa"
+    },
+    "horstmann2024_yungay": {
+      "source_id": "horstmann2024_yungay",
+      "title": "Persistent microbial communities in hyperarid subsurface habitats of the Atacama Desert: Insights from intracellular DNA analysis",
+      "institution": "PNAS Nexus",
+      "url": "https://doi.org/10.1093/pnasnexus/pgae123",
+      "access_method": "publication",
+      "cite": "Horstmann et al., 2024",
+      "year": 2024,
+      "kind": "peer_reviewed"
+    },
+    "izawa2011_haughton": {
+      "source_id": "izawa2011_haughton",
+      "title": "Weathering of Post-Impact Hydrothermal Deposits from the Haughton Impact Structure: Implications for Microbial Colonization and Biosignature Preservation",
+      "institution": "Astrobiology",
+      "url": "https://doi.org/10.1089/ast.2011.0612",
+      "access_method": "publication",
+      "cite": "Izawa et al., 2011",
+      "year": 2011,
+      "kind": "peer_reviewed"
+    },
+    "lasser2020_badwater": {
+      "source_id": "lasser2020_badwater",
+      "title": "Surface and subsurface characterisation of salt pans expressing polygonal patterns",
+      "institution": "Earth System Science Data",
+      "url": "https://doi.org/10.5194/essd-12-2881-2020",
+      "access_method": "publication",
+      "cite": "Lasser et al., 2020",
+      "year": 2020,
+      "kind": "peer_reviewed"
     },
     "lit_holuhraun": {
       "source_id": "lit_holuhraun",
-      "title": "Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, J. Volcanol. Geotherm. Res. 340",
-      "institution": "Elsevier (peer-reviewed literature)",
+      "title": "Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland",
+      "institution": "Journal of Volcanology and Geothermal Research",
       "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
-      "access_method": "DOI"
+      "access_method": "publication",
+      "cite": "Pedersen et al., 2017",
+      "year": 2017,
+      "kind": "peer_reviewed"
+    },
+    "parnell2012_haughton": {
+      "source_id": "parnell2012_haughton",
+      "title": "Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars",
+      "institution": "International Journal of Astrobiology",
+      "url": "https://doi.org/10.1017/S1473550411000395",
+      "access_method": "publication",
+      "cite": "Parnell et al., 2012",
+      "year": 2012,
+      "kind": "peer_reviewed"
+    },
+    "sager2020_yungay": {
+      "source_id": "sager2020_yungay",
+      "title": "New type of sand wedge polygons in the salt cemented soils of the hyper-arid Atacama Desert",
+      "institution": "Geomorphology",
+      "url": "https://doi.org/10.1016/j.geomorph.2020.107481",
+      "access_method": "publication",
+      "cite": "Sager et al., 2020",
+      "year": 2020,
+      "kind": "peer_reviewed"
+    },
+    "stoker2011_mdrs": {
+      "source_id": "stoker2011_mdrs",
+      "title": "Properties of Subsurface Soil Cores from Four Geologic Provinces Surrounding Mars Desert Research Station, Utah: Characterizing Analog Martian Soil in a Human Exploration Scenario",
+      "institution": "42nd Lunar and Planetary Science Conference (NASA Technical Reports Server 20110014304)",
+      "url": "https://ntrs.nasa.gov/citations/20110014304",
+      "access_method": "publication",
+      "cite": "Stoker et al., 2011",
+      "year": 2011,
+      "kind": "nasa"
+    },
+    "trowbridge2024_haughton": {
+      "source_id": "trowbridge2024_haughton",
+      "title": "Modeling of the Impact-Generated Hydrothermal System at the Haughton Impact Structure",
+      "institution": "Journal of Geophysical Research: Planets",
+      "url": "https://doi.org/10.1029/2023JE008267",
+      "access_method": "publication",
+      "cite": "Trowbridge et al., 2024",
+      "year": 2024,
+      "kind": "peer_reviewed"
+    },
+    "voigt2025_holuhraun": {
+      "source_id": "voigt2025_holuhraun",
+      "title": "The 2014-2015 Holuhraun Lava Flow-field in Iceland as a Planetary Analog for Young Volcanic Terrains in Elysium Planitia, Mars",
+      "institution": "The Planetary Science Journal",
+      "url": "https://doi.org/10.3847/PSJ/adb5f1",
+      "access_method": "publication",
+      "cite": "Voigt et al., 2025",
+      "year": 2025,
+      "kind": "peer_reviewed"
     }
   },
   "candidates": [
@@ -94,27 +208,23 @@
       "country": "Chile",
       "lat": -24.08,
       "lon_east": -69.95,
-      "description": "Hyperarid core of the Atacama, with soils so low in organics and microbial life that they were proposed as the closest terrestrial match to Viking-era Mars soil results. Used by NASA ARADS for rover and drill testing.",
+      "description": "Hyperarid core of the Atacama near Yungay: playa sediments over alluvial fan deposits, and polygonal ground cemented by sulfates, nitrates and chlorides. Used by NASA ARADS for rover and drill testing.",
       "tags_terrain": [
-        "desert_plain",
-        "smooth_plains",
         "alluvial_fan",
-        "hyperarid"
+        "playa",
+        "polygonal_terrain"
       ],
       "tags_mineralogy": [
-        "nitrates",
         "sulfates",
-        "perchlorates",
-        "halite",
-        "regolith"
+        "nitrates",
+        "chlorides"
       ],
       "known_analog_use": [
-        "NASA ARADS rover and drilling campaigns",
-        "Viking-era soil analog studies"
+        "NASA ARADS rover and drilling campaigns"
       ],
       "sources": [
-        "nasa_arads",
-        "lit_yungay"
+        "horstmann2024_yungay",
+        "sager2020_yungay"
       ]
     },
     {
@@ -124,26 +234,20 @@
       "country": "Antarctica (treaty)",
       "lat": -77.86,
       "lon_east": 160.72,
-      "description": "Cold, hyperarid polar desert with ice-cemented permafrost and sublimation-dominated landscapes; a long-standing analog for Martian periglacial terrain and the Phoenix landing region.",
+      "description": "High-elevation hyper-arid polar desert (University Valley) with dry permafrost over ice-cemented ground; studied as a Mars analog for periglacial processes and ground ice.",
       "tags_terrain": [
         "polar_desert",
-        "periglacial",
-        "polygonal_terrain",
-        "glacial_valley"
+        "periglacial"
       ],
       "tags_mineralogy": [
-        "ice_cemented_permafrost",
-        "salts",
-        "dolerite",
-        "sandstone"
+        "water_ice"
       ],
       "known_analog_use": [
-        "Phoenix mission permafrost analog studies",
-        "IceBite drill tests"
+        "Phoenix landing-site ground-ice analog studies"
       ],
       "sources": [
-        "lit_dry_valleys",
-        "nasa_analogs_overview"
+        "heldmann2015_dryvalleys",
+        "goordial2016_university_valley"
       ]
     },
     {
@@ -153,25 +257,23 @@
       "country": "Canada",
       "lat": 75.38,
       "lon_east": -89.68,
-      "description": "A 23 km diameter, 39 Myr old impact crater in a polar desert, with impact breccia and hydrothermal mineral deposits. Host to the Haughton-Mars Project field station since 1997.",
+      "description": "A 23 km diameter impact crater on Devon Island with impact breccia, gypsum bedrock, carbonates and hydrothermal deposits weathered to iron-oxide crusts. Home of the Haughton-Mars Project.",
       "tags_terrain": [
-        "impact_crater",
-        "polar_desert",
-        "periglacial",
-        "crater_floor"
+        "impact_crater"
       ],
       "tags_mineralogy": [
         "impact_breccia",
         "carbonates",
         "sulfates",
-        "gypsum"
+        "iron_oxides"
       ],
       "known_analog_use": [
         "Haughton-Mars Project (NASA Ames / Mars Institute / SETI)"
       ],
       "sources": [
-        "nasa_hmp",
-        "lit_haughton"
+        "trowbridge2024_haughton",
+        "izawa2011_haughton",
+        "parnell2012_haughton"
       ]
     },
     {
@@ -181,26 +283,25 @@
       "country": "United States",
       "lat": 36.46,
       "lon_east": -116.87,
-      "description": "Arid basin-and-range valley with playas, evaporite deposits, alluvial fans and volcanic features, named in the challenge statement as an established Mars analog.",
+      "description": "Desert basin with dry lakebeds (playas) and polygon-patterned salt pans at Badwater Basin; its playa sediments hold clays, chloride and sulfate salts and borate minerals. Used as an analog for Gale crater's lake deposits.",
       "tags_terrain": [
-        "desert_plain",
         "playa",
-        "alluvial_fan",
-        "basin_and_range"
+        "polygonal_terrain"
       ],
       "tags_mineralogy": [
-        "evaporites",
-        "halite",
-        "borates",
-        "basalt",
-        "iron_oxides"
+        "chlorides",
+        "sulfates",
+        "clays",
+        "borates"
       ],
       "known_analog_use": [
         "Named in the Space Apps challenge statement",
-        "NASA field instrument tests"
+        "Terrestrial analog for Gale crater lake deposits (Das et al., 2026)"
       ],
       "sources": [
-        "nasa_analogs_overview"
+        "elmaarry2015_playas",
+        "lasser2020_badwater",
+        "das2026_deathvalley"
       ]
     },
     {
@@ -210,25 +311,25 @@
       "country": "Iceland",
       "lat": 64.85,
       "lon_east": -16.8,
-      "description": "Fresh basaltic lava field from the 2014-2015 fissure eruption, surrounded by glacial outwash plains; a close morphological and compositional analog for young Martian volcanic plains.",
+      "description": "Basaltic lava flow field from the 2014-2015 fissure eruption, emplaced on a floodplain of glacial and fluvial deposits; an analog for young volcanic terrains in Elysium Planitia.",
       "tags_terrain": [
         "lava_plain",
         "fissure_vent",
-        "outwash_plain"
+        "outwash_plain",
+        "polygonal_terrain"
       ],
       "tags_mineralogy": [
         "basalt",
-        "olivine",
-        "glass",
-        "regolith"
+        "volcanic_glass"
       ],
       "known_analog_use": [
-        "NASA SAND-E rover field tests",
-        "ESA / university Mars volcanism analog studies"
+        "FELDSPAR analog sampling expedition (Stockton et al., 2019)",
+        "Analog for young volcanic terrains in Elysium Planitia (Voigt et al., 2025)"
       ],
       "sources": [
         "lit_holuhraun",
-        "nasa_analogs_overview"
+        "voigt2025_holuhraun",
+        "hartley2018_holuhraun"
       ]
     },
     {
@@ -238,24 +339,22 @@
       "country": "United States",
       "lat": 38.41,
       "lon_east": -110.79,
-      "description": "Semi-arid badlands of Jurassic and Cretaceous sandstone, shale and clays near Hanksville, where the Mars Desert Research Station hosts crewed simulations.",
+      "description": "Area around the Mars Desert Research Station near Hanksville, Utah: Jurassic and Cretaceous sandstone and shale with smectite clays and sulfate salts, and exhumed, inverted palaeochannels with carbonate concretions.",
       "tags_terrain": [
-        "badlands",
-        "sedimentary_plain",
-        "mesa",
-        "desert_plain"
+        "inverted_channels"
       ],
       "tags_mineralogy": [
+        "carbonates",
         "sandstone",
-        "clays",
-        "gypsum",
-        "iron_oxides"
+        "sulfates",
+        "clays"
       ],
       "known_analog_use": [
         "Mars Desert Research Station crewed simulations"
       ],
       "sources": [
-        "mdrs"
+        "clarke2011_hanksville",
+        "stoker2011_mdrs"
       ]
     },
     {
@@ -265,24 +364,22 @@
       "country": "United States",
       "lat": 19.82,
       "lon_east": -155.47,
-      "description": "Shield volcano whose upper slopes (tephra cones and basalt above ~3,500 m) are used for ISRU, regolith-excavation and rover trials because of their low vegetation and basaltic soils. NOTE: the 0.5 deg footprint centred on the summit spans the whole upper mountain, so footprint statistics describe the summit region as a whole, not only the test sites.",
+      "description": "Summit region of Mauna Kea: tephra cones such as Pu'u Poli'ahu, which holds a hematite-bearing outcrop, and upper flanks used for NASA rover and in-situ resource field tests. NOTE: the 0.5 deg footprint centred on the summit spans the whole upper mountain, so footprint statistics describe the summit region as a whole, not only the test sites.",
       "tags_terrain": [
-        "volcanic_slope",
-        "tephra_field",
-        "lava_plain"
+        "cinder_cone",
+        "volcanic_slope"
       ],
       "tags_mineralogy": [
-        "basalt",
         "tephra",
-        "volcanic_glass",
-        "regolith"
+        "iron_oxides"
       ],
       "known_analog_use": [
-        "PISCES / NASA ISRU field tests",
-        "RESOLVE rover trials"
+        "NASA / CSA / DLR in-situ resource utilization field tests (Sanders et al., 2011)",
+        "2012 Moon and Mars Analog Mission Activities rover test (Graham & Graff, 2013)"
       ],
       "sources": [
-        "nasa_analogs_overview"
+        "adams2014_maunakea",
+        "graham2013_maunakea"
       ]
     }
   ]

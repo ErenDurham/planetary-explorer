@@ -12,17 +12,26 @@ def _rank(**kw):
 
 
 def test_pair_similarity_is_direction_independent_and_matches_match_endpoint(client):
-    a = _rank(reference_body="mars", reference_id="jezero_crater")
-    b = _rank(reference_body="earth", reference_id="atacama_yungay")
+    # Mineralogy is missing for one Mars site (Utopia), so the Mars-candidate pool drops it
+    # pool-wide; compare both directions on the same basis (minerals weighted 0).
+    w = [AnalogWeight(feature_id="mineralogy_tags", weight=0)]
+    a = _rank(reference_body="mars", reference_id="jezero_crater", weights=w)
+    b = _rank(reference_body="earth", reference_id="atacama_yungay", weights=w)
     sa = next(c for c in a.candidates if c.location.id == "atacama_yungay").similarity
     sb = next(c for c in b.candidates if c.location.id == "jezero_crater").similarity
     assert sa == sb and sa is not None
-    m = client.post("/api/v1/analogs/match", json={"mars_site_id": "jezero_crater", "top_k": 7}).json()
+    m = client.post("/api/v1/analogs/match", json={"mars_site_id": "jezero_crater", "top_k": 7, "weights": [{"feature_id": "mineralogy_tags", "weight": 0}]}).json()
     assert next(x["similarity"] for x in m["matches"] if x["earth_candidate"]["id"] == "atacama_yungay") == sa
     assert a.candidate_body == "earth" and b.candidate_body == "mars" and a.pool_size == 7 and b.pool_size == 8
     # canonical values regardless of direction
     fd = next(f for f in next(c for c in b.candidates if c.location.id == "jezero_crater").feature_distances if f.feature_id == "slope_regional_median_deg")
     assert fd.mars_value == pytest.approx(1.077, abs=1e-3)
+
+
+def test_a_feature_missing_for_one_candidate_is_dropped_pool_wide_and_disclosed():
+    b = _rank(reference_body="earth", reference_id="atacama_yungay")
+    assert "mineralogy_tags" not in b.basis_features
+    assert any(e.feature_id == "mineralogy_tags" and "utopia_planitia" in e.reason for e in b.excluded_features)
 
 
 def test_full_pool_rank_and_colour_positions():

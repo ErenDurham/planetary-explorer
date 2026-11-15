@@ -439,13 +439,19 @@ similarity and with a warning naming it ("candidate '...' has no comparable
 weighted feature with '...'; similarity undefined").
 
 Worked example, Jezero Crater vs Atacama - Yungay under default weights
-(`api_examples.json`, rebuilt Earth profiles): slope d = |1.077 - 1.166| / 1.5
-= 0.0593; relief d = |194.4 - 126.5| / 100 = 0.679; terrain tags d = 1.0 (no
-shared tag); mineralogy tags d = 1.0; precipitation d = |0 - 0.02| / 1.0 =
-0.02. D = 0.25 x 0.0593 + 0.25 x 0.679 + 0.20 x 1.0 + 0.20 x 1.0 + 0.10 x
-0.02 = **0.5866**; Similarity = 100 / 1.5866 = **63.03**. Next in the
-example's top three: MDRS 61.53 (D 0.6251), McMurdo Dry Valleys 61.32
-(D 0.6308).
+(literature labels from `data/site_literature.v1.json`): slope d = |1.077 -
+1.166| / 1.5 = 0.0593; relief d = |194.4 - 126.5| / 100 = 0.679; terrain tags
+d = 1.0 (no shared tag); mineralogy tags d = 1 - 1/7 = 0.857 (shared:
+sulfates); precipitation d = |0 - 0.02| / 1.0 = 0.02. D = 0.25 x 0.0593 + 0.25
+x 0.679 + 0.20 x 1.0 + 0.20 x 0.857 + 0.10 x 0.02 = **0.5580**; Similarity =
+100 / 1.5580 = **64.18**. The Earth ranking for Jezero: MDRS 64.36 (D 0.5537;
+shares clays, carbonates and sulfates), Atacama 64.18, McMurdo Dry Valleys
+61.32 (D 0.6308).
+
+The Earth rover-test ranking in Explore uses this same similarity against the
+Mars site paired with the mission (`analog_reference_id`;
+`services/mission_assessment.py`): the Earth Low slopes / Less rugged ground
+sliders only split the 50% terrain share between slope and relief.
 
 ### 6.3 Narrative fields
 
@@ -454,8 +460,9 @@ example's top three: MDRS 61.53 (D 0.6251), McMurdo Dry Valleys 61.32
 - `important_differences`: numeric features with d > 1.0.
 - `noncomparable_variables`: per-feature non-comparable notes, followed by the
   spec's five **planetary disclosures**, attached to every match and echoed as
-  `planetary_differences` on every response: atmospheric pressure (Mars ~0.6
-  kPa vs Earth 101 kPa), gravity (3.71 vs 9.81 m/s2), radiation (no global
+  `planetary_differences` on every response: atmospheric pressure (Mars 0.636
+  kPa vs Earth 101.4 kPa) and gravity (3.73 vs 9.82 m/s2), both from the NASA
+  fact sheets; radiation (no global
   magnetic field, thin atmosphere), temperature (qualitative only), and the
   elevation datum (GMM3 areoid vs EGM2008 geoid; absolute elevations shown
   but never differenced).

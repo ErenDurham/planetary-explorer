@@ -34,7 +34,8 @@
     - `applyObjective()`: applies weights, interpretation and task together.
     - `appliedInterpretation`: reasons, cited research and mission kind, read by the "?" pop-up.
     - `excludedCriteria`: factors with no data.
-    - `earthWeights` / `recommendedEarthWeights`: Earth's shares on the same factors and the suggestion Reset restores. Earth terrain and smoothness also set `missionProfileWeights.rover_field_test` (slope/relief), which ranks Earth sites in Explore (`roverSharesFrom`).
+    - `earthWeights` / `recommendedEarthWeights`: Earth's shares on the same factors and the suggestion Reset restores. Earth Low slopes / Less rugged ground set `missionProfileWeights.rover_field_test` (`roverSharesFrom`); they only split the terrain half of the Earth ranking between slope and relief.
+    - `missionRequirements.earth.analog_reference_id` (`setEarthReference`): the paired Mars site. Explore ranks Earth sites by their full analog similarity to it.
     - `missionType` (set by the planet: Mars → `landing`, Earth → `rover_field_test`), `missionDesigned`, `missionDraftDirty`: mission type, whether a mission has been saved, unsaved-edit flag.
   - `hooks/useInterpretObjective.ts` — calls `/mission/interpret`. If the backend is down, builds a keyword reading in the browser instead. `applicationFromInterpretation()` turns the response into what the store applies.
   - `hooks/useDefaultMission.ts` — at startup, loads the factor definitions (`/scoring/default-mission`). Seeds default weights with the fast keyword reading (`use_llm: false`), so first rankings never wait on the LLM.
@@ -55,18 +56,21 @@
     - Fallback: `rule_based()` keyword reader. Results are cached in memory.
   - `app/services/evidence.py` + `data/evidence/landing_priorities.v1.json` — the research registry.
     - Sources: NASA or peer-reviewed, with links.
-    - Findings: a short fact plus the exact sentence it was copied from.
+    - Findings: a short fact plus the exact sentence it was copied from. Earth-analog findings carry `sites` (which Earth site research has used to stand in for Mars).
     - Only sources from the last 15 years are used (`MAX_SOURCE_AGE_YEARS` in `evidence.py`); older ones stay in the file but are never offered to the model or shown.
     - `tests/test_evidence.py` fails if a number in a fact isn't in its quoted sentence.
+  - `app/services/analog_check.py` — the Earth ↔ Mars cross-reference. The model picks the Earth site research shows suits the mission (`analog_pair.earth`); the Mars site is a site the text names, else the Mars site most similar to that Earth site (`closest_mars`, the analog ranking's top). It reads both sites' measured slope, relief, elevation and sunlight and marks slope/relief comparable within the analog scales (1.5°, 100 m); elevation and sunlight are never compared across planets. It also lists the landforms and minerals both sites share. Shown in the "?" pop-up; the Mars site id goes to the store (`setEarthReference`).
   - `app/services/llm_client.py` — the only code that talks to an LLM: Ollama (free, local) or Anthropic (paid), chosen by `LLM_PROVIDER` in `.env`.
   - `app/services/task_interpreter.py` — reads the task: Mars landing or analog search, which planet, which reference site.
   - `app/services/scoring_engine.py` + `app/config/scoring_spec.json` — the 5 landing factors, their scoring rules, and the hard constraints (`default_hard_constraints`: elevation, latitude).
-  - `app/services/mission_assessment.py` + `app/config/mission_profiles.json` — scoring for non-landing types.
+  - `app/services/mission_assessment.py` + `app/config/mission_profiles.json` — scoring for non-landing types. With `analog_reference_id`, the Earth ranking is the analog similarity to that Mars site (`_evaluate_against_mars`, same maths as `/analogs/rank`; each factor's points show what it cost).
+  - `data/site_literature.v1.json` — every site's landform and mineral labels, description and water/ice note, each label with a verbatim quote from a NASA, USGS or peer-reviewed source from the last 15 years. Edit it, then run `scripts/apply_site_literature.py` to update the site and profile files. Tested by `tests/test_site_literature.py`.
   - `app/models/objective.py` — the request and response format of `/mission/interpret`.
   - `app/config/settings.py` + `.env` (repo root) — settings: `LLM_PROVIDER`, `OLLAMA_MODEL`, `OLLAMA_THINK`, `OLLAMA_TIMEOUT_S` (30 s cap, then keyword fallback), `OLLAMA_KEEP_ALIVE` (keep the model in memory), `OLLAMA_WARMUP` (pre-load at server start, from `app/main.py`), `ANTHROPIC_API_KEY`.
 
 - **Common edits**
   - Factor name, colour or hover sentence → `PRIORITY_GUIDE` in `frontend/src/lib/objective.ts`.
+  - Default objective (sets the starting priorities, is the example in the empty box, and Tab fills it in) → `DEFAULT_OBJECTIVE` in `frontend/src/store/useAppStore.ts`.
   - Scoring rules or hard constraints → `backend/app/config/scoring_spec.json`.
   - New research finding → registry JSON. Copy the source's sentence exactly; tests check the numbers.
   - What the LLM is told → `_SYSTEM_RULES` in `backend/app/services/objective_engine.py`.

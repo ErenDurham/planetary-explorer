@@ -326,6 +326,71 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * AnalogCheck
+         * @description The cross-reference behind the priorities: an Earth site research shows
+         *     suits the mission, a Mars site, and how their measured data compare.
+         */
+        AnalogCheck: {
+            /** Earth Site Id */
+            earth_site_id: string;
+            /** Earth Site Name */
+            earth_site_name: string;
+            /** Mars Site Id */
+            mars_site_id: string;
+            /** Mars Site Name */
+            mars_site_name: string;
+            /**
+             * Research
+             * @description Recent research on the Earth site as a Mars analog
+             */
+            research?: components["schemas"]["EvidenceCitation"][];
+            /** Factors */
+            factors: components["schemas"]["AnalogFactorCheck"][];
+            /**
+             * Shared Landforms
+             * @description Landform tags both sites' literature reports
+             */
+            shared_landforms?: string[];
+            /**
+             * Shared Minerals
+             * @description Mineral tags both sites' literature reports
+             */
+            shared_minerals?: string[];
+            /**
+             * Chosen By
+             * @enum {string}
+             */
+            chosen_by: "llm" | "rules";
+        };
+        /**
+         * AnalogFactorCheck
+         * @description One factor of the Earth <-> Mars cross-reference: both sites' measured values.
+         */
+        AnalogFactorCheck: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Earth Value */
+            earth_value?: number | null;
+            /** Mars Value */
+            mars_value?: number | null;
+            /** Unit */
+            unit: string;
+            /** Difference */
+            difference?: number | null;
+            /**
+             * Tolerance
+             * @description A difference within this counts as comparable
+             */
+            tolerance?: number | null;
+            /**
+             * Comparable
+             * @description null = the factor cannot be compared across planets
+             */
+            comparable?: boolean | null;
+            /** Note */
+            note: string;
+        };
         /** AnalogMatch */
         AnalogMatch: {
             /** Mars Site Id */
@@ -1475,6 +1540,8 @@ export interface components {
              * @description Earth field-test site priorities from the same text (slope, relief)
              */
             earth_suggestions?: components["schemas"]["EarthWeightSuggestion"][];
+            /** @description Earth <-> Mars cross-reference used for the priorities */
+            analog_check?: components["schemas"]["AnalogCheck"] | null;
             /**
              * Constraint Evidence
              * @description Research behind each hard constraint, by constraint_id
@@ -1689,6 +1756,11 @@ export interface components {
              * @default 300
              */
             relief_tolerance_m: number;
+            /**
+             * Analog Reference Id
+             * @description Earth rover field test only: a Mars site id. When set, Earth sites are ranked by their analog similarity to that Mars site (the Explore analog calculation) instead of by the slope/relief targets.
+             */
+            analog_reference_id?: string | null;
         };
         /**
          * Provenance
