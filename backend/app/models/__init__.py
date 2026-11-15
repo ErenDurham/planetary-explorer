@@ -33,6 +33,8 @@ from .mission import (
     SuitabilityResult,
 )
 from .objective import (
+    AnalogCheck,
+    AnalogFactorCheck,
     AnalogWeightSuggestion,
     DirectionOption,
     EarthWeightSuggestion,

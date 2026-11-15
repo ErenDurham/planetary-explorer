@@ -241,12 +241,12 @@
           "category": "ground",
           "value": [
             "impact_crater",
+            "crater_floor",
             "delta",
-            "paleolake_basin",
-            "crater_floor"
+            "paleolake_basin"
           ],
           "unit": null,
-          "source_id": "nasa_m2020_landing_site",
+          "source_id": "farley2022_jezero",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -263,7 +263,7 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: impact_crater, crater_floor, delta (Farley et al., 2022); paleolake_basin (Goudge et al., 2015)."
         },
         {
           "feature_id": "mineralogy_tags",
@@ -271,9 +271,10 @@
           "category": "composition",
           "value": [
             "carbonates",
-            "clays",
             "olivine",
-            "basalt"
+            "clays",
+            "sulfates",
+            "perchlorates"
           ],
           "unit": null,
           "source_id": "lit_jezero_mineralogy",
@@ -293,13 +294,13 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: carbonates, olivine, clays (Goudge et al., 2015); sulfates, perchlorates (Farley et al., 2022)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Ancient lake and delta deposits (literature); no present-day ice detected at this latitude.",
+          "value": "Ancient lake and river deposits (Farley et al., 2022); no ice reported in the cited sources.",
           "unit": null,
           "source_id": "lit_jezero_mineralogy",
           "measurement_type": "literature",
@@ -463,13 +464,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "lit_jezero_mineralogy": {
-          "source_id": "lit_jezero_mineralogy",
-          "title": "Goudge et al. (2015), Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, J. Geophys. Res. Planets 120",
-          "institution": "AGU (peer-reviewed literature)",
-          "url": "https://doi.org/10.1002/2014JE004782",
-          "access_method": "DOI"
-        },
         "nasa_m2020_landing_site": {
           "source_id": "nasa_m2020_landing_site",
           "title": "Mars 2020 Perseverance Rover - Science (Jezero Crater landing site)",
@@ -489,12 +483,32 @@
           "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven proxy only.",
           "access_method": "computed",
           "license": "n/a"
+        },
+        "farley2022_jezero": {
+          "source_id": "farley2022_jezero",
+          "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
+          "institution": "Science",
+          "url": "https://doi.org/10.1126/science.abo2196",
+          "access_method": "publication",
+          "cite": "Farley et al., 2022",
+          "year": 2022,
+          "kind": "peer_reviewed"
+        },
+        "lit_jezero_mineralogy": {
+          "source_id": "lit_jezero_mineralogy",
+          "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+          "institution": "Journal of Geophysical Research: Planets",
+          "url": "https://doi.org/10.1002/2014JE004782",
+          "access_method": "publication",
+          "cite": "Goudge et al., 2015",
+          "year": 2015,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
@@ -741,13 +755,10 @@
           "category": "ground",
           "value": [
             "impact_crater",
-            "layered_mound",
-            "paleolake_basin",
-            "alluvial_fan",
-            "crater_floor"
+            "paleolake_basin"
           ],
           "unit": null,
-          "source_id": "nasa_msl_landing",
+          "source_id": "rampe2020_gale",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -764,20 +775,20 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: impact_crater (Rampe et al., 2020); paleolake_basin (Grotzinger et al., 2014)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "clays",
+            "iron_oxides",
             "sulfates",
-            "basalt",
-            "hematite"
+            "clays",
+            "silica"
           ],
           "unit": null,
-          "source_id": "lit_gale_stratigraphy",
+          "source_id": "rampe2020_gale",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -794,15 +805,15 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: iron_oxides, sulfates, clays, silica (Rampe et al., 2020)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Fluvio-lacustrine mudstones with clay minerals (literature); no present-day ice.",
+          "value": "Ancient lake deposits (Grotzinger et al., 2014); no ice reported in the cited sources.",
           "unit": null,
-          "source_id": "lit_gale_stratigraphy",
+          "source_id": "rampe2020_gale",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -964,13 +975,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "lit_gale_stratigraphy": {
-          "source_id": "lit_gale_stratigraphy",
-          "title": "Grotzinger et al. (2014), A habitable fluvio-lacustrine environment at Yellowknife Bay, Gale Crater, Mars, Science 343",
-          "institution": "AAAS (peer-reviewed literature)",
-          "url": "https://doi.org/10.1126/science.1242777",
-          "access_method": "DOI"
-        },
         "nasa_msl_landing": {
           "source_id": "nasa_msl_landing",
           "title": "Mars Science Laboratory (Curiosity) - Gale Crater landing site",
@@ -990,12 +994,32 @@
           "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven proxy only.",
           "access_method": "computed",
           "license": "n/a"
+        },
+        "lit_gale_stratigraphy": {
+          "source_id": "lit_gale_stratigraphy",
+          "title": "A Habitable Fluvio-Lacustrine Environment at Yellowknife Bay, Gale Crater, Mars",
+          "institution": "Science",
+          "url": "https://doi.org/10.1126/science.1242777",
+          "access_method": "publication",
+          "cite": "Grotzinger et al., 2014",
+          "year": 2014,
+          "kind": "peer_reviewed"
+        },
+        "rampe2020_gale": {
+          "source_id": "rampe2020_gale",
+          "title": "Mineralogy of Vera Rubin Ridge From the Mars Science Laboratory CheMin Instrument",
+          "institution": "Journal of Geophysical Research: Planets",
+          "url": "https://doi.org/10.1029/2019JE006306",
+          "access_method": "publication",
+          "cite": "Rampe et al., 2020",
+          "year": 2020,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
@@ -1241,11 +1265,11 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "lava_plain",
-            "smooth_plains"
+            "smooth_plains",
+            "lava_plain"
           ],
           "unit": null,
-          "source_id": "nasa_insight",
+          "source_id": "golombek2020_insight",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1262,7 +1286,7 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: smooth_plains, lava_plain (Golombek et al., 2020)."
         },
         {
           "feature_id": "mineralogy_tags",
@@ -1273,7 +1297,7 @@
             "regolith"
           ],
           "unit": null,
-          "source_id": "nasa_insight",
+          "source_id": "golombek2020_insight",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1290,15 +1314,15 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: basalt, regolith (Golombek et al., 2020)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "None reported at the surface.",
+          "value": "No ice reported in the cited sources.",
           "unit": null,
-          "source_id": "nasa_insight",
+          "source_id": "golombek2020_insight",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1479,12 +1503,22 @@
           "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven proxy only.",
           "access_method": "computed",
           "license": "n/a"
+        },
+        "golombek2020_insight": {
+          "source_id": "golombek2020_insight",
+          "title": "Geology of the InSight landing site on Mars",
+          "institution": "Nature Communications",
+          "url": "https://doi.org/10.1038/s41467-020-14679-1",
+          "access_method": "publication",
+          "cite": "Golombek et al., 2020",
+          "year": 2020,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
@@ -1730,12 +1764,11 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "clay_plain",
             "smooth_plains",
-            "fluvial_outlet"
+            "delta"
           ],
           "unit": null,
-          "source_id": "esa_oxia_planum",
+          "source_id": "lit_oxia_clays",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1752,16 +1785,14 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: smooth_plains, delta (Quantin-Nataf et al., 2021)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "clays",
-            "phyllosilicates",
-            "basalt"
+            "clays"
           ],
           "unit": null,
           "source_id": "lit_oxia_clays",
@@ -1781,13 +1812,13 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: clays (Quantin-Nataf et al., 2021)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Extensive hydrated clay minerals from past aqueous activity (literature).",
+          "value": "Hydrous clay-bearing bedrock from past aqueous activity (Quantin-Nataf et al., 2021); no ice reported in the cited sources.",
           "unit": null,
           "source_id": "lit_oxia_clays",
           "measurement_type": "literature",
@@ -1951,13 +1982,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "lit_oxia_clays": {
-          "source_id": "lit_oxia_clays",
-          "title": "Quantin-Nataf et al. (2021), Oxia Planum: The landing site for the ExoMars Rosalind Franklin rover mission, Astrobiology 21",
-          "institution": "Mary Ann Liebert (peer-reviewed literature)",
-          "url": "https://doi.org/10.1089/ast.2019.2191",
-          "access_method": "DOI"
-        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -1977,12 +2001,22 @@
           "institution": "ESA",
           "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
           "access_method": "web page"
+        },
+        "lit_oxia_clays": {
+          "source_id": "lit_oxia_clays",
+          "title": "Oxia Planum: The Landing Site for the ExoMars \"Rosalind Franklin\" Rover Mission: Geological Context and Prelanding Interpretation",
+          "institution": "Astrobiology",
+          "url": "https://doi.org/10.1089/ast.2019.2191",
+          "access_method": "publication",
+          "cite": "Quantin-Nataf et al., 2021",
+          "year": 2021,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
@@ -2228,13 +2262,11 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "northern_lowlands",
-            "smooth_plains",
-            "periglacial",
-            "polygonal_terrain"
+            "polygonal_terrain",
+            "rocky_surface"
           ],
           "unit": null,
-          "source_id": "nasa_viking",
+          "source_id": "cooke2011_utopia",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2251,19 +2283,15 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: polygonal_terrain (Cooke et al., 2011); rocky_surface (NASA Viking mission page)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
-          "value": [
-            "basalt",
-            "regolith",
-            "hydrated_minerals"
-          ],
+          "value": null,
           "unit": null,
-          "source_id": "lit_utopia_ice",
+          "source_id": null,
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2278,17 +2306,17 @@
             "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
           },
           "uncertainty": "Qualitative tags from the cited source",
-          "quality_flag": "qualitative",
-          "is_missing": false,
-          "notes": null
+          "quality_flag": "missing",
+          "is_missing": true,
+          "notes": "No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Subsurface water ice detected by SHARAD across Utopia Planitia (literature).",
+          "value": "Not reported at the Viking 2 site in the cited sources; SHARAD subsurface ice is reported for western Utopia Planitia (Stuurman et al., 2016), outside this footprint.",
           "unit": null,
-          "source_id": "lit_utopia_ice",
+          "source_id": "cooke2011_utopia",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2450,20 +2478,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "lit_utopia_ice": {
-          "source_id": "lit_utopia_ice",
-          "title": "Stuurman et al. (2016), SHARAD detection and characterization of subsurface water ice deposits in Utopia Planitia, Mars, Geophys. Res. Lett. 43",
-          "institution": "AGU (peer-reviewed literature)",
-          "url": "https://doi.org/10.1002/2016GL070138",
-          "access_method": "DOI"
-        },
-        "nasa_viking": {
-          "source_id": "nasa_viking",
-          "title": "Viking 1 and 2 missions",
-          "institution": "NASA Science",
-          "url": "https://science.nasa.gov/mission/viking/",
-          "access_method": "web page"
-        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -2476,13 +2490,35 @@
           "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven proxy only.",
           "access_method": "computed",
           "license": "n/a"
+        },
+        "cooke2011_utopia": {
+          "source_id": "cooke2011_utopia",
+          "title": "Basement controls on the scale of giant polygons in Utopia Planitia, Mars",
+          "institution": "Journal of Geophysical Research: Planets",
+          "url": "https://doi.org/10.1029/2011JE003812",
+          "access_method": "publication",
+          "cite": "Cooke et al., 2011",
+          "year": 2011,
+          "kind": "peer_reviewed"
+        },
+        "nasa_viking": {
+          "source_id": "nasa_viking",
+          "title": "Viking 1 and 2 missions",
+          "institution": "NASA Science (live mission page)",
+          "url": "https://science.nasa.gov/mission/viking/",
+          "access_method": "web page",
+          "cite": "NASA Viking mission page",
+          "year": null,
+          "kind": "nasa",
+          "retrieved_at": "2026-11-15"
         }
       },
       "completeness": {
         "features_requested": 17,
-        "features_available": 13,
-        "fraction": 0.765,
+        "features_available": 12,
+        "fraction": 0.7059,
         "missing_feature_ids": [
+          "mineralogy_tags",
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
           "rock_abundance_pct",
@@ -2727,12 +2763,12 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "northern_lowlands",
             "outflow_channel_deposits",
-            "smooth_plains"
+            "rocky_surface",
+            "northern_lowlands"
           ],
           "unit": null,
-          "source_id": "nasa_viking",
+          "source_id": "rodriguez2022_chryse",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2749,19 +2785,17 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: outflow_channel_deposits, rocky_surface, northern_lowlands (Rodriguez et al., 2022)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "basalt",
-            "regolith",
-            "iron_oxides"
+            "regolith"
           ],
           "unit": null,
-          "source_id": "nasa_viking",
+          "source_id": "rodriguez2022_chryse",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2778,15 +2812,15 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: regolith (Rodriguez et al., 2022)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Outflow-channel deposits from ancient catastrophic floods (literature); no present-day ice at the surface.",
+          "value": "Catastrophic flood and possible megatsunami deposits (Rodriguez et al., 2022); no ice reported in the cited sources.",
           "unit": null,
-          "source_id": "nasa_viking",
+          "source_id": "rodriguez2022_chryse",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2948,13 +2982,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "nasa_viking": {
-          "source_id": "nasa_viking",
-          "title": "Viking 1 and 2 missions",
-          "institution": "NASA Science",
-          "url": "https://science.nasa.gov/mission/viking/",
-          "access_method": "web page"
-        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -2967,12 +2994,33 @@
           "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven proxy only.",
           "access_method": "computed",
           "license": "n/a"
+        },
+        "nasa_viking": {
+          "source_id": "nasa_viking",
+          "title": "Viking 1 and 2 missions",
+          "institution": "NASA Science (live mission page)",
+          "url": "https://science.nasa.gov/mission/viking/",
+          "access_method": "web page",
+          "cite": "NASA Viking mission page",
+          "year": null,
+          "kind": "nasa",
+          "retrieved_at": "2026-11-15"
+        },
+        "rodriguez2022_chryse": {
+          "source_id": "rodriguez2022_chryse",
+          "title": "Evidence of an oceanic impact and megatsunami sedimentation in Chryse Planitia, Mars",
+          "institution": "Scientific Reports",
+          "url": "https://doi.org/10.1038/s41598-022-18082-2",
+          "access_method": "publication",
+          "cite": "Rodriguez et al., 2022",
+          "year": 2022,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
@@ -3218,11 +3266,11 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "smooth_plains",
-            "sedimentary_plain"
+            "layered_deposits",
+            "smooth_plains"
           ],
           "unit": null,
-          "source_id": "nasa_mer",
+          "source_id": "hynek2017_meridiani",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3239,20 +3287,19 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: layered_deposits (Hynek & Di Achille, 2017); smooth_plains (NASA Mars Exploration Rovers mission page)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "hematite",
+            "iron_oxides",
             "sulfates",
-            "basalt",
-            "jarosite"
+            "basalt"
           ],
           "unit": null,
-          "source_id": "lit_meridiani_hematite",
+          "source_id": "mccollom2018_meridiani",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3269,15 +3316,15 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: iron_oxides (Hynek & Di Achille, 2017); sulfates, basalt (McCollom et al., 2018)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Sulfate sandstones and hematite concretions from past groundwater (literature).",
+          "value": "Layered sulfate deposits altered by acidic, sulfate-rich fluids (McCollom et al., 2018); no ice reported in the cited sources.",
           "unit": null,
-          "source_id": "lit_meridiani_hematite",
+          "source_id": "mccollom2018_meridiani",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3439,20 +3486,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "lit_meridiani_hematite": {
-          "source_id": "lit_meridiani_hematite",
-          "title": "Christensen et al. (2000), Detection of crystalline hematite mineralization on Mars by the Thermal Emission Spectrometer, J. Geophys. Res. 105",
-          "institution": "AGU (peer-reviewed literature)",
-          "url": "https://doi.org/10.1029/1999JE001093",
-          "access_method": "DOI"
-        },
-        "nasa_mer": {
-          "source_id": "nasa_mer",
-          "title": "Mars Exploration Rovers (Spirit and Opportunity)",
-          "institution": "NASA Science / JPL",
-          "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/",
-          "access_method": "web page"
-        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -3465,12 +3498,43 @@
           "uncertainty_notes": "Model output, not a measurement. Ignores atmospheric dust opacity (which can cut surface flux by tens of percent) and local horizon. Use as a latitude-driven proxy only.",
           "access_method": "computed",
           "license": "n/a"
+        },
+        "hynek2017_meridiani": {
+          "source_id": "hynek2017_meridiani",
+          "title": "Geologic map of Meridiani Planum, Mars",
+          "institution": "U.S. Geological Survey Scientific Investigations Map 3356",
+          "url": "https://doi.org/10.3133/sim3356",
+          "access_method": "publication",
+          "cite": "Hynek & Di Achille, 2017",
+          "year": 2017,
+          "kind": "usgs"
+        },
+        "mccollom2018_meridiani": {
+          "source_id": "mccollom2018_meridiani",
+          "title": "Phosphorous Immobility During Formation of the Layered Sulfate Deposits of the Burns Formation at Meridiani Planum",
+          "institution": "Journal of Geophysical Research: Planets",
+          "url": "https://doi.org/10.1029/2017JE005493",
+          "access_method": "publication",
+          "cite": "McCollom et al., 2018",
+          "year": 2018,
+          "kind": "peer_reviewed"
+        },
+        "nasa_mer": {
+          "source_id": "nasa_mer",
+          "title": "Mars Exploration Rovers (Spirit and Opportunity)",
+          "institution": "NASA Science (live mission page)",
+          "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/",
+          "access_method": "web page",
+          "cite": "NASA Mars Exploration Rovers mission page",
+          "year": null,
+          "kind": "nasa",
+          "retrieved_at": "2026-11-15"
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
@@ -3717,8 +3781,7 @@
           "category": "ground",
           "value": [
             "impact_crater",
-            "lava_plain",
-            "crater_floor",
+            "paleolake_basin",
             "hills"
           ],
           "unit": null,
@@ -3739,20 +3802,19 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: impact_crater, paleolake_basin (NASA Mars Exploration Rovers mission page); hills (Ruff et al., 2019)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "basalt",
-            "olivine",
             "silica",
-            "sulfates"
+            "carbonates",
+            "basalt"
           ],
           "unit": null,
-          "source_id": "lit_gusev_basalt",
+          "source_id": "ruff2019_gusev",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3769,15 +3831,15 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: silica (Ruff et al., 2019); carbonates (Ruff et al., 2014); basalt (Bost et al., 2012)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Hydrothermal silica and sulfates in the Columbia Hills (literature); plains are volcanic.",
+          "value": "Opaline silica from ancient hot-spring activity (Ruff et al., 2019) and carbonate from a possible ephemeral lake (Ruff et al., 2014); no ice reported in the cited sources.",
           "unit": null,
-          "source_id": "lit_gusev_basalt",
+          "source_id": "ruff2019_gusev",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3939,13 +4001,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "nasa_mer": {
-          "source_id": "nasa_mer",
-          "title": "Mars Exploration Rovers (Spirit and Opportunity)",
-          "institution": "NASA Science / JPL",
-          "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/",
-          "access_method": "web page"
-        },
         "derived_toa_insolation": {
           "source_id": "derived_toa_insolation",
           "title": "Top-of-atmosphere annual-mean insolation from latitude and orbital elements",
@@ -3959,18 +4014,52 @@
           "access_method": "computed",
           "license": "n/a"
         },
-        "lit_gusev_basalt": {
-          "source_id": "lit_gusev_basalt",
-          "title": "McSween et al. (2004), Basaltic rocks analyzed by the Spirit rover in Gusev Crater, Science 305",
-          "institution": "AAAS (peer-reviewed literature)",
-          "url": "https://doi.org/10.1126/science.3050842",
-          "access_method": "DOI"
+        "bost2012_gusev": {
+          "source_id": "bost2012_gusev",
+          "title": "Synthesis of a spinifex-textured basalt as an analog to Gusev crater basalts, Mars",
+          "institution": "Meteoritics & Planetary Science",
+          "url": "https://doi.org/10.1111/j.1945-5100.2012.01355.x",
+          "access_method": "publication",
+          "cite": "Bost et al., 2012",
+          "year": 2012,
+          "kind": "peer_reviewed"
+        },
+        "nasa_mer": {
+          "source_id": "nasa_mer",
+          "title": "Mars Exploration Rovers (Spirit and Opportunity)",
+          "institution": "NASA Science (live mission page)",
+          "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/",
+          "access_method": "web page",
+          "cite": "NASA Mars Exploration Rovers mission page",
+          "year": null,
+          "kind": "nasa",
+          "retrieved_at": "2026-11-15"
+        },
+        "ruff2014_gusev": {
+          "source_id": "ruff2014_gusev",
+          "title": "Evidence for a Noachian-aged ephemeral lake in Gusev crater, Mars",
+          "institution": "Geology",
+          "url": "https://doi.org/10.1130/G35508.1",
+          "access_method": "publication",
+          "cite": "Ruff et al., 2014",
+          "year": 2014,
+          "kind": "peer_reviewed"
+        },
+        "ruff2019_gusev": {
+          "source_id": "ruff2019_gusev",
+          "title": "The Case for Ancient Hot Springs in Gusev Crater, Mars",
+          "institution": "Astrobiology",
+          "url": "https://doi.org/10.1089/ast.2019.2044",
+          "access_method": "publication",
+          "cite": "Ruff et al., 2019",
+          "year": 2019,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",

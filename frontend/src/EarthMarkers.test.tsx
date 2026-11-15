@@ -103,7 +103,7 @@ describe("Earth and Mars markers", () => {
     fireEvent.click(await screen.findByRole("button",{name:"Earth"}));
     expect(screen.getByRole("heading",{name:"Mission priorities"})).toBeInTheDocument();
     expect(screen.getAllByRole("slider")).toHaveLength(4); // the same sliders as Mars
-    fireEvent.change(screen.getByLabelText("Gentler terrain share of priorities"),{target:{value:"40"}});
+    fireEvent.change(screen.getByLabelText("Low slopes share of priorities"),{target:{value:"40"}});
     expect(useAppStore.getState().earthWeights.terrain_safety).toBe(40);
     expect(useAppStore.getState().missionProfileWeights.rover_field_test).toEqual(roverSharesFrom(useAppStore.getState().earthWeights));
     const start=screen.getByRole("button",{name:"Head to explore mission →"});

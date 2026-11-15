@@ -31,17 +31,18 @@
           "approx_width_km": 56.2,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "A ~45 km impact crater holding an ancient lake basin with a well-preserved river delta on its western margin. Chosen for Perseverance for its lacustrine and deltaic deposits.",
+        "description": "Impact crater whose floor holds water-altered igneous rocks below a sedimentary delta; its fan deposits carry Mg-rich carbonate, olivine and Fe/Mg-smectite. Perseverance landing site.",
         "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
         "tags": [
-          "basalt",
           "carbonates",
           "clays",
           "crater_floor",
           "delta",
           "impact_crater",
           "olivine",
-          "paleolake_basin"
+          "paleolake_basin",
+          "perchlorates",
+          "sulfates"
         ],
         "coordinate_sources": [
           "nasa_m2020_landing_site"
@@ -65,17 +66,14 @@
           "approx_width_km": 59.1,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "A 154 km crater with a 5 km central mound (Aeolis Mons / Mount Sharp) of layered sediments. Curiosity found evidence of an ancient habitable lake at Yellowknife Bay.",
+        "description": "Impact crater with ancient lake deposits at Yellowknife Bay and a hematite-bearing ridge (Vera Rubin ridge) on the slope of Mount Sharp. Curiosity landing site.",
         "heritage": "NASA Mars Science Laboratory Curiosity landing site (2012)",
         "tags": [
-          "alluvial_fan",
-          "basalt",
           "clays",
-          "crater_floor",
-          "hematite",
           "impact_crater",
-          "layered_mound",
+          "iron_oxides",
           "paleolake_basin",
+          "silica",
           "sulfates"
         ],
         "coordinate_sources": [
@@ -100,7 +98,7 @@
           "approx_width_km": 59.1,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Smooth, flat volcanic plains south of Elysium Mons, selected for InSight specifically because of its low relief and benign terrain.",
+        "description": "Smooth plains of impact-fragmented regolith over basaltic lava flows. InSight landing site.",
         "heritage": "NASA InSight landing site (2018)",
         "tags": [
           "basalt",
@@ -130,14 +128,11 @@
           "approx_width_km": 56.3,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "A clay-rich plain at the outlet of Coogoon Vallis near the dichotomy boundary, selected by ESA for its extensive Fe/Mg phyllosilicate deposits recording an ancient aqueous environment.",
+        "description": "Low-relief terrain of hydrous clay-bearing bedrock with a later fluviodeltaic system. ESA's selected landing site for the Rosalind Franklin rover.",
         "heritage": "ESA ExoMars Rosalind Franklin rover selected landing site",
         "tags": [
-          "basalt",
-          "clay_plain",
           "clays",
-          "fluvial_outlet",
-          "phyllosilicates",
+          "delta",
           "smooth_plains"
         ],
         "coordinate_sources": [
@@ -162,16 +157,11 @@
           "approx_width_km": 39.9,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Northern lowland plains within the largest recognised impact basin on Mars. SHARAD radar has detected a large subsurface water-ice deposit in the region.",
+        "description": "Lowland basin with giant polygonal terrain; Viking 2 imaged a rocky surface at its landing site. No recent source on the composition at the Viking 2 site was found, so no mineral labels are given.",
         "heritage": "NASA Viking 2 landing site (1976)",
         "tags": [
-          "basalt",
-          "hydrated_minerals",
-          "northern_lowlands",
-          "periglacial",
           "polygonal_terrain",
-          "regolith",
-          "smooth_plains"
+          "rocky_surface"
         ],
         "coordinate_sources": [
           "nasa_viking"
@@ -195,15 +185,13 @@
           "approx_width_km": 54.9,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Low-lying plains at the mouth of the great outflow channels (Maja, Kasei, Ares Valles) that drained into the Chryse basin; the first successful Mars landing site.",
+        "description": "Northern plains near the terminus of the Maja Valles flood channel; Viking 1 imaged a boulder-strewn surface here.",
         "heritage": "NASA Viking 1 landing site (1976)",
         "tags": [
-          "basalt",
-          "iron_oxides",
           "northern_lowlands",
           "outflow_channel_deposits",
           "regolith",
-          "smooth_plains"
+          "rocky_surface"
         ],
         "coordinate_sources": [
           "nasa_viking"
@@ -227,13 +215,12 @@
           "approx_width_km": 59.2,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "Flat, dark plains where TES detected coarse crystalline hematite from orbit; Opportunity confirmed sulfate-rich sandstones deposited in acidic groundwater.",
+        "description": "Plains with extensive layered deposits, some rich in hematite; the layered sulfate deposits of the Burns formation derive from a basaltic precursor. Opportunity landing site.",
         "heritage": "NASA MER Opportunity landing site (2004)",
         "tags": [
           "basalt",
-          "hematite",
-          "jarosite",
-          "sedimentary_plain",
+          "iron_oxides",
+          "layered_deposits",
           "smooth_plains",
           "sulfates"
         ],
@@ -259,17 +246,15 @@
           "approx_width_km": 57.4,
           "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
         },
-        "description": "A 166 km crater at the outlet of Ma'adim Vallis. Expected lake sediments turned out to be olivine-bearing basaltic plains; the Columbia Hills hold altered rocks and opaline silica.",
+        "description": "Impact crater and possible former lake; basalts analysed by Spirit, with Mg-Fe carbonate outcrops and opaline silica in the Columbia Hills. Spirit landing site.",
         "heritage": "NASA MER Spirit landing site (2004)",
         "tags": [
           "basalt",
-          "crater_floor",
+          "carbonates",
           "hills",
           "impact_crater",
-          "lava_plain",
-          "olivine",
-          "silica",
-          "sulfates"
+          "paleolake_basin",
+          "silica"
         ],
         "coordinate_sources": [
           "nasa_mer"
@@ -297,17 +282,18 @@
         "approx_width_km": 56.2,
         "description": "1.0 deg square centred on the site; 17x17 MOLA 16 ppd cells (floor/ceil edges)"
       },
-      "description": "A ~45 km impact crater holding an ancient lake basin with a well-preserved river delta on its western margin. Chosen for Perseverance for its lacustrine and deltaic deposits.",
+      "description": "Impact crater whose floor holds water-altered igneous rocks below a sedimentary delta; its fan deposits carry Mg-rich carbonate, olivine and Fe/Mg-smectite. Perseverance landing site.",
       "heritage": "NASA Mars 2020 Perseverance landing site (2021)",
       "tags": [
-        "basalt",
         "carbonates",
         "clays",
         "crater_floor",
         "delta",
         "impact_crater",
         "olivine",
-        "paleolake_basin"
+        "paleolake_basin",
+        "perchlorates",
+        "sulfates"
       ],
       "coordinate_sources": [
         "nasa_m2020_landing_site"
@@ -551,12 +537,12 @@
           "category": "ground",
           "value": [
             "impact_crater",
+            "crater_floor",
             "delta",
-            "paleolake_basin",
-            "crater_floor"
+            "paleolake_basin"
           ],
           "unit": null,
-          "source_id": "nasa_m2020_landing_site",
+          "source_id": "farley2022_jezero",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -573,7 +559,7 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: impact_crater, crater_floor, delta (Farley et al., 2022); paleolake_basin (Goudge et al., 2015)."
         },
         {
           "feature_id": "mineralogy_tags",
@@ -581,9 +567,10 @@
           "category": "composition",
           "value": [
             "carbonates",
-            "clays",
             "olivine",
-            "basalt"
+            "clays",
+            "sulfates",
+            "perchlorates"
           ],
           "unit": null,
           "source_id": "lit_jezero_mineralogy",
@@ -603,13 +590,13 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: carbonates, olivine, clays (Goudge et al., 2015); sulfates, perchlorates (Farley et al., 2022)."
         },
         {
           "feature_id": "water_ice_evidence",
           "label": "Water / ice evidence",
           "category": "water_ice",
-          "value": "Ancient lake and delta deposits (literature); no present-day ice detected at this latitude.",
+          "value": "Ancient lake and river deposits (Farley et al., 2022); no ice reported in the cited sources.",
           "unit": null,
           "source_id": "lit_jezero_mineralogy",
           "measurement_type": "literature",
@@ -773,22 +760,6 @@
           "license": "NASA PDS data are public domain; cite the MOLA Science Team",
           "retrieved_at": "2026-11-14"
         },
-        "lit_jezero_mineralogy": {
-          "source_id": "lit_jezero_mineralogy",
-          "title": "Goudge et al. (2015), Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars, J. Geophys. Res. Planets 120",
-          "institution": "AGU (peer-reviewed literature)",
-          "url": "https://doi.org/10.1002/2014JE004782",
-          "instrument_or_model": null,
-          "dataset_id": null,
-          "coverage": null,
-          "spatial_resolution": null,
-          "units": null,
-          "observation_period": null,
-          "uncertainty_notes": null,
-          "access_method": "DOI",
-          "license": null,
-          "retrieved_at": null
-        },
         "nasa_m2020_landing_site": {
           "source_id": "nasa_m2020_landing_site",
           "title": "Mars 2020 Perseverance Rover - Science (Jezero Crater landing site)",
@@ -820,12 +791,44 @@
           "access_method": "computed",
           "license": "n/a",
           "retrieved_at": null
+        },
+        "farley2022_jezero": {
+          "source_id": "farley2022_jezero",
+          "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
+          "institution": "Science",
+          "url": "https://doi.org/10.1126/science.abo2196",
+          "instrument_or_model": null,
+          "dataset_id": null,
+          "coverage": null,
+          "spatial_resolution": null,
+          "units": null,
+          "observation_period": null,
+          "uncertainty_notes": null,
+          "access_method": "publication",
+          "license": null,
+          "retrieved_at": null
+        },
+        "lit_jezero_mineralogy": {
+          "source_id": "lit_jezero_mineralogy",
+          "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+          "institution": "Journal of Geophysical Research: Planets",
+          "url": "https://doi.org/10.1002/2014JE004782",
+          "instrument_or_model": null,
+          "dataset_id": null,
+          "coverage": null,
+          "spatial_resolution": null,
+          "units": null,
+          "observation_period": null,
+          "uncertainty_notes": null,
+          "access_method": "publication",
+          "license": null,
+          "retrieved_at": null
         }
       },
       "completeness": {
         "features_requested": 17,
         "features_available": 13,
-        "fraction": 0.765,
+        "fraction": 0.7647,
         "missing_feature_ids": [
           "surface_temperature_mean_c",
           "atmospheric_pressure_pa",
@@ -1911,204 +1914,6 @@
       {
         "mars_site_id": "jezero_crater",
         "earth_candidate": {
-          "id": "atacama_yungay",
-          "name": "Atacama Desert - Yungay region",
-          "region": "Antofagasta Region",
-          "country": "Chile",
-          "lat": -24.08,
-          "lon_east": -69.95,
-          "footprint": {
-            "shape": "square",
-            "center_lat": -24.08,
-            "center_lon_east": -69.95,
-            "half_width_deg": 0.25,
-            "radius_km": null,
-            "crs": "EPSG:4326",
-            "longitude_convention": "east_-180_180",
-            "approx_width_km": 50.8,
-            "description": "0.5 deg square centred on the site"
-          },
-          "description": "Hyperarid core of the Atacama, with soils so low in organics and microbial life that they were proposed as the closest terrestrial match to Viking-era Mars soil results. Used by NASA ARADS for rover and drill testing.",
-          "tags": [
-            "alluvial_fan",
-            "desert_plain",
-            "halite",
-            "hyperarid",
-            "nitrates",
-            "perchlorates",
-            "regolith",
-            "smooth_plains",
-            "sulfates"
-          ],
-          "known_analog_use": [
-            "NASA ARADS rover and drilling campaigns",
-            "Viking-era soil analog studies"
-          ],
-          "sources": [
-            "nasa_arads",
-            "lit_yungay"
-          ]
-        },
-        "similarity": 63.03,
-        "distance": 0.5866,
-        "rank": 1,
-        "feature_distances": [
-          {
-            "feature_id": "slope_regional_median_deg",
-            "label": "Regional slope (median, ~3.7 km baseline)",
-            "comparable": true,
-            "mars_value": 1.077,
-            "earth_value": 1.166,
-            "unit": "deg",
-            "scale": 1.5,
-            "distance": 0.059333333333333314,
-            "raw_weight": 25.0,
-            "normalized_weight": 0.25,
-            "contribution": 0.014833333333333329,
-            "method": "scaled_absolute_difference",
-            "note": "Mars 1.08 deg vs Earth 1.17 deg: |difference| 0.09 deg / scale 1.50 deg = d 0.06 (close at the harmonised ~3.7 km baseline)"
-          },
-          {
-            "feature_id": "roughness_regional_m",
-            "label": "Detrended relief (~3.7 km cells)",
-            "comparable": true,
-            "mars_value": 194.4,
-            "earth_value": 126.5,
-            "unit": "m",
-            "scale": 100.0,
-            "distance": 0.679,
-            "raw_weight": 25.0,
-            "normalized_weight": 0.25,
-            "contribution": 0.16975,
-            "method": "scaled_absolute_difference",
-            "note": "Mars 194 m vs Earth 126 m: |difference| 68 m / scale 100 m = d 0.68 (moderately different at the harmonised ~3.7 km baseline)"
-          },
-          {
-            "feature_id": "terrain_morphology",
-            "label": "Terrain morphology",
-            "comparable": true,
-            "mars_value": [
-              "impact_crater",
-              "delta",
-              "paleolake_basin",
-              "crater_floor"
-            ],
-            "earth_value": [
-              "desert_plain",
-              "smooth_plains",
-              "alluvial_fan",
-              "hyperarid"
-            ],
-            "unit": null,
-            "scale": null,
-            "distance": 1.0,
-            "raw_weight": 20.0,
-            "normalized_weight": 0.2,
-            "contribution": 0.2,
-            "method": "jaccard_distance",
-            "note": "shared 0 of 8 distinct tags (none); Mars only: crater floor, delta, impact crater, paleolake basin; Earth only: alluvial fan, desert plain, hyperarid, smooth plains; Jaccard distance 1.00"
-          },
-          {
-            "feature_id": "mineralogy_tags",
-            "label": "Mineralogy / composition",
-            "comparable": true,
-            "mars_value": [
-              "carbonates",
-              "clays",
-              "olivine",
-              "basalt"
-            ],
-            "earth_value": [
-              "nitrates",
-              "sulfates",
-              "perchlorates",
-              "halite",
-              "regolith"
-            ],
-            "unit": null,
-            "scale": null,
-            "distance": 1.0,
-            "raw_weight": 20.0,
-            "normalized_weight": 0.2,
-            "contribution": 0.2,
-            "method": "jaccard_distance",
-            "note": "shared 0 of 9 distinct tags (none); Mars only: basalt, carbonates, clays, olivine; Earth only: halite, nitrates, perchlorates, regolith, sulfates; Jaccard distance 1.00"
-          },
-          {
-            "feature_id": "precipitation_mm_day",
-            "label": "Aridity (mean precipitation)",
-            "comparable": true,
-            "mars_value": 0.0,
-            "earth_value": 0.02,
-            "unit": "mm/day",
-            "scale": 1.0,
-            "distance": 0.02,
-            "raw_weight": 10.0,
-            "normalized_weight": 0.1,
-            "contribution": 0.002,
-            "method": "scaled_absolute_difference",
-            "note": "Mars 0.00 mm/day vs Earth 0.02 mm/day: |difference| 0.02 mm/day / scale 1.00 mm/day = d 0.02 (close)"
-          },
-          {
-            "feature_id": "insolation_toa_annual_mean_wm2",
-            "label": "Top-of-atmosphere insolation (annual mean)",
-            "comparable": true,
-            "mars_value": 170.4,
-            "earth_value": 382.8,
-            "unit": "W/m2",
-            "scale": 100.0,
-            "distance": 2.124,
-            "raw_weight": 0.0,
-            "normalized_weight": null,
-            "contribution": null,
-            "method": "scaled_absolute_difference",
-            "note": "Mars 170 W/m2 vs Earth 383 W/m2: |difference| 212 W/m2 / scale 100 W/m2 = d 2.12 (very different)"
-          }
-        ],
-        "shared_characteristics": [
-          "Regional slope: Mars 1.08 deg vs Earth 1.17 deg (difference 0.09 deg, within half the 1.50 deg comparison scale)",
-          "Aridity: Mars 0.00 mm/day vs Earth 0.02 mm/day (difference 0.02 mm/day, within half the 1.00 mm/day comparison scale)"
-        ],
-        "important_differences": [
-          "Terrain morphology: no shared tags (Mars: impact crater, delta, paleolake basin, crater floor; Earth: desert plain, smooth plains, alluvial fan, hyperarid)",
-          "Composition: no shared tags (Mars: carbonates, clays, olivine, basalt; Earth: nitrates, sulfates, perchlorates, halite, regolith)"
-        ],
-        "noncomparable_variables": [
-          "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
-          "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
-          "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
-          "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
-          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
-        ],
-        "research_applications": [
-          "NASA ARADS rover and drilling campaigns",
-          "Viking-era soil analog studies"
-        ],
-        "documented_analog_use": [
-          "NASA ARADS rover and drilling campaigns",
-          "Viking-era soil analog studies"
-        ],
-        "proposed_studies": [],
-        "limitations": [
-          "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
-          "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
-          "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
-        ],
-        "citations": [
-          "copernicus_glo90",
-          "derived_toa_insolation",
-          "lit_jezero_mineralogy",
-          "lit_yungay",
-          "mola_megdr_16ppd",
-          "nasa_arads",
-          "nasa_m2020_landing_site",
-          "nasa_power"
-        ],
-        "completeness_fraction": 1.0
-      },
-      {
-        "mars_site_id": "jezero_crater",
-        "earth_candidate": {
           "id": "mdrs_utah",
           "name": "San Rafael Swell - MDRS area",
           "region": "Utah",
@@ -2126,27 +1931,25 @@
             "approx_width_km": 43.6,
             "description": "0.5 deg square centred on the site"
           },
-          "description": "Semi-arid badlands of Jurassic and Cretaceous sandstone, shale and clays near Hanksville, where the Mars Desert Research Station hosts crewed simulations.",
+          "description": "Area around the Mars Desert Research Station near Hanksville, Utah: Jurassic and Cretaceous sandstone and shale with smectite clays and sulfate salts, and exhumed, inverted palaeochannels with carbonate concretions.",
           "tags": [
-            "badlands",
+            "carbonates",
             "clays",
-            "desert_plain",
-            "gypsum",
-            "iron_oxides",
-            "mesa",
+            "inverted_channels",
             "sandstone",
-            "sedimentary_plain"
+            "sulfates"
           ],
           "known_analog_use": [
             "Mars Desert Research Station crewed simulations"
           ],
           "sources": [
-            "mdrs"
+            "clarke2011_hanksville",
+            "stoker2011_mdrs"
           ]
         },
-        "similarity": 61.53,
-        "distance": 0.6251,
-        "rank": 2,
+        "similarity": 64.36,
+        "distance": 0.5537,
+        "rank": 1,
         "feature_distances": [
           {
             "feature_id": "slope_regional_median_deg",
@@ -2184,15 +1987,12 @@
             "comparable": true,
             "mars_value": [
               "impact_crater",
+              "crater_floor",
               "delta",
-              "paleolake_basin",
-              "crater_floor"
+              "paleolake_basin"
             ],
             "earth_value": [
-              "badlands",
-              "sedimentary_plain",
-              "mesa",
-              "desert_plain"
+              "inverted_channels"
             ],
             "unit": null,
             "scale": null,
@@ -2201,7 +2001,7 @@
             "normalized_weight": 0.2,
             "contribution": 0.2,
             "method": "jaccard_distance",
-            "note": "shared 0 of 8 distinct tags (none); Mars only: crater floor, delta, impact crater, paleolake basin; Earth only: badlands, desert plain, mesa, sedimentary plain; Jaccard distance 1.00"
+            "note": "shared 0 of 5 distinct tags (none); Mars only: crater floor, delta, impact crater, paleolake basin; Earth only: inverted channels; Jaccard distance 1.00"
           },
           {
             "feature_id": "mineralogy_tags",
@@ -2209,24 +2009,25 @@
             "comparable": true,
             "mars_value": [
               "carbonates",
-              "clays",
               "olivine",
-              "basalt"
+              "clays",
+              "sulfates",
+              "perchlorates"
             ],
             "earth_value": [
+              "carbonates",
               "sandstone",
-              "clays",
-              "gypsum",
-              "iron_oxides"
+              "sulfates",
+              "clays"
             ],
             "unit": null,
             "scale": null,
-            "distance": 0.8571428571428572,
+            "distance": 0.5,
             "raw_weight": 20.0,
             "normalized_weight": 0.2,
-            "contribution": 0.17142857142857146,
+            "contribution": 0.1,
             "method": "jaccard_distance",
-            "note": "shared 1 of 7 distinct tags (clays); Mars only: basalt, carbonates, olivine; Earth only: gypsum, iron oxides, sandstone; Jaccard distance 0.86"
+            "note": "shared 3 of 6 distinct tags (carbonates, clays, sulfates); Mars only: olivine, perchlorates; Earth only: sandstone; Jaccard distance 0.50"
           },
           {
             "feature_id": "precipitation_mm_day",
@@ -2260,15 +2061,15 @@
           }
         ],
         "shared_characteristics": [
-          "Composition shared: clays",
+          "Composition shared: carbonates, clays, sulfates",
           "Regional slope: Mars 1.08 deg vs Earth 0.92 deg (difference 0.15 deg, within half the 1.50 deg comparison scale)"
         ],
         "important_differences": [
-          "Terrain morphology: no shared tags (Mars: impact crater, delta, paleolake basin, crater floor; Earth: badlands, sedimentary plain, mesa, desert plain)"
+          "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: inverted channels)"
         ],
         "noncomparable_variables": [
-          "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
-          "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
+          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
           "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
           "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
           "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
@@ -2282,10 +2083,10 @@
         "proposed_studies": [
           {
             "kind": "proposed_study",
-            "title": "Instrument and sample-handling tests on shared materials (clays)",
-            "research_question": "Can instrument calibration and sample-handling procedures developed on clays at San Rafael Swell - MDRS area be validated before use on the materials reported at Jezero Crater?",
+            "title": "Instrument and sample-handling tests on shared materials (carbonates, clays, sulfates)",
+            "research_question": "Can instrument calibration and sample-handling procedures developed on carbonates, clays, sulfates at San Rafael Swell - MDRS area be validated before use on the materials reported at Jezero Crater?",
             "method": "Field spectroscopy and sample preparation on the Earth materials; compare instrument response against laboratory reference measurements; document which procedures depend on Earth-only conditions.",
-            "why_here": "Both sites carry cited clays; the comparison targets materials, not landing suitability.",
+            "why_here": "Both sites carry cited carbonates, clays, sulfates; the comparison targets materials, not landing suitability.",
             "motivating_citation_ids": [],
             "cannot_infer": "Composition tags are literature labels, not spectral matches; weathering, humidity and biology on Earth have no Mars counterpart.",
             "analog_candidate_id": "mdrs_utah"
@@ -2297,13 +2098,219 @@
           "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
         ],
         "citations": [
+          "clarke2011_hanksville",
           "copernicus_glo90",
           "derived_toa_insolation",
+          "farley2022_jezero",
           "lit_jezero_mineralogy",
           "mdrs",
           "mola_megdr_16ppd",
           "nasa_m2020_landing_site",
-          "nasa_power"
+          "nasa_power",
+          "stoker2011_mdrs"
+        ],
+        "completeness_fraction": 1.0
+      },
+      {
+        "mars_site_id": "jezero_crater",
+        "earth_candidate": {
+          "id": "atacama_yungay",
+          "name": "Atacama Desert - Yungay region",
+          "region": "Antofagasta Region",
+          "country": "Chile",
+          "lat": -24.08,
+          "lon_east": -69.95,
+          "footprint": {
+            "shape": "square",
+            "center_lat": -24.08,
+            "center_lon_east": -69.95,
+            "half_width_deg": 0.25,
+            "radius_km": null,
+            "crs": "EPSG:4326",
+            "longitude_convention": "east_-180_180",
+            "approx_width_km": 50.8,
+            "description": "0.5 deg square centred on the site"
+          },
+          "description": "Hyperarid core of the Atacama near Yungay: playa sediments over alluvial fan deposits, and polygonal ground cemented by sulfates, nitrates and chlorides. Used by NASA ARADS for rover and drill testing.",
+          "tags": [
+            "alluvial_fan",
+            "chlorides",
+            "nitrates",
+            "playa",
+            "polygonal_terrain",
+            "sulfates"
+          ],
+          "known_analog_use": [
+            "NASA ARADS rover and drilling campaigns"
+          ],
+          "sources": [
+            "horstmann2024_yungay",
+            "sager2020_yungay"
+          ]
+        },
+        "similarity": 64.18,
+        "distance": 0.558,
+        "rank": 2,
+        "feature_distances": [
+          {
+            "feature_id": "slope_regional_median_deg",
+            "label": "Regional slope (median, ~3.7 km baseline)",
+            "comparable": true,
+            "mars_value": 1.077,
+            "earth_value": 1.166,
+            "unit": "deg",
+            "scale": 1.5,
+            "distance": 0.059333333333333314,
+            "raw_weight": 25.0,
+            "normalized_weight": 0.25,
+            "contribution": 0.014833333333333329,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 1.08 deg vs Earth 1.17 deg: |difference| 0.09 deg / scale 1.50 deg = d 0.06 (close at the harmonised ~3.7 km baseline)"
+          },
+          {
+            "feature_id": "roughness_regional_m",
+            "label": "Detrended relief (~3.7 km cells)",
+            "comparable": true,
+            "mars_value": 194.4,
+            "earth_value": 126.5,
+            "unit": "m",
+            "scale": 100.0,
+            "distance": 0.679,
+            "raw_weight": 25.0,
+            "normalized_weight": 0.25,
+            "contribution": 0.16975,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 194 m vs Earth 126 m: |difference| 68 m / scale 100 m = d 0.68 (moderately different at the harmonised ~3.7 km baseline)"
+          },
+          {
+            "feature_id": "terrain_morphology",
+            "label": "Terrain morphology",
+            "comparable": true,
+            "mars_value": [
+              "impact_crater",
+              "crater_floor",
+              "delta",
+              "paleolake_basin"
+            ],
+            "earth_value": [
+              "alluvial_fan",
+              "playa",
+              "polygonal_terrain"
+            ],
+            "unit": null,
+            "scale": null,
+            "distance": 1.0,
+            "raw_weight": 20.0,
+            "normalized_weight": 0.2,
+            "contribution": 0.2,
+            "method": "jaccard_distance",
+            "note": "shared 0 of 7 distinct tags (none); Mars only: crater floor, delta, impact crater, paleolake basin; Earth only: alluvial fan, playa, polygonal terrain; Jaccard distance 1.00"
+          },
+          {
+            "feature_id": "mineralogy_tags",
+            "label": "Mineralogy / composition",
+            "comparable": true,
+            "mars_value": [
+              "carbonates",
+              "olivine",
+              "clays",
+              "sulfates",
+              "perchlorates"
+            ],
+            "earth_value": [
+              "sulfates",
+              "nitrates",
+              "chlorides"
+            ],
+            "unit": null,
+            "scale": null,
+            "distance": 0.8571428571428572,
+            "raw_weight": 20.0,
+            "normalized_weight": 0.2,
+            "contribution": 0.17142857142857146,
+            "method": "jaccard_distance",
+            "note": "shared 1 of 7 distinct tags (sulfates); Mars only: carbonates, clays, olivine, perchlorates; Earth only: chlorides, nitrates; Jaccard distance 0.86"
+          },
+          {
+            "feature_id": "precipitation_mm_day",
+            "label": "Aridity (mean precipitation)",
+            "comparable": true,
+            "mars_value": 0.0,
+            "earth_value": 0.02,
+            "unit": "mm/day",
+            "scale": 1.0,
+            "distance": 0.02,
+            "raw_weight": 10.0,
+            "normalized_weight": 0.1,
+            "contribution": 0.002,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 0.00 mm/day vs Earth 0.02 mm/day: |difference| 0.02 mm/day / scale 1.00 mm/day = d 0.02 (close)"
+          },
+          {
+            "feature_id": "insolation_toa_annual_mean_wm2",
+            "label": "Top-of-atmosphere insolation (annual mean)",
+            "comparable": true,
+            "mars_value": 170.4,
+            "earth_value": 382.8,
+            "unit": "W/m2",
+            "scale": 100.0,
+            "distance": 2.124,
+            "raw_weight": 0.0,
+            "normalized_weight": null,
+            "contribution": null,
+            "method": "scaled_absolute_difference",
+            "note": "Mars 170 W/m2 vs Earth 383 W/m2: |difference| 212 W/m2 / scale 100 W/m2 = d 2.12 (very different)"
+          }
+        ],
+        "shared_characteristics": [
+          "Composition shared: sulfates",
+          "Regional slope: Mars 1.08 deg vs Earth 1.17 deg (difference 0.09 deg, within half the 1.50 deg comparison scale)",
+          "Aridity: Mars 0.00 mm/day vs Earth 0.02 mm/day (difference 0.02 mm/day, within half the 1.00 mm/day comparison scale)"
+        ],
+        "important_differences": [
+          "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: alluvial fan, playa, polygonal terrain)"
+        ],
+        "noncomparable_variables": [
+          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
+          "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
+          "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
+          "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
+        ],
+        "research_applications": [
+          "NASA ARADS rover and drilling campaigns"
+        ],
+        "documented_analog_use": [
+          "NASA ARADS rover and drilling campaigns"
+        ],
+        "proposed_studies": [
+          {
+            "kind": "proposed_study",
+            "title": "Instrument and sample-handling tests on shared materials (sulfates)",
+            "research_question": "Can instrument calibration and sample-handling procedures developed on sulfates at Atacama Desert - Yungay region be validated before use on the materials reported at Jezero Crater?",
+            "method": "Field spectroscopy and sample preparation on the Earth materials; compare instrument response against laboratory reference measurements; document which procedures depend on Earth-only conditions.",
+            "why_here": "Both sites carry cited sulfates; the comparison targets materials, not landing suitability.",
+            "motivating_citation_ids": [],
+            "cannot_infer": "Composition tags are literature labels, not spectral matches; weathering, humidity and biology on Earth have no Mars counterpart.",
+            "analog_candidate_id": "atacama_yungay"
+          }
+        ],
+        "limitations": [
+          "Similarity is a heuristic index (100 / (1 + D)) over the configured features, not a validated probability.",
+          "Terrain statistics are compared at a harmonised ~3.7 km baseline; metre-scale morphology is not assessed.",
+          "Composition and morphology tags are literature-derived categorical labels, not spectral measurements."
+        ],
+        "citations": [
+          "copernicus_glo90",
+          "derived_toa_insolation",
+          "farley2022_jezero",
+          "horstmann2024_yungay",
+          "lit_jezero_mineralogy",
+          "mola_megdr_16ppd",
+          "nasa_arads",
+          "nasa_m2020_landing_site",
+          "nasa_power",
+          "sager2020_yungay"
         ],
         "completeness_fraction": 1.0
       },
@@ -2327,24 +2334,18 @@
             "approx_width_km": 11.7,
             "description": "0.5 deg square centred on the site"
           },
-          "description": "Cold, hyperarid polar desert with ice-cemented permafrost and sublimation-dominated landscapes; a long-standing analog for Martian periglacial terrain and the Phoenix landing region.",
+          "description": "High-elevation hyper-arid polar desert (University Valley) with dry permafrost over ice-cemented ground; studied as a Mars analog for periglacial processes and ground ice.",
           "tags": [
-            "dolerite",
-            "glacial_valley",
-            "ice_cemented_permafrost",
             "periglacial",
             "polar_desert",
-            "polygonal_terrain",
-            "salts",
-            "sandstone"
+            "water_ice"
           ],
           "known_analog_use": [
-            "Phoenix mission permafrost analog studies",
-            "IceBite drill tests"
+            "Phoenix landing-site ground-ice analog studies"
           ],
           "sources": [
-            "lit_dry_valleys",
-            "nasa_analogs_overview"
+            "heldmann2015_dryvalleys",
+            "goordial2016_university_valley"
           ]
         },
         "similarity": 61.32,
@@ -2387,15 +2388,13 @@
             "comparable": true,
             "mars_value": [
               "impact_crater",
+              "crater_floor",
               "delta",
-              "paleolake_basin",
-              "crater_floor"
+              "paleolake_basin"
             ],
             "earth_value": [
               "polar_desert",
-              "periglacial",
-              "polygonal_terrain",
-              "glacial_valley"
+              "periglacial"
             ],
             "unit": null,
             "scale": null,
@@ -2404,7 +2403,7 @@
             "normalized_weight": 0.2,
             "contribution": 0.2,
             "method": "jaccard_distance",
-            "note": "shared 0 of 8 distinct tags (none); Mars only: crater floor, delta, impact crater, paleolake basin; Earth only: glacial valley, periglacial, polar desert, polygonal terrain; Jaccard distance 1.00"
+            "note": "shared 0 of 6 distinct tags (none); Mars only: crater floor, delta, impact crater, paleolake basin; Earth only: periglacial, polar desert; Jaccard distance 1.00"
           },
           {
             "feature_id": "mineralogy_tags",
@@ -2412,15 +2411,13 @@
             "comparable": true,
             "mars_value": [
               "carbonates",
-              "clays",
               "olivine",
-              "basalt"
+              "clays",
+              "sulfates",
+              "perchlorates"
             ],
             "earth_value": [
-              "ice_cemented_permafrost",
-              "salts",
-              "dolerite",
-              "sandstone"
+              "water_ice"
             ],
             "unit": null,
             "scale": null,
@@ -2429,7 +2426,7 @@
             "normalized_weight": 0.2,
             "contribution": 0.2,
             "method": "jaccard_distance",
-            "note": "shared 0 of 8 distinct tags (none); Mars only: basalt, carbonates, clays, olivine; Earth only: dolerite, ice cemented permafrost, salts, sandstone; Jaccard distance 1.00"
+            "note": "shared 0 of 6 distinct tags (none); Mars only: carbonates, clays, olivine, perchlorates, sulfates; Earth only: water ice; Jaccard distance 1.00"
           },
           {
             "feature_id": "precipitation_mm_day",
@@ -2467,23 +2464,21 @@
           "Aridity: Mars 0.00 mm/day vs Earth 0.39 mm/day (difference 0.39 mm/day, within half the 1.00 mm/day comparison scale)"
         ],
         "important_differences": [
-          "Terrain morphology: no shared tags (Mars: impact crater, delta, paleolake basin, crater floor; Earth: polar desert, periglacial, polygonal terrain, glacial valley)",
-          "Composition: no shared tags (Mars: carbonates, clays, olivine, basalt; Earth: ice cemented permafrost, salts, dolerite, sandstone)"
+          "Terrain morphology: no shared tags (Mars: impact crater, crater floor, delta, paleolake basin; Earth: polar desert, periglacial)",
+          "Composition: no shared tags (Mars: carbonates, olivine, clays, sulfates, perchlorates; Earth: water ice)"
         ],
         "noncomparable_variables": [
-          "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
-          "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
+          "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+          "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
           "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
           "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
           "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
         ],
         "research_applications": [
-          "Phoenix mission permafrost analog studies",
-          "IceBite drill tests"
+          "Phoenix landing-site ground-ice analog studies"
         ],
         "documented_analog_use": [
-          "Phoenix mission permafrost analog studies",
-          "IceBite drill tests"
+          "Phoenix landing-site ground-ice analog studies"
         ],
         "proposed_studies": [],
         "limitations": [
@@ -2494,10 +2489,12 @@
         "citations": [
           "copernicus_glo90",
           "derived_toa_insolation",
+          "farley2022_jezero",
+          "goordial2016_university_valley",
+          "heldmann2015_dryvalleys",
           "lit_dry_valleys",
           "lit_jezero_mineralogy",
           "mola_megdr_16ppd",
-          "nasa_analogs_overview",
           "nasa_m2020_landing_site",
           "nasa_power"
         ],
@@ -2506,8 +2503,8 @@
     ],
     "analog_spec_version": "analog-v1.0",
     "planetary_differences": [
-      "Atmospheric pressure: Mars surface pressure is ~0.6 kPa (about 0.6% of Earth's 101 kPa); no Earth site is comparable.",
-      "Gravity: Mars surface gravity is 3.71 m/s2 versus Earth's 9.81 m/s2.",
+      "Atmospheric pressure: Mars surface pressure is about 0.636 kPa (6.36 mb) versus Earth's 101.4 kPa (1014 mb) (NASA Mars and Earth Fact Sheets); no Earth site is comparable.",
+      "Gravity: Mars surface gravity is 3.73 m/s2 versus Earth's 9.82 m/s2 (NASA Mars and Earth Fact Sheets).",
       "Radiation: Mars has no global magnetic field and a thin atmosphere, so surface radiation dose is far higher than anywhere on Earth.",
       "Temperature: Mars mean surface temperatures are far below any Earth analog; thermal comparisons are qualitative only.",
       "Elevation datum: Mars elevations are relative to the MOLA areoid (GMM3), Earth elevations to the EGM2008 geoid; absolute elevations are therefore shown but never differenced."
@@ -2537,9 +2534,9 @@
         "Surface roughness (detrended relief) (normalised weight 0.22)"
       ],
       "research_applications": [
-        "Proposed study ([C2], [C7], [C8]): Does the regional terrain statistic predict landing-scale hazards at Jezero Crater? Regional statistics cannot resolve lander-scale hazards, and the suitability score is a screening index; neither establishes that a landing would be safe. This study has not been performed.",
+        "Proposed study ([C3], [C7], [C8]): Does the regional terrain statistic predict landing-scale hazards at Jezero Crater? Regional statistics cannot resolve lander-scale hazards, and the suitability score is a screening index; neither establishes that a landing would be safe. This study has not been performed.",
         "Proposed study ([C1], [C2], [C3]): Record of past water at Jezero Crater: carbonates, clays, delta, paleolake basin Composition tags are literature-derived labels, not spectral measurements made by this tool, and they have no bearing on the landing suitability score. This study has not been performed.",
-        "Proposed study (no passage cited): Field rehearsal at Atacama Desert - Yungay region on terrain it shares with Jezero Crater The similarity index (63.03) is a heuristic; Earth gravity, atmosphere and radiation differ, and no transfer has been demonstrated. This study has not been performed."
+        "Proposed study (no passage cited): Field rehearsal at San Rafael Swell - MDRS area on terrain it shares with Jezero Crater The similarity index (64.36) is a heuristic; Earth gravity, atmosphere and radiation differ, and no transfer has been demonstrated. This study has not been performed."
       ],
       "missing_evidence": [
         "Criterion excluded: thermal_conditions",
@@ -2569,6 +2566,20 @@
         "score": 0.022541
       },
       {
+        "chunk_id": "crossref_lit_jezero_mineralogy#003",
+        "document_id": "crossref_lit_jezero_mineralogy",
+        "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+        "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+        "url": "https://api.crossref.org/works/10.1002/2014JE004782",
+        "publication_date": "2015-04",
+        "geographic_relevance": [
+          "jezero_crater",
+          "Nili Fossae / Isidis basin rim"
+        ],
+        "excerpt": "geomorphic units that are likely to have supplied sediment to the Jezero crater paleolake, as the fluvial valleys that fed the basin incise these units. The geomorphic units include exposures of Fe/Mg\u2010smectite\u2010, olivine\u2010, and Mg\u2010rich carbonate\u2010bearing terrain. We show that the difference in fan deposit mineralogy is a function of the areal exposure of the major geomorphic units within their watersheds. This indicates that the spectrally dominant aqueous alteration minerals in the fan deposits are primarily detrital, or transported, in nature and did not form in situ. We conclude that the aqueous alteration of the units in the watershed occurred prior to the fluvial activity that carved the v",
+        "score": 0.022177
+      },
+      {
         "chunk_id": "nasa_m2020_overview#007",
         "document_id": "nasa_m2020_overview",
         "title": "Mars 2020: Perseverance Rover - NASA Science",
@@ -2580,7 +2591,7 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "Martian atmosphere \u2014 technology for future explorers to fill lungs and fuel rockets.\n\nSee what Perseverance has been capturing this week with its cameras.\n\nNASA chose Jezero Crater as the landing site for the Perseverance rover. Scientists believe the area was once flooded with water and was home to an ancient river delta. The process of landing site selection involved a combination of mission team members and scientists from around the world, who carefully examined more than 60 candidate locations on the Red Planet. After the exhaustive five-year study of potential sites, each with its own unique characteristics and appeal, Jezero rose to the top.",
-        "score": 0.022177
+        "score": 0.021825
       },
       {
         "chunk_id": "nasa_m2020_overview#005",
@@ -2594,20 +2605,6 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "preserve signs of ancient life. Learn more about these precious samples, which Mars Sample Return could deliver to Earth for detailed study in the future.\n\nDuring its first five years on the Martian surface, Perseverance has collected more than two dozen geologically diverse rock samples \u2014 including one containing potential biosignatures \u2014 explored the history of geology, water, and habitable environments in Jezero crater and on the crater rim, demonstrated proof-of-concept for an off-world helicopter and onsite oxygen production, in preparation for future human exploration, and made numerous science discoveries and technical breakthroughs. Here are just a few.\n\nPerseverance Sheds More Light",
-        "score": 0.021825
-      },
-      {
-        "chunk_id": "crossref_lit_jezero_mineralogy#003",
-        "document_id": "crossref_lit_jezero_mineralogy",
-        "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
-        "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1002/2014JE004782",
-        "publication_date": "2015-04",
-        "geographic_relevance": [
-          "jezero_crater",
-          "Nili Fossae / Isidis basin rim"
-        ],
-        "excerpt": "geomorphic units that are likely to have supplied sediment to the Jezero crater paleolake, as the fluvial valleys that fed the basin incise these units. The geomorphic units include exposures of Fe/Mg\u2010smectite\u2010, olivine\u2010, and Mg\u2010rich carbonate\u2010bearing terrain. We show that the difference in fan deposit mineralogy is a function of the areal exposure of the major geomorphic units within their watersheds. This indicates that the spectrally dominant aqueous alteration minerals in the fan deposits are primarily detrital, or transported, in nature and did not form in situ. We conclude that the aqueous alteration of the units in the watershed occurred prior to the fluvial activity that carved the v",
         "score": 0.021154
       },
       {
@@ -2622,7 +2619,7 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "robotic arm.\n\nThese high-resolution images highlight the diversity of materials obtained during the rover\u2019s first thee and a half years on the Red Planet.\n\nNASA's Perseverance rover has been exploring the surface of Mars since landing in February 2021. The rover has made discoveries about the planet's volcanic history, climate, surface, interior, habitability, and the role of water in Jezero Crater. The rover's accomplishments also include the collection of diverse, compelling samples of rock and regolith (broken rock and dust), and the testing of technologies that would benefit future human exploration of Mars.\n\nPerseverance carries seven primary science instruments for acquiring informatio",
-        "score": 0.019097
+        "score": 0.019366
       },
       {
         "chunk_id": "nasa_m2020_science#001",
@@ -2636,7 +2633,21 @@
           "Nili Fossae / Isidis basin rim"
         ],
         "excerpt": "Perseverance takes the next step in Mars Exploration by looking for the signs of past life itself.\n\nPerseverance is exploring Jezero Crater, a location on Mars that shows promising signs of a place that was likely friendly to life in the distant past. The rover\u2019s goal is to study the site in detail for its past conditions and seek the very signs of past life. It is carrying out its mission to identify and collect the most compelling rock cores and other samples of Mars material, which a future mission could retrieve and bring to Earth for more detailed study. Perseverance also tests technologies needed for the future human and robotic exploration of Mars.\n\nComposed of 993 individual images a",
-        "score": 0.016176
+        "score": 0.016768
+      },
+      {
+        "chunk_id": "crossref_lit_gusev_basalt#003",
+        "document_id": "crossref_lit_gusev_basalt",
+        "title": "Basaltic Rocks Analyzed by the Spirit Rover in Gusev Crater",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.3050842",
+        "publication_date": "2004-08-06",
+        "geographic_relevance": [
+          "gusev_crater",
+          "Gusev Crater / Ma'adim Vallis outlet"
+        ],
+        "excerpt": "cite this record should be read as 'this paper exists and studied the named site', not as a quotation of its findings unless an abstract appears below.\n\nAbstract (from Crossref): The Spirit landing site in Gusev Crater on Mars contains dark, fine-grained, vesicular rocks interpreted as lavas. Pancam and Mini\u00e2\u0080\u0093Thermal Emission Spectrometer (Mini-TES) spectra suggest that all of these rocks are similar but have variable coatings and dust mantles. Magnified images of brushed and abraded rock surfaces show alteration rinds and veins. Rock interiors contain \u00e2\u0089\u00a425% megacrysts. Chemical analyses of rocks by the Alpha Particle X-ray Spectrometer are consistent with picritic basalts, containing norm",
+        "score": 0.014493
       },
       {
         "chunk_id": "esa_oxia_planum#006",
@@ -2650,21 +2661,7 @@
           "Chryse Planitia margin / Mawrth Vallis region"
         ],
         "excerpt": "two candidates for the 2020 mission, with both undergoing a detailed evaluation over the last 18 months.\n\nExoMars landing site candidates \u2013 elevation\n\nOn the technical side, the landing site must be at a suitably low elevation level, so that there is sufficient atmosphere and time to help slow the landing module\u2019s parachute descent. Then, the 120 x 19 km landing ellipses should not contain features that could endanger the landing, the deployment of the surface platform ramps for the rover to exit, and the subsequent driving of the rover. This means scrutinising the region for steep slopes, loose material and large rocks.\n\nOn the science side, the analysis had to identify sites where the rove",
-        "score": 0.014085
-      },
-      {
-        "chunk_id": "nasa_insight_overview#003",
-        "document_id": "nasa_insight_overview",
-        "title": "InSight Lander - NASA Science",
-        "institution": "NASA Science / JPL",
-        "url": "https://science.nasa.gov/mission/insight/",
-        "publication_date": "2017-12-04",
-        "geographic_relevance": [
-          "elysium_planitia",
-          "Elysium Planitia"
-        ],
-        "excerpt": "inner solar system.\n\nInSight studied the deep interior of Mars and was designed to take the planet's vital signs: its pulse, temperature, and reflexes.\n\nVisit the one-stop-shop for all InSight media\n\nAn artist's rendition of Mars, highlighting one of InSight's goals -- to figure out just how tectonically active Mars is today and how often meteorites impact it.\n\nInSight landed near Mars' equator on the western side of a flat, smooth plain called Elysium Planitia. Elysium Planitia was selected not for its surface features, but for safety considerations. InSight's purpose was to study the interior of Mars, not the surface. Thus, in the selection of a landing site, what's on the surface mattered",
-        "score": 0.013699
+        "score": 0.014286
       }
     ],
     "citations": [
@@ -2678,6 +2675,14 @@
       },
       {
         "citation_id": "[C2]",
+        "chunk_id": "crossref_lit_jezero_mineralogy#003",
+        "document_id": "crossref_lit_jezero_mineralogy",
+        "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
+        "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
+        "url": "https://api.crossref.org/works/10.1002/2014JE004782"
+      },
+      {
+        "citation_id": "[C3]",
         "chunk_id": "nasa_m2020_overview#007",
         "document_id": "nasa_m2020_overview",
         "title": "Mars 2020: Perseverance Rover - NASA Science",
@@ -2685,20 +2690,12 @@
         "url": "https://science.nasa.gov/mission/mars-2020-perseverance/"
       },
       {
-        "citation_id": "[C3]",
+        "citation_id": "[C4]",
         "chunk_id": "nasa_m2020_overview#005",
         "document_id": "nasa_m2020_overview",
         "title": "Mars 2020: Perseverance Rover - NASA Science",
         "institution": "NASA Science / JPL",
         "url": "https://science.nasa.gov/mission/mars-2020-perseverance/"
-      },
-      {
-        "citation_id": "[C4]",
-        "chunk_id": "crossref_lit_jezero_mineralogy#003",
-        "document_id": "crossref_lit_jezero_mineralogy",
-        "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
-        "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-        "url": "https://api.crossref.org/works/10.1002/2014JE004782"
       },
       {
         "citation_id": "[C5]",
@@ -2718,19 +2715,19 @@
       },
       {
         "citation_id": "[C7]",
+        "chunk_id": "crossref_lit_gusev_basalt#003",
+        "document_id": "crossref_lit_gusev_basalt",
+        "title": "Basaltic Rocks Analyzed by the Spirit Rover in Gusev Crater",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.3050842"
+      },
+      {
+        "citation_id": "[C8]",
         "chunk_id": "esa_oxia_planum#006",
         "document_id": "esa_oxia_planum",
         "title": "Oxia Planum favoured for ExoMars surface mission",
         "institution": "ESA",
         "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission"
-      },
-      {
-        "citation_id": "[C8]",
-        "chunk_id": "nasa_insight_overview#003",
-        "document_id": "nasa_insight_overview",
-        "title": "InSight Lander - NASA Science",
-        "institution": "NASA Science / JPL",
-        "url": "https://science.nasa.gov/mission/insight/"
       }
     ],
     "source_digests": [
@@ -2747,7 +2744,7 @@
         ],
         "citation_ids": [
           "[C1]",
-          "[C4]"
+          "[C2]"
         ],
         "what_it_tells_us": "The goal of this study is to understand the provenance of the sedimentary deposits within this open\u2010basin lake using a source\u2010to\u2010sink approach.",
         "why_it_matters": "Relevant because it names jezero, olivine, paleolake.",
@@ -2767,11 +2764,11 @@
           "nasa_m2020_overview#005"
         ],
         "citation_ids": [
-          "[C2]",
-          "[C3]"
+          "[C3]",
+          "[C4]"
         ],
         "what_it_tells_us": "NASA chose Jezero Crater as the landing site for the Perseverance rover.",
-        "why_it_matters": "Relevant because it names delta, jezero, perseverance.",
+        "why_it_matters": "Relevant because it names jezero, perseverance.",
         "limitation": "Mission overview text documents landing context and history; it does not validate the model's quantitative score.",
         "support_level": "supports",
         "generated_by": "extractive"
@@ -2798,6 +2795,25 @@
         "generated_by": "extractive"
       },
       {
+        "document_id": "crossref_lit_gusev_basalt",
+        "title": "Basaltic Rocks Analyzed by the Spirit Rover in Gusev Crater",
+        "institution": "Science / American Association for the Advancement of Science (AAAS)",
+        "url": "https://api.crossref.org/works/10.1126/science.3050842",
+        "publication_date": "2004-08-06",
+        "purpose_label": "Peer-reviewed record",
+        "chunk_ids": [
+          "crossref_lit_gusev_basalt#003"
+        ],
+        "citation_ids": [
+          "[C7]"
+        ],
+        "what_it_tells_us": "Abstract (from Crossref): The Spirit landing site in Gusev Crater on Mars contains dark, fine-grained, vesicular rocks interpreted as lavas.",
+        "why_it_matters": "Provides background for the topic rather than evidence about this site.",
+        "limitation": "Bibliographic record and abstract only; the full paper was not retrieved, so detailed results are not available here.",
+        "support_level": "context",
+        "generated_by": "extractive"
+      },
+      {
         "document_id": "esa_oxia_planum",
         "title": "Oxia Planum favoured for ExoMars surface mission",
         "institution": "ESA",
@@ -2808,28 +2824,9 @@
           "esa_oxia_planum#006"
         ],
         "citation_ids": [
-          "[C7]"
-        ],
-        "what_it_tells_us": "ExoMars landing site candidates \u2013 elevation On the technical side, the landing site must be at a suitably low elevation level, so that there is sufficient atmosphere and time to help slow the landing module\u2019s parachute descent.",
-        "why_it_matters": "Provides background for the topic rather than evidence about this site.",
-        "limitation": "Mission overview text documents landing context and history; it does not validate the model's quantitative score.",
-        "support_level": "context",
-        "generated_by": "extractive"
-      },
-      {
-        "document_id": "nasa_insight_overview",
-        "title": "InSight Lander - NASA Science",
-        "institution": "NASA Science / JPL",
-        "url": "https://science.nasa.gov/mission/insight/",
-        "publication_date": "2017-12-04",
-        "purpose_label": "Mission context",
-        "chunk_ids": [
-          "nasa_insight_overview#003"
-        ],
-        "citation_ids": [
           "[C8]"
         ],
-        "what_it_tells_us": "Elysium Planitia was selected not for its surface features, but for safety considerations.",
+        "what_it_tells_us": "ExoMars landing site candidates \u2013 elevation On the technical side, the landing site must be at a suitably low elevation level, so that there is sufficient atmosphere and time to help slow the landing module\u2019s parachute descent.",
         "why_it_matters": "Provides background for the topic rather than evidence about this site.",
         "limitation": "Mission overview text documents landing context and history; it does not validate the model's quantitative score.",
         "support_level": "context",
@@ -2844,7 +2841,7 @@
         "method": "Sample HiRISE/CTX-derived digital terrain models at 1-5 m baselines over the footprint, count rocks from HiRISE images, and compare the distributions with the regional MOLA statistics used by this tool.",
         "why_here": "Jezero Crater has a complete regional terrain profile and retrieved documentation of the topographic data and its sampling caveats, so the comparison can be made without new orbital data.",
         "motivating_citation_ids": [
-          "[C2]",
+          "[C3]",
           "[C7]",
           "[C8]"
         ],
@@ -2867,13 +2864,13 @@
       },
       {
         "kind": "proposed_study",
-        "title": "Field rehearsal at Atacama Desert - Yungay region on terrain it shares with Jezero Crater",
-        "research_question": "Do traverse-planning and terrain-mapping methods exercised at Atacama Desert - Yungay region transfer to the Jezero Crater landforms they share?",
+        "title": "Field rehearsal at San Rafael Swell - MDRS area on terrain it shares with Jezero Crater",
+        "research_question": "Do traverse-planning and terrain-mapping methods exercised at San Rafael Swell - MDRS area transfer to the Jezero Crater landforms they share?",
         "method": "Run instrumented traverses and terrain mapping on the matched landforms at the Earth site, measure where predicted and observed trafficability diverge, then test the method on orbital data for the Mars footprint.",
-        "why_here": "Shared at the harmonised ~3.7 km baseline: Regional slope: Mars 1.08 deg vs Earth 1.17 deg (difference 0.09 deg, within half the 1.50 deg comparison scale).",
+        "why_here": "Shared at the harmonised ~3.7 km baseline: Regional slope: Mars 1.08 deg vs Earth 0.92 deg (difference 0.15 deg, within half the 1.50 deg comparison scale).",
         "motivating_citation_ids": [],
-        "cannot_infer": "The similarity index (63.03) is a heuristic; Earth gravity, atmosphere and radiation differ, and no transfer has been demonstrated.",
-        "analog_candidate_id": "atacama_yungay"
+        "cannot_infer": "The similarity index (64.36) is a heuristic; Earth gravity, atmosphere and radiation differ, and no transfer has been demonstrated.",
+        "analog_candidate_id": "mdrs_utah"
       }
     ],
     "evidence_gap": null,
@@ -2883,7 +2880,7 @@
       "Citations point at retrieved passages only; read the source before relying on a claim."
     ],
     "cached": false,
-    "generated_at": "2026-11-14T22:48:14+00:00"
+    "generated_at": "2026-11-15T08:31:00+00:00"
   },
   "error_404": {
     "error": {

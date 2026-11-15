@@ -113,21 +113,20 @@ class DocSpec:
     topic: str = ""
 
 
-DOI_SOURCES = {
-    # Mars literature cited in data/mars/sites.json
-    "lit_jezero_mineralogy": ("10.1002/2014JE004782", ["jezero_crater"]),
-    "lit_gale_stratigraphy": ("10.1126/science.1242777", ["gale_crater"]),
-    "lit_oxia_clays": ("10.1089/ast.2019.2191", ["oxia_planum"]),
-    "lit_meridiani_hematite": ("10.1029/1999JE001093", ["meridiani_planum"]),
-    "lit_utopia_ice": ("10.1002/2016GL070138", ["utopia_planitia"]),
-    "lit_gusev_basalt": ("10.1126/science.3050842", ["gusev_crater"]),
-    "lit_golombek_mer_sites": ("10.1029/2003JE002074", ["gusev_crater", "meridiani_planum"]),
-    # Earth analog literature cited in data/earth/candidates.json
-    "lit_yungay": ("10.1126/science.1089143", ["atacama_yungay"]),
-    "lit_dry_valleys": ("10.1016/j.icarus.2007.06.018", ["mcmurdo_dry_valleys"]),
-    "lit_haughton": ("10.1111/j.1945-5100.2005.tb00147.x", ["haughton_crater"]),
-    "lit_holuhraun": ("10.1016/j.jvolgeores.2017.02.027", ["holuhraun_iceland"]),
-}
+def _doi_sources() -> dict[str, tuple[str, list[str]]]:
+    """Every DOI the site data cites, from data/site_literature.v1.json (the
+    single source of the site labels), with the sites that cite it, so the
+    research corpus and the site data always cite the same papers."""
+    lit = json.loads((Path(__file__).resolve().parents[1] / "data" / "site_literature.v1.json").read_text())
+    out: dict[str, tuple[str, list[str]]] = {}
+    for sid, src in lit["sources"].items():
+        if src["url"].startswith("https://doi.org/"):
+            sites = sorted({site_id for site_id, site in lit["sites"].items() if any(e["source_id"] == sid for e in site["evidence"])})
+            out[sid] = (src["url"].removeprefix("https://doi.org/"), sites)
+    return out
+
+
+DOI_SOURCES = _doi_sources()
 
 DOCUMENTS: list[DocSpec] = [
     # --- Mars sites: NASA mission pages (science.nasa.gov renders server-side) ---

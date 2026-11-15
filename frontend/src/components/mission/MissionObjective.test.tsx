@@ -9,7 +9,7 @@ import { fireEvent, render, screen, waitFor, within } from "@testing-library/rea
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import fixture from "@/test/fixtures/api_examples.json";
 import mission from "@/test/fixtures/mission_examples.json";
-import { roverSharesFrom, useAppStore } from "@/store/useAppStore";
+import { DEFAULT_OBJECTIVE, roverSharesFrom, useAppStore } from "@/store/useAppStore";
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
 import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 import { InfoTip } from "@/components/ui/InfoTip";
@@ -55,7 +55,7 @@ async function saveMission(text = TEXT) {
   const box = screen.getByLabelText("Your mission objective");
   fireEvent.change(box, { target: { value: text } });
   fireEvent.keyDown(box, { key: "Enter" });
-  return screen.findByLabelText("Gentler terrain share of priorities");
+  return screen.findByLabelText("Low slopes share of priorities");
 }
 
 beforeEach(() => {
@@ -136,14 +136,14 @@ describe("Mission Design chat box", () => {
     expect(s.appliedObjectiveModel).toBe("test-model");
     expect(s.appliedInterpretation?.evidence.terrain_safety).toEqual([SLOPE]);
     expect(s.appliedInterpretation?.missionProfile).toBe("human");
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toHaveValue("43");
+    expect(screen.getByLabelText("Low slopes share of priorities")).toHaveValue("43");
     // no provenance badges and no keyword-matching notice when the model ran
     expect(screen.queryByText(/rule.based/i)).toBeNull();
     expect(screen.queryByTestId("no-model-notice")).toBeNull();
 
     // pie beside the sliders: a slice per non-zero share; numbers only on hover
     expect(screen.getByText("Priority distribution")).toBeInTheDocument();
-    expect(screen.getByTestId("pie-slice-terrain_safety")).toHaveAttribute("aria-label", "Gentler terrain: 43%");
+    expect(screen.getByTestId("pie-slice-terrain_safety")).toHaveAttribute("aria-label", "Low slopes: 43%");
     expect(screen.queryByTestId("pie-slice-solar_illumination")).toBeNull();
     expect(container.querySelectorAll("svg text")).toHaveLength(0);
     expect(screen.getByRole("list", { name: "Pie legend" })).not.toHaveTextContent("%");
@@ -165,7 +165,7 @@ describe("Mission Design chat box", () => {
     renderTab();
     fireEvent.change(screen.getByLabelText("Your mission objective"), { target: { value: TEXT } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
-    await screen.findByLabelText("Gentler terrain share of priorities");
+    await screen.findByLabelText("Low slopes share of priorities");
     expect(screen.getByTestId("no-model-notice")).toHaveTextContent("Uh oh! Either our model is not available, or we could not understand your mission. Please try again!");
     expect(screen.queryByText(/Offline rule-based suggestion/)).toBeNull();
     const s = useAppStore.getState();
@@ -196,7 +196,7 @@ describe("Mission Design chat box", () => {
     await waitFor(() => expect(interpretCalls).toHaveLength(2));
     expect(interpretCalls[1].objective).toBe("Smooth terrain for a rover");
     // the sliders stay in view while the new text is read
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toBeInTheDocument();
+    expect(screen.getByLabelText("Low slopes share of priorities")).toBeInTheDocument();
   });
 });
 
@@ -214,11 +214,11 @@ describe("Mission Design popups", () => {
     fireEvent.mouseLeave(slice.closest("div")!);
     expect(screen.queryByTestId("priority-popup-terrain_safety")).toBeNull();
 
-    const label = screen.getByText("Gentler terrain", { selector: "label" });
+    const label = screen.getByText("Low slopes", { selector: "label" });
     fireEvent.mouseEnter(label);
     expect(screen.getByTestId("priority-popup-terrain_safety")).toHaveTextContent("43%");
     // the sentence is static: it does not change with the share
-    fireEvent.change(screen.getByLabelText("Gentler terrain share of priorities"), { target: { value: "60" } });
+    fireEvent.change(screen.getByLabelText("Low slopes share of priorities"), { target: { value: "60" } });
     expect(screen.getByTestId("priority-popup-terrain_safety")).toHaveTextContent("60%");
     expect(screen.getByTestId("priority-popup-terrain_safety")).toHaveTextContent("How gently the ground tilts across the landing region");
     fireEvent.mouseLeave(label);
@@ -283,7 +283,7 @@ describe("Mission Design popups", () => {
     mockInterpret();
     renderTab();
     await saveMission();
-    const summary = screen.getByLabelText("About Gentler terrain");
+    const summary = screen.getByLabelText("About Low slopes");
     const details = summary.closest("details")!;
     fireEvent.click(summary);
     expect(details.open).toBe(true);
@@ -364,11 +364,11 @@ describe("Mission Design focus and mission types", () => {
     expect(screen.getByTestId("earth-priorities")).toBeInTheDocument();
     // exactly the Mars sliders: same factors and labels (no-data thermal hidden)
     expect(screen.getAllByRole("slider").map((el) => el.getAttribute("aria-label"))).toEqual([
-      "Gentler terrain share of priorities", "Lower elevation share of priorities", "Smoother terrain share of priorities", "Solar energy share of priorities"]);
+      "Low slopes share of priorities", "Lower elevation share of priorities", "Less rugged ground share of priorities", "Solar energy share of priorities"]);
     expect(screen.queryByLabelText("Target regional slope share of priorities")).toBeNull();
     // no Earth reading in this response, so Earth starts from the Mars weights
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toHaveValue("43");
-    fireEvent.change(screen.getByLabelText("Smoother terrain share of priorities"), { target: { value: "60" } });
+    expect(screen.getByLabelText("Low slopes share of priorities")).toHaveValue("43");
+    fireEvent.change(screen.getByLabelText("Less rugged ground share of priorities"), { target: { value: "60" } });
     const st = useAppStore.getState();
     expect(st.earthWeights.surface_roughness).toBe(60);
     expect(st.weights.surface_roughness).toBe(31);   // Mars untouched
@@ -409,28 +409,28 @@ describe("Mission Design: one reading, two planets", () => {
     renderTab();
     await saveMission();
     expect(screen.getByTestId("mars-priorities")).toBeInTheDocument();
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toHaveValue("43");
+    expect(screen.getByLabelText("Low slopes share of priorities")).toHaveValue("43");
 
     fireEvent.click(screen.getByRole("button", { name: "Earth" }));
     expect(screen.getByTestId("earth-priorities")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Mission priorities" })).toBeInTheDocument(); // same heading and design as Mars
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toHaveValue("30");
+    expect(screen.getByLabelText("Low slopes share of priorities")).toHaveValue("30");
     expect(screen.getByLabelText("Lower elevation share of priorities")).toHaveValue("0");
-    expect(screen.getByLabelText("Smoother terrain share of priorities")).toHaveValue("50");
+    expect(screen.getByLabelText("Less rugged ground share of priorities")).toHaveValue("50");
     expect(screen.getByLabelText("Solar energy share of priorities")).toHaveValue("20");
     expect(screen.getByText("Priority distribution")).toBeInTheDocument();
-    expect(screen.getByTestId("pie-slice-surface_roughness")).toHaveAttribute("aria-label", "Smoother terrain: 50%");
-    fireEvent.change(screen.getByLabelText("Gentler terrain share of priorities"), { target: { value: "40" } });
+    expect(screen.getByTestId("pie-slice-surface_roughness")).toHaveAttribute("aria-label", "Less rugged ground: 50%");
+    fireEvent.change(screen.getByLabelText("Low slopes share of priorities"), { target: { value: "40" } });
 
     fireEvent.click(screen.getByRole("button", { name: "Mars" }));
     expect(screen.getByTestId("mars-priorities")).toBeInTheDocument();
     expect(useAppStore.getState().missionType).toBe("landing");
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toHaveValue("43"); // Mars untouched
+    expect(screen.getByLabelText("Low slopes share of priorities")).toHaveValue("43"); // Mars untouched
 
     fireEvent.click(screen.getByRole("button", { name: "Earth" }));
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toHaveValue("40"); // the user's Earth edit kept
+    expect(screen.getByLabelText("Low slopes share of priorities")).toHaveValue("40"); // the user's Earth edit kept
     fireEvent.click(screen.getByRole("button", { name: "Reset priorities to the applied objective's suggestion" }));
-    expect(screen.getByLabelText("Gentler terrain share of priorities")).toHaveValue("30"); // Reset = the LLM's Earth suggestion
+    expect(screen.getByLabelText("Low slopes share of priorities")).toHaveValue("30"); // Reset = the LLM's Earth suggestion
   });
 
   it("explains the Earth priorities in the same pop-up, with reasons and cited research, and no Mars hard constraints", async () => {
@@ -464,7 +464,7 @@ describe("Mission Design: one reading, two planets", () => {
     expect(star.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(loading.querySelector(".animate-spin")).toBeNull();
     release(json(EARTH_BODY));
-    await screen.findByLabelText("Gentler terrain share of priorities");
+    await screen.findByLabelText("Low slopes share of priorities");
     expect(screen.queryByText("Considering the rocket science...")).toBeNull();
   });
 });
@@ -492,5 +492,97 @@ describe("Mission Design decoration", () => {
     const slice = screen.getByTestId("pie-slice-terrain_safety");
     expect(slice).not.toHaveAttribute("stroke-width");
     expect(slice.getAttribute("class") ?? "").not.toMatch(/stroke/);
+  });
+});
+
+describe("Mission Design default objective", () => {
+  it("shows the default objective as the example and fills it in when Tab is pressed in the empty box", async () => {
+    mockInterpret();
+    renderTab();
+    expect(DEFAULT_OBJECTIVE).toBe(useAppStore.getInitialState().missionObjective);   // one source for both
+    const box = screen.getByLabelText("Your mission objective");
+    expect(box).toHaveValue("");
+    expect(box).toHaveAttribute("placeholder", DEFAULT_OBJECTIVE);
+    expect(box).toHaveAccessibleDescription(/Press Tab or use it , then Enter to save/);   // main's visible hint
+    fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveValue(DEFAULT_OBJECTIVE);
+    // with text in the box, Tab is left alone (it moves focus as usual)
+    fireEvent.change(box, { target: { value: "Something of my own" } });
+    fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveValue("Something of my own");
+    fireEvent.change(box, { target: { value: "" } });
+    fireEvent.keyDown(box, { key: "Tab", shiftKey: true });          // Shift+Tab never fills
+    expect(box).toHaveValue("");
+    fireEvent.keyDown(box, { key: "Tab" });
+    fireEvent.keyDown(box, { key: "Enter" });
+    await screen.findByLabelText("Low slopes share of priorities");
+    expect(useAppStore.getState().appliedObjective).toBe(DEFAULT_OBJECTIVE);
+  });
+
+  it("names the slope and roughness factors in plain words", async () => {
+    mockInterpret();
+    renderTab();
+    await saveMission();
+    expect(screen.getByLabelText("Low slopes share of priorities")).toBeInTheDocument();
+    expect(screen.getByLabelText("Less rugged ground share of priorities")).toBeInTheDocument();
+    expect(screen.queryByText(/Gentler terrain|Smoother terrain/)).toBeNull();
+  });
+});
+
+describe("Mission Design: Earth <-> Mars cross-reference", () => {
+  const ARADS = cite("analog_atacama_drill", "NASA's K-REX2 rover tested a life-detection drill reaching two meters (6.5 feet) in the Atacama, one month each year from 2016 to 2019.", "NASA ARADS, 2019", "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/");
+  const ANALOG = {
+    earth_site_id: "atacama_yungay", earth_site_name: "Atacama Desert (Yungay)", mars_site_id: "jezero_crater", mars_site_name: "Jezero Crater",
+    research: [ARADS], chosen_by: "llm",
+    factors: [
+      { criterion_id: "terrain_safety", earth_value: 1.17, mars_value: 1.08, unit: "deg", difference: 0.09, tolerance: 1.5, comparable: true, note: "Comparable: differ by 0.09 deg (comparable within 1.5 deg)." },
+      { criterion_id: "surface_roughness", earth_value: 126.5, mars_value: 194.4, unit: "m", difference: 67.9, tolerance: 100, comparable: true, note: "Comparable: differ by 67.90 m (comparable within 100 m)." },
+      { criterion_id: "elevation_suitability", earth_value: 1046, mars_value: -2563, unit: "m", difference: null, tolerance: null, comparable: null, note: "Not comparable across planets: Earth elevations are above sea level, Mars elevations above the MOLA areoid." },
+      { criterion_id: "solar_illumination", earth_value: 407, mars_value: 171, unit: "W/m2", difference: null, tolerance: null, comparable: null, note: "Not directly comparable: Mars receives 0.431 of Earth's sunlight (NASA Mars Fact Sheet)." },
+    ],
+    shared_landforms: ["alluvial_fan"], shared_minerals: ["sulfates"],
+  };
+
+  it("shows the chain - proven Earth site, its research, the Mars site - and each factor's Earth vs Mars data, on both planets", async () => {
+    mockInterpret({ ...LLM_BODY, analog_check: ANALOG });
+    renderTab();
+    await saveMission();
+    fireEvent.click(screen.getByRole("button", { name: "Why these priorities?" }));
+    let dialog = screen.getByRole("dialog", { name: "Why these priorities?" });
+    const chain = within(dialog).getByTestId("why-analog");
+    expect(chain).toHaveTextContent("A Mars site is good when its data compares with an Earth site that research shows suits this mission.");
+    expect(chain).toHaveTextContent("Proven Earth site: Atacama Desert (Yungay)");
+    expect(within(chain).getByRole("link", { name: "NASA ARADS, 2019" })).toBeInTheDocument();
+    expect(chain).toHaveTextContent("Compared with Mars site: Jezero Crater");
+    expect(within(dialog).getByTestId("why-compare-terrain_safety")).toHaveTextContent("Earth 1.17° · Mars 1.08° — comparable");
+    expect(within(dialog).getByTestId("why-compare-elevation_suitability")).toHaveTextContent("— not compared");
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Earth" }));
+    fireEvent.click(screen.getByRole("button", { name: "Why these priorities?" }));
+    dialog = screen.getByRole("dialog", { name: "Why these priorities?" });
+    expect(within(dialog).getByTestId("why-analog")).toHaveTextContent("An Earth site is good when its data compares with the Mars data.");
+    expect(within(dialog).getByTestId("why-compare-surface_roughness")).toHaveTextContent("Earth 126.5 m · Mars 194.4 m — comparable");
+  });
+
+  it("ranks Earth sites by their analog similarity to the paired Mars site", async () => {
+    mockInterpret({ ...LLM_BODY, analog_check: ANALOG });
+    renderTab();
+    await saveMission();
+    const earth = useAppStore.getState().missionRequirements.earth;
+    expect(earth.analog_reference_id).toBe("jezero_crater");
+    // the slope/relief targets are untouched: the similarity ranking does not use them
+    expect(earth.slope_target_deg).toBe(1);
+    expect(earth.relief_target_m).toBe(100);
+    fireEvent.click(screen.getByRole("button", { name: "Why these priorities?" }));
+    expect(screen.getByTestId("why-shared")).toHaveTextContent("Shared landforms: alluvial fan · Shared minerals: sulfates");
+  });
+
+  it("says plainly when the proven Earth site has no recent research", async () => {
+    mockInterpret({ ...LLM_BODY, analog_check: { ...ANALOG, earth_site_id: "haughton_crater", earth_site_name: "Haughton impact structure", research: [] } });
+    renderTab();
+    await saveMission();
+    fireEvent.click(screen.getByRole("button", { name: "Why these priorities?" }));
+    expect(within(screen.getByRole("dialog")).getByTestId("why-analog")).toHaveTextContent("No research from the last 15 years on this site in the evidence registry.");
   });
 });

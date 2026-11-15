@@ -75,7 +75,7 @@ describe("App", () => {
     expect(screen.getByText("Planetary Explorer")).toBeInTheDocument();
 
     // sliders come from GET /scoring/default-mission
-    const slider = await screen.findByLabelText("Gentler terrain share of priorities");
+    const slider = await screen.findByLabelText("Low slopes share of priorities");
     expect(slider).toHaveValue("27"); // effective allocation, not the old raw weight of 65
     expect(screen.getAllByRole("slider")).toHaveLength(4); // the no-data thermal factor is not shown
 
@@ -117,7 +117,7 @@ describe("App", () => {
 
   it("re-evaluates once after a burst of slider changes and shows the selected site profile", async () => {
     await renderApp();
-    const slider = await screen.findByLabelText("Gentler terrain share of priorities");
+    const slider = await screen.findByLabelText("Low slopes share of priorities");
     await waitFor(() => expect(evaluateCalls.length).toBe(1), { timeout: 2000 });
 
     // a drag: several changes inside the debounce window -> one request

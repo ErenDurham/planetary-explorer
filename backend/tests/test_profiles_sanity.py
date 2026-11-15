@@ -109,9 +109,11 @@ def test_insolation_matches_the_pipeline_model_for_the_profile_latitude(profile)
 def test_mars_profiles_state_the_honest_gaps():
     for p in MARS["profiles"]:
         gaps = {m["feature_id"] for m in p["measurements"] if m["is_missing"]}
-        assert gaps == {"surface_temperature_mean_c", "atmospheric_pressure_pa", "rock_abundance_pct", "dust_cover_index"}
+        # Utopia (Viking 2): no recent source on the composition at the site, so no mineral labels
+        literature_gaps = {"mineralogy_tags"} if p["site_id"] == "utopia_planitia" else set()
+        assert gaps == {"surface_temperature_mean_c", "atmospheric_pressure_pa", "rock_abundance_pct", "dust_cover_index"} | literature_gaps
         tags = {m["feature_id"]: m["value"] for m in p["measurements"] if isinstance(m["value"], list)}
-        assert set(tags) == {"terrain_morphology", "mineralogy_tags"} and all(tags.values())
+        assert set(tags) == {"terrain_morphology", "mineralogy_tags"} - literature_gaps and all(tags.values())
 
 
 def test_earth_profiles_are_complete_and_harmonised():

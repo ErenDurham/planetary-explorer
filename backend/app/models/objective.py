@@ -93,6 +93,32 @@ class TaskInterpretation(BaseModel):
     rationale: list[str] = Field(default_factory=list)
 
 
+class AnalogFactorCheck(BaseModel):
+    """One factor of the Earth <-> Mars cross-reference: both sites' measured values."""
+    criterion_id: str
+    earth_value: float | None = None
+    mars_value: float | None = None
+    unit: str
+    difference: float | None = None
+    tolerance: float | None = Field(None, description="A difference within this counts as comparable")
+    comparable: bool | None = Field(None, description="null = the factor cannot be compared across planets")
+    note: str
+
+
+class AnalogCheck(BaseModel):
+    """The cross-reference behind the priorities: an Earth site research shows
+    suits the mission, a Mars site, and how their measured data compare."""
+    earth_site_id: str
+    earth_site_name: str
+    mars_site_id: str
+    mars_site_name: str
+    research: list[EvidenceCitation] = Field(default_factory=list, description="Recent research on the Earth site as a Mars analog")
+    factors: list[AnalogFactorCheck]
+    shared_landforms: list[str] = Field(default_factory=list, description="Landform tags both sites' literature reports")
+    shared_minerals: list[str] = Field(default_factory=list, description="Mineral tags both sites' literature reports")
+    chosen_by: Literal["llm", "rules"]
+
+
 class EarthWeightSuggestion(BaseModel):
     """The same mission read for choosing an Earth site (field test / analog):
     the same criteria as Mars, weighted for Earth."""
@@ -118,6 +144,7 @@ class InterpretResponse(BaseModel):
     validation_notes: list[str] = Field(default_factory=list, description="Deterministic corrections applied to the proposal")
     mission_profile: MissionProfile = Field("other", description="Mission type read from the text; selects which research applies")
     earth_suggestions: list[EarthWeightSuggestion] = Field(default_factory=list, description="Earth field-test site priorities from the same text (slope, relief)")
+    analog_check: AnalogCheck | None = Field(None, description="Earth <-> Mars cross-reference used for the priorities")
     constraint_evidence: dict[str, list[EvidenceCitation]] = Field(default_factory=dict, description="Research behind each hard constraint, by constraint_id")
     evidence_version: str | None = None
     scoring_spec_version: str

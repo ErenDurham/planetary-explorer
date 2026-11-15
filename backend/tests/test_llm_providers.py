@@ -168,7 +168,7 @@ def test_ollama_timeout_falls_back_and_keep_alive_is_sent_as_ollama_expects(olla
 
 def test_interpret_schema_asks_only_for_what_the_tab_shows():
     req = oe._schema()["required"]
-    assert set(req) == {"mission_profile", "weights", "reasons", "evidence", "unsupported_needs", "confidence", "earth_weights", "earth_reasons", "focus_body", "site_guess"}
+    assert set(req) == {"mission_profile", "weights", "reasons", "evidence", "unsupported_needs", "confidence", "earth_weights", "earth_reasons", "focus_body", "site_guess", "analog_pair"}
 
 
 def test_one_reading_gives_earth_priorities_on_the_same_factors(monkeypatch):

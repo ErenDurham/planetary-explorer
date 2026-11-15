@@ -255,7 +255,8 @@ def test_committed_data_every_candidate_fully_comparable_and_deterministic():
 def test_terrain_only_weights_rank_haughton_first_for_jezero():
     """Haughton is the only impact-crater candidate, so with morphology as the
     sole criterion it must lead for Jezero; and the ordering must differ from
-    the default-weight ordering, which Atacama leads on slope and aridity."""
+    the default-weight ordering, which MDRS leads (it shares clays, carbonates and
+    sulfates with Jezero in the literature labels)."""
     site, prof, cands = _real("jezero_crater")
     base, _ = match_all(site, prof, cands, None, 7)
     w = _weights(terrain_morphology=100, slope_regional_median_deg=0, roughness_regional_m=0, mineralogy_tags=0, precipitation_mm_day=0)
@@ -263,10 +264,10 @@ def test_terrain_only_weights_rank_haughton_first_for_jezero():
     assert warnings == []
     assert alt[0].earth_candidate.id == "haughton_crater"
     assert [m.earth_candidate.id for m in alt] != [m.earth_candidate.id for m in base]
-    assert base[0].earth_candidate.id == "atacama_yungay"
+    assert base[0].earth_candidate.id == "mdrs_utah"
     terrain = next(f for f in alt[0].feature_distances if f.feature_id == TERRAIN)
     assert terrain.normalized_weight == 1.0 and "impact crater" in terrain.note
-    assert any(x.startswith("Terrain morphology shared: crater floor, impact crater") for x in alt[0].shared_characteristics)
+    assert any(x.startswith("Terrain morphology shared: impact crater") for x in alt[0].shared_characteristics)
     # with only one comparable feature, similarity is 100/(1+d_terrain) exactly
     assert alt[0].similarity == pytest.approx(100 / (1 + terrain.distance), abs=0.01)
 

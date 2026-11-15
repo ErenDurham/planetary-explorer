@@ -216,7 +216,7 @@
           "category": "light",
           "value": 24.08,
           "unit": "deg",
-          "source_id": "nasa_arads",
+          "source_id": "horstmann2024_yungay",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -390,13 +390,12 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "desert_plain",
-            "smooth_plains",
             "alluvial_fan",
-            "hyperarid"
+            "playa",
+            "polygonal_terrain"
           ],
           "unit": null,
-          "source_id": "nasa_arads",
+          "source_id": "horstmann2024_yungay",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -413,21 +412,19 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: alluvial_fan, playa (Horstmann et al., 2024); polygonal_terrain (Sager et al., 2020)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "nitrates",
             "sulfates",
-            "perchlorates",
-            "halite",
-            "regolith"
+            "nitrates",
+            "chlorides"
           ],
           "unit": null,
-          "source_id": "lit_yungay",
+          "source_id": "sager2020_yungay",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -444,7 +441,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: sulfates, nitrates, chlorides (Sager et al., 2020)."
         }
       ],
       "sources": {
@@ -457,13 +454,6 @@
           "units": "W/m2",
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
-        },
-        "nasa_arads": {
-          "source_id": "nasa_arads",
-          "title": "Atacama Rover Astrobiology Drilling Studies (ARADS)",
-          "institution": "NASA Ames",
-          "url": "https://www.nasa.gov/ames/arads",
-          "access_method": "web page"
         },
         "copernicus_glo90": {
           "source_id": "copernicus_glo90",
@@ -479,13 +469,6 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
         },
-        "lit_yungay": {
-          "source_id": "lit_yungay",
-          "title": "Navarro-Gonzalez et al. (2003), Mars-like soils in the Atacama Desert, Chile, and the dry limit of microbial life, Science 302",
-          "institution": "AAAS (peer-reviewed literature)",
-          "url": "https://doi.org/10.1126/science.1089143",
-          "access_method": "DOI"
-        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -499,6 +482,26 @@
           "access_method": "REST API, no login",
           "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-14"
+        },
+        "horstmann2024_yungay": {
+          "source_id": "horstmann2024_yungay",
+          "title": "Persistent microbial communities in hyperarid subsurface habitats of the Atacama Desert: Insights from intracellular DNA analysis",
+          "institution": "PNAS Nexus",
+          "url": "https://doi.org/10.1093/pnasnexus/pgae123",
+          "access_method": "publication",
+          "cite": "Horstmann et al., 2024",
+          "year": 2024,
+          "kind": "peer_reviewed"
+        },
+        "sager2020_yungay": {
+          "source_id": "sager2020_yungay",
+          "title": "New type of sand wedge polygons in the salt cemented soils of the hyper-arid Atacama Desert",
+          "institution": "Geomorphology",
+          "url": "https://doi.org/10.1016/j.geomorph.2020.107481",
+          "access_method": "publication",
+          "cite": "Sager et al., 2020",
+          "year": 2020,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
@@ -721,7 +724,7 @@
           "category": "light",
           "value": 77.86,
           "unit": "deg",
-          "source_id": "lit_dry_valleys",
+          "source_id": "heldmann2015_dryvalleys",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -896,12 +899,10 @@
           "category": "ground",
           "value": [
             "polar_desert",
-            "periglacial",
-            "polygonal_terrain",
-            "glacial_valley"
+            "periglacial"
           ],
           "unit": null,
-          "source_id": "lit_dry_valleys",
+          "source_id": "heldmann2015_dryvalleys",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -918,20 +919,17 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: polar_desert, periglacial (Heldmann et al., 2015)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "ice_cemented_permafrost",
-            "salts",
-            "dolerite",
-            "sandstone"
+            "water_ice"
           ],
           "unit": null,
-          "source_id": "nasa_analogs_overview",
+          "source_id": "goordial2016_university_valley",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -948,7 +946,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: water_ice (Goordial et al., 2016)."
         }
       ],
       "sources": {
@@ -961,13 +959,6 @@
           "units": "W/m2",
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
-        },
-        "lit_dry_valleys": {
-          "source_id": "lit_dry_valleys",
-          "title": "Marchant & Head (2007), Antarctic dry valleys: Microclimate zonation, variable geomorphic processes, and implications for assessing climate change on Mars, Icarus 192",
-          "institution": "Elsevier (peer-reviewed literature)",
-          "url": "https://doi.org/10.1016/j.icarus.2007.06.018",
-          "access_method": "DOI"
         },
         "copernicus_glo90": {
           "source_id": "copernicus_glo90",
@@ -983,13 +974,6 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
         },
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
-        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -1003,6 +987,26 @@
           "access_method": "REST API, no login",
           "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-14"
+        },
+        "goordial2016_university_valley": {
+          "source_id": "goordial2016_university_valley",
+          "title": "Nearing the cold-arid limits of microbial life in permafrost of an upper dry valley, Antarctica",
+          "institution": "The ISME Journal",
+          "url": "https://doi.org/10.1038/ismej.2015.239",
+          "access_method": "publication",
+          "cite": "Goordial et al., 2016",
+          "year": 2016,
+          "kind": "peer_reviewed"
+        },
+        "heldmann2015_dryvalleys": {
+          "source_id": "heldmann2015_dryvalleys",
+          "title": "Mars: Periglacial Morphology and Implications for Future Landing Sites",
+          "institution": "NASA Technical Reports Server 20150023012",
+          "url": "https://ntrs.nasa.gov/citations/20150023012",
+          "access_method": "publication",
+          "cite": "Heldmann et al., 2015",
+          "year": 2015,
+          "kind": "nasa"
         }
       },
       "completeness": {
@@ -1225,7 +1229,7 @@
           "category": "light",
           "value": 75.38,
           "unit": "deg",
-          "source_id": "nasa_hmp",
+          "source_id": "trowbridge2024_haughton",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -1399,13 +1403,10 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "impact_crater",
-            "polar_desert",
-            "periglacial",
-            "crater_floor"
+            "impact_crater"
           ],
           "unit": null,
-          "source_id": "nasa_hmp",
+          "source_id": "trowbridge2024_haughton",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1422,7 +1423,7 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: impact_crater (Trowbridge et al., 2024)."
         },
         {
           "feature_id": "mineralogy_tags",
@@ -1432,10 +1433,10 @@
             "impact_breccia",
             "carbonates",
             "sulfates",
-            "gypsum"
+            "iron_oxides"
           ],
           "unit": null,
-          "source_id": "lit_haughton",
+          "source_id": "izawa2011_haughton",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1452,7 +1453,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: impact_breccia, carbonates (Izawa et al., 2011); sulfates, iron_oxides (Parnell et al., 2012)."
         }
       ],
       "sources": {
@@ -1480,13 +1481,6 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
         },
-        "lit_haughton": {
-          "source_id": "lit_haughton",
-          "title": "Osinski et al. (2005), Impactites of the Haughton impact structure, Devon Island, Canadian High Arctic, Meteoritics & Planetary Science 40",
-          "institution": "Wiley (peer-reviewed literature)",
-          "url": "https://doi.org/10.1111/j.1945-5100.2005.tb00147.x",
-          "access_method": "DOI"
-        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -1501,12 +1495,35 @@
           "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-14"
         },
-        "nasa_hmp": {
-          "source_id": "nasa_hmp",
-          "title": "Haughton-Mars Project (Devon Island)",
-          "institution": "NASA Ames / Mars Institute",
-          "url": "https://www.marsinstitute.no/hmp",
-          "access_method": "web page"
+        "izawa2011_haughton": {
+          "source_id": "izawa2011_haughton",
+          "title": "Weathering of Post-Impact Hydrothermal Deposits from the Haughton Impact Structure: Implications for Microbial Colonization and Biosignature Preservation",
+          "institution": "Astrobiology",
+          "url": "https://doi.org/10.1089/ast.2011.0612",
+          "access_method": "publication",
+          "cite": "Izawa et al., 2011",
+          "year": 2011,
+          "kind": "peer_reviewed"
+        },
+        "parnell2012_haughton": {
+          "source_id": "parnell2012_haughton",
+          "title": "Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars",
+          "institution": "International Journal of Astrobiology",
+          "url": "https://doi.org/10.1017/S1473550411000395",
+          "access_method": "publication",
+          "cite": "Parnell et al., 2012",
+          "year": 2012,
+          "kind": "peer_reviewed"
+        },
+        "trowbridge2024_haughton": {
+          "source_id": "trowbridge2024_haughton",
+          "title": "Modeling of the Impact-Generated Hydrothermal System at the Haughton Impact Structure",
+          "institution": "Journal of Geophysical Research: Planets",
+          "url": "https://doi.org/10.1029/2023JE008267",
+          "access_method": "publication",
+          "cite": "Trowbridge et al., 2024",
+          "year": 2024,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
@@ -1729,7 +1746,7 @@
           "category": "light",
           "value": 36.46,
           "unit": "deg",
-          "source_id": "nasa_analogs_overview",
+          "source_id": "elmaarry2015_playas",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -1903,13 +1920,11 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "desert_plain",
             "playa",
-            "alluvial_fan",
-            "basin_and_range"
+            "polygonal_terrain"
           ],
           "unit": null,
-          "source_id": "nasa_analogs_overview",
+          "source_id": "elmaarry2015_playas",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1926,21 +1941,20 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: playa (El-Maarry et al., 2015); polygonal_terrain (Lasser et al., 2020)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "evaporites",
-            "halite",
-            "borates",
-            "basalt",
-            "iron_oxides"
+            "chlorides",
+            "sulfates",
+            "clays",
+            "borates"
           ],
           "unit": null,
-          "source_id": "nasa_analogs_overview",
+          "source_id": "elmaarry2015_playas",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -1957,17 +1971,10 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: chlorides, sulfates, clays (El-Maarry et al., 2015); borates (Das et al., 2026)."
         }
       ],
       "sources": {
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
-        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -2005,6 +2012,36 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
+        },
+        "das2026_deathvalley": {
+          "source_id": "das2026_deathvalley",
+          "title": "Estimating past fluid pH and evaporative conditions in Gale crater using terrestrial analog samples from Death Valley, CA",
+          "institution": "Meteoritics & Planetary Science",
+          "url": "https://doi.org/10.1111/maps.70237",
+          "access_method": "publication",
+          "cite": "Das et al., 2026",
+          "year": 2026,
+          "kind": "peer_reviewed"
+        },
+        "elmaarry2015_playas": {
+          "source_id": "elmaarry2015_playas",
+          "title": "Field investigation of dried lakes in western United States as an analogue to desiccation fractures on Mars",
+          "institution": "Journal of Geophysical Research: Planets",
+          "url": "https://doi.org/10.1002/2015JE004895",
+          "access_method": "publication",
+          "cite": "El-Maarry et al., 2015",
+          "year": 2015,
+          "kind": "peer_reviewed"
+        },
+        "lasser2020_badwater": {
+          "source_id": "lasser2020_badwater",
+          "title": "Surface and subsurface characterisation of salt pans expressing polygonal patterns",
+          "institution": "Earth System Science Data",
+          "url": "https://doi.org/10.5194/essd-12-2881-2020",
+          "access_method": "publication",
+          "cite": "Lasser et al., 2020",
+          "year": 2020,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
@@ -2403,7 +2440,8 @@
           "value": [
             "lava_plain",
             "fissure_vent",
-            "outwash_plain"
+            "outwash_plain",
+            "polygonal_terrain"
           ],
           "unit": null,
           "source_id": "lit_holuhraun",
@@ -2423,7 +2461,7 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: lava_plain, fissure_vent, outwash_plain (Pedersen et al., 2017); polygonal_terrain (Voigt et al., 2025)."
         },
         {
           "feature_id": "mineralogy_tags",
@@ -2431,12 +2469,10 @@
           "category": "composition",
           "value": [
             "basalt",
-            "olivine",
-            "glass",
-            "regolith"
+            "volcanic_glass"
           ],
           "unit": null,
-          "source_id": "nasa_analogs_overview",
+          "source_id": "lit_holuhraun",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2453,7 +2489,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: basalt (Pedersen et al., 2017); volcanic_glass (Hartley et al., 2018)."
         }
       ],
       "sources": {
@@ -2481,20 +2517,6 @@
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
         },
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
-        },
-        "lit_holuhraun": {
-          "source_id": "lit_holuhraun",
-          "title": "Pedersen et al. (2017), Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland, J. Volcanol. Geotherm. Res. 340",
-          "institution": "Elsevier (peer-reviewed literature)",
-          "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
-          "access_method": "DOI"
-        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -2508,6 +2530,36 @@
           "access_method": "REST API, no login",
           "license": "Public domain (NASA)",
           "retrieved_at": "2026-11-14"
+        },
+        "hartley2018_holuhraun": {
+          "source_id": "hartley2018_holuhraun",
+          "title": "Melt inclusion constraints on petrogenesis of the 2014-2015 Holuhraun eruption, Iceland",
+          "institution": "Contributions to Mineralogy and Petrology",
+          "url": "https://doi.org/10.1007/s00410-017-1435-0",
+          "access_method": "publication",
+          "cite": "Hartley et al., 2018",
+          "year": 2018,
+          "kind": "peer_reviewed"
+        },
+        "lit_holuhraun": {
+          "source_id": "lit_holuhraun",
+          "title": "Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland",
+          "institution": "Journal of Volcanology and Geothermal Research",
+          "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
+          "access_method": "publication",
+          "cite": "Pedersen et al., 2017",
+          "year": 2017,
+          "kind": "peer_reviewed"
+        },
+        "voigt2025_holuhraun": {
+          "source_id": "voigt2025_holuhraun",
+          "title": "The 2014-2015 Holuhraun Lava Flow-field in Iceland as a Planetary Analog for Young Volcanic Terrains in Elysium Planitia, Mars",
+          "institution": "The Planetary Science Journal",
+          "url": "https://doi.org/10.3847/PSJ/adb5f1",
+          "access_method": "publication",
+          "cite": "Voigt et al., 2025",
+          "year": 2025,
+          "kind": "peer_reviewed"
         }
       },
       "completeness": {
@@ -2730,7 +2782,7 @@
           "category": "light",
           "value": 38.41,
           "unit": "deg",
-          "source_id": "mdrs",
+          "source_id": "clarke2011_hanksville",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -2904,13 +2956,10 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "badlands",
-            "sedimentary_plain",
-            "mesa",
-            "desert_plain"
+            "inverted_channels"
           ],
           "unit": null,
-          "source_id": "mdrs",
+          "source_id": "clarke2011_hanksville",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2927,20 +2976,20 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: inverted_channels (Clarke & Stoker, 2011)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
+            "carbonates",
             "sandstone",
-            "clays",
-            "gypsum",
-            "iron_oxides"
+            "sulfates",
+            "clays"
           ],
           "unit": null,
-          "source_id": "mdrs",
+          "source_id": "stoker2011_mdrs",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -2957,7 +3006,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: carbonates (Clarke & Stoker, 2011); sandstone, sulfates, carbonates, clays (Stoker et al., 2011)."
         }
       ],
       "sources": {
@@ -2985,13 +3034,6 @@
           "uncertainty_notes": "Model output; ignores atmosphere.",
           "access_method": "computed"
         },
-        "mdrs": {
-          "source_id": "mdrs",
-          "title": "Mars Desert Research Station",
-          "institution": "The Mars Society",
-          "url": "https://mdrs.marssociety.org/",
-          "access_method": "web page"
-        },
         "copernicus_glo90": {
           "source_id": "copernicus_glo90",
           "title": "Copernicus DEM GLO-90 (90 m global digital surface model)",
@@ -3005,6 +3047,26 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
+        },
+        "clarke2011_hanksville": {
+          "source_id": "clarke2011_hanksville",
+          "title": "Concretions in Exhumed Channels Near Hanksville Utah: Implications for Mars",
+          "institution": "NASA Technical Reports Server 20110023235",
+          "url": "https://ntrs.nasa.gov/citations/20110023235",
+          "access_method": "publication",
+          "cite": "Clarke & Stoker, 2011",
+          "year": 2011,
+          "kind": "nasa"
+        },
+        "stoker2011_mdrs": {
+          "source_id": "stoker2011_mdrs",
+          "title": "Properties of Subsurface Soil Cores from Four Geologic Provinces Surrounding Mars Desert Research Station, Utah: Characterizing Analog Martian Soil in a Human Exploration Scenario",
+          "institution": "42nd Lunar and Planetary Science Conference (NASA Technical Reports Server 20110014304)",
+          "url": "https://ntrs.nasa.gov/citations/20110014304",
+          "access_method": "publication",
+          "cite": "Stoker et al., 2011",
+          "year": 2011,
+          "kind": "nasa"
         }
       },
       "completeness": {
@@ -3227,7 +3289,7 @@
           "category": "light",
           "value": 19.82,
           "unit": "deg",
-          "source_id": "nasa_analogs_overview",
+          "source_id": "adams2014_maunakea",
           "measurement_type": "measured",
           "spatial_resolution": "point",
           "geographic_footprint": {
@@ -3401,12 +3463,11 @@
           "label": "Terrain morphology",
           "category": "ground",
           "value": [
-            "volcanic_slope",
-            "tephra_field",
-            "lava_plain"
+            "cinder_cone",
+            "volcanic_slope"
           ],
           "unit": null,
-          "source_id": "nasa_analogs_overview",
+          "source_id": "adams2014_maunakea",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3423,20 +3484,18 @@
           "uncertainty": null,
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: cinder_cone (Adams, 2014); volcanic_slope (Graham & Graff, 2013)."
         },
         {
           "feature_id": "mineralogy_tags",
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "basalt",
             "tephra",
-            "volcanic_glass",
-            "regolith"
+            "iron_oxides"
           ],
           "unit": null,
-          "source_id": "nasa_analogs_overview",
+          "source_id": "adams2014_maunakea",
           "measurement_type": "literature",
           "spatial_resolution": null,
           "geographic_footprint": {
@@ -3453,17 +3512,10 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": null
+          "notes": "Literature labels: tephra, iron_oxides (Adams, 2014)."
         }
       ],
       "sources": {
-        "nasa_analogs_overview": {
-          "source_id": "nasa_analogs_overview",
-          "title": "NASA Analog Missions",
-          "institution": "NASA",
-          "url": "https://www.nasa.gov/analog-missions/",
-          "access_method": "web page"
-        },
         "nasa_power": {
           "source_id": "nasa_power",
           "title": "NASA POWER Climatology API (Prediction Of Worldwide Energy Resources)",
@@ -3501,6 +3553,26 @@
           "access_method": "HTTPS Cloud-Optimised GeoTIFF, no login",
           "license": "Free for any use under the Copernicus DEM licence (attribution required)",
           "retrieved_at": "2026-11-14"
+        },
+        "adams2014_maunakea": {
+          "source_id": "adams2014_maunakea",
+          "title": "Pu'u Poli'ahu, Mauna Kea: A Possible Analog for the Hematite Bearing Layer Located in Gale Crater, Mars",
+          "institution": "NASA Technical Reports Server 20140010577",
+          "url": "https://ntrs.nasa.gov/citations/20140010577",
+          "access_method": "publication",
+          "cite": "Adams, 2014",
+          "year": 2014,
+          "kind": "nasa"
+        },
+        "graham2013_maunakea": {
+          "source_id": "graham2013_maunakea",
+          "title": "Rover-Based Instrumentation and Scientific Investigations During the 2012 Analog Field Test on Mauna Kea Volcano, Hawaii",
+          "institution": "NASA Technical Reports Server 20130009908",
+          "url": "https://ntrs.nasa.gov/citations/20130009908",
+          "access_method": "publication",
+          "cite": "Graham & Graff, 2013",
+          "year": 2013,
+          "kind": "nasa"
         }
       },
       "completeness": {

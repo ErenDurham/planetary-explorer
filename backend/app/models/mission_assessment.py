@@ -13,6 +13,7 @@ class MissionRequirements(BaseModel):
     slope_tolerance_deg: float = Field(5.0, gt=0, le=90)
     relief_target_m: float = Field(100.0, ge=0, le=10000)
     relief_tolerance_m: float = Field(300.0, gt=0, le=10000)
+    analog_reference_id: str | None = Field(None, max_length=100, description="Earth rover field test only: a Mars site id. When set, Earth sites are ranked by their analog similarity to that Mars site (the Explore analog calculation) instead of by the slope/relief targets.")
 
 class MissionAssessmentRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
