@@ -46,6 +46,19 @@ sites), and verified imagery for Earth sites (Landsat WELD orbital context via N
 photographs with recorded licences). Landing suitability stays Mars-only and is never merged with
 analog similarity. The Moon is deferred: its catalogue data is isolated and unused in navigation.
 
+## Expedition Planner
+
+From a site's **Research** page, **Plan an Expedition** opens an interactive rover-expedition planner: choose an
+objective (terrain survey, geological sampling, research traverse), lay out waypoints on the region's
+georeferenced CTX mosaic, set rover limits, and let the shared expedition service (`expedition-v1`, MOLA regional
+grid, A* routing) compute the route, its slopes, energy and feasibility. Every metric on screen is the service's;
+the UI estimates nothing. See [docs/EXPEDITION_PLANNER_UI.md](docs/EXPEDITION_PLANNER_UI.md) and
+[EXPEDITION_PLANNER_CONTRACT.md](EXPEDITION_PLANNER_CONTRACT.md).
+
+| Workspace | Mission report |
+|---|---|
+| ![Expedition workspace](docs/screenshots/expedition-workspace.jpg) | ![Mission report](docs/screenshots/expedition-report.jpg) |
+
 ## Quick start
 
 ```bash

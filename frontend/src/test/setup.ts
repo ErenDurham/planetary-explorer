@@ -24,3 +24,18 @@ if (!window.matchMedia) {
     dispatchEvent: vi.fn(),
   });
 }
+
+// jsdom has no PointerEvent; the expedition map's pointer handlers need
+// `button`, `clientX` and `clientY`, so give it a MouseEvent-backed polyfill.
+if (!("PointerEvent" in window)) {
+  class PointerEventPolyfill extends MouseEvent {
+    readonly pointerId: number;
+    readonly pointerType: string;
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init);
+      this.pointerId = init.pointerId ?? 1;
+      this.pointerType = init.pointerType ?? "mouse";
+    }
+  }
+  (window as unknown as { PointerEvent: typeof PointerEventPolyfill }).PointerEvent = PointerEventPolyfill;
+}

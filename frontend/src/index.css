@@ -111,3 +111,34 @@ input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ---- Expedition Planner (features/expedition) ----------------------------
+   One extra accent for the Research Traverse objective, the route reveal, the
+   map's floating controls and a subtle one-shot glow when a route lands. All
+   motion is disabled by the prefers-reduced-motion rule above. */
+@theme {
+  --color-teal: #5fb8b0;
+}
+@keyframes route-reveal {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.route-reveal { stroke-dasharray: 1; stroke-dashoffset: 1; animation: route-reveal .9s ease-out forwards; }
+@keyframes route-fade { from { opacity: 0; } to { opacity: 1; } }
+.route-fade { animation: route-fade .6s ease-out forwards; }
+@keyframes scan-line { from { top: 0; } to { top: 100%; } }
+.scan-line { animation: scan-line 1.8s linear infinite; }
+.pulse-ring { animation: pulse-ring 2.4s ease-out infinite; }
+.map-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--color-line-strong); background: rgba(11,15,20,.82); color: var(--color-fg); backdrop-filter: blur(6px); }
+.map-btn:hover { border-color: var(--color-copper); color: var(--color-copper-bright); }
+.map-btn-on { border-color: var(--color-copper); background: rgba(194,98,43,.25); color: var(--color-copper-bright); }
+@keyframes settle-glow {
+  0% { box-shadow: 0 0 0 0 rgba(240,160,60,.0); }
+  25% { box-shadow: 0 0 0 3px rgba(240,160,60,.45), 0 0 32px rgba(240,160,60,.25); }
+  100% { box-shadow: 0 0 0 0 rgba(240,160,60,0); }
+}
+.settle-glow { animation: settle-glow 1.6s ease-out 1; }
+.expedition-hero { background: radial-gradient(120% 140% at 85% 10%, rgba(194,98,43,.28), transparent 55%), linear-gradient(180deg, rgba(11,15,20,.15), rgba(11,15,20,.92)); }
+.eyebrow { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-fg-faint); }
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.rise-in { animation: rise-in .45s ease-out both; }
