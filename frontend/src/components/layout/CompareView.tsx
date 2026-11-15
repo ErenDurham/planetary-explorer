@@ -12,6 +12,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { api } from "@/services/api";
 import { ErrorNote } from "@/components/ui/ErrorNote";
 import { Spinner } from "@/components/ui/Spinner";
+import { CompareAtlasFrame, CompareAtlasImagery } from "@/components/compare/CompareAtlasFrame";
 import { PairSelectors, type PairColumnData } from "@/components/compare/PairSelectors";
 import { AnalogPreferencesSlot } from "@/components/compare/AnalogPreferencesSlot";
 import { SimilarityCard } from "@/components/compare/SimilarityCard";
@@ -42,7 +43,6 @@ export function currentEntry(imagery: PaneImagery, view: PaneView, choice: strin
 export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; selectedId: string | null; onSelect?: (id: string) => void }) {
   const q = useQuery({ queryKey: ["comparison-catalog"], queryFn: api.comparisonCatalog, staleTime: Infinity });
   const selectionBody = useAppStore(s => s.selectionBody);
-  const task = useAppStore(s => s.task);
   const appliedReference = useAppStore(s => s.appliedReference);
   const selectedEarthId = useAppStore(s => s.selectedEarthId);
   const selectedMarsId = useAppStore(s => s.selectedMarsId);
@@ -119,15 +119,7 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
     ? "Field photographs have no map scale, so their zoom cannot be linked."
     : "Both panes need georeferenced orbital imagery (image bounds) before scales can be linked.";
 
-  return <div className="scroll-thin h-full overflow-y-auto bg-bg" aria-label="Earth and Mars pair comparison">
-    <div className="mx-auto max-w-[1800px] px-4 py-6 md:px-8">
-      <header className="mb-5">
-        <h1 className="text-2xl font-semibold text-fg">Compare an Earth and a Mars location</h1>
-        <p className="mt-2 text-sm text-fg-muted">
-          {task === "analog_site_selection" ? <>Analog site selection: choosing a location on <span className="text-fg">{BODY_NAME[selectionBody]}</span> for a reference on {BODY_NAME[otherBody(selectionBody)]}.</> : <>Landing screening: the selected Mars candidate beside an Earth reference for field context.</>}
-          {" "}Columns follow the objective; swap only changes the display order.
-        </p>
-      </header>
+  return <CompareAtlasFrame focusBody={selectionBody}>
       {q.isPending && <Spinner label="Loading comparison locations" />}
       {q.error && <div className="mb-4"><ErrorNote error={q.error} context="comparison/catalog" /><button className="mt-3 text-sm text-copper-bright underline" onClick={() => q.refetch()}>Retry comparison</button></div>}
       {data && <div className="space-y-5">
@@ -142,7 +134,7 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
           <details className="mt-2 text-sm"><summary className="cursor-pointer text-fg-muted">Adjust analog preferences</summary><div className="mt-3 max-w-2xl"><AnalogPreferencesSlot /></div></details>
         </section>
 
-        <section aria-label="Side-by-side visual field views" className="space-y-3">
+        <CompareAtlasImagery>
           <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-line bg-bg-elev px-3 py-2">
             <div className="flex flex-wrap gap-1 rounded border border-line p-1" role="group" aria-label="Imagery view for both panes">
               {(["orbital", "surface"] as const).map(v => <button key={v} type="button" aria-pressed={sharedView === v} onClick={() => changeSharedView(v)} className={`rounded px-3 py-1.5 text-sm ${sharedView === v ? "bg-copper/15 text-copper-bright" : "text-fg-muted hover:bg-bg-elev-2"}`}>{VIEW_LABEL[v]}</button>)}
@@ -160,7 +152,7 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
               return <ImagePane key={`${body}:${c.location?.id ?? "none"}`} roleLabel={c.label} location={paneLocation(body)} imagery={imagery[body]} view={viewFor(body)} sharedView={sharedView} onOverrideView={v => setOverrides(o => ({ ...o, [body]: v }))} entryId={choices[keyFor(body)] ?? null} onEntryChange={id => setChoices(ch => ({ ...ch, [keyFor(body)]: id }))} zoom={zoomFor(body)} onZoomChange={z => setZoom(body, z, linkedActive)} onFitHeight={body === "earth" ? fitEarth : fitMars} linkNote={linkNote} />;
             })}
           </div>
-        </section>
+        </CompareAtlasImagery>
 
         <SimilarityCard rank={pair.rank} candidate={pair.candidate} candidateBody={selectedCol.body} candidateName={selectedCol.location?.name ?? BODY_NAME[selectedCol.body]} referenceName={referenceName} />
 
@@ -173,6 +165,5 @@ export function CompareView({ sites, selectedId }: { sites: Site[] | undefined; 
 
         <ProvenanceDisclosures columns={columns} bodies={bodies} rank={pair.rank.data} pairMatch={pair.pairMatch} imagery={[imagery.earth.data, imagery.mars.data]} />
       </div>}
-    </div>
-  </div>;
+  </CompareAtlasFrame>;
 }
