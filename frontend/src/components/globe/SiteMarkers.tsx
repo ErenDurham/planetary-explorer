@@ -19,7 +19,7 @@ interface Props {
 }
 
 const BASE = 0.022;
-const DARK = "#0b0f14";
+const DARK = "var(--color-canvas)";
 
 export function SiteMarkers({ config, markers, selectedId, onSelect, onHoverChange, planetRef }: Props) {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -72,7 +72,8 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
 
   useFrame(({ clock, camera }) => {
     // Keep markers small enough to inspect the surface when the camera zooms in.
-    if (groupRef.current) groupRef.current.scale.setScalar(Math.max(0.18, Math.min(1, camera.position.distanceTo(pos) / 2.1)));
+    // (down to a twentieth when the camera is close enough to frame a single footprint)
+    if (groupRef.current) groupRef.current.scale.setScalar(Math.max(0.05, Math.min(1, camera.position.distanceTo(pos) / 2.1)));
     if (!ringRef.current) return;
     if (selected) {
       const t = (clock.elapsedTime % 1.6) / 1.6;
@@ -161,14 +162,14 @@ function Marker({ datum, config, selected, hovered, onSelect, onHover, planetRef
           <span
             aria-hidden
             className="num inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 px-1 text-[11px] font-semibold leading-none shadow"
-            style={{ backgroundColor: "rgba(11,15,20,0.88)", borderColor: datum.rank == null ? color : "#ffffff", color: datum.rank == null ? color : "#ffffff" }}
+            style={{ backgroundColor: "var(--overlay-bg)", borderColor: datum.rank == null ? color : "#ffffff", color: datum.rank == null ? color : "#ffffff" }}
           >
             {datum.rank ?? "NR"}
           </span>
         </Html>
       )}
       {hovered && (
-        <Html position={[0, BASE * 2.2, 0]} center calculatePosition={labelPosition} occlude={planetRef ? [planetRef] : true} style={{ pointerEvents: "none" }} zIndexRange={[50, 0]}>
+        <Html position={[0, 0, 0]} center calculatePosition={labelPosition} occlude={planetRef ? [planetRef] : true} style={{ pointerEvents: "none" }} zIndexRange={[50, 0]}>
           <div role="tooltip" data-testid="marker-description" className="w-max max-w-[260px] whitespace-normal break-words rounded border border-line-strong bg-bg-elev-2/95 px-2.5 py-1.5 text-left shadow-lg">
             <div className="text-xs font-semibold text-fg">{datum.name}</div>
             <div className="text-[10.5px] text-fg-muted">{datum.region}</div>

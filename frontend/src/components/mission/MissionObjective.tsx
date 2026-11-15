@@ -7,13 +7,24 @@
 // did not run, one plain line says so: the weights then come from keyword
 // matching, not from research. The applied task reading (Earth-Mars release:
 // task, body, destination, reference) is shown under the saved text.
-import { useState, type FormEvent, type KeyboardEvent } from "react";
-import { Loader2, Pencil, TriangleAlert } from "lucide-react";
+//
+// The built-in objective (lib/defaultObjective.ts) is previewed in the empty
+// box as its placeholder. Tab, or the "Use suggested mission" button, puts it
+// in the box so it can be read and edited; Enter or Save then submits it like
+// any other text. Tab is only intercepted while the box is empty, so keyboard
+// navigation out of a box with text in it is unchanged.
+import { ContourArtwork } from "@/components/atlas/AtlasSurface";
+import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
+import { Pencil, TriangleAlert } from "lucide-react";
+import { ShootingStar } from "@/components/mission/SpaceDecor";
 import { useAppStore } from "@/store/useAppStore";
 import { BODY_NAME } from "@/lib/analogFeatures";
-import { TASK_LABEL } from "@/components/mission/TaskReview";
+import type { Task } from "@/store/useAppStore";
 
-const PLACEHOLDER = "We want to land on Mars to establish a Research Base.";
+const TASK_LABEL: Record<Task, string> = { landing_screening: "Mars landing screening", analog_site_selection: "Analog site selection" };
+
+const SUGGESTION = DEFAULT_MISSION_OBJECTIVE;
 
 interface Props {
   /** True once a mission has been saved from this box. */
@@ -38,6 +49,8 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
   const appliedReference = useAppStore((s) => s.appliedReference);
   const [draft, setDraft] = useState("");
   const [editing, setEditing] = useState(false);
+  const box = useRef<HTMLTextAreaElement>(null);
+  const empty = draft.trim() === "";
   const composing = !submitted || editing;
   const draftDiffers = editing && draft.trim() !== missionText;
 
@@ -51,8 +64,15 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
     onSave(text);
   };
   const onSubmit = (e: FormEvent) => { e.preventDefault(); save(); };
+  /** Put the suggested mission in the box, ready to read, edit or save. */
+  const useSuggestion = () => {
+    setDraft(SUGGESTION);
+    setDraftDirty(SUGGESTION.trim() !== (submitted ? missionText : appliedObjective).trim());
+    requestAnimationFrame(() => { const el = box.current; if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } });
+  };
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); save(); }
+    else if (e.key === "Tab" && !e.shiftKey && empty) { e.preventDefault(); useSuggestion(); }
     else if (e.key === "Escape" && editing) { e.preventDefault(); cancelEdit(); }
   };
   const startEdit = () => { setDraft(missionText); setEditing(true); };
@@ -60,7 +80,8 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
   const noModel = missionType === "landing" && submitted && !pending && !composing && appliedSource !== null && appliedSource !== "llm";
 
   return (
-    <div className={`mx-auto w-full px-4 text-center transition-[max-width,padding] duration-500 ease-out ${submitted ? "max-w-3xl pb-5 pt-6" : "max-w-2xl pb-8 pt-[16vh]"}`}>
+    <div data-pane="mission-objective" data-composing={composing} className={`mx-auto w-full px-4 text-center transition-[max-width,padding] duration-500 ease-out ${submitted ? "max-w-3xl pb-5 pt-6" : "max-w-2xl pb-8 pt-[16vh]"}`}>
+      <ContourArtwork />
       <h2 className={`font-semibold tracking-tight text-fg transition-[font-size] duration-500 ${submitted ? "text-3xl" : "text-4xl"}`}>Mission Design</h2>
       {!submitted && <p className="mt-2 text-base text-fg-muted">Tell us what your mission is</p>}
 
@@ -69,15 +90,22 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
           <label htmlFor="mission-objective" className="sr-only">Your mission objective</label>
           <textarea
             id="mission-objective"
+            ref={box}
             maxLength={500}
-            rows={3}
+            rows={5}
             value={draft}
             onChange={(e) => { setDraft(e.target.value); setDraftDirty(e.target.value.trim() !== (submitted ? missionText : appliedObjective).trim()); }}
             onKeyDown={onKeyDown}
-            placeholder={PLACEHOLDER}
+            placeholder={SUGGESTION}
+            aria-describedby={empty ? "mission-suggestion-hint" : undefined}
             autoFocus={editing}
             className="w-full resize-none rounded-xl border border-line-strong bg-bg px-4 py-3 text-left text-base text-fg placeholder:text-fg-faint"
           />
+          {empty && (
+            <p id="mission-suggestion-hint" className="mt-2 text-sm text-fg-muted" data-testid="mission-suggestion-hint">
+              The grey text is a suggested mission. Press <kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-xs text-fg">Tab</kbd> or <button type="button" onClick={useSuggestion} className="text-copper-bright underline underline-offset-2">use it</button>, then <kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-xs text-fg">Enter</kbd> to save. Or write your own.
+            </p>
+          )}
           <div className="mt-3 flex items-center justify-center gap-2">
             {editing && <button type="button" onClick={cancelEdit} className="rounded-lg border border-line px-4 py-2 text-sm text-fg-muted hover:text-fg">Cancel</button>}
             <button type="submit" disabled={!draft.trim() || !canSave || pending} className="rounded-lg border border-copper bg-copper/10 px-5 py-2 text-sm font-semibold text-copper-bright disabled:opacity-40">
@@ -101,9 +129,10 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
               <Pencil className="h-4 w-4" aria-hidden /> Edit Mission
             </button>
             {pending && (
-              <span className="inline-flex items-center gap-1.5 text-sm text-fg-muted" role="status">
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Considering the rocket science...
-              </span>
+              <div className="mt-4 flex w-full items-center justify-center gap-2.5 text-xl font-medium text-fg" role="status" data-testid="mission-loading">
+                <ShootingStar />
+                <p>Considering the rocket science...</p>
+              </div>
             )}
           </div>
         </div>

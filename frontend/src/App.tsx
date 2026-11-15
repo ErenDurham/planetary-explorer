@@ -1,3 +1,4 @@
+import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
 // App shell. The store separates the MISSION (task, destination, selections on
 // each body) from the VIEW (which globe is shown, which map mode colours it).
 // This component turns server data into one marker list for the visible body:
@@ -38,6 +39,7 @@ import { EmptyNote } from "@/components/ui/Section";
 import type { AnalogRankResponse } from "@/types";
 
 export default function App() {
+  const candidateResearchTarget = useCandidateResearchTarget(s => s.target);
   const [sitePanelWidth,setSitePanelWidth]=useState(380);
   const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
   const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
@@ -52,6 +54,10 @@ export default function App() {
   const exploreRevision = useAppStore(s => s.exploreRevision);
   const activeTab = useAppStore((s) => s.activeTab);
   const setActiveTab = useAppStore((s) => s.setActiveTab);
+  const exploreMode = useAppStore((s) => s.exploreMode);
+  // "Find Earth Analogs" is the second Explore experience: the same three-column
+  // workspace, drawn by DiscoveryView itself, with its own run-scoped state
+  const findAnalogs = activeTab === "explore" && exploreMode === "find_analogs";
   const focusToken = useAppStore((s) => s.selectionRevision);
   const viewedBody = useAppStore((s) => s.viewedBody);
   const mapMode = useAppStore((s) => s.mapMode);
@@ -125,6 +131,21 @@ export default function App() {
       return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lon_east, mode: "landing" as const, score: r?.score ?? null, rank: r?.rank ?? null, status: r?.status ?? null, similarity: null, unrankableReason: null, appearance: r?.status === "ok" ? analogMarkerAppearance(missionRankPosition(r.rank,evaluation.data?.results.map(r=>r.rank)??[]),rankPalette) : markerAppearance(r?.status, r?.score) };
     });
   }, [viewedBody, analog, sites.data, evaluation.data, earth.sites, rankData, rankPalette, referenceId, earthMission, taskMissionView, assessment.data, earth.data]);
+
+  // A deliberate trip to analogs opens the top match only if that body has no
+  // selection. Consume the request once so clearing a site stays cleared.
+  const analogEntry = useRef({ revision: -1, pending: false });
+  useEffect(() => {
+    if (analogEntry.current.revision !== exploreRevision) {
+      analogEntry.current = { revision: exploreRevision, pending: analog && activeTab === "explore" };
+    }
+    if (activeTab !== "explore" || !analog) { analogEntry.current.pending = false; return; }
+    if (!analogEntry.current.pending || !rankData || !referenceId) return;
+    analogEntry.current.pending = false;
+    if (selectedId) return;
+    const top = rankData.candidates.find(c => c.rank === 1);
+    if (top) selectLocation(viewedBody, top.location.id);
+  }, [exploreRevision, activeTab, analog, rankData, referenceId, selectedId, viewedBody, selectLocation]);
 
   // One-time best-match hint: only when a reference (a known selected site on
   // the other body) exists and the visible body has no selection yet. Shown as
@@ -223,14 +244,14 @@ export default function App() {
     : (rankData?.candidate_body === "earth" ? rankData.candidates.find(c => c.rank === 1)?.location.id : undefined) ?? earth.sites[0]?.id;
 
   useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
-  const centre = activeTab === "explore"
+  const centre = findAnalogs
+    ? <DiscoveryView panelWidth={sitePanelWidth} onPanelWidthChange={setSitePanelWidth} />
+    : activeTab === "explore"
     ? <ExploreView key={exploreRevision} initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
       ? missionType !== "landing" ? <MissionAssessmentDetail data={assessment.data} result={assessment.data?.results.find(r=>r.site_id===missionSelectedId)} location={missionLocation} pending={assessment.isPending} showSensitivity/> : <AnalyzeView sites={sites.data?.sites} evaluation={evaluation.data} selectedId={selectedMarsId} onSelect={selectSite} />
       : activeTab === "compare"
         ? <CompareView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} />
-        : activeTab === "discover"
-        ? <DiscoveryView />
         : <ResearchView sites={sites.data?.sites} selectedId={selectedMarsId} onSelect={selectSite} mission={evaluation.mission} />;
 
   // Candidate pane for the visible body (Analyze always shows the Mars landing ranking).
@@ -295,7 +316,7 @@ export default function App() {
       </div>
       <TopNav active={activeTab} onChange={setActiveTab} />
       <StatusBanner />
-      {(activeTab === "explore" || activeTab === "analyze") && (
+      {((activeTab === "explore" && !findAnalogs) || activeTab === "analyze") && (
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-bg-elev px-4 py-2 lg:hidden">
           <label htmlFor="mobile-candidate" className="text-sm text-fg-muted">{exploreAnalog ? `${BODY_NAME[viewedBody]} candidate` : "Candidate"}</label>
           <select id="mobile-candidate" value={mobileSelected ?? ""} onChange={e => (taskCandidates ? selectLocation(missionBody,e.target.value || null) : exploreAnalog ? selectLocation(viewedBody,e.target.value || null) : selectSite(e.target.value || null))} className="min-w-0 flex-1 rounded border border-line-strong bg-bg p-2 text-sm text-fg"><option value="">No location selected</option>{mobileOptions.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}</select>
@@ -319,7 +340,7 @@ export default function App() {
             <button type="button" disabled={!appliedObjective || draftDirty || !initialMissionId || (missionType === "landing" ? evaluation.isPending : assessment.isPending)} onClick={() => navigateExplore("mission", initialMissionId)} className="ml-auto rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">Head to explore mission →</button>
           </footer>}
         </div>
-        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" || activeTab === "discover" ? (
+        {activeTab === "mission" ? null : activeTab === "compare" || activeTab === "research" || findAnalogs ? (
           <div className="h-full">{centre}</div>
         ) : (
           // Candidates scroll independently of mission settings and reasoning.
@@ -336,7 +357,7 @@ export default function App() {
           </div>
         )}
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || activeTab === "discover" ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" ? exploreOverlayMaxHeight : undefined} /></div>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${(activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "lg:left-[250px] lg:right-[var(--site-panel-width)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );

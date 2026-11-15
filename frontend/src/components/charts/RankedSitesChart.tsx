@@ -1,5 +1,5 @@
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { AXIS, GRID, TOOLTIP_STYLE } from "./theme";
+import { AXIS, COPPER_BRIGHT, GRID, TOOLTIP_STYLE } from "./theme";
 import { missionRankPosition, rankColor, NOT_RANKED_COLOR } from "@/lib/rankColor";
 import { markerAppearance } from "@/components/globe/colors";
 import type { SuitabilityResult } from "@/types";
@@ -23,7 +23,7 @@ export function RankedSitesChart({ results, selectedId, onSelect }: { results: S
             <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "#ffffff08" }} formatter={(v, _n, item) => [`${Number(v).toFixed(1)} (${(item.payload as (typeof data)[number]).status})`, "index"]} />
             <Bar dataKey="score" radius={[0, 2, 2, 0]} isAnimationActive={false} onClick={(d) => onSelect?.((d as unknown as { id: string }).id)} cursor={onSelect ? "pointer" : undefined}>
               {data.map((d) => (
-                <Cell key={d.id} fill={d.color} stroke={d.id === selectedId ? "#f0a03c" : undefined} strokeWidth={d.id === selectedId ? 1.5 : 0} />
+                <Cell key={d.id} fill={d.color} stroke={d.id === selectedId ? COPPER_BRIGHT : undefined} strokeWidth={d.id === selectedId ? 1.5 : 0} />
               ))}
             </Bar>
           </BarChart>

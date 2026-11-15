@@ -69,6 +69,23 @@ describe("ExplanationPanel digests and study cards", () => {
   });
   afterEach(() => vi.restoreAllMocks());
 
+  it("uses a plain refresh icon for rule-based research", async () => {
+    response = { ...base, generated_by: "deterministic_fallback" };
+    renderPanel();
+    await screen.findByText("NASA chose Jezero for Perseverance.");
+    const refresh = screen.getByRole("button", { name: "Explain this site under the current priorities" });
+    expect(refresh.querySelector(".lucide-sparkles")).toBeNull();
+    expect(refresh.querySelector(".lucide-refresh-cw")).not.toBeNull();
+  });
+
+  it("identifies refresh as AI when research was model generated", async () => {
+    response = { ...base, generated_by: "llm" };
+    renderPanel();
+    await screen.findByText(/Language model/);
+    const refresh = screen.getByRole("button", { name: "Explain this site under the current priorities" });
+    expect(refresh.querySelector(".lucide-sparkles")).not.toBeNull();
+  });
+
   it("sends the applied objective, renders one card per URL with support levels and per-chunk citation handles", async () => {
     renderPanel();
     await screen.findByText("NASA chose Jezero for Perseverance.");

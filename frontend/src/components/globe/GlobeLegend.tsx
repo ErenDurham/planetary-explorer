@@ -1,3 +1,5 @@
+import { useId, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { NOT_RANKED_COLOR, RANK_LEGEND_SENTENCE, rankGradient, type RankPalette } from "@/lib/rankColor";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerMode } from "./MarkerData";
@@ -15,6 +17,9 @@ export interface GlobeLegendProps {
 }
 
 export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onPaletteChange, heading, rankedCount }: GlobeLegendProps) {
+  const [expanded, setExpanded] = useState(false);
+  const detailsId = useId();
+  const title = mode === "analog" ? "Analog match rank" : "Mission suitability rank";
   const credit = (
     <div className="mt-2 border-t border-line pt-2 text-[10px] leading-relaxed text-fg-faint [overflow-wrap:anywhere]">
       {config.displayName} texture: {config.textureCreditUrl ? <a href={config.textureCreditUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-fg">{config.textureCredit}</a> : config.textureCredit}
@@ -24,9 +29,12 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
   {
     return (
       <div className="pointer-events-auto w-[260px] max-w-full rounded border border-line bg-bg-elev/90 px-3 py-2 text-[10.5px] leading-relaxed text-fg-muted backdrop-blur-sm" data-testid={mode === "analog" ? "analog-legend" : mode === "mission" ? "mission-legend" : "landing-legend"}>
-        <div className="mb-1 font-semibold uppercase tracking-wide text-fg-faint">{mode === "analog" ? "Analog match rank" : "Mission suitability rank"}</div>
-        {heading && <div className="mb-1 text-fg">{heading}</div>}
-        <div className="h-2 w-full rounded-full" style={{ background: rankGradient(palette) }} aria-hidden />
+        <button type="button" onClick={() => setExpanded(value => !value)} aria-expanded={expanded} aria-controls={detailsId} className="mb-1 flex min-h-6 w-full items-center justify-between gap-3 rounded text-left font-semibold uppercase tracking-wide text-fg-muted hover:text-fg">
+          <span>{title}</span><ChevronDown aria-hidden className={`h-4 w-4 shrink-0 ${expanded ? "rotate-180" : ""}`} />
+        </button>
+        <div data-rank-scale className="h-2 w-full rounded-full" style={{ background: rankGradient(palette) }} role="img" aria-label={`${title}: ${palette === "single_hue" ? "light to dark" : "red to violet"}, strongest to weakest`} />
+        <div id={detailsId} hidden={!expanded}>
+        {heading && <div className="mt-2 text-fg">{heading}</div>}
         <div className="mt-1 grid grid-cols-2 gap-3 text-[10px] leading-snug">
           <span>1 · Strongest</span>
           <span className="text-right">{rankedCount && rankedCount > 1 ? `${rankedCount} · ` : ""}Weakest</span>
@@ -44,6 +52,7 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
           </label>
         )}
         {credit}
+        </div>
       </div>
     );
   }

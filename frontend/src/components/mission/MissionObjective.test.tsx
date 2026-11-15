@@ -11,6 +11,7 @@ import fixture from "@/test/fixtures/api_examples.json";
 import mission from "@/test/fixtures/mission_examples.json";
 import { roverSharesFrom, useAppStore } from "@/store/useAppStore";
 import { LeftSidebar } from "@/components/layout/LeftSidebar";
+import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 import { InfoTip } from "@/components/ui/InfoTip";
 import type { DefaultMissionResponse, EvaluateResponse, EvidenceCitation } from "@/types";
 
@@ -72,6 +73,31 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("Mission Design chat box", () => {
+  it("previews the built-in mission, fills it on Tab and submits it on Enter", async () => {
+    mockInterpret();
+    renderTab();
+    const box = screen.getByLabelText("Your mission objective");
+    expect(box).toHaveValue("");
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    // Tab in the empty box adopts the preview, with the hint gone and Save enabled
+    fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveValue(DEFAULT_MISSION_OBJECTIVE);
+    expect(screen.queryByTestId("mission-suggestion-hint")).toBeNull();
+    expect(screen.getByRole("button", { name: "Save" })).toBeEnabled();
+    // Tab with text present is ordinary focus movement, not a second fill
+    fireEvent.change(box, { target: { value: "My own words" } });
+    fireEvent.keyDown(box, { key: "Tab" });
+    expect(box).toHaveValue("My own words");
+    // back to empty: the "use it" button does the same as Tab, then Enter submits the suggestion
+    fireEvent.change(box, { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: "use it" }));
+    expect(box).toHaveValue(DEFAULT_MISSION_OBJECTIVE);
+    fireEvent.keyDown(box, { key: "Enter" });
+    await screen.findByTestId("mission-text");
+    expect(interpretCalls[0].objective).toBe(DEFAULT_MISSION_OBJECTIVE);
+    expect(screen.getByTestId("mission-text")).toHaveTextContent(/new candidate Earth regions beyond established analog sites/);
+  });
+
   it("opens on the chat box alone, then Enter interprets, applies and brings in the sliders and pie", async () => {
     mockInterpret();
     const { container } = renderTab();
@@ -80,7 +106,8 @@ describe("Mission Design chat box", () => {
     expect(screen.getByText("Tell us what your mission is")).toBeInTheDocument();
     const box = screen.getByLabelText("Your mission objective");
     expect(box).toHaveValue("");
-    expect(box).toHaveAttribute("placeholder", "We want to land on Mars to establish a Research Base.");
+    expect(box).toHaveAttribute("placeholder", DEFAULT_MISSION_OBJECTIVE);
+    expect(screen.getByTestId("mission-suggestion-hint")).toHaveTextContent(/Press Tab or use it, then Enter to save/);
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
     expect(screen.queryByText("Priority distribution")).toBeNull();
     expect(screen.queryByRole("button", { name: /Edit Mission/ })).toBeNull();
@@ -309,31 +336,16 @@ describe("Mission Design task reading", () => {
     expect(screen.queryByTestId("mars-priorities")).toBeNull();
   });
 
-  it("opens the task panel on an ambiguous reading, keeps Apply task disabled until a direction is chosen, and never guesses an unresolved site", async () => {
+  it("never asks the user to settle the task: no panel, no questions, even if a reading comes back unresolved", async () => {
     mockInterpret({ ...mission.interpret, task_interpretation: { task: "ambiguous", focus_body: null, mission_destination: "mars", reference_site: null, unresolved_sites: [{ matched_text: "the crater", options: [{ body: "mars", id: "gale_crater", name: "Gale Crater (Bradbury Landing)", matched_text: "gale" }, { body: "earth", id: "haughton_crater", name: "Haughton impact structure", matched_text: "haughton" }] }], direction_options: [{ task: "analog_site_selection", focus_body: "earth", label: "Find Earth sites like a Mars site", description: "Pick a Mars reference." }, { task: "analog_site_selection", focus_body: "mars", label: "Find Mars sites like an Earth site", description: "Pick an Earth reference." }], analog_suggestions: analogDefaults, rationale: [] } });
     renderTab();
     await saveMission("Compare the crater");
-    // landing weights applied; the task is not applied until the user settles it
-    expect(useAppStore.getState().weights.thermal_conditions).toBe(0);
-    expect(useAppStore.getState().task).toBe("landing_screening");
-    const task = screen.getByTestId("task-review");
-    expect(within(task).getByTestId("task-proposed")).toHaveTextContent("Ambiguous");
-    expect(within(task).getByTestId("task-reference")).toHaveTextContent("unresolved - pick below");
-    const applyButton = screen.getByRole("button", { name: "Apply task" });
-    expect(applyButton).toBeDisabled();
-    fireEvent.click(within(task).getByRole("radio", { name: /Find Mars sites like an Earth site/ }));
-    expect(applyButton).toBeEnabled();
-    expect(within(task).getByTestId("task-focus")).toHaveTextContent("Mars");
-    fireEvent.change(within(task).getByRole("combobox", { name: /Site for “the crater”/ }), { target: { value: "haughton_crater" } });
-    expect(within(task).getByTestId("task-reference")).toHaveTextContent("Haughton impact structure (Earth)");
-    fireEvent.click(applyButton);
-    const s = useAppStore.getState();
-    expect(s.task).toBe("analog_site_selection");
-    expect(s.viewedBody).toBe("mars");
-    expect(s.selectedEarthId).toBe("haughton_crater");
-    expect(s.selectedMarsId).toBeNull();
+    expect(useAppStore.getState().weights.thermal_conditions).toBe(0);   // the priorities are applied as usual
     expect(screen.queryByTestId("task-resolver")).toBeNull();
-    expect(screen.getByTestId("applied-task")).toHaveTextContent("Analog site selection · looking on Mars");
+    expect(screen.queryByTestId("task-review")).toBeNull();
+    expect(screen.queryByRole("radio")).toBeNull();
+    expect(screen.queryByRole("combobox")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Apply task" })).toBeNull();
   });
 });
 
@@ -443,9 +455,42 @@ describe("Mission Design: one reading, two planets", () => {
     const box = screen.getByLabelText("Your mission objective");
     fireEvent.change(box, { target: { value: TEXT } });
     fireEvent.keyDown(box, { key: "Enter" });
-    expect(await screen.findByText("Considering the rocket science...")).toBeInTheDocument();
+    const text = await screen.findByText("Considering the rocket science...");
+    const loading = screen.getByTestId("mission-loading");
+    expect(loading).toHaveClass("text-xl", "justify-center", "items-center");
+    // a star circling like a spinner, to the left of the text and sized to it (em-based)
+    const star = within(loading).getByTestId("shooting-star");
+    expect(star).toHaveClass("star-spinner", "h-[1.35em]", "w-[1.35em]");
+    expect(star.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(loading.querySelector(".animate-spin")).toBeNull();
     release(json(EARTH_BODY));
     await screen.findByLabelText("Gentler terrain share of priorities");
     expect(screen.queryByText("Considering the rocket science...")).toBeNull();
+  });
+});
+
+describe("Mission Design decoration", () => {
+  it("adds a rocket and twinkling stars that screen readers and clicks ignore, with more stars while only the chat box shows", async () => {
+    mockInterpret();
+    renderTab();
+    const decor = screen.getByTestId("space-decor");
+    expect(decor).toHaveAttribute("aria-hidden");
+    expect(decor).toHaveClass("pointer-events-none");
+    expect(within(decor).getByTestId("decor-rocket")).toHaveClass("rocket-float");
+    const before = within(decor).getAllByTestId("decor-star");
+    expect(before.length).toBeGreaterThan(8);
+    expect(before.every((s) => s.classList.contains("star"))).toBe(true);
+    await saveMission();
+    // once the sliders are in, stars stay beside the header only
+    expect(within(screen.getByTestId("space-decor")).getAllByTestId("decor-star").length).toBeLessThan(before.length);
+  });
+
+  it("draws the pie without borders between slices", async () => {
+    mockInterpret();
+    renderTab();
+    await saveMission();
+    const slice = screen.getByTestId("pie-slice-terrain_safety");
+    expect(slice).not.toHaveAttribute("stroke-width");
+    expect(slice.getAttribute("class") ?? "").not.toMatch(/stroke/);
   });
 });

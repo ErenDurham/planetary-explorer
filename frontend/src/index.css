@@ -1,26 +1,7 @@
 @import "tailwindcss";
 
-/* Dark planetary-research palette. Near-black blue-grey base, copper accent,
-   restrained type: Space Grotesk for text, IBM Plex Mono for numbers. */
-@theme {
-  --color-bg: #0b0f14;
-  --color-bg-elev: #111720;
-  --color-bg-elev-2: #171f2a;
-  --color-line: #232c38;
-  --color-line-strong: #2f3a49;
-  --color-fg: #e6e9ee;
-  --color-fg-muted: #9aa5b4;
-  --color-fg-faint: #6b7686;
-  --color-copper: #c2622b;
-  --color-copper-bright: #f0a03c;
-  --color-copper-dim: #7a3f1f;
-  --color-ok: #6fb98f;
-  --color-warn: #d9a441;
-  --color-danger: #d16a5a;
-  --color-info: #6ea0d9;
-  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-}
+/* All colours, fonts and radii live in theme.css: edit the look there. */
+@import "./theme.css";
 
 html, body, #root { height: 100%; }
 body {
@@ -60,7 +41,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* hatched swatch for ineligible */
 .hatched {
-  background-image: repeating-linear-gradient(45deg, #4a4f57 0 3px, #2a2f37 3px 6px);
+  background-image: repeating-linear-gradient(45deg, var(--color-line-strong) 0 3px, var(--color-line) 3px 6px);
 }
 
 @keyframes pulse-ring {
@@ -85,6 +66,21 @@ input[type="range"]:disabled { opacity: .35; }
 @keyframes mission-slide-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 .mission-text-enter { animation: mission-slide-up .45s ease-out backwards; }
 .mission-enter { animation: mission-slide-up .5s ease-out .1s backwards; }
+
+/* Mission Design decoration: twinkling stars and a gently floating rocket */
+@keyframes twinkle { 0%, 100% { opacity: .2; transform: scale(.75); } 50% { opacity: 1; transform: scale(1.1); } }
+.star { animation: twinkle var(--twinkle-duration, 3s) ease-in-out var(--twinkle-delay, 0s) infinite; transform-origin: center; }
+@keyframes rocket-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.rocket-float { animation: rocket-float 4s ease-in-out infinite; }
+@keyframes rocket-flame { 0%, 100% { opacity: 1; transform: scaleY(1); } 50% { opacity: .65; transform: scaleY(.75); } }
+.rocket-flame { animation: rocket-flame .4s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
+/* loading indicator: a star circling like a spinner */
+@keyframes star-spin { to { transform: rotate(360deg); } }
+.star-spinner { animation: star-spin 1s linear infinite; transform-origin: 50% 50%; }
+@media (prefers-reduced-motion: reduce) {
+  .star, .rocket-float, .rocket-flame { animation: none !important; }
+  .star-spinner { animation: none !important; }
+}
 input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
@@ -119,9 +115,6 @@ input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
    One extra accent for the Research Traverse objective, the route reveal, the
    map's floating controls and a subtle one-shot glow when a route lands. All
    motion is disabled by the prefers-reduced-motion rule above. */
-@theme {
-  --color-teal: #5fb8b0;
-}
 @keyframes route-reveal {
   from { stroke-dashoffset: 1; }
   to { stroke-dashoffset: 0; }
@@ -145,3 +138,24 @@ input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
 .eyebrow { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-fg-faint); }
 @keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .rise-in { animation: rise-in .45s ease-out both; }
+
+/* Keep native select behavior, with consistent readable controls in the dark UI. */
+select {
+  color-scheme: dark;
+  appearance: none;
+  max-width: 100%;
+  min-width: 0;
+  padding-right: 2rem;
+  text-overflow: ellipsis;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239aa5b4' stroke-width='1.5'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right .65rem center;
+  background-repeat: no-repeat;
+}
+select:not(:disabled) { cursor: pointer; }
+select:disabled { cursor: not-allowed; opacity: .5; }
+select option { color: var(--color-fg); background-color: var(--color-bg-elev); }
+select option:disabled { color: var(--color-fg-faint); }
+summary { overflow-wrap: anywhere; }
+@media (forced-colors: active) {
+  select { appearance: auto; background-image: none; }
+}

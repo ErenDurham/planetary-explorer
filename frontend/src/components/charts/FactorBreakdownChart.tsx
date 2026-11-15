@@ -14,7 +14,7 @@ export function FactorBreakdownChart({ factors }: { factors: FactorScore[] }) {
       const points = f.weighted_contribution ?? 0;
       return <li key={f.criterion_id}>
         <div className="mb-2 flex items-center justify-between gap-3 text-sm"><span className="text-fg">{guide?.name ?? f.label}</span><span className="num shrink-0 font-semibold text-fg">{points.toFixed(1)} <span className="font-normal text-fg-muted">pts</span></span></div>
-        <div className="h-2 overflow-hidden rounded-full bg-line" aria-hidden><div className="h-full rounded-full" style={{width: `${Math.max(0, Math.min(100, points))}%`, background: guide?.color ?? "#f0a03c"}} /></div>
+        <div className="h-2 overflow-hidden rounded-full bg-line" aria-hidden><div className="h-full rounded-full" style={{width: `${Math.max(0, Math.min(100, points))}%`, background: guide?.color ?? "var(--color-copper-bright)"}} /></div>
         <p className="mt-1 text-xs text-fg-muted">{Math.round((f.normalized_weight ?? 0) * 100)}% influence · factor score {f.suitability?.toFixed(2) ?? "—"} / 1</p>
       </li>;
     })}</ul>

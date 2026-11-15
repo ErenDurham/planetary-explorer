@@ -67,7 +67,7 @@ describe("Astro", () => {
     expect(input).toHaveValue("");
     expect(input).toHaveAttribute("placeholder", "");
   });
-  it("keeps conversation through collapse and only navigates on explicit action", async () => {
+  it("keeps explanations through collapse without navigation clutter", async () => {
     vi.spyOn(api, "astroChat").mockResolvedValue(response);
     render(<AstroPanel />);
     fireEvent.click(screen.getByRole("button", { name: "Expand Astro" }));
@@ -80,8 +80,11 @@ describe("Astro", () => {
     fireEvent.click(screen.getByRole("button", { name: "Collapse Astro" }));
     fireEvent.click(screen.getByRole("button", { name: "Expand Astro" }));
     expect(screen.getByText("Inspect the regional evidence.")).toBeVisible();
-    fireEvent.click(screen.getByRole("button", { name: "Open Research" }));
-    expect(useAppStore.getState().activeTab).toBe("research");
+    expect(screen.queryByRole("button", { name: "Open Research" })).toBeNull();
+    expect(screen.queryByText("Computed context")).toBeNull();
+    expect(screen.getByText(/Using a site summary/)).toBeVisible();
+    expect(screen.queryByText("Mars · Jezero", { exact: true })).toBeNull();
+    expect(useAppStore.getState().activeTab).toBe("explore");
   });
   it("labels old context and clears a pending conversation without resurrecting it", async () => {
     let resolve!: (v: typeof response) => void;
@@ -106,7 +109,7 @@ describe("Astro", () => {
       screen.queryByText("Inspect the regional evidence."),
     ).not.toBeInTheDocument();
   });
-  it("opens the resolved Compare Mars location on an explicit Research action", async () => {
+  it("uses the displayed Compare pair without changing navigation", async () => {
     useAppStore.setState({
       activeTab: "compare",
       selectedMarsId: null,
@@ -130,15 +133,12 @@ describe("Astro", () => {
       target: { value: "What next?" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Send message" }));
-    fireEvent.click(
-      await screen.findByRole("button", {
-        name: "Research displayed location",
-      }),
-    );
-    expect(useAppStore.getState().selectedMarsId).toBe("jezero_crater");
-    expect(useAppStore.getState().activeTab).toBe("research");
+    await screen.findByText("Inspect the regional evidence.");
+    expect(screen.queryByRole("button", { name: "Research displayed location" })).toBeNull();
+    expect(api.astroChat).toHaveBeenCalledWith(expect.objectContaining({ selected_mars_id: "jezero_crater" }));
+    expect(useAppStore.getState().activeTab).toBe("compare");
   });
-  it("sends the active Earth task assessment and opens its Analyze action", async () => {
+  it("sends the active Earth task assessment without action buttons", async () => {
     useAppStore.setState({
       activeTab: "analyze",
       missionType: "research",
@@ -167,11 +167,8 @@ describe("Astro", () => {
       target: { value: "Why this task fit?" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Send message" }));
-    fireEvent.click(
-      await screen.findByRole("button", {
-        name: "Inspect task mission factors",
-      }),
-    );
+    await screen.findByText("Inspect the regional evidence.");
+    expect(screen.queryByRole("button", { name: "Inspect task mission factors" })).toBeNull();
     expect(api.astroChat).toHaveBeenCalledWith(
       expect.objectContaining({
         assessment: expect.objectContaining({
@@ -183,6 +180,40 @@ describe("Astro", () => {
     );
     expect(useAppStore.getState().selectedEarthId).toBe("atacama_yungay");
     expect(useAppStore.getState().activeTab).toBe("analyze");
+  });
+  it("does not label an instant greeting as an AI failure", async () => {
+    vi.spyOn(api, "astroChat").mockResolvedValue({ ...response, generated_by: "local", actions: [] });
+    render(<AstroPanel />);
+    fireEvent.click(screen.getByRole("button", { name: "Expand Astro" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Message Astro" }), { target: { value: "Hi" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }));
+    await screen.findByText("Inspect the regional evidence.");
+    expect(screen.queryByText(/AI unavailable|Using a site summary/)).toBeNull();
+    expect(screen.queryByText("Mars · Jezero", { exact: true })).toBeNull();
+  });
+  it("resizes from the top with keyboard access and resets on double click", () => {
+    render(<AstroPanel />);
+    fireEvent.click(screen.getByRole("button", { name: "Expand Astro" }));
+    const handle = screen.getByRole("separator", { name: "Resize Astro height" });
+    const surface = screen.getByRole("region", { name: "Astro research assistant" });
+    fireEvent.keyDown(handle, { key: "Home" });
+    expect(surface).toHaveStyle({ height: "180px" });
+    fireEvent.keyDown(handle, { key: "ArrowUp" });
+    expect(surface).toHaveStyle({ height: "212px" });
+    fireEvent.doubleClick(handle);
+    expect(surface.style.height).toBe("");
+  });
+  it("resizes width from either side with keyboard access", () => {
+    render(<AstroPanel />);
+    fireEvent.click(screen.getByRole("button", { name: "Expand Astro" }));
+    const surface = screen.getByRole("region", { name: "Astro research assistant" });
+    const right = screen.getByRole("separator", { name: "Resize Astro from right" });
+    fireEvent.keyDown(right, { key: "Home" });
+    expect(surface).toHaveStyle({ width: "360px" });
+    fireEvent.keyDown(right, { key: "ArrowRight" });
+    expect(surface).toHaveStyle({ width: "392px" });
+    fireEvent.doubleClick(right);
+    expect(surface.style.width).toBe("");
   });
   it("offers retry after network failure", async () => {
     vi.spyOn(api, "astroChat")

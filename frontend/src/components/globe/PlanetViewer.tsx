@@ -2,7 +2,7 @@
 // live inside this tree (R3F local state) and never pass through the Zustand
 // store, per docs/ARCHITECTURE.md. The parent hands in a PlanetConfig, a flat
 // marker list, the selected id and callbacks.
-import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Stars, useProgress } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -12,6 +12,7 @@ import { PlanetSphere, PlaceholderSphere } from "./PlanetSphere";
 import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
+import { token } from "@/lib/theme";
 import { GlobeLegend } from "./GlobeLegend";
 import type { PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
@@ -39,12 +40,16 @@ export interface PlanetViewerProps {
   /** Analog mode: names the reference in the legend, e.g. "Earth matches to Elysium Planitia (InSight)". */
   legendHeading?: string;
   rankedCount?: number | null;
+  /** Extra scene content drawn on the surface (SurfaceOverlays); the viewer gives it no meaning. */
+  overlays?: ReactNode;
+  /** Camera distance, as a multiple of the radius, that selecting a marker flies to. 1.65 frames a region; ~1.08 frames a 60 km footprint. */
+  focusDistance?: number;
 }
 
 const DEFAULT_CAMERA = new Vector3(0, 0.6, 3.1);
 
 export function PlanetViewer(props: PlanetViewerProps) {
-  const { config, markers, selectedId, onSelect, autoRotate, onAutoRotateChange, resetToken, onRequestReset, statusLine, mode = "landing", palette = "roygbiv", onPaletteChange, legendHeading, rankedCount } = props;
+  const { config, markers, selectedId, onSelect, autoRotate, onAutoRotateChange, resetToken, onRequestReset, statusLine, mode = "landing", palette = "roygbiv", onPaletteChange, legendHeading, rankedCount, overlays, focusDistance = 1.65 } = props;
   const selected = markers.find(m => m.id === selectedId);
   const body = config.displayName;
   const [focusRequest, setFocusRequest] = useState(0);
@@ -65,7 +70,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
   const deselect = useRef(props.onDeselect);
   deselect.current = props.onDeselect;
   return (
-    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-[#06090d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
+    <div ref={containerRef} tabIndex={0} role="region" aria-label={`Interactive ${body} globe`} aria-describedby="globe-keyboard-help" data-body={config.id} className="relative h-full w-full min-h-[320px] overflow-hidden bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright focus-visible:-outline-offset-2"
       onKeyDown={e => {
         if (e.target !== e.currentTarget || e.altKey || e.ctrlKey || e.metaKey) return;
         const key = e.key.toLowerCase();
@@ -79,12 +84,12 @@ export function PlanetViewer(props: PlanetViewerProps) {
       }}>
       <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit {body}. Plus and minus zoom. F focuses the selected site. Escape clears the current selection. Click empty globe space to deselect. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km; {markers.length} candidate {markers.length === 1 ? "location is" : "locations are"} marked at their real coordinates.</p>
       <Canvas
-        camera={{ position: DEFAULT_CAMERA.toArray(), fov: 42, near: 0.1, far: 100 }}
+        camera={{ position: DEFAULT_CAMERA.toArray(), fov: 42, near: 0.02, far: 100 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false }}
         onPointerMissed={(event) => { if (event.type === "click") { deselect.current?.(); containerRef.current?.focus({preventScroll:true}); } }}
       >
-        <color attach="background" args={["#06090d"]} />
+        <color attach="background" args={[token("--color-canvas")]} />
         <ambientLight intensity={config.id === "earth" ? 2.2 : 1.1} />
         <directionalLight position={[5, 2, 4]} intensity={2.2} color="#fff2e0" />
         <directionalLight position={[-6, -1, -3]} intensity={0.25} color="#8aa0c8" />
@@ -92,8 +97,9 @@ export function PlanetViewer(props: PlanetViewerProps) {
         <Suspense fallback={<PlaceholderSphere config={config} meshRef={planetRef} />}>
           <PlanetSphere config={config} meshRef={planetRef} />
         </Suspense>
+        {overlays}
         <SiteMarkers config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} planetRef={planetRef} />
-        <Controls bodyId={config.id} autoRotate={autoRotate} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} />
+        <Controls bodyId={config.id} autoRotate={autoRotate} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} focusDistance={focusDistance} />
       </Canvas>
 
       <LoadingOverlay body={body} />
@@ -148,7 +154,7 @@ function LoadingOverlay({ body }: { body: string }) {
   }, [active, progress]);
   if (!show) return null;
   return (
-    <div role="status" aria-live="polite" className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#06090d]/60">
+    <div role="status" aria-live="polite" className="pointer-events-none absolute inset-0 flex items-center justify-center bg-canvas/60">
       <div className="rounded border border-line bg-bg-elev/90 px-4 py-2 text-xs text-fg-muted">
         Loading {body} texture… <span className="num">{Math.round(progress)}%</span>
       </div>
@@ -161,7 +167,9 @@ interface CameraMemory { position: Vector3; target: Vector3 }
 /** OrbitControls with auto-rotate that pauses while the user interacts, reset,
  * and a per-body camera memory: switching Earth <-> Mars saves the current
  * orbit and restores the other body's last orbit (default on first visit). */
-function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lonEast, focusToken, navigation }: { bodyId: string; autoRotate: boolean; resetToken: number; radius: number; selectedId: string | null; lat?: number; lonEast?: number; focusToken: string; navigation: { id: number; action: string } }) {
+function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lonEast, focusToken, navigation, focusDistance }: { bodyId: string; autoRotate: boolean; resetToken: number; radius: number; selectedId: string | null; lat?: number; lonEast?: number; focusToken: string; navigation: { id: number; action: string }; focusDistance: number }) {
+  // the closest the camera may come; a tight focus distance lowers it so the flight can land
+  const minDistance = radius * Math.min(1.35, focusDistance - 0.03);
   const ref = useRef<OrbitControlsImpl>(null);
   const { camera } = useThree();
   const [interacting, setInteracting] = useState(false);
@@ -171,9 +179,6 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
   const rotation = useRef(new Quaternion());
   const memory = useRef(new Map<string, CameraMemory>());
   const lastBody = useRef(bodyId);
-  // set when a body switch just restored the camera, so the selection-flight
-  // effect below does not immediately override the restored orbit
-  const switched = useRef(false);
   useEffect(() => () => { if (idleTimer.current) window.clearTimeout(idleTimer.current); }, []);
 
   useEffect(() => {
@@ -186,7 +191,6 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
     camera.position.copy(saved?.position ?? DEFAULT_CAMERA);
     c.target.copy(saved?.target ?? new Vector3(0, 0, 0));
     c.update();
-    switched.current = true;
   }, [bodyId, camera]);
 
   useEffect(() => {
@@ -199,12 +203,11 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
   }, [resetToken, camera]);
 
   useEffect(() => {
-    if (switched.current) { switched.current = false; return; }
     if (!selectedId) { flight.current = null; return; }
     if (lat === undefined || lonEast === undefined || !ref.current) return;
     const target = latLonToVector3(lat, lonEast, 1).normalize();
     const start = camera.position.clone().normalize();
-    const distance = radius * 1.65;
+    const distance = radius * focusDistance;
     ref.current.target.set(0, 0, 0);
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
       camera.position.copy(target.multiplyScalar(distance));
@@ -213,7 +216,7 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
     } else {
       flight.current = { start, turn: new Quaternion().setFromUnitVectors(start, target), distance: camera.position.length(), elapsed: 0 };
     }
-  }, [selectedId, lat, lonEast, focusToken, radius, camera]);
+  }, [bodyId, selectedId, lat, lonEast, focusToken, radius, camera, focusDistance]);
 
   useEffect(() => {
     if (!navigation.id || !ref.current) return;
@@ -227,10 +230,10 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
     if (key === "+" || key === "=") spherical.radius *= 0.9;
     if (key === "-" || key === "_") spherical.radius *= 1.1;
     spherical.phi = Math.max(0.05, Math.min(Math.PI - 0.05, spherical.phi));
-    spherical.radius = Math.max(radius * 1.35, Math.min(radius * 7, spherical.radius));
+    spherical.radius = Math.max(minDistance, Math.min(radius * 7, spherical.radius));
     camera.position.setFromSpherical(spherical);
     ref.current.update();
-  }, [navigation, camera, radius]);
+  }, [navigation, camera, radius, minDistance]);
 
   useFrame((_state, delta) => {
     const f = flight.current;
@@ -242,7 +245,7 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
     // Travel around the sphere, never through it when selecting the far side.
     rotation.current.identity().slerp(f.turn, eased);
     direction.current.copy(f.start).applyQuaternion(rotation.current);
-    camera.position.copy(direction.current.multiplyScalar(f.distance + (radius * 1.65 - f.distance) * eased));
+    camera.position.copy(direction.current.multiplyScalar(f.distance + (radius * focusDistance - f.distance) * eased));
     controls.target.set(0, 0, 0);
     controls.update();
     if (t === 1) flight.current = null;
@@ -256,7 +259,7 @@ function Controls({ bodyId, autoRotate, resetToken, radius, selectedId, lat, lon
       dampingFactor={0.08}
       rotateSpeed={0.55}
       zoomSpeed={0.7}
-      minDistance={radius * 1.35}
+      minDistance={minDistance}
       maxDistance={radius * 7}
       autoRotate={autoRotate && !interacting}
       autoRotateSpeed={0.35}

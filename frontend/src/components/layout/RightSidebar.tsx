@@ -11,6 +11,7 @@ import { SuitabilityPanel } from "@/components/mission/SuitabilityPanel";
 import { useSiteProfile } from "@/hooks/useSites";
 import { formatLatLon, formatNumber, humanize } from "@/lib/format";
 import { AnalogMatchPanel, EarthLocationPanel } from "@/components/sites/LocationPanels";
+import { FindAnalogsEntry } from "@/features/discovery/components/FindAnalogsEntry";
 import type { RankPalette } from "@/lib/rankColor";
 import type { AnalogRankResponse, ComparisonLocation, EvaluateResponse, MissionProfile } from "@/types";
 
@@ -45,7 +46,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     if (window.matchMedia?.("(max-width: 1023px)")?.matches) panel.current.scrollIntoView?.({ behavior: reduced ? "auto" : "smooth", block: "start" });
     if (!reduced) {
-      panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px #f0a03c", backgroundColor: "#313131" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });
+      panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px var(--color-copper-bright)", backgroundColor: "var(--color-bg-elev-2)" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });
     }
   }, [selectedId, revision]);
   const result = evaluation?.results.find((r) => r.site_id === selectedId);
@@ -116,6 +117,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
             <Section title="Research potential" subtitle="Turn this site's characteristics into questions to investigate.">
               <button type="button" onClick={() => openResearch("research")} className="w-full rounded-lg border border-info/50 bg-info/10 p-3 text-left text-sm font-semibold text-info">Explore study ideas and supporting evidence →</button>
             </Section>
+            <FindAnalogsEntry siteId={q.data.site.id} siteName={q.data.site.name} />
             <details className="m-4 rounded-lg border border-line">
               <summary className="cursor-pointer p-3 text-sm text-fg">All environmental measurements and sources</summary>
               <EnvironmentalProfilePanel profile={q.data.profile} />

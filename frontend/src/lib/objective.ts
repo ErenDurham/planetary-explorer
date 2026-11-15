@@ -1,3 +1,4 @@
+import { token } from "@/lib/theme";
 /** Transparent suggestions, never a claim that free text expands the scoring model. */
 
 /** Plain-language copy for each scoring factor. `preference` is the one-line
@@ -26,7 +27,7 @@ export interface PriorityGuide {
 export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
   terrain_safety: {
     name: "Gentler terrain",
-    color: "#f0a03c",
+    color: token("--color-copper-bright"),
     preference: "Prefers sites whose broad regional ground tilt is small.",
     description: "How gently the ground tilts across the landing region, since steep slopes can tip a lander over.",
     quantity: "Median slope between neighbouring ~3.7 km MOLA cells over the ~59 km footprint.",
@@ -36,7 +37,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
   },
   surface_roughness: {
     name: "Smoother terrain",
-    color: "#6fb98f",
+    color: token("--color-ok"),
     preference: "Prefers less unevenness once the broad tilt is removed.",
     description: "How bumpy the ground is once its overall tilt is set aside, a sign of uneven terrain at landing scale.",
     quantity: "Detrended relief: standard deviation of MOLA elevation after a best-fit plane, over the footprint.",
@@ -46,7 +47,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
   },
   elevation_suitability: {
     name: "Lower elevation",
-    color: "#6ea0d9",
+    color: token("--color-info"),
     preference: "Prefers lower-lying footprints.",
     description: "How low the site sits, since lower ground leaves more atmosphere to slow the lander as it descends.",
     quantity: "Footprint median MOLA elevation relative to the areoid.",
@@ -56,7 +57,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
   },
   solar_illumination: {
     name: "Solar energy",
-    color: "#c4a4e8",
+    color: token("--color-lavender"),
     preference: "Prefers more annual sunlight.",
     description: "How much sunlight reaches the site over a Mars year, the energy available for solar power.",
     quantity: "Modelled annual-mean top-of-atmosphere insolation from latitude and Mars' orbit.",
@@ -66,7 +67,7 @@ export const PRIORITY_GUIDE: Record<string, PriorityGuide> = {
   },
   thermal_conditions: {
     name: "Thermal conditions",
-    color: "#9aa5b4",
+    color: token("--color-fg-muted"),
     preference: "Would prefer warmer measured surface temperatures.",
     description: "How warm the surface is, which no current candidate site has measurements for.",
     quantity: "Mean surface temperature; no site in the v1 profiles carries a measured value.",

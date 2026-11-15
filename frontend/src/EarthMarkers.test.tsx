@@ -2,7 +2,7 @@
 // Mars globe: the App is mounted with the WebGL viewer stubbed to print the
 // body it was given and the ids of the markers it received.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import fixture from "@/test/fixtures/api_examples.json";
 import assessments from "@/test/fixtures/mission_assessment.json";
@@ -131,6 +131,7 @@ describe("Earth and Mars markers", () => {
     expect((rankCalls[0].weights as unknown[]).length).toBe(5);
     await waitFor(() => expect(screen.getByTestId("globe-stub")).toHaveTextContent("Earth matches to Elysium Planitia (InSight)"), { timeout: 3000 });
     expect(screen.getByTestId("match-context-line")).toHaveTextContent(/^Earth matches to Elysium Planitia \(InSight\)/);
+    await waitFor(() => expect(useAppStore.getState().selectedEarthId).toBe(earthIds[0]));
     const second = earthIds[1];
     const row = await screen.findByRole("button", { name: new RegExp(`^${second}, match rank 2 of ${earthIds.length}, 85% match`) });
     fireEvent.click(row);
@@ -139,7 +140,11 @@ describe("Earth and Mars markers", () => {
     expect(s.selectedMarsId).toBe("elysium_planitia");
     expect(s.viewedBody).toBe("earth");
     expect(screen.getByRole("button", { name: new RegExp(`^${second},`) })).toHaveAttribute("aria-pressed", "true");
-    // the strongest match is offered only as a labelled suggestion, never selected
-    expect(screen.queryByText("Suggested reference")).toBeNull(); // cleared once the user selected
+    fireEvent.click(screen.getByRole("button", { name: "View Mars" }));
+    expect(useAppStore.getState().selectedMarsId).toBe("elysium_planitia");
+    fireEvent.click(screen.getByRole("button", { name: "View Earth" }));
+    await waitFor(() => expect(useAppStore.getState().selectedEarthId).toBe(second));
+    act(() => useAppStore.getState().selectLocation("earth", null));
+    await waitFor(() => expect(useAppStore.getState().selectedEarthId).toBeNull());
   });
 });
