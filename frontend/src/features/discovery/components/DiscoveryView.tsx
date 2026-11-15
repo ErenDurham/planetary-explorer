@@ -22,6 +22,7 @@ import { DiscoveryStage } from "./DiscoveryStage";
 import { DiscoveryCandidateList } from "./DiscoveryCandidateList";
 import { DiscoveryPanel } from "./DiscoveryPanel";
 import { DiscoverySurveyPanel } from "./DiscoverySurveyPanel";
+import { CandidateCompare } from "./CandidateCompare";
 import { CandidateDetail } from "./CandidateDetail";
 import { SurveyPicker } from "./SurveyPicker";
 import { SurveyMap } from "./SurveyMap";
@@ -66,9 +67,11 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const runs = caps.kind === "ready" ? caps.capabilities.runs : [];
   const reference: DiscoveryReference | undefined = capabilities?.reference;
   const referenceName = reference?.name ?? "Jezero Crater";
-  const criteria = caps.kind === "ready" ? caps.capabilities.criteria : [];
+  const activeRun = runs.find(r => r.run_id === store.runId) ?? null;
+  const criteria = activeRun?.criteria ?? (caps.kind === "ready" ? caps.capabilities.criteria : []);
+  const defaults = activeRun?.default_weights ?? capabilities?.default_weights;
 
-  useEffect(() => { if (capabilities) store.seedDefaults(capabilities.default_weights); }, [capabilities?.default_weights]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (defaults) store.seedDefaults(defaults); }, [defaults]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (runs.length && (!store.runId || !runs.some(r => r.run_id === store.runId))) store.setRun(runs[0].run_id); }, [runs]); // eslint-disable-line react-hooks/exhaustive-deps
   // Ranking a fixed, preprocessed pool is cheap and deterministic, so it runs as soon as a survey is chosen.
   useEffect(() => { if (caps.kind === "ready" && store.runId && !run.ranked) store.requestRank(); }, [caps.kind, store.runId, run.ranked]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -80,7 +83,6 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   useEffect(() => { const first = candidates?.[0]; if (first && rank.data?.run_id === store.runId) store.autoSelectFirst(first.id); }, [candidates, rank.data?.run_id, store.runId]); // eslint-disable-line react-hooks/exhaustive-deps
   const selected = candidates?.find(c => c.id === run.selectedCandidateId) ?? null;
   const detail = useDiscoveryCandidate(store.runId, selected?.id ?? null);
-  const activeRun = runs.find(r => r.run_id === store.runId) ?? null;
   const sources = useMemo(() => candidates?.flatMap(c => c.sources) ?? [], [candidates]);
   const refImagery = useImageryFor("mars", reference?.id ?? null);
   const refImage = refImagery.data?.entries.find(e => isGeoreferenced(e) && /regional/i.test(e.title)) ?? refImagery.data?.entries.find(e => e.view === "orbital") ?? null;
@@ -145,8 +147,8 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
   const weights = ready ? { shares: store.weights, defaults: store.defaultWeights, criteria, onChange: store.setWeight, onReset: store.resetWeights, topK: store.topK, onTopK: store.setTopK, disabled: !run.ranked } : null;
 
   return (
-    <div className="grid h-full grid-cols-1 overflow-y-auto lg:grid-cols-[290px_minmax(0,1fr)_var(--discovery-panel-width)] lg:overflow-hidden" style={{ "--discovery-panel-width": `${width}px` } as CSSProperties} data-testid="discovery-view">
-      <aside id="discovery-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 max-h-[45vh] min-h-0 overflow-hidden border-b border-line bg-bg-elev lg:order-1 lg:max-h-none lg:h-full lg:border-b-0 lg:border-r">
+    <div className="workspace-grid flex h-full flex-col xl:grid overflow-y-auto xl:grid-cols-[270px_minmax(0,1fr)_var(--discovery-panel-width)] xl:overflow-hidden" style={{ "--discovery-panel-width": `${width}px` } as CSSProperties} data-testid="discovery-view">
+      <aside id="discovery-candidates" tabIndex={-1} aria-label="Candidate ranking" className="order-2 h-[40dvh] max-h-[380px] shrink-0 min-h-0 overflow-hidden border-b border-line bg-bg-elev xl:order-1 xl:max-h-none xl:h-full xl:border-b-0 xl:border-r">
         <DiscoveryCandidateList
           candidates={candidates}
           evaluated={evaluated}
@@ -163,7 +165,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           weights={weights}
         />
       </aside>
-      <div className="relative order-1 lg:order-2 lg:h-full">
+      <div data-pane="viewer" className="relative order-1 shrink-0 xl:order-2 xl:h-full">
         <DiscoveryStage
           badge={badge}
           title={`Find unresearched analogs for ${reference?.name === "Jezero Crater" ? "Jezero" : referenceName}.`}
@@ -180,7 +182,7 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
           {body}
         </DiscoveryStage>
       </div>
-      <div className="order-3 min-h-0 border-t border-line bg-bg-elev lg:border-l lg:border-t-0">
+      <div className="order-3 shrink-0 min-h-0 border-t border-line bg-bg-elev xl:border-l xl:border-t-0">
         <SitePanelShell width={width} onWidthChange={setWidth} title="Candidate details">
           <DiscoveryPanel
             selected={!!selected}
@@ -188,8 +190,12 @@ export function DiscoveryView({ panelWidth, onPanelWidthChange }: {
             overview={<DiscoverySurveyPanel reference={reference} activeRun={activeRun} criteria={criteria} limitations={rank.data?.limitations ?? capabilities?.limitations ?? []} ranking={rank.data} sources={sources} refImage={refImage} refImageStatus={refImagery.status} />}
           >
             {selected && rank.data && (
+              <>
+              <div className="px-4 pt-4"><button type="button" aria-pressed={run.shortlist.some(c => c.id === selected.id)} disabled={run.shortlist.length >= 3 && !run.shortlist.some(c => c.id === selected.id)} onClick={() => store.toggleShortlist(selected)} className="rounded-lg border border-line-strong px-3 py-2 text-xs text-fg hover:border-copper disabled:opacity-40">{run.shortlist.some(c => c.id === selected.id) ? "Remove from shortlist" : "Save to shortlist"} · {run.shortlist.length}/3</button></div>
               <CandidateDetail candidate={selected} detail={detail.data} detailPending={detail.isPending && detail.fetchStatus !== "idle"} detailError={detail.error} onRetry={() => void detail.refetch()} criteria={criteria} reference={rank.data.reference} established={earth.sites} onCompareKnown={id => openEstablished(id)} onResearch={openResearch} effectiveWeights={rank.data.effective_weights} returnedCount={rank.data.returned_count} survey={survey ?? null} />
+              </>
             )}
+            {store.runId && run.shortlist.length > 0 && <details className="m-3"><summary className="cursor-pointer text-sm text-copper-bright">Your shortlist · {run.shortlist.length}/3</summary><div className="mt-3"><CandidateCompare criteria={criteria} saved={run.shortlist} ranking={rank.data} pending={rank.isRefreshing} runId={store.runId} onRemove={store.toggleShortlist} onResearch={openResearch} /></div></details>}
           </DiscoveryPanel>
         </SitePanelShell>
       </div>

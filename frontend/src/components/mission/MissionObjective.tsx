@@ -127,7 +127,7 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
           {editing && draftDiffers && <p className="mx-auto mt-3 inline-flex items-center gap-2 rounded-full border border-warn/50 bg-warn/10 px-3 py-1 text-xs text-warn" data-testid="draft-badge">Draft · not applied until you apply it</p>}
           <div className="mt-4 flex items-center justify-center gap-2">
             {editing && <button type="button" onClick={cancelEdit} className="rounded-lg border border-line px-4 py-2 text-sm text-fg-muted hover:text-fg">Cancel</button>}
-            <button type="submit" disabled={!draft.trim() || !canSave || pending} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-copper bg-copper px-6 py-2.5 text-sm font-semibold text-white hover:bg-copper-bright disabled:opacity-40" data-testid="apply-objective">
+            <button type="submit" disabled={!draft.trim() || !canSave || pending} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-copper bg-copper px-6 py-2.5 text-sm font-semibold text-bg hover:bg-copper-bright disabled:opacity-40" data-testid="apply-objective">
               {pending && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />}{applyLabel}
             </button>
           </div>

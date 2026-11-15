@@ -24,7 +24,7 @@ export function PlanEntryCard({ body, siteId, siteName, onOpen }: { body: Expedi
             <li>{service.kind === "available" ? "Expedition service connected" : service.kind === "loading" ? "Connecting to the expedition service…" : "Expedition service not connected"}</li>
           </ul>
         </div>
-        <button type="button" onClick={onOpen} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-copper-bright hover:text-bg">Plan an Expedition <ArrowRight className="h-4 w-4" aria-hidden /></button>
+        <button type="button" onClick={onOpen} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-copper bg-copper px-5 py-3 text-sm font-semibold text-bg transition-colors hover:bg-copper-bright hover:text-bg">Plan an Expedition <ArrowRight className="h-4 w-4" aria-hidden /></button>
       </div>
     </section>
   );

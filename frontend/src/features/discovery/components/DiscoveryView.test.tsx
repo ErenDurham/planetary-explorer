@@ -131,7 +131,7 @@ describe("DiscoveryView", () => {
     // the selected candidate's detail follows the new rank response
     expect(screen.getByRole("article", { name: /Candidate evidence/ })).toHaveTextContent("Rank 2");
     // export the server artifact
-    fireEvent.click(screen.getByRole("button", { name: /Survey audit artifact/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Download survey audit/ }));
     expect(await screen.findByText(/Saved discovery-pilot_2026_11_14-audit\.json \(3 audit rows\)/)).toBeInTheDocument();
   });
 

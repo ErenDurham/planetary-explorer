@@ -1,3 +1,4 @@
+import { motionIsReduced } from "@/lib/motion/preferences";
 import { useEffect, useRef } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { MapPin } from "lucide-react";
@@ -44,7 +45,7 @@ export function RightSidebar({ body = "mars", selectedId, evaluation, evaluation
   useEffect(() => {
     if (!selectedId || !panel.current) return;
     panel.current.scrollTop = 0;
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const reduced = motionIsReduced();
     if (window.matchMedia?.("(max-width: 1023px)")?.matches) panel.current.scrollIntoView?.({ behavior: reduced ? "auto" : "smooth", block: "start" });
     if (!reduced) {
       panel.current.animate?.([{ boxShadow: "inset 0 0 0 2px var(--color-copper-bright)", backgroundColor: "var(--color-bg-elev-2)" }, { boxShadow: "inset 0 0 0 2px transparent", backgroundColor: "transparent" }], { duration: 1100, easing: "cubic-bezier(0.32,0.72,0,1)" });

@@ -120,7 +120,7 @@ export function ConfigPanel({ workspace, service, terrain, onChange, onChooseObj
         {running ? (
           <button type="button" onClick={onCancel} className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-strong px-4 py-3 text-sm font-semibold text-fg hover:border-danger hover:text-danger"><Square className="h-4 w-4" aria-hidden />Cancel calculation</button>
         ) : (
-          <button type="button" onClick={onCalculate} disabled={!canCalculate} aria-describedby={!canCalculate ? "calc-blockers" : undefined} className="flex w-full items-center justify-center gap-2 rounded-lg border border-copper bg-copper px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-copper-bright hover:text-bg disabled:cursor-not-allowed disabled:opacity-40">
+          <button type="button" onClick={onCalculate} disabled={!canCalculate} aria-describedby={!canCalculate ? "calc-blockers" : undefined} className="flex w-full items-center justify-center gap-2 rounded-lg border border-copper bg-copper px-4 py-3 text-sm font-semibold text-bg transition-colors hover:bg-copper-bright hover:text-bg disabled:cursor-not-allowed disabled:opacity-40">
             <Play className="h-4 w-4" aria-hidden />{workspace.runs.length ? "Recalculate route" : "Calculate route"}
           </button>
         )}

@@ -3,16 +3,16 @@
 :root {
   --ui-radius-panel: var(--radius-panel);
   --ui-radius-control: 4px;
-  --ui-radius-input: 12px;
+  --ui-radius-input: 5px;
   --ui-space-pane: 24px;
   --ui-space-section: 24px;
   --ui-content-wide: 1800px;
   --ui-content-reading: 1280px;
-  --ui-type-display: 48px;
-  --ui-leading-display: 1;
-  --ui-type-title: 36px;
-  --ui-leading-title: 40px;
-  --ui-type-heading: 24px;
+  --ui-type-display: 36px;
+  --ui-leading-display: 1.15;
+  --ui-type-title: 30px;
+  --ui-leading-title: 36px;
+  --ui-type-heading: 21px;
   --ui-leading-heading: 32px;
   --ui-type-label: 12px;
   --ui-leading-label: 16px;

@@ -85,8 +85,8 @@ export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onP
           </label>
         )}
         {credit}
-        </div>
         {roles && <RoleChips roles={roles} />}
+        </div>
       </div>
     );
   }

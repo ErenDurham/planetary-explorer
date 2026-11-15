@@ -274,7 +274,7 @@ def rank(req: DiscoveryRankRequest):
             chosen.append(c)
     chosen = chosen[:req.top_k]
     return DiscoveryRankResponse(run_id=run.run_id, reference=run.reference, survey=run.survey,
-        basis_features=[f for f in FEATURES if weights[f]>0], effective_weights=weights,
+        basis_features=[f for f in features if weights[f]>0], effective_weights=weights,
         eligible_pool_count=len(ranked), returned_count=len(chosen), candidates=chosen,
         client_request_id=req.client_request_id, limitations=run.limitations)
 

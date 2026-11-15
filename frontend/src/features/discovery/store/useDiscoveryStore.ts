@@ -1,6 +1,7 @@
 // Run-scoped UI state for discovery. Independent of the app store's curated
 // selections: a discovery candidate id is never written to selectedEarthId,
 // and curated analog weights are never read here.
+import type { DiscoveryCandidate } from "../adapter";
 import { create } from "zustand";
 import type { Shares } from "@/lib/allocation";
 import { TOP_K_DEFAULT, clampTopK, setDiscoveryShare, sharesFromDefaults } from "../lib/weights";
@@ -13,6 +14,7 @@ interface RunState {
   selectedCandidateId: string | null;
   /** The first result was selected once when the first ranking arrived; never repeated, so a cleared or changed selection stays. */
   autoSelected: boolean;
+  shortlist: DiscoveryCandidate[];
 }
 
 interface DiscoveryState {
@@ -35,9 +37,10 @@ interface DiscoveryState {
   selectCandidate: (id: string | null) => void;
   /** Select the first result once per run; a no-op when something is already selected or it has run before. */
   autoSelectFirst: (id: string) => void;
+  toggleShortlist: (candidate: DiscoveryCandidate) => void;
 }
 
-const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null, autoSelected: false };
+const EMPTY_RUN: RunState = { ranked: false, selectedCandidateId: null, autoSelected: false, shortlist: [] };
 
 export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   runId: null,
@@ -51,13 +54,23 @@ export const useDiscoveryStore = create<DiscoveryState>((set, get) => ({
   seedDefaults: (defaults) => set((s) => {
     const next = sharesFromDefaults(defaults);
     const untouched = JSON.stringify(s.weights) === JSON.stringify(s.defaultWeights);
-    return { defaultWeights: next, weights: untouched ? { ...next } : s.weights };
+    const sameBasis = Object.keys(next).length === Object.keys(s.weights).length && Object.keys(next).every(id => id in s.weights);
+    return { defaultWeights: next, weights: untouched || !sameBasis ? { ...next } : s.weights };
   }),
   setWeight: (id, value) => set((s) => { const next = setDiscoveryShare(s.weights, id, value); return next === s.weights ? {} : { weights: next }; }),
   resetWeights: () => set((s) => ({ weights: { ...s.defaultWeights } })),
   setTopK: (n) => set({ topK: clampTopK(n) }),
   setView: (view) => set({ view }),
   requestRank: () => { const { runId } = get(); if (runId) set((s) => ({ runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), ranked: true } } })); },
+  toggleShortlist: (candidate) => {
+    const { runId } = get(); if (!runId) return;
+    set(s => {
+      const run = s.runs[runId] ?? EMPTY_RUN, saved = run.shortlist ?? [];
+      const exists = saved.some(c => c.id === candidate.id);
+      if (!exists && saved.length >= 3) return {};
+      return { runs: { ...s.runs, [runId]: { ...run, shortlist: exists ? saved.filter(c => c.id !== candidate.id) : [...saved, candidate] } } };
+    });
+  },
   selectCandidate: (id) => { const { runId } = get(); if (runId) set((s) => ({ selectionRevision: id ? s.selectionRevision + 1 : s.selectionRevision, runs: { ...s.runs, [runId]: { ...(s.runs[runId] ?? EMPTY_RUN), selectedCandidateId: id, autoSelected: true } } })); },
   // An automatic selection fills the evidence panel but must NOT move the camera: on a
   // survey spanning continents, diving to one footprint hides the spread the map exists to show.

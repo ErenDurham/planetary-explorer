@@ -11,3 +11,7 @@ it("keeps even a close surface departure outside the planet throughout travel",(
 it("dissolves only after departure and clamps to exact endpoint textures",()=>{
  expect(planetDissolve(0)).toBe(0);expect(planetDissolve(.18)).toBe(0);expect(planetDissolve(.6)).toBeGreaterThan(0);expect(planetDissolve(2)).toBe(1);
 });
+it("keeps the original body visible during camera withdrawal, then completes the handoff before arrival",()=>{
+ expect(planetDissolve(.45)).toBe(0);
+ expect(planetDissolve(1.15)).toBe(1);
+});

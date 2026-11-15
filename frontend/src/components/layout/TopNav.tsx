@@ -5,12 +5,14 @@
 // pair"). Arrow keys move focus along the visible buttons; Enter or Space
 // activates; Escape closes the menu.
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Orbit } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { MotionControl } from "@/lib/motion/preferences";
+import styles from "./navigation.module.css";
 import { type Tab } from "@/store/useAppStore";
 
 const PRIMARY: Array<{ id: Tab; label: string; hint: string; step: number }> = [
   { id: "mission", label: "Mission Design", hint: "Describe the mission; the app reads it and proposes priorities", step: 1 },
-  { id: "explore", label: "Explore", hint: "Find Earth terrain resembling Jezero, or browse the established regions and Mars sites", step: 2 },
+  { id: "explore", label: "Explore", hint: "Browse established Earth and Mars regions, or find new Earth terrain resembling Jezero", step: 2 },
   { id: "research", label: "Research", hint: "Notebook, checklist, brief and background evidence for a candidate", step: 3 },
 ];
 const ADVANCED: Array<{ id: Tab; label: string; hint: string }> = [
@@ -37,26 +39,26 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
     const next = e.key === "Home" ? 0 : e.key === "End" ? buttons.length - 1 : (index + (e.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length;
     e.preventDefault(); buttons[next]?.focus();
   };
-  const tabClass = (on: boolean) => `rounded px-3 py-1.5 text-xs font-medium transition-colors ${on ? "bg-copper/15 text-copper-bright" : "text-fg-muted hover:bg-bg-elev-2 hover:text-fg"}`;
+  const tabClass = (on: boolean) => `${styles.tab} ${on ? styles.active : ""}`;
   return (
-    <header data-pane="navigation" className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-bg-elev px-4 py-2 sm:h-12 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:py-0">
+    <header data-pane="navigation" className={styles.navigation}>
       <div className="flex min-w-0 items-center gap-3">
-        <span className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-semibold tracking-tight text-fg">
-          <Orbit className="h-4 w-4 text-copper-bright" aria-hidden />
+        <button type="button" aria-label="Home" aria-current={active === "home" ? "page" : undefined} onClick={() => { setOpen(false); onChange("home"); }} className={styles.brand}>
+          <svg viewBox="0 0 28 28" width="27" height="27" fill="none" aria-hidden><circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth=".8"/><ellipse cx="14" cy="14" rx="13" ry="4.8" transform="rotate(-40 14 14)" stroke="currentColor" strokeWidth=".8"/><circle cx="21.6" cy="6.5" r="1.8" fill="currentColor"/></svg>
           Planetary Explorer
-        </span>
+        </button>
       </div>
-      <nav aria-label="Primary" className="flex flex-wrap items-center justify-center gap-1 justify-self-center">
+      <nav aria-label="Primary" className={styles.links}>
         {PRIMARY.map((t) => (
-          <button key={t.id} type="button" onClick={() => onChange(t.id)} onKeyDown={roving} aria-current={active === t.id ? "page" : undefined} title={t.hint} className={`inline-flex items-center gap-1.5 ${tabClass(active === t.id)}`}>
-            <span aria-hidden className={`num inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] ${active === t.id ? "border-copper-bright/60 text-copper-bright" : "border-line-strong text-fg-faint"}`}>{t.step}</span>{t.label}
+          <button key={t.id} type="button" onClick={() => onChange(t.id)} onKeyDown={roving} aria-current={active === t.id ? "page" : undefined} title={t.hint} className={tabClass(active === t.id)}>
+            <span aria-hidden className={styles.step}>0{t.step}</span>{t.label}
           </button>
         ))}
         <div ref={menu} className="relative">
-          <button type="button" onClick={() => setOpen(o => !o)} onKeyDown={roving} aria-expanded={open} aria-haspopup="menu" aria-controls="advanced-tools" title="Analyze and Compare" className={`inline-flex items-center gap-1 ${tabClass(!!advancedActive)}`} data-testid="advanced-nav">
-            Advanced{advancedActive ? <span className="text-fg-faint"> · </span> : null}{advancedActive ? <span>{advancedActive.label}</span> : null}<ChevronDown className={`h-3.5 w-3.5 ${open ? "rotate-180" : ""}`} aria-hidden />
+          <button type="button" onClick={() => setOpen(o => !o)} onKeyDown={roving} aria-expanded={open} aria-haspopup="menu" aria-controls="advanced-tools" title={advancedActive ? `${advancedActive.label} is open · choose an analysis tool` : "Analyze and Compare"} aria-current={advancedActive ? "page" : undefined} className={`${tabClass(!!advancedActive)} ${styles.tools}`} data-testid="advanced-nav">
+            {advancedActive ? <span>{advancedActive.label}</span> : <><span className="sm:hidden">Tools</span><span className="hidden sm:inline">Advanced</span></>}<ChevronDown className={`h-3.5 w-3.5 ${open ? "rotate-180" : ""}`} aria-hidden />
           </button>
-          <div id="advanced-tools" role="menu" aria-label="Advanced tools" hidden={!open} className="absolute left-1/2 top-full z-50 mt-1 w-56 -translate-x-1/2 rounded-lg border border-line bg-bg-elev p-1 shadow-lg">
+          <div id="advanced-tools" role="menu" aria-label="Advanced tools" hidden={!open} className={styles.menu}>
             <p className="px-2 py-1 text-[10.5px] uppercase tracking-wide text-fg-faint">Analysis tools</p>
             {ADVANCED.map(t => (
               <button key={t.id} type="button" role="menuitem" onClick={() => { onChange(t.id); setOpen(false); }} onKeyDown={roving} aria-current={active === t.id ? "page" : undefined} title={t.hint} className={`block w-full rounded px-2 py-1.5 text-left text-xs ${active === t.id ? "bg-copper/15 text-copper-bright" : "text-fg hover:bg-bg-elev-2"}`}>
@@ -66,7 +68,7 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
           </div>
         </div>
       </nav>
-      <div className="hidden min-w-0 items-center justify-end gap-2 md:flex">{right}</div>
+      <div className={styles.trailing}>{right}{active === "home" && <MotionControl />}</div>
     </header>
   );
 }

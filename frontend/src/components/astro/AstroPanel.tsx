@@ -5,6 +5,8 @@ import { useMission } from "@/hooks/useEvaluation";
 import { AIIndicator } from "@/components/ui/AIIndicator";
 import { useBoundsReporter } from "@/hooks/useBoundsReporter";
 import type { OverlayBounds } from "@/lib/overlay";
+import { AstroPresence } from "./AstroPresence";
+import styles from "./astro.module.css";
 import { AstroComposer } from "./AstroComposer";
 import { astroSuggestion } from "./suggestion";
 import { ResponsiveSurface } from "@/components/ui/ResponsiveSurface";
@@ -66,11 +68,15 @@ export function AstroPanel({
   const state = useAppStore();
   const mission = useMission();
   const { entries, pending, send, clear } = useAstroStore();
+  const latest = entries.at(-1);
+  const presenceState = pending ? "thinking" : latest?.error ? "error" : latest?.response ? "answer" : "ready";
+  const presenceLabel = pending ? "Reviewing evidence" : latest?.error ? "Reply unavailable" : latest?.response ? "Response ready" : "Ready for a question";
   const log = useRef<HTMLDivElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
   useBoundsReporter(launcher, onBoundsChange, !open);
   const context = {
-    active_tab: state.activeTab,
+    // Astro is hidden on Home, which has no scientific conversation context.
+    active_tab: state.activeTab === "home" ? "mission" as const : state.activeTab,
     viewed_body: state.viewedBody,
     map_mode: state.mapMode,
     selected_mars_id:
@@ -173,10 +179,9 @@ export function AstroPanel({
           aria-label="Expand Astro"
           aria-expanded={false}
           onClick={() => setOpen(true)}
-          className="pointer-events-auto absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-xl border border-line-strong bg-bg-elev py-3 pl-4 pr-12 text-sm font-medium text-fg shadow-lg hover:border-copper/50 focus-visible:outline focus-visible:outline-copper"
+          className={`pointer-events-auto absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center text-fg hover:border-copper/50 focus-visible:outline focus-visible:outline-copper ${styles.launcher}`}
         >
-          <span>Astro</span>
-          <AIIndicator label="AI" />
+          <AstroPresence state={presenceState} size={36} /><span className={styles.identity}><strong>Astro</strong><small>AI · {pending ? "Reviewing" : "Ask a question"}</small></span>
           <span className={cornerToggle} aria-hidden><ArrowUpRight className="h-4 w-4" /></span>
         </button>
       )}
@@ -196,10 +201,10 @@ export function AstroPanel({
           mobileClassName={
             entries.length || pending
               ? "h-[min(64dvh,500px)] max-h-[80dvh]"
-              : "h-[220px] max-h-[80dvh]"
+              : "h-[300px] max-h-[80dvh]"
           }
           onClose={close}
-          className={`pointer-events-auto absolute bottom-3 left-1/2 flex w-[720px] max-w-[calc(100%-32px)] -translate-x-1/2 flex-col overflow-hidden rounded-xl border border-line-strong bg-bg-elev shadow-2xl motion-safe:animate-[sheet-in_180ms_ease-out] ${entries.length || pending ? "h-[min(64%,480px)] min-h-[280px]" : "h-[220px]"}`}
+          className={`pointer-events-auto absolute bottom-3 left-1/2 flex w-[720px] max-w-[calc(100%-32px)] -translate-x-1/2 flex-col overflow-hidden rounded-xl border border-line-strong bg-bg-elev shadow-2xl motion-safe:animate-[sheet-in_180ms_ease-out] ${styles.surface} ${entries.length || pending ? "h-[min(64%,480px)] min-h-[280px]" : "h-[300px]"}`}
         >
           <div
             role="separator" tabIndex={0} aria-label="Resize Astro height" aria-orientation="horizontal"
@@ -245,15 +250,14 @@ export function AstroPanel({
           <button type="button" aria-label="Collapse Astro" title="Collapse Astro" aria-expanded={true} onClick={close} className={cornerToggle}>
             <ArrowDownLeft className="h-4 w-4" aria-hidden />
           </button>
-          <header className="flex shrink-0 items-center justify-between gap-3 border-b border-line py-3 pl-4 pr-14">
+          <header className={`flex shrink-0 items-center justify-between gap-3 border-b border-line py-3 pl-4 pr-14 ${styles.header}`}>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-fg">Astro</h2>
-              <AIIndicator label="AI assistant" />
+              {(entries.length > 0 || pending) && <AstroPresence state={presenceState} size={38} />}<div><div className="flex items-center gap-2"><h2 className="text-sm font-medium text-fg">Astro</h2><AIIndicator label="AI assistant" /></div><p className={styles.status}>{presenceLabel}</p></div>
             </div>
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={clear}
+                onClick={() => { clear(); setDraft(""); }}
                 className="text-xs text-fg-muted hover:text-fg"
               >
                 Clear conversation
@@ -267,8 +271,9 @@ export function AstroPanel({
             aria-label="Astro conversation"
             aria-live="polite"
             aria-busy={pending}
-            className="scroll-thin min-h-0 flex-1 space-y-4 overflow-y-auto p-4"
+            className={`scroll-thin min-h-0 flex-1 space-y-4 overflow-y-auto p-4 ${styles.log}`}
           >
+            {!entries.length && !pending && <div className={styles.empty}><AstroPresence size={76} /><div><h3>Make sense of the evidence.</h3><p>Ask about a place, a ranking, or what to investigate next.</p></div></div>}
             {entries.map((entry, i) => (
               <article key={i} className="space-y-3 border-b border-line pb-4">
                 <p className="rounded-lg bg-bg-elev-2 p-3 text-sm text-fg">

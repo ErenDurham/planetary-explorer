@@ -307,3 +307,10 @@ def test_unscorable_dimensions_are_carried_as_context_never_as_score():
         flux=context["insolation_toa_annual_mean_wm2"]
         assert flux.comparable and flux.mars_value is not None
         assert context["surface_temperature_mean_c"].mars_value is None
+
+@pytest.mark.parametrize("weights", [None, {"precipitation_mm_day": 1}])
+def test_global_rank_reports_the_features_that_actually_have_weight(weights):
+    response = engine.rank(DiscoveryRankRequest(run_id=installed("discovery-v2.0"), weights=weights))
+    expected = {feature for feature, weight in response.effective_weights.items() if weight > 0}
+    assert set(response.basis_features) == expected
+    assert expected == {feature.feature_id for feature in response.candidates[0].feature_distances if feature.normalized_weight > 0}

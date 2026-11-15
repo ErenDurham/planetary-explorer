@@ -136,7 +136,7 @@ function SiteImages({site,view,enabled}: {site: ImagerySubject; view: "orbital" 
     {failed === entry.entry_id ? <div role="alert" className="rounded-lg border border-line p-4 text-sm">Image could not be loaded.<button type="button" className="ml-3 text-info underline" onClick={()=>{setAttempt(n=>n+1);setFailed(null);}}>Retry image</button></div> : <div tabIndex={0} aria-label="Image area; arrow keys scroll" className="max-h-[52vh] overflow-auto rounded-lg border border-line bg-black">
       <div className="relative mx-auto" style={{width: entry.width_px && entry.height_px ? `min(${zoom*100}%, ${entry.width_px/entry.height_px*52*zoom}vh)` : `${zoom*100}%`}}>
         <img key={`${entry.entry_id}:${attempt}`} src={imageryAssetUrl(entry.entry_id,attempt)} alt={`${entry.title}. ${entry.relevance}`} className="block h-auto w-full" onLoad={()=>setLoaded(entry.entry_id)} onError={()=>setFailed(entry.entry_id)} />
-        {contains && bounds && <span title="Candidate coordinate (not a landing ellipse)" aria-label="Candidate coordinate" className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-copper shadow" style={{left:`${(site.lon_east-bounds.west)/(bounds.east-bounds.west)*100}%`,top:`${(bounds.north-site.lat)/(bounds.north-bounds.south)*100}%`}} />}
+        {contains && bounds && <span title="Candidate coordinate (not a landing ellipse)" aria-label="Candidate coordinate" className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-data-contribution shadow" style={{left:`${(site.lon_east-bounds.west)/(bounds.east-bounds.west)*100}%`,top:`${(bounds.north-site.lat)/(bounds.north-bounds.south)*100}%`}} />}
       </div>
     </div>}
     {entries.length > 1 && <>

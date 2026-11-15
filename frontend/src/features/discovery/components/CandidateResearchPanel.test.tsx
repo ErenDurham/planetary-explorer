@@ -26,7 +26,7 @@ function mount() { return render(<QueryClientProvider client={new QueryClient({ 
 beforeEach(() => {
   vi.clearAllMocks();
   setDiscoveryService(connectedService());
-  useDiscoveryStore.setState({ runId: run.run_id, runs: { [run.run_id]: { ranked: true, selectedCandidateId: null, autoSelected: false } }, weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 }, topK: 5 });
+  useDiscoveryStore.setState({ runId: run.run_id, runs: { [run.run_id]: { ranked: true, selectedCandidateId: null, autoSelected: false, shortlist: [] } }, weights: { slope_regional_median_deg: 50, roughness_regional_m: 50 }, topK: 5 });
   useCandidateResearchTarget.setState({ target, drafts: {} });
   mocks.research.mockResolvedValue(dossier); mocks.saveResearch.mockResolvedValue({ status: "in_progress" });
   vi.stubGlobal("URL", Object.assign(URL, { createObjectURL: vi.fn(() => "blob:x"), revokeObjectURL: vi.fn() }));
@@ -102,6 +102,19 @@ describe("candidate deep research", () => {
     expect(await screen.findByText(/Nothing was saved\. Your notes are still here/)).toBeInTheDocument();
     expect(screen.getByLabelText("Review summary and remaining gaps")).toHaveValue("These notes must not vanish.");
     expect(screen.getByTestId("draft-indicator")).toBeInTheDocument();
+  });
+
+  it("keeps newer edits when an older save finishes", async () => {
+    let resolveSave!: (value: unknown) => void;
+    mocks.saveResearch.mockImplementationOnce(() => new Promise(resolve => { resolveSave = resolve; }));
+    mount(); await screen.findByText("Deep research: Proposed region");
+    fireEvent.change(screen.getByLabelText("Review summary and remaining gaps"), { target: { value: "Submitted notes" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save research notes" }));
+    await waitFor(() => expect(mocks.saveResearch).toHaveBeenCalled());
+    fireEvent.change(screen.getByLabelText("Review summary and remaining gaps"), { target: { value: "Newer notes must survive" } });
+    resolveSave({ status: "unresearched" });
+    await waitFor(() => expect(screen.queryByText("Saving research notes…")).not.toBeInTheDocument());
+    expect(screen.getByLabelText("Review summary and remaining gaps")).toHaveValue("Newer notes must survive");
   });
 
   it("goes back to the same candidate in Explore", async () => {

@@ -106,7 +106,7 @@ describe("discovery journey", () => {
     const list2 = await screen.findByRole("list", { name: "Ranked proposed candidates" });
     await waitFor(() => expect(within(list2).getByRole("button", { name: /Footprint c_31_25_m2_75/ })).toHaveTextContent(/Research in progress/));
     // export: the audit JSON still downloads from the left column
-    fireEvent.click(screen.getByRole("button", { name: /Survey audit artifact/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Download survey audit/ }));
     expect(await screen.findByText(new RegExp(`Saved discovery-${run.run_id}-audit\\.json \\(${exportPayload.audit_rows.length} audit rows\\)`))).toBeInTheDocument();
     // the curated selections were never touched by discovery
     expect(useAppStore.getState().selectedEarthId).toBeNull();
@@ -137,6 +137,6 @@ describe("discovery journey", () => {
     expect(within(menu).queryByRole("menuitem", { name: /Mission Design/ })).toBeNull();
     fireEvent.click(within(menu).getByRole("menuitem", { name: /^Analyze/ }));
     expect(useAppStore.getState().activeTab).toBe("analyze");
-    expect(screen.getByTestId("advanced-nav")).toHaveTextContent(/Advanced · Analyze/);
+    expect(screen.getByTestId("advanced-nav")).toHaveTextContent(/^Analyze$/);
   });
 });

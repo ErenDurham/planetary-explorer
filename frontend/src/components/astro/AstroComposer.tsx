@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 export function AstroComposer({
   draft,
   onDraft,
@@ -25,7 +25,7 @@ export function AstroComposer({
       <label htmlFor="astro-message" className="sr-only">
         Message Astro
       </label>
-      <div className="relative rounded-lg border border-line-strong bg-bg focus-within:border-copper">
+      <div className="relative rounded border border-line-strong bg-bg focus-within:border-copper">
         <textarea
           id="astro-message"
           rows={2}
@@ -42,15 +42,15 @@ export function AstroComposer({
               if (draft.trim()) onSend();
             }
           }}
-          className="block min-h-[68px] w-full resize-none rounded-lg bg-transparent px-3 py-2.5 pr-12 text-sm leading-5 text-fg placeholder:text-fg-faint outline-none"
+          className="block min-h-[68px] w-full resize-none rounded bg-transparent px-3 py-2.5 pr-12 text-sm leading-5 text-fg placeholder:text-fg-faint outline-none"
         />
         <button
           type="submit"
           disabled={pending || !draft.trim()}
           aria-label="Send message"
-          className="absolute bottom-2 right-2 rounded-md p-2 text-copper-bright hover:bg-copper/10 disabled:opacity-40"
+          className="absolute bottom-2 right-2 rounded bg-copper-bright p-2 text-bg hover:brightness-110 disabled:bg-line disabled:text-fg-faint disabled:opacity-50"
         >
-          <Send className="h-4 w-4" aria-hidden />
+          <ArrowUp className="h-4 w-4" aria-hidden />
         </button>
       </div>
     </form>

@@ -38,7 +38,7 @@ export function SitePanelShell({
   return (
     <section
       data-pane="site" aria-label="Site information panel"
-      className="relative flex h-auto min-h-0 flex-col bg-bg-elev lg:h-full"
+      className="relative flex h-auto min-h-0 flex-col bg-bg-elev xl:h-full"
     >
       <div
         role="separator"
@@ -85,7 +85,7 @@ export function SitePanelShell({
             else change(width + (e.key === "ArrowLeft" ? 40 : -40));
           }
         }}
-        className="absolute inset-y-0 -left-1 z-20 hidden w-2 cursor-col-resize touch-none items-center justify-center hover:bg-copper/20 focus-visible:bg-copper/30 focus-visible:outline-none lg:flex"
+        className="absolute inset-y-0 -left-1 z-20 hidden w-2 cursor-col-resize touch-none items-center justify-center hover:bg-copper/20 focus-visible:bg-copper/30 focus-visible:outline-none xl:flex"
       >
         <span aria-hidden className="h-10 w-0.5 rounded bg-line-strong" />
       </div>

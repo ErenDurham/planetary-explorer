@@ -74,7 +74,7 @@ export function DiscoveryCandidateList({ candidates, evaluated, regionsSearched,
       {/* The column scrolls as one (rows, then weights, then export), so this uses the
           Browse Regions panel's header shape rather than CandidatePanel itself, whose
           own full-height scroll area would collapse when nested in a scrolling column. */}
-      <section aria-label="Ranked candidates" className="px-4 py-3">
+      <section aria-label="Ranked candidates" className="candidate-panel px-4 py-3">
         <header className="mb-3 flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-muted">Ranked candidates</h2>
@@ -104,9 +104,9 @@ export function DiscoveryCandidateList({ candidates, evaluated, regionsSearched,
                       <button type="button" onClick={() => onSelect(c.id)} onKeyDown={rowKeyDown} aria-pressed={selected} aria-label={label} className={candidateRowClass(selected)}>
                         <span className="num text-xs text-fg-muted">{c.display_rank ?? "—"}</span>
                         <span className="min-w-0">
-                          <span className="block truncate text-xs text-fg" title={c.name}>{c.name}</span>
+                          <span className="candidate-name block text-xs text-fg" title={c.name}>{c.name}</span>
                           <span className="num block truncate text-[10px] text-fg-faint">{formatPoint(c.lat, c.lon_east)}</span>
-                          <span className="mt-1 block h-1.5 w-full overflow-hidden rounded-sm bg-line" aria-hidden>
+                          <span className="mt-2 block h-0.5 w-full overflow-hidden rounded-sm bg-line" aria-hidden>
                             {index != null && <span className="block h-full" style={{ width: `${index}%`, backgroundColor: color }} />}
                           </span>
                           <DimensionStrip dimensions={dimensions} color={color} />

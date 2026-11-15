@@ -646,7 +646,7 @@ describe("Mission Design next step", () => {
   it("returning to edit the objective keeps research notes and the discovery selection", async () => {
     mockInterpret();
     useCandidateResearchTarget.setState({ target: { runId: "run-1", candidateId: "c-1" }, drafts: { "run-1:c-1": { status: "in_progress", notes: "Keep me across a mission edit.", findings: [], checked: [], baseUpdatedAt: null } } });
-    useDiscoveryStore.setState({ runId: "run-1", runs: { "run-1": { ranked: true, selectedCandidateId: "c-1", autoSelected: true } } });
+    useDiscoveryStore.setState({ runId: "run-1", runs: { "run-1": { ranked: true, selectedCandidateId: "c-1", autoSelected: true, shortlist: [] } } });
     renderTab();
     await saveMission();
     fireEvent.click(screen.getByRole("button", { name: /Edit Mission/ }));

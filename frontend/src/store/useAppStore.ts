@@ -15,7 +15,7 @@ import { setShare, toShares } from "@/lib/allocation";
 import { ANALOG_FEATURE_IDS, otherBody, toAnalogShares, type Body } from "@/lib/analogFeatures";
 import type { AnalogCheck, EvidenceCitation, HardConstraint, MissionKind } from "@/types";
 
-export type Tab = "mission" | "explore" | "analyze" | "compare" | "research";
+export type Tab = "home" | "mission" | "explore" | "analyze" | "compare" | "research";
 /** The two ways to explore: browse the featured regions, or find candidate Earth analogs for a reference region. */
 export type ExploreMode = "browse" | "find_analogs";
 
@@ -353,11 +353,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   setComparisonPair: (comparisonPair) => set({comparisonPair}),
   comparison: { mode: "all", earthId: "haughton_crater", moonId: "apollo_11", section: "all", details: false },
   setComparison: (patch) => set(s => ({ comparison: { ...s.comparison, ...patch } })),
-  // a fresh session opens on Mission Design: objective first, then Explore, then Research
-  activeTab: "mission",
+  // Home explains the purpose and offers entry points; mission drafts and selections survive returning.
+  activeTab: "home",
   setActiveTab: (tab) => set({ activeTab: tab }),
-  // Explore opens on the supported discovery pilot; Browse Regions (established analogs, mission scoring) is the secondary mode
-  exploreMode: "find_analogs",
+  // Browse Regions is the default; the fixed survey remains an explicit alternative.
+  exploreMode: "browse",
   setExploreMode: (exploreMode) => set({ exploreMode }),
   openFindAnalogs: () => set({ activeTab: "explore", exploreMode: "find_analogs" }),
 

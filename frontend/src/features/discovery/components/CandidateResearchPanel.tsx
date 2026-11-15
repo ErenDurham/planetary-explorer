@@ -21,7 +21,7 @@ import { useDiscoveryCapabilities } from "../hooks/useDiscoveryCapabilities";
 import { buildResearchBrief, researchBriefFilename } from "../lib/researchBrief";
 import { downloadText } from "../lib/download";
 import { formatPoint } from "../lib/geo";
-import { PROPOSED_LABEL } from "../lib/copy";
+import { candidateTitle, PROPOSED_LABEL } from "../lib/copy";
 
 type Finding = NonNullable<CandidateResearchUpdate["findings"]>[number];
 const STATUSES: ResearchStatus[] = ["unresearched", "in_progress", "literature_reviewed"];
@@ -78,8 +78,12 @@ export function CandidateResearchPanel() {
   }, [dirty]);
 
   const save = useMutation({
-    mutationFn: () => discoveryEngine.saveResearch(target!.runId, target!.candidateId, { status: working!.status, notes: working!.notes, findings: working!.findings }),
-    onSuccess: async () => { if (target) clearDraft(target); await client.invalidateQueries({ queryKey: ["discovery"] }); },
+    mutationFn: (submission: { target: ResearchTarget; draft: ResearchDraft }) => discoveryEngine.saveResearch(submission.target.runId, submission.target.candidateId, { status: submission.draft.status, notes: submission.draft.notes, findings: submission.draft.findings }),
+    onSuccess: async (_, submission) => {
+      await client.invalidateQueries({ queryKey: ["discovery"] });
+      const current = useCandidateResearchTarget.getState().drafts[draftKey(submission.target)];
+      if (JSON.stringify(current) === JSON.stringify(submission.draft)) clearDraft(submission.target);
+    },
   });
   const canComplete = !!working && working.notes.trim().length >= 40 && working.findings.some(f => f.scope !== "regional_background");
   const blockedCompletion = working?.status === "literature_reviewed" && !canComplete;
@@ -104,7 +108,7 @@ export function CandidateResearchPanel() {
     <section className="rounded-xl border border-line-strong bg-bg-elev p-4">
       <button type="button" className="inline-flex items-center gap-1.5 text-sm text-info underline underline-offset-2" onClick={() => returnToCandidate(target)}><ArrowLeft className="h-4 w-4" aria-hidden />Back to this candidate in Explore</button>
       <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
-        <div><h2 className="text-xl font-semibold text-fg">Deep research: {c.name}</h2><p className="num mt-1 text-sm text-fg-muted">{formatPoint(c.lat, c.lon_east, 4)} · survey {run?.label ?? data.run_id}</p></div>
+        <div><h2 className="text-xl font-semibold text-fg">Deep research: {candidateTitle(c)}</h2><p className="num mt-1 text-sm text-fg-muted">{formatPoint(c.lat, c.lon_east, 4)} · survey {run?.label ?? data.run_id}</p></div>
         <ResearchStatusBadge status={record!.status} />
       </div>
       <p className="mt-2 text-xs text-fg-muted" data-testid="research-ranking-context">
@@ -119,7 +123,7 @@ export function CandidateResearchPanel() {
       <div className="flex flex-wrap items-center justify-between gap-2"><h3 id="research-notebook" className="text-lg font-semibold text-fg">Research notebook</h3>{dirty && <span className="rounded-full border border-warn/50 bg-warn/10 px-2 py-0.5 text-xs text-warn" data-testid="draft-indicator">Unsaved changes · kept while you navigate</span>}</div>
       <p className="mt-2 text-sm text-fg-muted">Saved findings are analyst supplied and are not automatically verified. Literature reviewed means a documented literature review, never a validated analog, and it can conclude the candidate is unsuitable.</p>
       {staleBase && <p role="status" className="mt-2 rounded-lg border border-warn/40 bg-warn/10 p-2 text-xs text-warn">The saved notes changed after this draft was started. Saving will overwrite them; discard the draft to see the saved version.</p>}
-      <form className="mt-3 space-y-3" onSubmit={e => { e.preventDefault(); save.mutate(); }}>
+      <form className="mt-3 space-y-3" onSubmit={e => { e.preventDefault(); save.mutate({ target: { ...target }, draft: { ...working } }); }}>
         <label className="block text-sm text-fg">Research status
           <select aria-label="Candidate research status" className={`${input} mt-2`} value={working.status} onChange={e => update({ status: e.target.value as ResearchStatus })}>
             {STATUSES.map(s => <option key={s} value={s}>{RESEARCH_STATUS_MEANING[s].label}</option>)}
