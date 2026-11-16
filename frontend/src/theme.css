@@ -124,7 +124,7 @@
 }
 :root[data-appearance="light"] dialog[aria-label="Astro research assistant"] { background:var(--color-bg-elev); }
 :root[data-appearance="light"] .mission-panel textarea { background:var(--color-bg-elev); }
-:root[data-appearance="light"] .motion-control { background:var(--color-bg-elev); }
+
 
 /* Fit the mission composer to laptop-height viewports without clipping content. */
 @media(min-width:701px) and (max-height:850px) {

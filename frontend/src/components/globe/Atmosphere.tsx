@@ -24,6 +24,7 @@ const FRAG = /* glsl */ `
   uniform float uIntensity;
   uniform float uPower;
   uniform float uLimb;
+  uniform float uFade;
   varying vec3 vNormal;
   varying vec3 vView;
   void main() {
@@ -33,20 +34,20 @@ const FRAG = /* glsl */ `
     // nothing at the outer edge, so the glow has a soft outside and no hard ring.
     float depth = clamp(-dot(vNormal, vView) / uLimb, 0.0, 1.0);
     float rim = pow(depth, uPower);
-    gl_FragColor = vec4(uColor * rim * uIntensity, rim * uIntensity);
+    gl_FragColor = vec4(uColor * rim * uIntensity, rim * uIntensity) * uFade;
   }
 `;
 
 export interface AtmosphereSpec { color: string; intensity: number; /** shell thickness as a fraction of the radius */ thickness?: number; power?: number }
 
-export function Atmosphere({ radius, spec }: { radius: number; spec: AtmosphereSpec }) {
+export function Atmosphere({ radius, spec, fade }: { radius: number; spec: AtmosphereSpec; /** 0-1 multiplier read every frame, so the glow can fade out with its planet */ fade?: { current: number } }) {
   const thickness = spec.thickness ?? 0.035;
   // cosine of the angle between the shell normal and the view ray where the ray grazes the planet
   const limb = Math.sqrt(Math.max(1e-4, 1 - 1 / ((1 + thickness) * (1 + thickness))));
-  const uniforms = useMemo(() => ({ uColor: { value: new Color(spec.color) }, uIntensity: { value: spec.intensity }, uPower: { value: spec.power ?? 2.2 }, uLimb: { value: limb } }), []);
+  const uniforms = useMemo(() => ({ uColor: { value: new Color(spec.color) }, uIntensity: { value: spec.intensity }, uPower: { value: spec.power ?? 2.2 }, uLimb: { value: limb }, uFade: { value: fade?.current ?? 1 } }), []);
   const reduce=prefersReducedMotion();
   const targetColor=useMemo(()=>new Color(spec.color),[spec.color]);
-  useFrame((_,delta)=>{const k=reduce?1:1-Math.exp(-Math.min(delta,.1)*5);uniforms.uColor.value.lerp(targetColor,k);uniforms.uIntensity.value+=(spec.intensity-uniforms.uIntensity.value)*k;uniforms.uPower.value+=((spec.power ?? 2.2)-uniforms.uPower.value)*k;uniforms.uLimb.value+=(limb-uniforms.uLimb.value)*k;});
+  useFrame((_,delta)=>{const k=reduce?1:1-Math.exp(-Math.min(delta,.1)*5);uniforms.uColor.value.lerp(targetColor,k);uniforms.uIntensity.value+=(spec.intensity-uniforms.uIntensity.value)*k;uniforms.uPower.value+=((spec.power ?? 2.2)-uniforms.uPower.value)*k;uniforms.uLimb.value+=(limb-uniforms.uLimb.value)*k;uniforms.uFade.value=fade?.current ?? 1;});
   return (
     <mesh scale={1 + thickness} renderOrder={-1}>
       <sphereGeometry args={[radius, 64, 48]} />

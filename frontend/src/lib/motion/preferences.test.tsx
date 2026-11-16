@@ -1,20 +1,18 @@
-import { afterEach, expect, it } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
-import { MotionControl, useMotionPreference, useMotionStore } from "./preferences";
-afterEach(() => useMotionStore.setState({ paused: false }));
-it("lets the user pause and resume visual motion with an explicit control", () => {
-  function Example() { const reduced = useMotionPreference("home"); return <><MotionControl /><output>{reduced ? "Still" : "Moving"}</output></>; }
+import { afterEach, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { useMotionPreference } from "./preferences";
+afterEach(() => vi.restoreAllMocks());
+function Example() { const reduced = useMotionPreference(); return <output>{reduced ? "Still" : "Moving"}</output>; }
+const media = (matches: boolean) => vi.spyOn(window, "matchMedia").mockImplementation((query: string) => ({ matches, media: query, onchange: null, addListener: vi.fn(), removeListener: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn() }));
+
+it("keeps motion on by default", () => {
+  media(false);
   render(<Example />);
-  expect(screen.getByText("Moving")).toBeInTheDocument();
-  fireEvent.click(screen.getByRole("button", { name: "Pause visual motion" }));
-  expect(screen.getByText("Still")).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Resume visual motion" })).toHaveAttribute("aria-pressed", "true");
-  act(() => useMotionStore.getState().setPaused(false));
   expect(screen.getByText("Moving")).toBeInTheDocument();
 });
 
-it("does not let the Home pause switch disable exploration or Astro motion", () => {
- useMotionStore.setState({paused:true});
- function Example(){const reduced=useMotionPreference();return <output>{reduced?"Still":"Moving"}</output>;}
- render(<Example/>);expect(screen.getByText("Moving")).toBeInTheDocument();
+it("stills motion when the device asks for reduced motion", () => {
+  media(true);
+  render(<Example />);
+  expect(screen.getByText("Still")).toBeInTheDocument();
 });
