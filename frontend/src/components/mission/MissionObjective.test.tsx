@@ -77,7 +77,7 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("Mission Design chat box", () => {
-  it("offers two example objectives that fill the box, and applies one on Enter", async () => {
+  it("offers three example objectives that fill the box, and applies one on Enter", async () => {
     mockInterpret();
     renderTab();
     const box = screen.getByLabelText("Your mission objective");
@@ -85,19 +85,19 @@ describe("Mission Design chat box", () => {
     expect(screen.getByRole("button", { name: /Apply objective/ })).toBeDisabled();
     const examples = screen.getByRole("group", { name: "Example objectives" });
     expect(within(examples).getAllByRole("button").map(b => b.textContent)).toEqual([
-      expect.stringContaining("Best established analog for Jezero"), expect.stringContaining("Mars landing screening"),
+      expect.stringContaining("New Earth terrain resembling Jezero"), expect.stringContaining("Best established analog for Jezero"), expect.stringContaining("Mars landing screening"),
     ]);
-    fireEvent.click(within(examples).getByRole("button", { name: /Best established analog for Jezero/ }));
+    fireEvent.click(within(examples).getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     expect(box).toHaveValue(DEFAULT_MISSION_OBJECTIVE);
     expect(screen.getByRole("button", { name: /Apply objective/ })).toBeEnabled();
     // an example is a draft like any other: the user can still rewrite it
     fireEvent.change(box, { target: { value: "My own words" } });
     expect(box).toHaveValue("My own words");
-    fireEvent.click(within(examples).getByRole("button", { name: /Best established analog for Jezero/ }));
+    fireEvent.click(within(examples).getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     fireEvent.keyDown(box, { key: "Enter" });
     await screen.findByTestId("mission-text");
     expect(interpretCalls[0].objective).toBe(DEFAULT_MISSION_OBJECTIVE);
-    expect(screen.getByTestId("mission-text")).toHaveTextContent(/established Earth analog best matches Jezero/);
+    expect(screen.getByTestId("mission-text")).toHaveTextContent(/new candidate Earth regions beyond established analog sites/);
     expect(screen.getByTestId("mission-applied")).toHaveTextContent(/Applied objective/);
   });
 
@@ -515,13 +515,13 @@ describe("Mission Design default objective", () => {
     const box = screen.getByLabelText("Your mission objective");
     expect(box).toHaveValue("");
     expect(box).toHaveAccessibleDescription(/Enter applies/);
-    fireEvent.click(screen.getByRole("button", { name: /Best established analog for Jezero/ }));
+    fireEvent.click(screen.getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     expect(box).toHaveValue(DEFAULT_OBJECTIVE);
     // Tab is ordinary focus movement, never a fill
     fireEvent.change(box, { target: { value: "" } });
     fireEvent.keyDown(box, { key: "Tab" });
     expect(box).toHaveValue("");
-    fireEvent.click(screen.getByRole("button", { name: /Best established analog for Jezero/ }));
+    fireEvent.click(screen.getByRole("button", { name: /New Earth terrain resembling Jezero/ }));
     fireEvent.keyDown(box, { key: "Enter" });
     await screen.findByLabelText("Low slopes share of priorities");
     expect(useAppStore.getState().appliedObjective).toBe(DEFAULT_OBJECTIVE);
@@ -599,6 +599,21 @@ describe("Mission Design next step", () => {
   beforeEach(() => { useAppStore.setState({ viewedBody: "mars", followObjective: true, selectedMarsId: null, selectedSiteId: null, selectedEarthId: null, missionDestination: "mars", task: "landing_screening", appliedTask: null, activeTab: "mission", exploreMode: "browse" }); });
   afterEach(() => { setDiscoveryService(deadService); });
 
+  it("a supported new-region Jezero objective leads to Explore candidates, which opens Find Earth Analogs", async () => {
+    setDiscoveryService(connectedService());
+    mockInterpret({ ...mission.interpret, task_interpretation: { task: "analog_site_selection", focus_body: "earth", mission_destination: "mars", reference_site: { body: "mars", id: "jezero_crater", name: "Jezero Crater", matched_text: "Jezero" }, unresolved_sites: [], direction_options: [], analog_suggestions: [], rationale: [] } });
+    renderTab();
+    const box = screen.getByLabelText("Your mission objective");
+    fireEvent.change(box, { target: { value: DEFAULT_MISSION_OBJECTIVE } });
+    fireEvent.keyDown(box, { key: "Enter" });
+    const next = await screen.findByTestId("mission-next-step");
+    await waitFor(() => expect(next).toHaveAttribute("data-route", "discovery"));
+    expect(next).toHaveTextContent(/fixed set of surveyed Earth footprints.*Jezero Crater.*not a global search/);
+    expect(screen.queryByTestId("mission-unsupported")).toBeNull();
+    fireEvent.click(within(next).getByRole("button", { name: /Explore candidates/ }));
+    expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "find_analogs" });
+  });
+
   it("an objective that asks for new regions around another reference is routed honestly to the established analogs", async () => {
     setDiscoveryService(connectedService());
     mockInterpret({ ...mission.interpret, task_interpretation: { task: "analog_site_selection", focus_body: "earth", mission_destination: "mars", reference_site: { body: "mars", id: "elysium_planitia", name: "Elysium Planitia (InSight)", matched_text: "Elysium" }, unresolved_sites: [], direction_options: [], analog_suggestions: [], rationale: [] } });
@@ -609,7 +624,7 @@ describe("Mission Design next step", () => {
     fireEvent.keyDown(box, { key: "Enter" });
     const next = await screen.findByTestId("mission-next-step");
     expect(next).toHaveAttribute("data-route", "established_analogs");
-    expect(screen.queryByTestId("mission-unsupported")).toBeNull();
+    expect(screen.getByTestId("mission-unsupported")).toHaveTextContent(/only exists for Jezero Crater; it cannot find new regions for Elysium Planitia/);
     fireEvent.click(within(next).getByRole("button", { name: /Explore established analogs/ }));
     expect(onExplore).toHaveBeenCalledTimes(1);
     expect(useAppStore.getState().exploreMode).toBe("browse");
@@ -624,7 +639,8 @@ describe("Mission Design next step", () => {
     expect(next).toHaveTextContent(/does not guess/);
     expect(within(next).getByRole("button", { name: "Mars landing screening" })).toBeInTheDocument();
     expect(within(next).getByRole("button", { name: "Established Earth analogs" })).toBeInTheDocument();
-    expect(within(next).queryByRole("button", { name: "New Earth terrain resembling Jezero" })).toBeNull();   // the discovery page was removed
+    // no survey is reachable in this test, so the discovery choice is disabled rather than shown as if it worked
+    expect(within(next).getByRole("button", { name: "New Earth terrain resembling Jezero" })).toBeDisabled();
   });
 
   it("returning to edit the objective keeps research notes and the discovery selection", async () => {

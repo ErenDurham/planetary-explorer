@@ -1,4 +1,3 @@
-import { AstroPresence } from "@/components/astro/AstroPresence";
 // The Mission Design composer: one objective box as the instrument of the
 // page. Before anything is applied it carries a two-sentence account of what
 // the user will get and three example objectives that fill the box (each one
@@ -11,6 +10,7 @@ import { AstroPresence } from "@/components/astro/AstroPresence";
 // words. Shift+Enter is a new line; Escape cancels an edit.
 import { ContourArtwork } from "@/components/atlas/AtlasSurface";
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 import { Check, Pencil, TriangleAlert } from "lucide-react";
 import { ShootingStar } from "@/components/mission/SpaceDecor";
 import { useAppStore } from "@/store/useAppStore";
@@ -21,6 +21,7 @@ const TASK_LABEL: Record<Task, string> = { landing_screening: "Mars landing scre
 
 /** Three objectives the app can act on, one per supported workflow. Clicking one fills the box; nothing is applied until the user applies it. */
 export const EXAMPLE_OBJECTIVES: Array<{ id: string; label: string; hint: string; text: string }> = [
+  { id: "discovery", label: "New Earth terrain resembling Jezero", hint: "the installed discovery pilot", text: DEFAULT_MISSION_OBJECTIVE },
   { id: "analogs", label: "Best established analog for Jezero", hint: "the curated Earth analogs", text: "Which established Earth analog best matches Jezero Crater's regional terrain for a rover field rehearsal? Rank the curated analog sites and explain each match with cited evidence." },
   { id: "landing", label: "Mars landing screening", hint: "the catalogued Mars sites", text: "Screen the catalogued Mars sites for a solar-powered lander: favour gentle regional slopes and low relief, then reliable sunlight, and explain the trade-offs." },
 ];
@@ -86,14 +87,13 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
       <h2 className={`font-semibold tracking-tight text-fg transition-[font-size] duration-500 ${submitted ? "text-3xl" : "text-4xl"}`}>Mission Design</h2>
       {!submitted && (
         <p className="mission-lede" data-testid="mission-lede">
-          Describe the mission in a sentence or two. The app reads it, proposes scoring priorities you can adjust, and sends you to the right view: the established Earth analogs or Mars landing screening.
+          Describe the mission in a sentence or two. The app reads it, proposes scoring priorities you can adjust, and sends you to the right view: new Earth terrain resembling Jezero Crater through the installed discovery pilot, the established analogs, or Mars landing screening.
         </p>
       )}
 
       {composing ? (
         <form onSubmit={onSubmit} className="mt-5" aria-busy={pending}>
           <label htmlFor="mission-objective" className="sr-only">Your mission objective</label>
-          <div className="mission-input-identity"><AstroPresence size={36} state={pending ? "thinking" : "ready"} /><span>AI-assisted mission interpretation</span></div>
           <textarea
             id="mission-objective"
             ref={box}
@@ -109,7 +109,7 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
             className="w-full resize-none rounded-xl border border-line-strong bg-bg px-4 py-3 text-left text-base text-fg placeholder:text-fg-faint"
           />
           <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-fg-muted">
-            <span id="mission-objective-keys">Enter applies · Shift+Enter for a new line</span>
+            <span id="mission-objective-keys"><kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-[11px] text-fg">Enter</kbd> applies · <kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-[11px] text-fg">Shift+Enter</kbd> for a new line</span>
             <span className="num" aria-live="polite">{draft.length} / 500</span>
           </div>
           {!editing && (

@@ -26,6 +26,8 @@ import { RightSidebar } from "@/components/layout/RightSidebar";
 import { AnalyzeView } from "@/components/layout/AnalyzeView";
 import { ResearchView } from "@/components/layout/ResearchView";
 import { CompareEntry } from "@/features/regions/CompareEntry";
+import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
+import { DiscoveryView } from "@/features/discovery";
 import { PlanetViewer, PLANET_CONFIGS, markerAppearance, analogMarkerAppearance, type MarkerDatum } from "@/components/globe";
 import { useSites } from "@/hooks/useSites";
 import { useEarthSites } from "@/hooks/useEarthSites";
@@ -48,6 +50,8 @@ export default function App() {
   // Explore's site pane starts collapsed; selecting a site opens it (see the effect below)
   const [sitePanelWidth,setSitePanelWidth]=useState(COLLAPSED_SITE_WIDTH);
   const openPanelWidth=useRef(380);
+  // Find Earth Analogs keeps its own pane, open by default as before
+  const [discoveryPanelWidth,setDiscoveryPanelWidth]=useState(380);
   const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
   const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
   const updateAstroBounds=useCallback((bounds:OverlayBounds)=>setAstroBounds(previous=>previous && previous.left===bounds.left && previous.right===bounds.right && previous.top===bounds.top && previous.bottom===bounds.bottom ? previous : bounds),[]);
@@ -61,8 +65,10 @@ export default function App() {
   const workspaceRef = useViewArrival(activeTab);
   const regionActive = regionTarget != null && (activeTab === "analyze" || activeTab === "compare");
   const setActiveTab = useAppStore((s) => s.setActiveTab);
-  // Explore has a single experience, Find Earth Analogs (the discovery pilot page was removed)
-  const findAnalogs = false;
+  const exploreMode = useAppStore((s) => s.exploreMode);
+  // "Find Earth Analogs" is the second Explore experience: the same three-column
+  // workspace, drawn by DiscoveryView itself, with its own run-scoped state
+  const findAnalogs = activeTab === "explore" && exploreMode === "find_analogs";
   const focusToken = useAppStore((s) => s.selectionRevision);
   const viewedBody = useAppStore((s) => s.viewedBody);
   const mapMode = useAppStore((s) => s.mapMode);
@@ -260,6 +266,8 @@ export default function App() {
   useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
   const centre = activeTab === "home"
     ? <HomeView />
+    : findAnalogs
+    ? <DiscoveryView panelWidth={discoveryPanelWidth} onPanelWidthChange={setDiscoveryPanelWidth} />
     : activeTab === "explore"
     ? <ExploreView initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
@@ -336,7 +344,10 @@ export default function App() {
       </div>
       <TopNav active={activeTab} onChange={tab=>{
         if((tab==="compare" || tab==="analyze") && activeTab==="explore"){
-          if(selectedId)openRegion({kind:"catalog",id:selectedId});
+          const discovery=useDiscoveryStore.getState();
+          const id=discovery.runId ? discovery.runs[discovery.runId]?.selectedCandidateId : null;
+          if(exploreMode==="find_analogs" && discovery.runId && id)openRegion({kind:"discovered",id,runId:discovery.runId});
+          else if(exploreMode==="browse" && selectedId)openRegion({kind:"catalog",id:selectedId});
           else useRegionTarget.getState().choose();
         }
         setActiveTab(tab);
