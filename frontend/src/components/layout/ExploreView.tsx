@@ -102,6 +102,12 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
         <span className="mt-1 font-medium text-fg">{BODY_NAME[destination]} <span aria-hidden className="text-fg-muted">↗</span></span>
         <span id="planet-destination" className="mt-0.5 text-[10px] text-fg-muted">{destinationLabel}</span>
       </button>
+      {/* Moon: shown for every planet view; clicking it does nothing yet. */}
+      <button type="button" aria-label="View Moon" title="Switch to Moon" data-testid="moon-button" className="mt-1 flex min-w-[104px] flex-col items-center rounded-md px-2 py-1.5 text-xs text-fg-muted transition-colors hover:bg-bg-elev-2 hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright">
+        <span aria-hidden className="h-10 w-10 rounded-full border border-line-strong shadow-inner sm:h-12 sm:w-12" style={{backgroundImage: "radial-gradient(circle at 30% 25%, transparent 35%, rgba(0,0,0,.5) 95%), radial-gradient(circle at 62% 36%, #8d8d8d 0 9%, transparent 10%), radial-gradient(circle at 34% 60%, #7e7e7e 0 13%, transparent 14%), radial-gradient(circle at 68% 70%, #909090 0 7%, transparent 8%), radial-gradient(circle at 40% 28%, #868686 0 6%, transparent 7%), linear-gradient(135deg, #c9c9c9, #9a9a9a)"}}/>
+        <span className="mt-1 font-medium text-fg">Moon <span aria-hidden className="text-fg-muted">↗</span></span>
+        <span className="mt-0.5 text-[10px] text-fg-muted">Lunar sites</span>
+      </button>
     </div><div hidden={view !== "globe"} className="h-full">{view === "globe" && globe}</div><div hidden={view === "globe"} className="h-full">{site ? <SiteImages key={site.id} site={site} view={view === "surface" ? "surface" : "orbital"} enabled={view !== "globe"} /> : <div className="p-4"><EmptyNote>Select a candidate to see its imagery.</EmptyNote></div>}</div></div>
   </div>;
 }
