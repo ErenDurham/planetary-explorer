@@ -18,7 +18,7 @@ import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
 import { GlobeLegend } from "./GlobeLegend";
-import type { PlanetConfig } from "./PlanetConfig";
+import { GLOBE_DPR, type PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
 import type { RankPalette } from "@/lib/rankColor";
 
@@ -97,8 +97,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
       <p id="globe-keyboard-help" className="sr-only">Arrow keys orbit {body}. Plus and minus zoom. F focuses the selected site. Escape clears the current selection. Click empty globe space to deselect. R resets the camera. Tab moves out of the globe. Select a site from the candidate list using Enter or Space. {body} has a mean radius of {Math.round(config.bodyRadiusKm).toLocaleString()} km; {markers.length} candidate {markers.length === 1 ? "location is" : "locations are"} marked at their real coordinates.</p>
       <Canvas
         camera={{ position: DEFAULT_CAMERA.toArray(), fov: 42, near: 0.02, far: 100 }}
-        // capped device pixel ratio: 1.5 is indistinguishable from 2 on a 4k texture and halves the fill cost on phones
-        dpr={[1, 1.5]}
+        dpr={GLOBE_DPR}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         onCreated={({ gl }) => { gl.toneMapping = ACESFilmicToneMapping; gl.toneMappingExposure = config.lighting.exposure; gl.setClearColor(0x000000, 0); }}
         onPointerMissed={(event) => { if (event.type === "click" && !travelling) { deselect.current?.(); containerRef.current?.focus({preventScroll:true}); } }}

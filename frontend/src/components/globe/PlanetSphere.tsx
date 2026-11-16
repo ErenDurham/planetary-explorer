@@ -12,7 +12,7 @@ export function PlanetSphere({config,meshRef,reducedMotion=false}:{config:Planet
   const uniforms=useMemo(()=>({otherPlanetMap:{value:mars},planetMix:{value:config.id==="mars"?1:0}}),[earth,mars]);
   const transition=useRef({from:uniforms.planetMix.value,to:uniforms.planetMix.value,elapsed:2});
   const earthGlow=useMemo(()=>new Color("#0e2440"),[]),marsGlow=useMemo(()=>new Color("#1a0d08"),[]);
-  useLayoutEffect(()=>{for(const texture of [earth,mars]){texture.colorSpace=SRGBColorSpace;texture.anisotropy=8;texture.needsUpdate=true;}},[earth,mars]);
+  useLayoutEffect(()=>{for(const texture of [earth,mars]){texture.colorSpace=SRGBColorSpace;texture.anisotropy=16;texture.needsUpdate=true;}},[earth,mars]);
   useLayoutEffect(()=>{transition.current={from:uniforms.planetMix.value,to:config.id==="mars"?1:0,elapsed:0};if(reducedMotion)uniforms.planetMix.value=transition.current.to;},[config.id,reducedMotion,uniforms]);
   useFrame((_,delta)=>{
     const t=transition.current;t.elapsed+=Math.min(delta,.1);
@@ -20,7 +20,7 @@ export function PlanetSphere({config,meshRef,reducedMotion=false}:{config:Planet
     uniforms.planetMix.value=t.from+(t.to-t.from)*blend;
     if(material.current){const mix=uniforms.planetMix.value;material.current.roughness=.82+.14*mix;material.current.emissive.copy(earthGlow).lerp(marsGlow,mix);material.current.emissiveIntensity=.35-.15*mix;}
   });
-  return <mesh ref={meshRef}><sphereGeometry args={[config.radius,128,96]}/><meshStandardMaterial ref={material} map={earth} roughness={.9} metalness={0} onBeforeCompile={shader=>{
+  return <mesh ref={meshRef}><sphereGeometry args={[config.radius,192,128]}/><meshStandardMaterial ref={material} map={earth} roughness={.9} metalness={0} onBeforeCompile={shader=>{
     Object.assign(shader.uniforms,uniforms);
     shader.fragmentShader="uniform sampler2D otherPlanetMap;\nuniform float planetMix;\n"+shader.fragmentShader.replace("#include <map_fragment>",ShaderChunk.map_fragment.replace("texture2D( map, vMapUv )","mix( texture2D( map, vMapUv ), texture2D( otherPlanetMap, vMapUv ), planetMix )"));
   }} customProgramCacheKey={()=>"planet-dissolve-v1"}/></mesh>;

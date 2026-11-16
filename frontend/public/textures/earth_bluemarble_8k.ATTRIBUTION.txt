@@ -1,0 +1,1 @@
+NASA Earth Observatory Blue Marble Next Generation (Reto Stöckli, NASA GSFC), via NASA GIBS layer BlueMarble_NextGeneration (2004-08-01), 500 m set level 4 (10240x5120), resized to 8192x4096. Public domain (NASA). Equirectangular, column 0 = 180W, row 0 = 90N. Same source and framing as earth_bluemarble_4k.jpg; used on large screens.
