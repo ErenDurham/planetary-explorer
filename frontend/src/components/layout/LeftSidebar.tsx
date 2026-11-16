@@ -97,7 +97,7 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
   const top = factors.map(f => ({ label: f.name, share: shares[f.id] ?? 0 })).sort((a, b) => b.share - a.share).slice(0, 2);
 
   return (
-    <div data-pane="mission" aria-label="Mission settings" className="mission-panel relative min-h-full bg-bg-elev">
+    <div data-pane="mission" data-composer-only={missionText === null} aria-label="Mission settings" className="mission-panel relative min-h-full bg-bg-elev">
       <SpaceDecor openSky={!designed} />
       <MissionObjective submitted={missionText !== null} missionText={missionText ?? ""} pending={pending} canSave={canSave} onSave={(t) => void save(t)} />
       {missionText === null && defaultsError ? (

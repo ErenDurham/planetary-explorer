@@ -1,9 +1,9 @@
 import { expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { TopNav } from "./TopNav";
-it("shows motion control only on Home", () => {
+it("keeps preview motion controls out of the navigation", () => {
  const {rerender}=render(<TopNav active="home" onChange={vi.fn()}/>);
- expect(screen.getByRole("button",{name:"Pause visual motion"})).toBeInTheDocument();
+ expect(screen.queryByRole("button",{name:"Pause visual motion"})).toBeNull();
  rerender(<TopNav active="explore" onChange={vi.fn()}/>);
  expect(screen.queryByRole("button",{name:"Pause visual motion"})).toBeNull();
 });

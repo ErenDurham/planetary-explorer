@@ -7,7 +7,7 @@ import styles from "./atlas.module.css";
 
 export function CompareAtlasHeader({ focusBody }: { focusBody: Body }) {
   return <header className={styles.hero}>
-    <ContourArtwork />
+    <ContourArtwork variant="compare" />
     <div className={styles.heroText}><p className={styles.eyebrow}>Planetary Explorer / Comparative field atlas</p>
       <h1>Earth meets Mars.</h1><p className={styles.lead}>Compare terrain, materials, and field context.</p>
     </div>

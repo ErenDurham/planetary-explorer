@@ -8,7 +8,7 @@ import { PLANET_CONFIGS } from "@/components/globe/PlanetConfig";
 import { Atmosphere } from "@/components/globe/Atmosphere";
 import { GlobeErrorBoundary } from "@/components/globe/GlobeFallback";
 import { hasWebGL } from "@/components/globe/webgl";
-import { useMotionPreference } from "@/lib/motion/preferences";
+import { MotionControl, useMotionPreference } from "@/lib/motion/preferences";
 import { previewFitDistance, previewSlide } from "./previewMotion";
 import styles from "./home.module.css";
 
@@ -48,7 +48,7 @@ function PreviewControls({ controls, reduced }: { controls: React.RefObject<Orbi
     const c=camera as PerspectiveCamera;
     c.position.normalize().multiplyScalar(fit);c.lookAt(0,0,0);c.updateProjectionMatrix();controls.current?.update();invalidate();
   },[camera,fit,controls,invalidate]);
-  return <OrbitControls ref={controls} makeDefault enablePan={false} enableDamping={!reduced} dampingFactor={.08} rotateSpeed={.55} zoomSpeed={.55} minDistance={fit*.94} maxDistance={fit*1.7} autoRotate={!reduced} autoRotateSpeed={.22}/>;
+  return <OrbitControls ref={controls} makeDefault enablePan={false} enableDamping={!reduced} dampingFactor={.08} rotateSpeed={.55} zoomSpeed={.55} minDistance={fit*.94} maxDistance={fit*1.7} autoRotate={!reduced} autoRotateSpeed={.28}/>;
 }
 
 /** Interactive preview only: never changes a mission selection or ranking. */
@@ -82,11 +82,12 @@ export default function HomePlanetPreview() {
       }}>
       {webgl?<GlobeErrorBoundary fallback={()=>fallback}><Canvas dpr={[1,1.5]} frameloop={reduced||!visible?"demand":"always"} camera={{position:[0,.1,4],fov:40}} gl={{alpha:true,antialias:true}} aria-hidden="true">
         <hemisphereLight args={["#b4c3d2","#161b17",1.05]}/><directionalLight position={[-3,3,5]} color="#fff4e6" intensity={3}/><directionalLight position={[4,-1,-3]} color="#7898b0" intensity={.25}/>
-        <Stars radius={50} depth={20} count={550} factor={1.3} fade speed={0}/>
+        <Stars radius={50} depth={20} count={700} factor={2.2} fade speed={reduced||!visible?0:.18}/>
         <Suspense fallback={<PlaceholderSphere config={config}/>}><World body={body} reduced={reduced} visible={visible} controls={controls}/></Suspense>
         <PreviewControls controls={controls} reduced={reduced||!visible}/>
       </Canvas></GlobeErrorBoundary>:fallback}
     </div>
+    <div className={styles.previewMotion}><MotionControl /></div>
     <p id="home-preview-help" className={styles.previewHelp}>{webgl?"Drag to rotate · Scroll to zoom":"Reference preview"}<span className="sr-only">. Arrow keys rotate; plus and minus zoom.</span></p>
     <div className={styles.previewControls} role="group" aria-label="Preview a world">
       <span className={styles.previewTrack} aria-hidden="true"><i style={{transform:`translateY(${body==="earth"?0:100}%)`}}/></span>

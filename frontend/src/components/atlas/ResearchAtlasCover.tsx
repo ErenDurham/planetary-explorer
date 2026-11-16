@@ -18,7 +18,7 @@ export function ResearchAtlasCover({ site }: { site: Site }) {
       <p className={styles.coordinates}>{formatLatLon(site.lat, site.lon_east)}</p><p className={styles.dossierDescription}>{site.description}</p>
     </div>
     <figure className={styles.coverImage}>
-      {showImage ? <img key={`${site.id}:${entry.entry_id}`} src={imageryAssetUrl(entry.entry_id)} alt={`${site.name}: ${entry.title}`} onError={() => setFailedEntry(entry.entry_id)} /> : <div className={styles.coverFallback}><ContourArtwork /><p role="status">{imagery.status === "loading" ? "Loading site imagery…" : "Site imagery unavailable"}</p></div>}
+      {showImage ? <img key={`${site.id}:${entry.entry_id}`} src={imageryAssetUrl(entry.entry_id)} alt={`${site.name}: ${entry.title}`} onError={() => setFailedEntry(entry.entry_id)} /> : <div className={styles.coverFallback}><ContourArtwork variant="quiet" /><p role="status">{imagery.status === "loading" ? "Loading site imagery…" : "Site imagery unavailable"}</p></div>}
       {entry && showImage && <figcaption><span>{entry.view === "surface" ? "Field photograph" : "Orbital imagery"} · {coverageKind(entry) === "regional" ? "Regional context" : "Exact-site imagery"}</span><a href={entry.source_page_url} target="_blank" rel="noreferrer">{entry.credit} ↗</a></figcaption>}
     </figure>
   </section>;

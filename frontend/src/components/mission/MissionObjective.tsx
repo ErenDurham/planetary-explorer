@@ -1,3 +1,4 @@
+import { AstroPresence } from "@/components/astro/AstroPresence";
 // The Mission Design composer: one objective box as the instrument of the
 // page. Before anything is applied it carries a two-sentence account of what
 // the user will get and three example objectives that fill the box (each one
@@ -94,6 +95,7 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
       {composing ? (
         <form onSubmit={onSubmit} className="mt-5" aria-busy={pending}>
           <label htmlFor="mission-objective" className="sr-only">Your mission objective</label>
+          <div className="mission-input-identity"><AstroPresence size={36} state={pending ? "thinking" : "ready"} /><span>AI-assisted mission interpretation</span></div>
           <textarea
             id="mission-objective"
             ref={box}
@@ -109,7 +111,7 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
             className="w-full resize-none rounded-xl border border-line-strong bg-bg px-4 py-3 text-left text-base text-fg placeholder:text-fg-faint"
           />
           <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-fg-muted">
-            <span id="mission-objective-keys"><kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-[11px] text-fg">Enter</kbd> applies · <kbd className="num rounded border border-line-strong px-1.5 py-0.5 text-[11px] text-fg">Shift+Enter</kbd> for a new line</span>
+            <span id="mission-objective-keys">Enter applies · Shift+Enter for a new line</span>
             <span className="num" aria-live="polite">{draft.length} / 500</span>
           </div>
           {!editing && (

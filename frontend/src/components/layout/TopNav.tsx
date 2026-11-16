@@ -5,8 +5,9 @@
 // pair"). Arrow keys move focus along the visible buttons; Enter or Space
 // activates; Escape closes the menu.
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { MotionControl } from "@/lib/motion/preferences";
+import { Wordmark } from "./Wordmark";
+import { useAppearance } from "@/theme/appearance";
+import { ChevronDown, Sun, Moon } from "lucide-react";
 import styles from "./navigation.module.css";
 import { type Tab } from "@/store/useAppStore";
 
@@ -21,6 +22,7 @@ const ADVANCED: Array<{ id: Tab; label: string; hint: string }> = [
 ];
 
 export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t: Tab) => void; right?: React.ReactNode }) {
+  const mode=useAppearance(s=>s.mode), toggleAppearance=useAppearance(s=>s.toggle);
   const [open, setOpen] = useState(false);
   const menu = useRef<HTMLDivElement>(null);
   const advancedActive = ADVANCED.find(t => t.id === active) ?? null;
@@ -44,8 +46,7 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
     <header data-pane="navigation" className={styles.navigation}>
       <div className="flex min-w-0 items-center gap-3">
         <button type="button" aria-label="Home" aria-current={active === "home" ? "page" : undefined} onClick={() => { setOpen(false); onChange("home"); }} className={styles.brand}>
-          <svg viewBox="0 0 28 28" width="27" height="27" fill="none" aria-hidden><circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth=".8"/><ellipse cx="14" cy="14" rx="13" ry="4.8" transform="rotate(-40 14 14)" stroke="currentColor" strokeWidth=".8"/><circle cx="21.6" cy="6.5" r="1.8" fill="currentColor"/></svg>
-          Planetary Explorer
+          <Wordmark /><span className="sr-only">Planetary Explorer</span>
         </button>
       </div>
       <nav aria-label="Primary" className={styles.links}>
@@ -68,7 +69,7 @@ export function TopNav({ active, onChange, right }: { active: Tab; onChange: (t:
           </div>
         </div>
       </nav>
-      <div className={styles.trailing}>{right}{active === "home" && <MotionControl />}</div>
+      <div className={styles.trailing}>{right}<button type="button" className={styles.appearanceToggle} aria-label={`Switch to ${mode === "dark" ? "light" : "dark"} mode`} title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`} onClick={toggleAppearance}>{mode === "dark" ? <Sun size={16} aria-hidden /> : <Moon size={16} aria-hidden />}</button></div>
     </header>
   );
 }

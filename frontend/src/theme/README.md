@@ -2,8 +2,10 @@
 
 One document-wide `ThemeProvider` is mounted in `main.tsx`. Its default is
 `APP_THEME` in `config.ts`; change `atlas` to `observatory` to switch presets.
-A future preference control can render `<ThemeProvider theme={name}>` directly.
-There is no theme state in the scientific store and no storage side effects.
+The navigation toggle controls a separate dark/light appearance preference in
+`appearance.ts`, saved under `planetary-appearance`. Dark is the default. The
+provider applies it document-wide, including portals, without remounting workspace
+state. Scientific state, imagery and data palettes remain separate.
 
 - `../theme.css`: canonical semantic color and font roles, including Tailwind's existing
   `bg-bg`, `text-fg`, `border-line`, status and action tokens. Add a named palette

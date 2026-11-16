@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } f
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useMission } from "@/hooks/useEvaluation";
-import { AIIndicator } from "@/components/ui/AIIndicator";
 import { useBoundsReporter } from "@/hooks/useBoundsReporter";
 import type { OverlayBounds } from "@/lib/overlay";
 import { AstroPresence } from "./AstroPresence";
@@ -252,7 +251,7 @@ export function AstroPanel({
           </button>
           <header className={`flex shrink-0 items-center justify-between gap-3 border-b border-line py-3 pl-4 pr-14 ${styles.header}`}>
             <div className="flex items-center gap-2">
-              {(entries.length > 0 || pending) && <AstroPresence state={presenceState} size={38} />}<div><div className="flex items-center gap-2"><h2 className="text-sm font-medium text-fg">Astro</h2><AIIndicator label="AI assistant" /></div><p className={styles.status}>{presenceLabel}</p></div>
+              {(entries.length > 0 || pending) && <AstroPresence state={presenceState} size={38} />}<div><div className="flex items-center gap-2"><h2 className="text-sm font-medium text-fg">Astro</h2></div><p className={styles.status}>{presenceLabel}</p></div>
             </div>
             <div className="flex items-center gap-3">
               <button

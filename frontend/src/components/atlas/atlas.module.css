@@ -2,13 +2,14 @@
 .surface { background: var(--color-bg); color: var(--color-fg); }
 .content { max-width: var(--ui-content-wide); padding: 24px 32px 64px; margin: 0 auto; }
 .eyebrow { margin: 0; font-family: var(--font-mono); font-size: 9px; line-height: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--color-fg-muted); }
-.hero { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; padding: 8px 0 24px; margin-bottom: 16px; }
+.hero { position: relative; isolation: isolate; overflow: visible; display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; padding: 8px 0 24px; margin-bottom: 16px; }
 .heroText { position: relative; max-width: 680px; }
 .hero h1 { margin: 16px 0; font-size: var(--ui-type-display); line-height: var(--ui-leading-display); font-weight: 500; letter-spacing: -.06em; text-wrap: balance; }
 .lead { margin: 0; color: var(--color-fg-muted); font-size: 14px; line-height: 24px; text-wrap: pretty; }
-.contours { position: absolute; width: 600px; height: 300px; right: 8%; top: -16px; z-index: -1; pointer-events: none; color: var(--color-contour); opacity: .13; }
-.contours path { fill: none; stroke: currentColor; stroke-width: .7; }
-.focusNote { position: relative; width: 240px; flex-shrink: 0; padding: 16px 0; background: var(--color-bg); }
+.contours { position:absolute; width:100vw; height:360px; left:50%; margin-left:-50vw; top:-16px; z-index:-1; pointer-events:none; color:var(--color-copper-bright); opacity:.25; overflow:hidden; mask-image:linear-gradient(to right,transparent,#000 18%,#000 82%,transparent),linear-gradient(to bottom,transparent,#000 22%,#000 64%,transparent); mask-composite:intersect; }
+.contours svg { width:112%; height:112%; margin:-3% -6%; }
+.contours path, .contours ellipse { fill: none; stroke: currentColor; stroke-width:1.35; stroke-dasharray:0 5.5; stroke-linecap:round; vector-effect:non-scaling-stroke; }
+.focusNote { position: relative; width: 240px; flex-shrink: 0; padding: 16px 0; isolation:isolate; }
 .focusNote > span { color: var(--color-fg-muted); font-size: 12px; line-height: 16px; }
 .focusNote strong { display: block; margin: 8px 0; font-size: 24px; line-height: 32px; font-weight: 500; }
 .focusNote p { margin: 0; color: var(--color-fg-muted); font-size: 14px; line-height: 20px; text-wrap: pretty; }
@@ -58,7 +59,8 @@
 .coverImage figcaption { padding: 12px 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 16px; color: var(--color-fg-muted); }
 .coverImage figcaption a { text-decoration: underline; text-underline-offset: 4px; }
 .coverFallback { position: relative; isolation: isolate; min-height: 360px; display: flex; align-items: center; justify-content: center; }
-.coverFallback .contours { top: 0; right: 0; }
+.hero .contours { top:0; height:100%; }
+.coverFallback .contours { top:0; height:100%; width:100%; left:0; margin-left:0; }
 .coverFallback p { font-size: 14px; line-height: 20px; color: var(--color-fg-muted); }
 .surface button, .surface a, .surface select, .surface summary { transition: color var(--ui-motion-duration) var(--ui-motion-easing), background-color var(--ui-motion-duration) var(--ui-motion-easing); }
 @media (min-width: 1600px) { .imagery [data-testid^="pane-"] [role="group"][aria-label^="Orbital view"], .imagery [data-testid^="pane-"] [role="group"][aria-label^="Field photos"] { height: 520px; } }
@@ -101,3 +103,11 @@
 .imagery [data-testid^="pane-"] > div:not(:has([role="dialog"])) > label { height: 40px; min-height: 40px; }
 .imagery [data-testid^="pane-"] > div:not(:has([role="dialog"])):has([aria-label="Zoom controls"]):not(:has(> label))::before { content: ""; display: block; height: 40px; flex-shrink: 0; }
 .imagery [data-testid^="pane-"] > div:not(:has([role="dialog"])) > div:has(> [aria-label="Zoom controls"]) { min-height: 32px; }
+
+/* Fade the artwork beneath the note instead of cutting it at the text column. */
+.focusNote::before { content:""; position:absolute; inset:0 0 0 -110px; z-index:-1; pointer-events:none; background:linear-gradient(to right,transparent,var(--color-bg) 110px); }
+
+/* Static dotted ribbons; comparison mirrors the mission artwork. */
+.contours[data-contour=compare] { opacity:.22; }
+.contours[data-contour=analysis] { height:220px; opacity:.20; }
+:global(:root[data-appearance="light"]) .contours { color:var(--color-copper-bright); opacity:.66; }
