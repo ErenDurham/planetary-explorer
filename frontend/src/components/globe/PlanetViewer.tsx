@@ -18,6 +18,7 @@ import { SiteMarkers } from "./SiteMarkers";
 import { latLonToVector3 } from "./geo";
 import { legendBottomOffset, type OverlayBounds } from "@/lib/overlay";
 import { GlobeLegend } from "./GlobeLegend";
+import { RotationSpeed } from "./RotationSpeed";
 import { GLOBE_DPR, type PlanetConfig } from "./PlanetConfig";
 import type { MarkerDatum, MarkerMode } from "./MarkerData";
 import type { RankPalette } from "@/lib/rankColor";
@@ -59,6 +60,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
   const [travelling,setTravelling]=useState(false);
   const [focusRequest, setFocusRequest] = useState(0);
   const [rotationRequest, setRotationRequest] = useState(0);
+  const [rotationSpeed, setRotationSpeed] = useState(1);
   const [navigation, setNavigation] = useState({ id: 0, action: "" });
   const planetRef = useRef<Mesh>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -113,7 +115,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
         <Atmosphere radius={config.radius} spec={config.atmosphere} />
         {!travelling && overlays}
         {!travelling && <SiteMarkers config={config} markers={markers} selectedId={selectedId} onSelect={onSelect} planetRef={planetRef} reducedMotion={reducedMotion} />}
-        <Controls rotationRequest={rotationRequest} onTravel={setTravelling} bodyId={config.id} autoRotate={autoRotate && !reducedMotion && !travelling} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} focusDistance={focusDistance} />
+        <Controls rotationSpeed={rotationSpeed} rotationRequest={rotationRequest} onTravel={setTravelling} bodyId={config.id} autoRotate={autoRotate && !reducedMotion && !travelling} resetToken={resetToken} radius={config.radius} selectedId={selectedId} lat={selected?.lat} lonEast={selected?.lonEast} focusToken={`${props.focusToken ?? 0}:${focusRequest}`} navigation={navigation} focusDistance={focusDistance} />
       </Canvas>
 
       <LoadingOverlay body={body} />
@@ -146,6 +148,7 @@ export function PlanetViewer(props: PlanetViewerProps) {
             {autoRotate ? <Pause className="h-3.5 w-3.5" aria-hidden /> : <Play className="h-3.5 w-3.5" aria-hidden />}
             {autoRotate ? "Rotating" : "Paused"}
           </button>
+          {autoRotate && !reducedMotion && <RotationSpeed value={rotationSpeed} onChange={setRotationSpeed} className="h-8 rounded border border-line bg-bg-elev/90 px-2.5 text-xs" />}
         </div>
         {statusLine && <div className="sr-only">{statusLine}</div>}
       </div>
@@ -216,7 +219,7 @@ function KeyLight({ intensity, color }: { intensity: number; color: string }) {
 /** OrbitControls with auto-rotate that pauses while the user interacts, reset,
  * and a per-body camera memory: switching Earth <-> Mars saves the current
  * orbit and restores the other body's last orbit (default on first visit). */
-function Controls({ rotationRequest, onTravel, bodyId, autoRotate, resetToken, radius, selectedId, lat, lonEast, focusToken, navigation, focusDistance }: { rotationRequest:number; onTravel:(moving:boolean)=>void; bodyId: string; autoRotate: boolean; resetToken: number; radius: number; selectedId: string | null; lat?: number; lonEast?: number; focusToken: string; navigation: { id: number; action: string }; focusDistance: number }) {
+function Controls({ rotationSpeed, rotationRequest, onTravel, bodyId, autoRotate, resetToken, radius, selectedId, lat, lonEast, focusToken, navigation, focusDistance }: { rotationSpeed:number; rotationRequest:number; onTravel:(moving:boolean)=>void; bodyId: string; autoRotate: boolean; resetToken: number; radius: number; selectedId: string | null; lat?: number; lonEast?: number; focusToken: string; navigation: { id: number; action: string }; focusDistance: number }) {
   // the closest the camera may come; a tight focus distance lowers it so the flight can land
   const minDistance = radius * Math.min(1.35, focusDistance - 0.03);
   const ref = useRef<OrbitControlsImpl>(null);
@@ -353,15 +356,15 @@ function Controls({ rotationRequest, onTravel, bodyId, autoRotate, resetToken, r
       minDistance={minDistance}
       maxDistance={radius * 7}
       autoRotate={autoRotate && !interacting}
-      autoRotateSpeed={0.65}
+      autoRotateSpeed={0.65 * rotationSpeed}
       onStart={() => {
         flight.current = null;queuedFocus.current=null;onTravel(false);
         setInteracting(true);
         if (idleTimer.current) window.clearTimeout(idleTimer.current);
       }}
       onEnd={() => {
-        // resume auto-rotate after a few idle seconds
-        idleTimer.current = window.setTimeout(() => setInteracting(false), 3500);
+        // resume auto-rotate shortly after the pointer lets go
+        idleTimer.current = window.setTimeout(() => setInteracting(false), 1000);
       }}
     />
   );

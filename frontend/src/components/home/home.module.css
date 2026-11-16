@@ -51,4 +51,5 @@
 }
 .worlds figcaption { left:12px; width:calc(100% - 24px); }
 .previewHelp { left:12px; }
+.previewSpeed { position:absolute; left:12px; top:32px; z-index:2; font:8px/1.6 var(--font-mono); color:var(--color-fg-faint); }
 .previewControls { right:10px; }

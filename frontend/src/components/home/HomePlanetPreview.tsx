@@ -8,6 +8,7 @@ import { GLOBE_DPR, PLANET_CONFIGS } from "@/components/globe/PlanetConfig";
 import { Atmosphere } from "@/components/globe/Atmosphere";
 import { GlobeErrorBoundary } from "@/components/globe/GlobeFallback";
 import { hasWebGL } from "@/components/globe/webgl";
+import { RotationSpeed } from "@/components/globe/RotationSpeed";
 import { useMotionPreference } from "@/lib/motion/preferences";
 import { previewFitDistance, previewSwap } from "./previewMotion";
 import styles from "./home.module.css";
@@ -43,14 +44,14 @@ function World({ body, reduced, visible, controls }: { body: Body; reduced: bool
     <Atmosphere key={shown} radius={config.radius} spec={config.atmosphere} fade={fade}/>
   </group>;
 }
-function PreviewControls({ controls, reduced }: { controls: React.RefObject<OrbitControlsImpl>; reduced: boolean }) {
+function PreviewControls({ controls, reduced, speed }: { controls: React.RefObject<OrbitControlsImpl>; reduced: boolean; speed: number }) {
   const {camera,size,invalidate}=useThree();
   const fit=previewFitDistance(size.width/Math.max(1,size.height));
   useLayoutEffect(()=>{
     const c=camera as PerspectiveCamera;
     c.position.normalize().multiplyScalar(fit);c.lookAt(0,0,0);c.updateProjectionMatrix();controls.current?.update();invalidate();
   },[camera,fit,controls,invalidate]);
-  return <OrbitControls ref={controls} makeDefault enablePan={false} enableDamping={!reduced} dampingFactor={.08} rotateSpeed={.55} zoomSpeed={.55} minDistance={fit*.94} maxDistance={fit*1.7} autoRotate={!reduced} autoRotateSpeed={.28}/>;
+  return <OrbitControls ref={controls} makeDefault enablePan={false} enableDamping={!reduced} dampingFactor={.08} rotateSpeed={.55} zoomSpeed={.55} minDistance={fit*.94} maxDistance={fit*1.7} autoRotate={!reduced} autoRotateSpeed={.28*speed}/>;
 }
 
 /** Interactive preview only: never changes a mission selection or ranking. */
@@ -67,6 +68,7 @@ export default function HomePlanetPreview() {
   },[]);
   const [body,setBody]=useState<Body>("earth");
   const reduced=useMotionPreference();
+  const [speed,setSpeed]=useState(1);
   const config=PLANET_CONFIGS[body];
   const fallback=<div className={styles.flatWorld} style={{backgroundImage:`url(${config.textureUrl})`}}/>;
   const webgl=typeof window!=="undefined"&&!!(window.WebGLRenderingContext||window.WebGL2RenderingContext)&&hasWebGL();
@@ -86,10 +88,11 @@ export default function HomePlanetPreview() {
         <hemisphereLight args={["#b4c3d2","#161b17",1.05]}/><directionalLight position={[-3,3,5]} color="#fff4e6" intensity={3}/><directionalLight position={[4,-1,-3]} color="#7898b0" intensity={.25}/>
         <Stars radius={50} depth={20} count={700} factor={2.2} fade speed={reduced||!visible?0:.18}/>
         <Suspense fallback={<PlaceholderSphere config={config}/>}><World body={body} reduced={reduced} visible={visible} controls={controls}/></Suspense>
-        <PreviewControls controls={controls} reduced={reduced||!visible}/>
+        <PreviewControls controls={controls} reduced={reduced||!visible} speed={speed}/>
       </Canvas></GlobeErrorBoundary>:fallback}
     </div>
     <p id="home-preview-help" className={styles.previewHelp}>{webgl?"Drag to rotate · Scroll to zoom":"Reference preview"}<span className="sr-only">. Arrow keys rotate; plus and minus zoom.</span></p>
+    {webgl&&!reduced&&<RotationSpeed value={speed} onChange={setSpeed} className={styles.previewSpeed}/>}
     <div className={styles.previewControls} role="group" aria-label="Preview a world">
       <span className={styles.previewTrack} aria-hidden="true"><i style={{transform:`translateY(${body==="earth"?0:100}%)`}}/></span>
       {(["earth","mars"] as const).map((id,i)=><button type="button" key={id} aria-label={`Preview ${PLANET_CONFIGS[id].displayName}`} aria-pressed={id===body} aria-controls="home-world-preview" onClick={()=>setBody(id)}><span>0{i+1}</span>{PLANET_CONFIGS[id].displayName}<span aria-hidden>↗</span></button>)}
