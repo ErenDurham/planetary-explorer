@@ -10,13 +10,31 @@ import { AstroComposer } from "./AstroComposer";
 import { astroSuggestion } from "./suggestion";
 import { ResponsiveSurface } from "@/components/ui/ResponsiveSurface";
 import { useAstroStore } from "./astroState";
-import type { AstroRequest } from "@/types";
+import type { AstroRequest, AstroResponse } from "@/types";
+import { InfoTip } from "@/components/ui/InfoTip";
 import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
 
 const cornerToggle = "absolute right-1 top-1 z-10 inline-flex h-8 w-8 items-center justify-center rounded-md text-fg-muted hover:bg-bg-elev-2 hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright";
 
 const button =
   "rounded border border-line px-2.5 py-2 text-left text-xs text-fg-muted hover:border-copper hover:text-fg focus-visible:outline focus-visible:outline-copper";
+
+function AstroAnswer({ response }: { response: AstroResponse }) {
+  const notes = [...new Set(response.limitations)];
+  // The API keeps the complete scientific explanation; repeated catalogue
+  // notes are presented on demand rather than appended to the visible reply.
+  const answer = notes.reduce((text, note) => text.replaceAll(note, ""), response.answer)
+    .replace(/\n[ \t]+/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  if (response.generated_by === "deterministic_fallback") {
+    notes.unshift(response.fallback_reason === "rate_limit" ? "AI limit reached · answering from computed data"
+      : response.fallback_reason === "not_configured" ? "AI is not connected · answering from computed data"
+      : "Answering from computed data for this reply");
+  }
+  return <div className="flex items-start gap-2">
+    {answer && <p className="min-w-0 flex-1 whitespace-pre-wrap text-sm text-fg">{answer}</p>}
+    {notes.length > 0 && <InfoTip hover label="About this answer"><ul className="list-disc space-y-2 pl-4">{notes.map(note => <li key={note}>{note}</li>)}</ul></InfoTip>}
+  </div>;
+}
 export function AstroPanel({
   onBoundsChange,
   maxOverlayHeight,
@@ -300,16 +318,13 @@ export function AstroPanel({
                 </p>
                 {entry.response && (
                   <div className="space-y-3 text-xs leading-relaxed text-fg-muted">
-                    {entry.response.generated_by === "deterministic_fallback" && <p className="text-xs text-fg-faint" role="status">{entry.response.fallback_reason === "rate_limit" ? "AI limit reached · answering from computed data" : entry.response.fallback_reason === "not_configured" ? "AI is not connected · answering from computed data" : "Answering from computed data for this reply"}</p>}
                     {entry.contextKey !== contextKey && (
-                      <p className="rounded border border-warn/40 p-2 text-warn">
+                      <InfoTip hover label="About this earlier answer">
                         Earlier context — this answer refers to the selection
                         and priorities when you sent it.
-                      </p>
+                      </InfoTip>
                     )}
-                    <p className="whitespace-pre-wrap text-sm text-fg">
-                      {entry.response.answer}
-                    </p>
+                    <AstroAnswer response={entry.response} />
                     {!!entry.response.evidence.length && <details>
                       <summary className="cursor-pointer text-xs text-info hover:underline">Sources</summary>
                       <div className="mt-2 space-y-3">

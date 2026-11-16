@@ -1,3 +1,4 @@
+import { InfoTip } from "@/components/ui/InfoTip";
 import { StageButton } from "@/components/ui/StageButton";
 // After an objective is applied: the one deliberate next action, chosen from
 // what the app can actually do with that reading (lib/missionRoute.ts), with
@@ -5,7 +6,7 @@ import { StageButton } from "@/components/ui/StageButton";
 // at; the user picks a supported workflow. The card is disabled while a draft
 // edit is unapplied, so Explore never opens on priorities that belong to an
 // older objective.
-import { Compass, Globe2, Mountain, TriangleAlert } from "lucide-react";
+import { Compass, Globe2, Mountain } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useDiscoveryCapabilities } from "@/features/discovery/hooks/useDiscoveryCapabilities";
 import { routeForMission, type MissionRoute } from "@/lib/missionRoute";
@@ -38,7 +39,7 @@ export function MissionNextStep({ onExploreMission, exploreReady, pending }: {
       <p className="eyebrow">Step 2 · Explore</p>
       <h3 id="mission-next-title" className="mt-1 text-lg font-semibold text-fg">{route.kind === "choose" ? "Choose a supported task" : route.kind === "discovery" ? "Explore new candidate regions" : route.kind === "landing_screening" ? `Explore the ${focusBody === "earth" ? "Earth" : "Mars"} sites` : "Explore the established analogs"}</h3>
       <p className="mt-2 max-w-3xl text-sm leading-relaxed text-fg-muted">{route.detail}</p>
-      {route.unsupported && <p className="mt-3 inline-flex max-w-3xl items-start gap-2 rounded-lg border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-warn" role="status" data-testid="mission-unsupported"><TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />{route.unsupported}</p>}
+      {route.unsupported && <div className="mt-2" data-testid="mission-unsupported"><InfoTip hover label="About the available mission data">{route.unsupported}</InfoTip></div>}
       <div className="mt-4 flex flex-wrap items-center gap-2">
         {route.kind === "discovery" && <StageButton disabled={blocked} onClick={go(openFindAnalogs)}><Compass className="h-4 w-4" aria-hidden />{route.cta}</StageButton>}
         {(route.kind === "established_analogs" || route.kind === "landing_screening") && <StageButton disabled={blocked || !exploreReady} onClick={go(onExploreMission)}><Globe2 className="h-4 w-4" aria-hidden />{route.cta}</StageButton>}
