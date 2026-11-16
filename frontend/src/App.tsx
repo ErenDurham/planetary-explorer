@@ -365,7 +365,7 @@ export default function App() {
           )}
         </div>
       )}
-      <div className="flex min-h-0 flex-1"><main ref={workspaceRef} style={{"--site-panel-width":`${sitePanelWidth}px`,"--active-panel-width":`${sitePanelWidth}px`} as React.CSSProperties} id="workspace" data-view={activeTab} tabIndex={-1} className="relative min-w-0 min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1"><main ref={workspaceRef} style={{"--site-panel-width":`${sitePanelWidth}px`} as React.CSSProperties} id="workspace" data-view={activeTab} tabIndex={-1} className="relative min-w-0 min-h-0 flex-1">
         {/* Mission Design stays mounted (only hidden) on other tabs, as the old
             drawer did, so a draft objective and the excluded-factor sync survive
             switching tabs. */}
@@ -390,7 +390,7 @@ export default function App() {
           </div>
         )}
         {/* Astro stays mounted (its conversation survives) but is hidden on Mission Design until a mission is saved: that tab opens on the chat box alone */}
-        <div className={`pointer-events-none absolute inset-0 z-[60] ${activeTab === "home" || (activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) || ((activeTab === "analyze" || activeTab === "compare") && regionTarget != null) ? "hidden " : ""}${activeTab === "explore" ? "xl:left-[294px] xl:right-[calc(var(--active-panel-width)+24px)]" : activeTab === "analyze" ? "lg:left-[280px]" : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
+        <div className={`pointer-events-none absolute inset-0 z-[60] ${activeTab === "home" || (activeTab === "mission" && !missionDesigned) || (activeTab === "research" && candidateResearchTarget != null) || ((activeTab === "analyze" || activeTab === "compare") && regionTarget != null) ? "hidden " : ""}`}><AstroPanel onBoundsChange={updateAstroBounds} maxOverlayHeight={activeTab === "explore" && !findAnalogs ? exploreOverlayMaxHeight : undefined} /></div>
       </main></div>
     </div>
   );
