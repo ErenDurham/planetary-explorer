@@ -31,17 +31,14 @@ export interface PlanetConfig {
   lighting: { key: string; keyIntensity: number; sky: string; ground: string; hemisphere: number; exposure: number };
 }
 
-// Large screens get the 8k mosaics; phones and small tablets keep the 4k ones, which
-// load faster and fit their GPU texture limits. Both sizes share one framing.
 const LARGE_SCREEN = typeof window !== "undefined" && !!window.matchMedia?.("(min-width: 1024px)").matches;
-const TEXTURE_SIZE = LARGE_SCREEN ? "8k" : "4k";
 /** Device-pixel-ratio range for the globe canvases: full retina sharpness on large screens, capped lower on phones to halve the fill cost. */
 export const GLOBE_DPR: [number, number] = LARGE_SCREEN ? [1, 2] : [1, 1.5];
 
 export const MARS_CONFIG: PlanetConfig = {
   id: "mars",
   displayName: "Mars",
-  textureUrl: `${import.meta.env.BASE_URL}textures/mars_viking_${TEXTURE_SIZE}.jpg`,
+  textureUrl: `${import.meta.env.BASE_URL}textures/mars_viking_4k.jpg`,
   radius: 1,
   bodyRadiusKm: 3389.5,
   markerConvention: "east_-180_180_three_default_uv",
@@ -56,7 +53,7 @@ export const MARS_CONFIG: PlanetConfig = {
 export const EARTH_CONFIG: PlanetConfig = {
   id: "earth",
   displayName: "Earth",
-  textureUrl: `${import.meta.env.BASE_URL}textures/earth_bluemarble_${TEXTURE_SIZE}.jpg`,
+  textureUrl: `${import.meta.env.BASE_URL}textures/earth_bluemarble_4k.jpg`,
   radius: 1,
   bodyRadiusKm: 6371.0,
   markerConvention: "east_-180_180_three_default_uv",
