@@ -25,6 +25,16 @@ if (!window.matchMedia) {
   });
 }
 
+// Node 25 ships its own `localStorage` global, which is an empty object unless
+// Node is started with --localstorage-file, and it shadows jsdom's working one.
+// Hand tests jsdom's real Storage instead.
+if (typeof localStorage.setItem !== "function") {
+  const dom = (window as unknown as { jsdom?: { window: Window } }).jsdom;
+  if (dom) {
+    for (const target of [globalThis, window]) Object.defineProperty(target, "localStorage", { configurable: true, get: () => dom.window.localStorage });
+  }
+}
+
 // jsdom has no PointerEvent; the expedition map's pointer handlers need
 // `button`, `clientX` and `clientY`, so give it a MouseEvent-backed polyfill.
 if (!("PointerEvent" in window)) {
