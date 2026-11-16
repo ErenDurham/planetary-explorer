@@ -25,7 +25,7 @@ KEYWORDS = {
     "northern_lowlands": r"northern plains|northern lowlands", "rocky_surface": r"rock|boulder",
     "sulfates": r"sulfate|sulphate|gypsum|jarosite", "nitrates": r"nitrate", "chlorides": r"chloride|halite",
     "perchlorates": r"perchlorate", "borates": r"borate", "carbonates": r"carbonate|calcite", "clays": r"clay|smectite|nontronite",
-    "iron_oxides": r"hematite|iron oxide", "silica": r"silica", "olivine": r"olivine", "basalt": r"basalt",
+    "hematite": r"\bhematite\b", "iron_oxides": r"hematite|iron oxide", "silica": r"silica", "olivine": r"olivine", "basalt": r"basalt",
     "volcanic_glass": r"glass", "tephra": r"tephra", "sandstone": r"sandstone", "impact_breccia": r"breccia",
     "water_ice": r"ice", "regolith": r"regolith|soil",
 }

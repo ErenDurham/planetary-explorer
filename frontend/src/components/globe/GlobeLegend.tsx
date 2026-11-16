@@ -19,7 +19,7 @@ export interface GlobeLegendProps {
 export function GlobeLegend({ config, mode = "landing", palette = "roygbiv", onPaletteChange, heading, rankedCount }: GlobeLegendProps) {
   const [expanded, setExpanded] = useState(false);
   const detailsId = useId();
-  const title = mode === "analog" ? "Analog match rank" : "Mission suitability rank";
+  const title = mode === "analog" ? "Analog match rank" : mode === "mission" ? "Mission target rank" : "Mission suitability rank";
   const credit = (
     <div className="mt-2 border-t border-line pt-2 text-[10px] leading-relaxed text-fg-faint [overflow-wrap:anywhere]">
       {config.displayName} texture: {config.textureCreditUrl ? <a href={config.textureCreditUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-fg">{config.textureCredit}</a> : config.textureCredit}

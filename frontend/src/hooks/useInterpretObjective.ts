@@ -148,6 +148,7 @@ export function taskApplicationFromInterpretation(ti: TaskInterpretation | null 
   const proposed = suggestions.some((a) => a.weight > 0) ? Object.fromEntries(suggestions.map((a) => [a.feature_id, a.weight])) : null;
   const analogWeights = resolution.analogShares ?? (proposed ? toAnalogShares(proposed) : null);
   return {
+    screening: ti.screening ?? null,
     task,
     focusBody: focus,
     missionDestination: ti.mission_destination ?? (task === "landing_screening" ? "mars" : null),
@@ -181,6 +182,7 @@ export function applicationFromInterpretation(
     evidence[s.criterion_id] = s.evidence ?? [];
   }
   const interpretation: AppliedInterpretation = {
+    screening:r.task_interpretation?.screening ?? null,
     reasons,
     rationale: r.rationale ?? [],
     tradeoffs: r.tradeoffs ?? [],

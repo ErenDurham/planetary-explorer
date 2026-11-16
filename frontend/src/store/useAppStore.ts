@@ -8,7 +8,7 @@ import { DEFAULT_MISSION_OBJECTIVE } from "@/lib/defaultObjective";
 // backend normalises whatever it receives, so a share IS the weight it scores
 // with, and the number beside a slider equals `normalized_weight` * 100.
 import { DEFAULT_PROFILE_WEIGHTS, defaultRequirements, missionViewMode, type MissionType, type AssessmentType } from "@/lib/missionProfiles";
-import type { MissionRequirements } from "@/types";
+import type { MissionRequirements, ScreeningPlan } from "@/types";
 import type { ComparisonMode } from "@/lib/comparison";
 import { create } from "zustand";
 import { setShare, toShares } from "@/lib/allocation";
@@ -49,6 +49,7 @@ export interface LocationReference {
  * by the review UI from `task_interpretation` (direction options resolved,
  * unresolved mentions picked by the user) and applied in ONE store action. */
 export interface InterpretationApplication {
+  screening?: ScreeningPlan | null;
   task: Task;
   /** Where the user is looking for a location; null falls back to the task's default body. */
   focusBody: Body | null;
@@ -71,6 +72,7 @@ export type ObjectiveSource = "llm" | "rule_based" | "offline_rule_based";
  * way it does. Every string is the interpreter's reading of the text, never a
  * scientific finding about a site. */
 export interface AppliedInterpretation {
+  screening?: ScreeningPlan | null;
   /** Per-factor `reason` from the interpretation, by criterion_id. */
   reasons: Record<string, string>;
   rationale: string[];
@@ -345,7 +347,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       appliedObjectiveSource: meta?.source ?? "offline_rule_based",
       appliedObjectiveModel: meta?.model ?? null,
       appliedInterpretation: meta?.interpretation ?? null,
-      ...(meta?.taskApplication ? taskPatch(state, meta.taskApplication) : {}),
+      ...(meta?.taskApplication ? taskPatch(state, meta.taskApplication) : {appliedTask:null,appliedReference:null}),
     });
   },
   selectionRevision: 0,
@@ -483,17 +485,23 @@ export function roverSharesFrom(earth: Record<string, number>): Record<string, n
  * field testing unless an Earth profile is already chosen). Switching planet
  * therefore always switches the mission view, in both directions. */
 function missionTypeFor(focus: Body, current: MissionType): MissionType {
+  if(current === "research" || current === "base_planning")return current;
   if (focus === "mars") return "landing";
   return current === "landing" ? "rover_field_test" : current;
 }
 
 function taskPatch(s: AppState, app: InterpretationApplication): Partial<AppState> {
   const suggestedFocus: Body = app.focusBody ?? (app.task === "landing_screening" ? "mars" : app.reference ? otherBody(app.reference.body) : s.selectionBody);
-  const focus = s.missionFocusOverride ?? suggestedFocus;
-  const kind = missionTypeFor(focus, s.missionType);
+  const focus = app.screening?.body ?? s.missionFocusOverride ?? suggestedFocus;
+  const kind = app.screening?.mission_type ?? missionTypeFor(focus, s.missionType);
   const analog = app.analogWeights ? toAnalogShares(app.analogWeights) : null;
   const patch: Partial<AppState> = {
     missionType: kind,
+    ...(app.screening ? {
+      missionFocusOverride:null,
+      missionRequirements:{...s.missionRequirements,[focus]:{...defaultRequirements(),...app.screening.requirements}},
+      ...(kind!=="landing" && Object.values(app.screening.weights).some(w=>w>0) ? {missionProfileWeights:{...s.missionProfileWeights,[kind]:{...app.screening.weights}}} : {}),
+    } : {}),
     suggestedMissionFocus: suggestedFocus,
     task: app.task,
     missionDestination: app.missionDestination ?? (app.task === "landing_screening" ? "mars" : s.missionDestination),

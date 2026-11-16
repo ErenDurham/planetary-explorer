@@ -35,6 +35,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from app.models import AnalogWeightSuggestion, DirectionOption, SiteCandidate, SiteReference, TaskInterpretation
+from app.services.objective_screening import screening_plan
 from app.services.site_aliases import EARTH as EARTH_ALIASES, MARS as MARS_ALIASES
 
 DATA = Path(__file__).resolve().parents[2] / "data"
@@ -155,6 +156,9 @@ def interpret_task(text: str) -> TaskInterpretation:
         sugg, notes = analog_preferences(text)
         rationale += notes
         return TaskInterpretation(task="analog_site_selection", focus_body=focus, mission_destination=destination, reference_site=ref, unresolved_sites=unresolved(text, found), analog_suggestions=sugg, rationale=rationale)
-    # landing screening (default for Mars mission wording)
-    rationale.append("Landing / site-screening wording: Mars landing screening with Earth analogs as an optional counterpart." if landing else "No analog wording: Mars landing screening is assumed; use 'Find Earth analogs' to switch.")
-    return TaskInterpretation(task="landing_screening", focus_body="mars", mission_destination=destination, reference_site=mars_ref, unresolved_sites=unresolved(text, found), analog_suggestions=analog_preferences(text)[0], rationale=rationale)
+    plan = screening_plan(text)
+    if plan and plan.mission_type != "landing":
+        rationale.append(f"Catalogue {plan.mission_type.replace('_', ' ')} screening: use the declared target criteria and disclose unsupported goals.")
+    else:
+        rationale.append("Landing / site-screening wording: Mars landing screening with Earth analogs as an optional counterpart." if landing else "No analog wording: Mars landing screening is assumed; use 'Find Earth analogs' to switch.")
+    return TaskInterpretation(task="landing_screening", screening=plan, focus_body="mars", mission_destination=destination, reference_site=mars_ref, unresolved_sites=unresolved(text, found), analog_suggestions=analog_preferences(text)[0], rationale=rationale)

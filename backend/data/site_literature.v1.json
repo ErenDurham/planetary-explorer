@@ -43,7 +43,8 @@
       "sandstone": "sandstone",
       "impact_breccia": "impact breccia",
       "water_ice": "ground ice (ice-cemented permafrost or subsurface ice)",
-      "regolith": "regolith / soil"
+      "regolith": "regolith / soil",
+      "hematite": "hematite"
     }
   },
   "sources": {
@@ -636,7 +637,8 @@
         {
           "feature": "mineralogy_tags",
           "tags": [
-            "iron_oxides"
+            "iron_oxides",
+            "hematite"
           ],
           "source_id": "hynek2017_meridiani",
           "quote": "this area contains extensive layered deposits, some of which are rich in the mineral hematite"

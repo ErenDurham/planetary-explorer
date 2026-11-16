@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Literal
 
 from pydantic import BaseModel, Field
+from .mission_assessment import MissionRequirements
 
 InterpretationSource = Literal["llm", "rule_based"]
 Confidence = Literal["low", "medium", "high"]
@@ -78,12 +79,22 @@ class AnalogWeightSuggestion(BaseModel):
     reason: str
 
 
+class ScreeningPlan(BaseModel):
+    """Catalogue-backed intent, independent of model-generated landing weights."""
+    body: BodyKind
+    mission_type: Literal["landing", "research", "rover_field_test", "base_planning"]
+    requirements: MissionRequirements
+    weights: dict[str, float]
+    limitations: list[str]
+
+
 class TaskInterpretation(BaseModel):
     """What the objective asks for, separately from the landing-priority weights.
     `focus_body` is where the user is looking for a location; `mission_destination`
     is where the mission flies (a Mars mission can use Earth test sites)."""
 
     task: TaskKind
+    screening: ScreeningPlan | None = None
     focus_body: BodyKind | None = None
     mission_destination: BodyKind | None = None
     reference_site: SiteReference | None = None

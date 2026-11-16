@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
+import { effectiveMapMode, useAppStore } from "@/store/useAppStore";
 import { useMission } from "@/hooks/useEvaluation";
 import { useBoundsReporter } from "@/hooks/useBoundsReporter";
 import type { OverlayBounds } from "@/lib/overlay";
@@ -11,6 +11,7 @@ import { astroSuggestion } from "./suggestion";
 import { ResponsiveSurface } from "@/components/ui/ResponsiveSurface";
 import { useAstroStore } from "./astroState";
 import type { AstroRequest } from "@/types";
+import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
 
 const cornerToggle = "absolute right-1 top-1 z-10 inline-flex h-8 w-8 items-center justify-center rounded-md text-fg-muted hover:bg-bg-elev-2 hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper-bright";
 
@@ -65,6 +66,9 @@ export function AstroPanel({
   }
 
   const state = useAppStore();
+  const discovery = useDiscoveryStore();
+  const discoveryActive = state.activeTab === "explore" && state.exploreMode === "find_analogs";
+  const discoveryRun = discovery.runId ? discovery.runs[discovery.runId] : null;
   const mission = useMission();
   const { entries, pending, send, clear } = useAstroStore();
   const latest = entries.at(-1);
@@ -73,11 +77,26 @@ export function AstroPanel({
   const log = useRef<HTMLDivElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
   useBoundsReporter(launcher, onBoundsChange, !open);
+  const taskPage = state.activeTab === "mission" || state.activeTab === "analyze";
+  const viewedBody = state.activeTab === "research" ? "mars" : taskPage ? state.selectionBody : state.viewedBody;
+  const mapMode = state.activeTab === "research" ? "landing_suitability" as const
+    : taskPage ? (state.missionType === "landing" ? "landing_suitability" as const : "mission_browse" as const)
+    : effectiveMapMode(state);
+  const taskContext = !discoveryActive && state.missionType !== "landing" && (
+    state.activeTab === "mission" || state.activeTab === "analyze" ||
+    (state.activeTab === "explore" && mapMode === "mission_browse" && state.viewedBody === state.selectionBody)
+  );
   const context = {
+    discovery: discoveryActive ? {
+      ranking: discovery.runId && discoveryRun?.ranked ? {
+        run_id: discovery.runId, reference_id: "jezero_crater" as const, weights: Object.keys(discovery.weights).length ? discovery.weights : null, top_k: discovery.topK,
+      } : null,
+      selected_candidate_id: discoveryRun?.selectedCandidateId ?? null,
+    } : null,
     // Astro is hidden on Home, which has no scientific conversation context.
     active_tab: state.activeTab === "home" ? "mission" as const : state.activeTab,
-    viewed_body: state.viewedBody,
-    map_mode: state.mapMode,
+    viewed_body: viewedBody,
+    map_mode: mapMode,
     selected_mars_id:
       state.activeTab === "compare"
         ? (state.comparisonPair?.marsId ?? state.selectedMarsId)
@@ -86,11 +105,11 @@ export function AstroPanel({
       state.activeTab === "compare"
         ? (state.comparisonPair?.earthId ?? state.selectedEarthId)
         : state.selectedEarthId,
-    candidate_body: state.selectionBody,
+    candidate_body: state.activeTab === "compare" ? state.selectionBody : viewedBody,
     objective: state.appliedObjective.slice(0, 500),
     mission,
     assessment:
-      state.missionType === "landing"
+      !taskContext || state.missionType === "landing"
         ? null
         : {
             body: state.selectionBody,
@@ -112,7 +131,7 @@ export function AstroPanel({
   function ask(question: string) {
     if (!question.trim() || pending) return;
     const history: AstroRequest["history"] = entries
-      .filter((e) => e.response)
+      .filter((e) => e.response && e.contextKey === contextKey)
       .slice(-6)
       .flatMap((e) => [
         { role: "user" as const, content: e.question },
@@ -281,7 +300,7 @@ export function AstroPanel({
                 </p>
                 {entry.response && (
                   <div className="space-y-3 text-xs leading-relaxed text-fg-muted">
-                    {entry.response.generated_by === "deterministic_fallback" && <p className="text-xs text-fg-faint" role="status">{entry.response.fallback_reason === "rate_limit" ? "Free AI limit reached · using a site summary" : entry.response.fallback_reason === "not_configured" ? "AI is not connected · using a site summary" : "Using a site summary for this reply"}</p>}
+                    {entry.response.generated_by === "deterministic_fallback" && <p className="text-xs text-fg-faint" role="status">{entry.response.fallback_reason === "rate_limit" ? "AI limit reached · answering from computed data" : entry.response.fallback_reason === "not_configured" ? "AI is not connected · answering from computed data" : "Answering from computed data for this reply"}</p>}
                     {entry.contextKey !== contextKey && (
                       <p className="rounded border border-warn/40 p-2 text-warn">
                         Earlier context — this answer refers to the selection

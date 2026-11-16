@@ -8,6 +8,8 @@ MissionKind = Literal["research", "rover_field_test", "base_planning"]
 class MissionRequirements(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
     material_targets: list[str] = Field(default_factory=list, max_length=30)
+    excluded_material_targets: list[str] = Field(default_factory=list, max_length=30)
+    material_match: Literal["coverage", "any"] = "coverage"
     landform_targets: list[str] = Field(default_factory=list, max_length=30)
     slope_target_deg: float = Field(1.0, ge=0, le=90)
     slope_tolerance_deg: float = Field(5.0, gt=0, le=90)

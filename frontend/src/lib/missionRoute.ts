@@ -1,3 +1,4 @@
+import type { ScreeningPlan } from "@/types";
 // Where an applied mission sends the user next, said honestly. The discovery
 // pilot is the only "new region" capability and it is bounded: a fixed set of
 // surveyed Earth footprints compared with Jezero Crater on regional median
@@ -22,6 +23,7 @@ export interface MissionRoute {
 }
 
 export interface MissionRouteInput {
+  screening?: ScreeningPlan | null;
   objective: string;
   task: Task | null;
   reference: { id: string; name: string; body: Body } | null;
@@ -37,6 +39,10 @@ export function routeForMission(input: MissionRouteInput): MissionRoute {
   const { objective, task, reference, focusBody, discoveryReady } = input;
   const asksForNew = wantsDiscovery(objective);
   const refName = reference?.name ?? null;
+  if (task === "landing_screening" && input.screening?.mission_type !== undefined && input.screening.mission_type !== "landing") {
+    const plan=input.screening;
+    return {kind:"landing_screening",cta:`Explore ${focusBody === "earth" ? "Earth" : "Mars"} sites`,detail:plan.mission_type==="research" ? "Explore ranks the catalogued sites by documented matches to your requested materials and landforms. Missing data stays unranked; equal matches share a rank. This is target alignment, not landing suitability or water accessibility." : plan.mission_type==="base_planning" ? "Explore the catalogue as an evidence review. Base viability cannot be scored from the available data." : "Explore ranks regional terrain against your requested slope and relief targets; this is test-environment fit, not vehicle safety.",unsupported:plan.limitations.join(" ") || undefined};
+  }
   if (task === "landing_screening") {
     return {
       kind: "landing_screening",

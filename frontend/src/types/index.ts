@@ -133,3 +133,5 @@ export type MissionAssessmentRequest = S["MissionAssessmentRequest"];
 export type MissionAssessmentResponse = S["MissionAssessmentResponse"];
 export type MissionAssessmentResult = S["MissionAssessmentResult"];
 export type MissionFactor = S["MissionFactor"];
+
+export type ScreeningPlan = S["ScreeningPlan"];

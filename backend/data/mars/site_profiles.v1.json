@@ -6277,7 +6277,8 @@
           "label": "Mineral / compositional evidence",
           "category": "composition",
           "value": [
-            "iron_oxides"
+            "iron_oxides",
+            "hematite"
           ],
           "unit": null,
           "source_id": "hynek2017_meridiani",
@@ -6297,7 +6298,7 @@
           "uncertainty": "Qualitative tags from the cited source",
           "quality_flag": "qualitative",
           "is_missing": false,
-          "notes": "Literature labels: iron_oxides (Hynek & Di Achille, 2017)."
+          "notes": "Literature labels: iron_oxides, hematite (Hynek & Di Achille, 2017)."
         },
         {
           "feature_id": "water_ice_evidence",

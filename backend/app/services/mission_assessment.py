@@ -41,7 +41,7 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
     criteria = profile["criteria"]
     weights = {c["id"]:req.weights.get(c["id"], c["weight"]) for c in criteria}
     requirements = req.requirements.model_dump()
-    for key in ("material_targets", "landform_targets"):
+    for key in ("material_targets", "landform_targets", "excluded_material_targets"):
         requirements[key] = sorted(set(t.strip().lower().replace(" ","_") for t in requirements[key] if t.strip()))
     # Research claims must use the actual catalogue vocabulary, not silently score typos as absence.
     if req.mission_type == "research":
@@ -50,12 +50,12 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
             for _,p in pool:
                 m = p.get(c["feature"]) if p else None
                 if _available(m,c): known.update(m.value)
-            unknown = set(requirements[c["targets"]]) - known
+            unknown = (set(requirements[c["targets"]]) | (set(requirements["excluded_material_targets"]) if c["id"] == "materials" else set())) - known
             if unknown:
                 raise ValueError(f"Unknown {c['label'].lower()}: {', '.join(sorted(unknown))}")
     configured = [c for c in criteria if weights[c["id"]] > 0 and ("targets" not in c or requirements[c["targets"]])]
     missing_targets = [f"Select {c['label'].lower()} to activate this priority." for c in criteria if weights[c['id']] > 0 and "targets" in c and not requirements[c['targets']]]
-    valid = [c for c in configured if pool and all(_available(p.get(c["feature"]) if p else None,c) for _,p in pool)]
+    valid = [c for c in configured if pool and (any if req.mission_type == "research" else all)(_available(p.get(c["feature"]) if p else None,c) for _,p in pool)]
     excluded = [f"{c['label']} excluded for every site: missing, non-finite or incompatible data in the candidate pool." for c in configured if c not in valid]
     denominator = sum(weights[c["id"]] for c in configured)
     valid_weight = sum(weights[c["id"]] for c in valid)
@@ -64,21 +64,31 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
     results = []
     for site,p in pool:
         factors = []
-        provenance_gaps = []
+        site_valid = [c for c in valid if _available(p.get(c["feature"]) if p else None,c)]
+        site_coverage = sum(weights[c["id"]] for c in site_valid) / denominator if denominator else 0
+        site_status = "insufficient_data" if req.mission_type == "research" and configured and len(site_valid) != len(configured) else status
+        mineral_data=p.get("mineralogy_tags") if p else None
+        exclusion_unknown=bool(req.mission_type == "research" and requirements["excluded_material_targets"] and not _available(mineral_data,{"targets":"material_targets"}))
+        blocked=set(requirements["excluded_material_targets"]) & set(mineral_data.value) if mineral_data and isinstance(mineral_data.value,list) else set()
+        if exclusion_unknown: site_status="insufficient_data"
+        provenance_gaps = ([f"{c['label']}: no compatible site data; site is unranked rather than scored as zero." for c in configured if c not in site_valid] if req.mission_type == "research" else [])
         for c in criteria:
             m = p.get(c["feature"]) if p else None
-            ok = c in valid
+            ok = c in site_valid
             q = None
             if ok and "targets" in c:
                 targets = set(requirements[c["targets"]]); found = targets & set(m.value)
-                q = len(found)/len(targets)
-                note = f"{len(found)} of {len(targets)} requested tags documented: {', '.join(sorted(found)) or 'none'}. Unreported tags are not confirmed absent."
+                q = float(bool(found)) if c["id"] == "materials" and req.requirements.material_match == "any" else len(found)/len(targets)
+                note = ("Any requested material qualifies. " if c["id"] == "materials" and req.requirements.material_match == "any" else "") + f"{len(found)} of {len(targets)} requested tags documented: {', '.join(sorted(found)) or 'none'}. Unreported tags are not confirmed absent."
             elif ok:
                 target, tolerance = requirements[c["target"]],requirements[c["tolerance"]]
                 q = piecewise_linear(abs(float(m.value)-target), "lower_is_better", 0, tolerance)
                 note = f"Target {target:g} {c['unit']}; tolerance {tolerance:g} {c['unit']}. Absolute difference {abs(float(m.value)-target):g} {c['unit']}."
             else:
-                note = "Weight is zero." if weights[c['id']] == 0 else "No targets selected." if c not in configured else "Excluded pool-wide: data missing or incompatible."
+                note = "Weight is zero." if weights[c['id']] == 0 else "No targets selected." if c not in configured else "Site data missing or incompatible; no score is assigned." if req.mission_type == "research" else "Excluded pool-wide: data missing or incompatible."
+            if ok and req.mission_type == "research" and blocked:
+                q=0.0
+                note += f" Excluded material documented: {', '.join(sorted(blocked))}; this site does not meet the exclusion."
             generic_source = bool(ok and "targets" in c and m.source_id == "nasa_analogs_overview")
             if generic_source:
                 gap = f"{c['label']}: catalogue tags cite a general analog overview; verify site-specific support."
@@ -91,9 +101,9 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
                 contribution=100*weight*q if ok else None,
                 source=p.sources.get(m.source_id) if p and m and m.source_id else None,
                 method="tag_target_coverage" if "targets" in c else "target_distance",note=note,quality="low_confidence" if generic_source else m.quality_flag if m else None))
-        score = sum(f.contribution for f in factors if f.contribution is not None) if status == "scored" else None
-        results.append(MissionAssessmentResult(site_id=site.id,site_name=site.name,body=req.body,score=score,status=status,
-            coverage_fraction=coverage,factors=factors,evidence_gaps=profile.get('evidence_gaps',[])+missing_targets+excluded+provenance_gaps))
+        score = sum(f.contribution for f in factors if f.contribution is not None) if site_status == "scored" else None
+        results.append(MissionAssessmentResult(site_id=site.id,site_name=site.name,body=req.body,score=score,status=site_status,
+            coverage_fraction=site_coverage if req.mission_type == "research" else coverage,factors=factors,evidence_gaps=profile.get('evidence_gaps',[])+missing_targets+excluded+provenance_gaps))
     results.sort(key=lambda r:(-(r.score if r.score is not None else -1),r.site_id))
     previous_score = None
     rank = 0
@@ -101,6 +111,8 @@ def evaluate(req: MissionAssessmentRequest, pool=None):
         if result.score is not None:
             if previous_score is None or not math.isclose(result.score,previous_score,rel_tol=0,abs_tol=1e-12): rank=index
             result.rank=rank;previous_score=result.score
+    if req.mission_type == "research" and req.requirements.material_match == "any":
+        profile = {**profile, "method": "Material match = 1 if at least one requested material tag is documented, otherwise 0. Other configured target coverage uses the fraction documented. Index = 100 × weighted mean; sites missing an active criterion are unranked. Ties are preserved. This does not rank ice proximity or accessibility."}
     return MissionAssessmentResponse(body=req.body,mission_type=req.mission_type,spec_version=spec['version'],
         profile_label=profile['label'],method=profile['method'],assumptions=profile['assumptions'],warnings=missing_targets+excluded,
         requirements=requirements,results=results,client_request_id=req.client_request_id)

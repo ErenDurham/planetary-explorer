@@ -625,7 +625,8 @@
         "layered_deposits"
       ],
       "tags_mineralogy": [
-        "iron_oxides"
+        "iron_oxides",
+        "hematite"
       ],
       "water_ice_evidence": "Water-altered bedrock outcrops record prolonged surface and near-surface fluid/rock interaction (Hynek & Di Achille, 2017); no ice reported in the cited sources.",
       "coordinate_sources": [

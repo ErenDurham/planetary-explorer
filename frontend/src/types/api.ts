@@ -771,6 +771,7 @@ export interface components {
             assessment?: components["schemas"]["MissionAssessmentRequest"] | null;
             /** Analog Weights */
             analog_weights?: components["schemas"]["AnalogWeight"][] | null;
+            discovery?: components["schemas"]["AstroDiscoveryContext"] | null;
         };
         /** AstroResponse */
         AstroResponse: {
@@ -1031,6 +1032,10 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /** Region Id */
+            region_id?: string | null;
+            /** Region Name */
+            region_name?: string | null;
             /** Lat */
             lat: number;
             /** Lon East */
@@ -1055,6 +1060,8 @@ export interface components {
             similarity_index?: number | null;
             /** Feature Distances */
             feature_distances?: components["schemas"]["DiscoveryFeatureDistance"][];
+            /** Dimension Scores */
+            dimension_scores?: components["schemas"]["DiscoveryDimensionScore"][];
             /** Terrain Valid Fraction */
             terrain_valid_fraction: number;
             novelty: components["schemas"]["DiscoveryNovelty"];
@@ -1070,6 +1077,10 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /** Region Id */
+            region_id?: string | null;
+            /** Region Name */
+            region_name?: string | null;
             /** Lat */
             lat: number;
             /** Lon East */
@@ -1094,6 +1105,8 @@ export interface components {
             similarity_index?: number | null;
             /** Feature Distances */
             feature_distances?: components["schemas"]["DiscoveryFeatureDistance"][];
+            /** Dimension Scores */
+            dimension_scores?: components["schemas"]["DiscoveryDimensionScore"][];
             /** Terrain Valid Fraction */
             terrain_valid_fraction: number;
             novelty: components["schemas"]["DiscoveryNovelty"];
@@ -1114,10 +1127,10 @@ export interface components {
         DiscoveryCapabilities: {
             /**
              * Engine Version
-             * @default discovery-v1
-             * @constant
+             * @default discovery-v2
+             * @enum {string}
              */
-            engine_version: "discovery-v1";
+            engine_version: "discovery-v1" | "discovery-v2";
             /**
              * State
              * @enum {string}
@@ -1151,6 +1164,36 @@ export interface components {
              * @constant
              */
             geology_status: "not_assessed";
+            /** Measurements */
+            measurements?: components["schemas"]["DiscoveryContextMeasurement"][];
+        };
+        /**
+         * DiscoveryContextMeasurement
+         * @description An Earth dimension carried for honesty, never for scoring.
+         *
+         *     `mars_value` is null whenever this release holds no measured Mars counterpart;
+         *     the UI must present these as differences it cannot rank, not as a match.
+         */
+        DiscoveryContextMeasurement: {
+            /** Feature Id */
+            feature_id: string;
+            /** Label */
+            label: string;
+            /** Group */
+            group: string;
+            /** Earth Value */
+            earth_value: number;
+            /** Mars Value */
+            mars_value?: number | null;
+            /** Unit */
+            unit: string;
+            /**
+             * Comparable
+             * @default false
+             */
+            comparable: boolean;
+            /** Note */
+            note: string;
         };
         /** DiscoveryCriterion */
         DiscoveryCriterion: {
@@ -1162,6 +1205,39 @@ export interface components {
             unit: string;
             /** Scale */
             scale: number;
+            /**
+             * Group
+             * @default terrain
+             */
+            group: string;
+            /**
+             * Group Label
+             * @default Terrain and landform
+             */
+            group_label: string;
+            /**
+             * Rationale
+             * @default
+             */
+            rationale: string;
+        };
+        /**
+         * DiscoveryDimensionScore
+         * @description Similarity restricted to one dimension group, on the same index as the total.
+         */
+        DiscoveryDimensionScore: {
+            /** Group */
+            group: string;
+            /** Label */
+            label: string;
+            /** Feature Ids */
+            feature_ids: string[];
+            /** Weight Share */
+            weight_share: number;
+            /** Distance */
+            distance: number;
+            /** Similarity Index */
+            similarity_index: number;
         };
         /** DiscoveryExport */
         DiscoveryExport: {
@@ -1241,7 +1317,10 @@ export interface components {
             /** Gradient Valid Fraction */
             gradient_valid_fraction: number;
         };
-        /** DiscoveryRankRequest */
+        /**
+         * DiscoveryRankRequest
+         * @description Weights name features; the engine rejects any the chosen run does not score.
+         */
         DiscoveryRankRequest: {
             /** Run Id */
             run_id: string;
@@ -1251,10 +1330,13 @@ export interface components {
              * @constant
              */
             reference_id: "jezero_crater";
-            weights?: components["schemas"]["DiscoveryWeights"];
+            /** Weights */
+            weights?: {
+                [key: string]: number;
+            } | null;
             /**
              * Top K
-             * @default 5
+             * @default 6
              */
             top_k: number;
             /** Client Request Id */
@@ -1264,10 +1346,10 @@ export interface components {
         DiscoveryRankResponse: {
             /**
              * Engine Version
-             * @default discovery-v1
-             * @constant
+             * @default discovery-v2
+             * @enum {string}
              */
-            engine_version: "discovery-v1";
+            engine_version: "discovery-v1" | "discovery-v2";
             /** Run Id */
             run_id: string;
             reference: components["schemas"]["DiscoveryReference"];
@@ -1332,6 +1414,21 @@ export interface components {
             total_sampled: number;
             /** Eligible Count */
             eligible_count: number;
+            /**
+             * Region Count
+             * @default 1
+             */
+            region_count: number;
+            /** Regions */
+            regions?: {
+                [key: string]: unknown;
+            }[];
+            /** Criteria */
+            criteria?: components["schemas"]["DiscoveryCriterion"][];
+            /** Default Weights */
+            default_weights?: {
+                [key: string]: number;
+            };
         };
         /** DiscoverySource */
         DiscoverySource: {
@@ -1389,19 +1486,14 @@ export interface components {
             diversification: {
                 [key: string]: unknown;
             };
-        };
-        /** DiscoveryWeights */
-        DiscoveryWeights: {
-            /**
-             * Slope Regional Median Deg
-             * @default 50
-             */
-            slope_regional_median_deg: number;
-            /**
-             * Roughness Regional M
-             * @default 50
-             */
-            roughness_regional_m: number;
+            /** Regions */
+            regions?: {
+                [key: string]: unknown;
+            }[];
+            /** Context Features */
+            context_features?: {
+                [key: string]: unknown;
+            }[];
         };
         /** EarthCandidate */
         EarthCandidate: {
@@ -2387,6 +2479,14 @@ export interface components {
         MissionRequirements: {
             /** Material Targets */
             material_targets?: string[];
+            /** Excluded Material Targets */
+            excluded_material_targets?: string[];
+            /**
+             * Material Match
+             * @default coverage
+             * @enum {string}
+             */
+            material_match: "coverage" | "any";
             /** Landform Targets */
             landform_targets?: string[];
             /**
@@ -2947,6 +3047,29 @@ export interface components {
             /** Rank */
             rank: number | null;
         };
+        /**
+         * ScreeningPlan
+         * @description Catalogue-backed intent, independent of model-generated landing weights.
+         */
+        ScreeningPlan: {
+            /**
+             * Body
+             * @enum {string}
+             */
+            body: "earth" | "mars";
+            /**
+             * Mission Type
+             * @enum {string}
+             */
+            mission_type: "landing" | "research" | "rover_field_test" | "base_planning";
+            requirements: components["schemas"]["MissionRequirements"];
+            /** Weights */
+            weights: {
+                [key: string]: number;
+            };
+            /** Limitations */
+            limitations: string[];
+        };
         /** SensitivityBreakpoint */
         SensitivityBreakpoint: {
             /**
@@ -3480,6 +3603,7 @@ export interface components {
              * @enum {string}
              */
             task: "landing_screening" | "analog_site_selection" | "ambiguous";
+            screening?: components["schemas"]["ScreeningPlan"] | null;
             /** Focus Body */
             focus_body?: ("earth" | "mars") | null;
             /** Mission Destination */
@@ -3570,7 +3694,10 @@ export interface components {
             /** Vertical Datum */
             vertical_datum?: string | null;
         };
-        /** TerrainMeasurement */
+        /**
+         * TerrainMeasurement
+         * @description One scored quantity. Units are closed: a new unit is a contract change.
+         */
         TerrainMeasurement: {
             /** Value */
             value: number;
@@ -3578,13 +3705,13 @@ export interface components {
              * Unit
              * @enum {string}
              */
-            unit: "deg" | "m";
+            unit: "deg" | "m" | "W/m2" | "mm/day";
             /**
              * Measurement Type
              * @default derived
-             * @constant
+             * @enum {string}
              */
-            measurement_type: "derived";
+            measurement_type: "derived" | "measured";
         };
         /** Turn */
         Turn: {
@@ -3656,6 +3783,12 @@ export interface components {
              * @description Research findings cited for this weight (0-3); empty = none in the registry applies
              */
             evidence?: components["schemas"]["EvidenceCitation"][];
+        };
+        /** AstroDiscoveryContext */
+        AstroDiscoveryContext: {
+            ranking?: components["schemas"]["DiscoveryRankRequest"] | null;
+            /** Selected Candidate Id */
+            selected_candidate_id?: string | null;
         };
     };
     responses: never;

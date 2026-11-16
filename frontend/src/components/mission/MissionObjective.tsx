@@ -145,7 +145,7 @@ export function MissionObjective({ submitted, missionText, pending, canSave, onS
             <p className="mt-3 whitespace-pre-wrap break-words text-base leading-relaxed text-fg" data-testid="mission-text">{missionText}</p>
             {appliedTask && !pending && (
               <p className="mt-2 text-sm text-fg-muted" data-testid="applied-task">
-                Applied task: {TASK_LABEL[appliedTask]}
+                Applied task: {missionType === "research" ? "Research target alignment" : missionType === "base_planning" ? "Base-planning evidence review" : TASK_LABEL[appliedTask]}
                 {appliedFocusBody && <> · looking on {BODY_NAME[appliedFocusBody]}</>}
                 {appliedDestination && <> · mission to {BODY_NAME[appliedDestination]}</>}
                 {appliedReference && <> · reference {appliedReference.name} ({BODY_NAME[appliedReference.body]})</>}

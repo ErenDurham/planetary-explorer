@@ -82,7 +82,7 @@ describe("Astro", () => {
     expect(screen.getByText("Inspect the regional evidence.")).toBeVisible();
     expect(screen.queryByRole("button", { name: "Open Research" })).toBeNull();
     expect(screen.queryByText("Computed context")).toBeNull();
-    expect(screen.getByText(/Using a site summary/)).toBeVisible();
+    expect(screen.getByText(/Answering from computed data/)).toBeVisible();
     expect(screen.queryByText("Mars · Jezero", { exact: true })).toBeNull();
     expect(useAppStore.getState().activeTab).toBe("explore");
   });
@@ -188,7 +188,7 @@ describe("Astro", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Message Astro" }), { target: { value: "Hi" } });
     fireEvent.click(screen.getByRole("button", { name: "Send message" }));
     await screen.findByText("Inspect the regional evidence.");
-    expect(screen.queryByText(/AI unavailable|Using a site summary/)).toBeNull();
+    expect(screen.queryByText(/AI unavailable|Answering from computed data/)).toBeNull();
     expect(screen.queryByText("Mars · Jezero", { exact: true })).toBeNull();
   });
   it("resizes from the top with keyboard access and resets on double click", () => {
@@ -230,4 +230,72 @@ describe("Astro", () => {
     await screen.findByText("Inspect the regional evidence.");
     expect(api.astroChat).toHaveBeenCalledTimes(2);
   });
+});
+
+describe("Astro page context", () => {
+  beforeEach(() => {
+    vi.stubGlobal("matchMedia", vi.fn().mockImplementation(() => ({ matches:false, addEventListener:vi.fn(), removeEventListener:vi.fn() })));
+    useAstroStore.getState().clear();
+    useAppStore.setState({activeTab:"explore", viewedBody:"earth", selectionBody:"mars", mapMode:"analog_match", missionType:"research", selectedMarsId:"jezero_crater", selectedEarthId:null});
+  });
+  afterEach(() => { cleanup(); vi.restoreAllMocks(); });
+  async function ask(text: string) {
+    if (!screen.queryByRole("textbox", {name:"Message Astro"})) fireEvent.click(screen.getByRole("button", {name:"Expand Astro"}));
+    fireEvent.change(screen.getByRole("textbox", {name:"Message Astro"}), {target:{value:text}});
+    fireEvent.click(screen.getByRole("button", {name:"Send message"}));
+    await act(async()=>{});
+  }
+  it("does not send the Mars research assessment while viewing Earth analogs", async () => {
+    const send=vi.spyOn(api,"astroChat").mockResolvedValue(response);
+    render(<AstroPanel/>);
+    await ask("Compare candidates 1 and 2");
+    expect(send).toHaveBeenLastCalledWith(expect.objectContaining({assessment:null, viewed_body:"earth",map_mode:"analog_match"}));
+  });
+  it("keeps Research on Mars when an Earth task is active", async () => {
+    useAppStore.setState({activeTab:"research", selectionBody:"earth", missionType:"rover_field_test"});
+    const send=vi.spyOn(api,"astroChat").mockResolvedValue(response);
+    render(<AstroPanel/>);
+    await ask("Tell me about Jezero");
+    expect(send).toHaveBeenLastCalledWith(expect.objectContaining({assessment:null, active_tab:"research"}));
+  });
+  it("does not reuse history from a different selection or mission", async () => {
+    const send=vi.spyOn(api,"astroChat").mockResolvedValue(response);
+    render(<AstroPanel/>);
+    await ask("Explain this ranking");
+    await act(async()=>{useAppStore.setState({selectedMarsId:"oxia_planum", appliedObjective:"Study clays"});});
+    await ask("What about the evidence?");
+    expect(send).toHaveBeenLastCalledWith(expect.objectContaining({history:[]}));
+  });
+});
+
+describe("Astro task-page body", () => {
+  afterEach(()=>{cleanup(); vi.restoreAllMocks();});
+  it("sends the mission body while Mission Design is open after Earth browsing", async () => {
+    vi.stubGlobal("matchMedia", vi.fn().mockImplementation(()=>({matches:false,addEventListener:vi.fn(),removeEventListener:vi.fn()})));
+    useAstroStore.getState().clear();
+    useAppStore.setState({activeTab:"mission",selectionBody:"mars",viewedBody:"earth",missionType:"landing",mapMode:"analog_match"});
+    const send=vi.spyOn(api,"astroChat").mockResolvedValue(response);
+    render(<AstroPanel/>);
+    fireEvent.click(screen.getByRole("button",{name:"Expand Astro"}));
+    fireEvent.change(screen.getByRole("textbox",{name:"Message Astro"}),{target:{value:"Compare candidates 1 and 2"}});
+    fireEvent.click(screen.getByRole("button",{name:"Send message"}));
+    await act(async()=>{});
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({viewed_body:"mars",map_mode:"landing_suitability"}));
+  });
+});
+
+it("sends survey context instead of catalog assessment in Find Analogs", async()=>{
+  const {useDiscoveryStore}=await import("@/features/discovery/store/useDiscoveryStore");
+  vi.stubGlobal("matchMedia", vi.fn().mockImplementation(()=>({matches:false,addEventListener:vi.fn(),removeEventListener:vi.fn()})));
+  useAstroStore.getState().clear();
+  useAppStore.setState({activeTab:"explore",exploreMode:"find_analogs",viewedBody:"earth",selectionBody:"earth",missionType:"rover_field_test",mapMode:"mission_browse"});
+  useDiscoveryStore.setState({runId:"survey-test",weights:{slope:100},topK:6,runs:{"survey-test":{ranked:true,selectedCandidateId:"new-site",autoSelected:true,shortlist:[]}}});
+  const send=vi.spyOn(api,"astroChat").mockResolvedValue(response);
+  render(<AstroPanel/>);
+  fireEvent.click(screen.getByRole("button",{name:"Expand Astro"}));
+  fireEvent.change(screen.getByRole("textbox",{name:"Message Astro"}),{target:{value:"Compare candidates 1 and 2"}});
+  fireEvent.click(screen.getByRole("button",{name:"Send message"}));
+  await act(async()=>{});
+  expect(send).toHaveBeenCalledWith(expect.objectContaining({assessment:null,discovery:{ranking:{run_id:"survey-test",reference_id:"jezero_crater",weights:{slope:100},top_k:6},selected_candidate_id:"new-site"}}));
+  cleanup();vi.restoreAllMocks();
 });

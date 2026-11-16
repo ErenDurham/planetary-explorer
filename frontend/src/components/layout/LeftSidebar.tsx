@@ -1,3 +1,4 @@
+import { MissionScoringPanel } from "@/components/mission/MissionScoringPanel";
 // The "Mission Design" pane, the first step of the journey. It opens on the
 // composer alone; applying a mission has the backend read it ONCE for both
 // planets: the Mars landing priorities and the Earth priorities, on the same
@@ -85,7 +86,8 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
     // the same reading's Earth weights (the Mars ones if the backend was unreachable)
     useAppStore.getState().applyEarthSuggestion(app.earthWeights ?? app.weights);
     // Earth sites are ranked by their analog similarity to the paired Mars site
-    useAppStore.getState().setEarthReference(result.response.analog_check?.mars_site_id ?? null);
+    const activeKind=useAppStore.getState().missionType;
+    useAppStore.getState().setEarthReference(activeKind === "research" || activeKind === "base_planning" ? null : result.response.analog_check?.mars_site_id ?? null);
     setMissionDraftDirty(false);
     setMissionDesigned(true);
     setDesigned(true);
@@ -109,10 +111,10 @@ export function LeftSidebar({ defaults, defaultsError, evaluation, evaluationErr
           <details open className="mission-advanced" data-testid="mission-advanced">
             <summary>
               <span className="font-medium text-fg">Adjust mission focus and scoring priorities</span>
-              <span className="ml-2 text-fg-muted">{top.length ? `· ${top.map(t => `${t.label} ${Math.round(t.share)}%`).join(", ")}` : ""}</span>
+              <span className="ml-2 text-fg-muted">{missionType === "research" ? "· documented research targets" : missionType === "base_planning" ? "· evidence review" : top.length ? `· ${top.map(t => `${t.label} ${Math.round(t.share)}%`).join(", ")}` : ""}</span>
             </summary>
             <div className="mx-auto w-full max-w-3xl border-t border-line"><MissionFocus /></div>
-            {defaultsError ? (
+            {missionType === "research" || missionType === "base_planning" ? <div className="grid border-t border-line lg:grid-cols-2"><MissionScoringPanel /></div> : defaultsError ? (
               <div className="border-t border-line p-4"><ErrorNote error={defaultsError} context="scoring/default-mission" /></div>
             ) : !defaults ? (
               <div className="border-t border-line p-4"><Spinner label="Loading scoring defaults" /></div>

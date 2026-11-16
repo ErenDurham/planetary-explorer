@@ -8,11 +8,18 @@ from .analog import AnalogWeight
 from .mission import MissionProfile
 from .mission_assessment import MissionAssessmentRequest
 from .research import Citation
+from .discovery import DiscoveryRankRequest
 
 
 class Turn(BaseModel):
     role: Literal["user", "assistant"]
     content: str = Field(min_length=1, max_length=4000)
+
+
+class AstroDiscoveryContext(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ranking: DiscoveryRankRequest | None = None
+    selected_candidate_id: str | None = Field(None, max_length=100)
 
 
 class AstroRequest(BaseModel):
@@ -33,6 +40,7 @@ class AstroRequest(BaseModel):
     mission: MissionProfile | None = None
     assessment: MissionAssessmentRequest | None = None
     analog_weights: list[AnalogWeight] | None = Field(None, max_length=10)
+    discovery: AstroDiscoveryContext | None = None
 
 
 class AstroAction(BaseModel):

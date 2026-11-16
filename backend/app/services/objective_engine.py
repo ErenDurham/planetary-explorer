@@ -394,9 +394,16 @@ def rule_based(req: InterpretRequest) -> InterpretResponse:
     earth = _earth_suggestions(mars_weights, {s.criterion_id: s.reason for s in suggestions},
                                {s.criterion_id: s.evidence for s in suggestions}, req.excluded_criteria, mars_weights)
     ti = resolve_task(interpret_task(text), None, None)
+    catalogue_task = ti.screening if ti and ti.screening and ti.screening.mission_type != "landing" else None
+    if catalogue_task:
+        rationale = list(ti.rationale)
+        unsupported = list(dict.fromkeys(catalogue_task.limitations))
+        questions = (["Which documented material or landform should the catalogue screen for?"]
+                     if catalogue_task.mission_type == "research" and not (catalogue_task.requirements.material_targets or catalogue_task.requirements.landform_targets)
+                     else [])
     pair = analog_pair(ti, profile, None)
     return InterpretResponse(objective=text, objective_hash=objective_hash(text), generated_by="rule_based", model=None, suggestions=suggestions, earth_suggestions=earth,
-                             analog_check=analog_check.check(*pair),
+                             analog_check=None if catalogue_task else analog_check.check(*pair),
                              rationale=rationale, tradeoffs=tradeoffs, unsupported_needs=unsupported, clarifying_questions=questions[:2],
                              confidence=confidence, confidence_note=note, validation_notes=notes, mission_profile=profile,
                              constraint_evidence=evidence.for_constraints(), evidence_version=evidence.version(),
@@ -533,7 +540,9 @@ def _strip_unbacked_numbers(lines: list[str], allowed: set[int]) -> tuple[list[s
 def interpret(req: InterpretRequest) -> InterpretResponse:
     """Entry point. LLM when configured, validated deterministically; the
     rule-based reader otherwise and on any failure."""
-    use_llm = req.use_llm and llm_client.enabled("interpret")
+    task_plan = interpret_task(req.objective).screening
+    catalogue_research = task_plan is not None and task_plan.mission_type == "research"
+    use_llm = req.use_llm and not catalogue_research and llm_client.enabled("interpret")
     key = (objective_hash(req.objective), tuple(sorted(req.excluded_criteria)), tuple(sorted(_current(req).items())), llm_client.model_name() if use_llm else "rules",
            evidence.version())
     hit = _cache.get(key)

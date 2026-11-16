@@ -19,6 +19,7 @@ export function MissionNextStep({ onExploreMission, exploreReady, pending }: {
   pending: boolean;
 }) {
   const objective = useAppStore(s => s.appliedObjective);
+  const screening = useAppStore(s=>s.appliedInterpretation?.screening);
   const task = useAppStore(s => s.appliedTask);
   const reference = useAppStore(s => s.appliedReference);
   const focusBody = useAppStore(s => s.appliedFocusBody);
@@ -28,14 +29,14 @@ export function MissionNextStep({ onExploreMission, exploreReady, pending }: {
   const caps = useDiscoveryCapabilities();
   const discoveryReady = caps.kind === "ready" && caps.capabilities.runs.length > 0;
   if (!objective) return null;
-  const route: MissionRoute = routeForMission({ objective, task, reference: reference ? { id: reference.id, name: reference.name, body: reference.body } : null, focusBody, discoveryReady });
+  const route: MissionRoute = routeForMission({ objective, task, reference: reference ? { id: reference.id, name: reference.name, body: reference.body } : null, focusBody, discoveryReady, screening });
   const blocked = draftDirty || pending;
   const secondary = "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-line-strong bg-bg-elev px-4 py-2.5 text-sm font-medium text-fg hover:border-copper disabled:opacity-40";
   const go = (fn: () => void) => () => { if (!blocked) fn(); };
   return (
     <section className="mission-next" aria-labelledby="mission-next-title" data-testid="mission-next-step" data-route={route.kind}>
       <p className="eyebrow">Step 2 · Explore</p>
-      <h3 id="mission-next-title" className="mt-1 text-lg font-semibold text-fg">{route.kind === "choose" ? "Choose a supported task" : route.kind === "discovery" ? "Explore new candidate regions" : route.kind === "landing_screening" ? "Explore the Mars sites" : "Explore the established analogs"}</h3>
+      <h3 id="mission-next-title" className="mt-1 text-lg font-semibold text-fg">{route.kind === "choose" ? "Choose a supported task" : route.kind === "discovery" ? "Explore new candidate regions" : route.kind === "landing_screening" ? `Explore the ${focusBody === "earth" ? "Earth" : "Mars"} sites` : "Explore the established analogs"}</h3>
       <p className="mt-2 max-w-3xl text-sm leading-relaxed text-fg-muted">{route.detail}</p>
       {route.unsupported && <p className="mt-3 inline-flex max-w-3xl items-start gap-2 rounded-lg border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-warn" role="status" data-testid="mission-unsupported"><TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />{route.unsupported}</p>}
       <div className="mt-4 flex flex-wrap items-center gap-2">

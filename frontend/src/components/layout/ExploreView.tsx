@@ -71,6 +71,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
   const viewedBody = useAppStore((s) => s.viewedBody);
   const missionBody = useAppStore(s => s.selectionBody);
   const stage = useAppStore(s => s.exploreStage);
+  const missionType=useAppStore(s=>s.missionType);
   const navigateExplore = useAppStore(s => s.navigateExplore);
   const mapMode = useAppStore(s => s.mapMode);
   const effective = effectiveMapMode({ viewedBody, mapMode });
@@ -84,7 +85,7 @@ export function ExploreView({ globe, site, analog, initialMissionId }: ExploreVi
     <nav aria-label="Explore views" className="shrink-0 border-b border-line bg-bg-elev px-3 py-3">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
       <ExploreModeSwitch className="shrink-0" />
-      {stage !== "analogs" && <p className="min-w-[12rem] flex-1 text-xs leading-relaxed text-fg-muted" data-testid="explore-intro">{`Explore ${BODY_NAME[missionBody]} sites for your mission. Select a site to inspect it, then switch planets to find analogs on ${BODY_NAME[otherBody(missionBody)]}.`}</p>}
+      {stage !== "analogs" && <p className="min-w-[12rem] flex-1 text-xs leading-relaxed text-fg-muted" data-testid="explore-intro">{missionType === "research" ? `Research target alignment · ${BODY_NAME[missionBody]}. Sites are ranked by documented target matches; inspect each site for sources and missing data.` : `Explore ${BODY_NAME[missionBody]} sites for your mission. Select a site to inspect it, then switch planets to find analogs on ${BODY_NAME[otherBody(missionBody)]}.`}</p>}
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <div role="group" aria-label="Site imagery">{(["globe","orbital","surface"] as const).map(id => <button key={id} type="button" aria-pressed={view === id} onClick={() => setView(id)} className={`rounded border px-2.5 py-1.5 text-xs ${view === id ? "border-copper text-copper-bright bg-copper/10" : "border-transparent text-fg-muted hover:text-fg"}`}>{id === "globe" ? "Globe" : id === "orbital" ? "Orbital view" : "Surface view"}</button>)}</div>
