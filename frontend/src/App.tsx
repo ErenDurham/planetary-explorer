@@ -26,8 +26,6 @@ import { RightSidebar } from "@/components/layout/RightSidebar";
 import { AnalyzeView } from "@/components/layout/AnalyzeView";
 import { ResearchView } from "@/components/layout/ResearchView";
 import { CompareEntry } from "@/features/regions/CompareEntry";
-import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
-import { DiscoveryView } from "@/features/discovery";
 import { PlanetViewer, PLANET_CONFIGS, markerAppearance, analogMarkerAppearance, type MarkerDatum } from "@/components/globe";
 import { useSites } from "@/hooks/useSites";
 import { useEarthSites } from "@/hooks/useEarthSites";
@@ -37,7 +35,6 @@ import { useAnalogRank } from "@/hooks/useAnalogRank";
 import { effectiveMapMode, referenceIdFor, selectedIdFor, useAppStore } from "@/store/useAppStore";
 import { BODY_NAME, otherBody, toAnalogShares } from "@/lib/analogFeatures";
 import { sharesEqual } from "@/lib/allocation";
-import { passesRole, roleCounts, roleKey, type RoleFilter } from "@/lib/roles";
 import { RankedList, AnalogRankedList } from "@/components/mission/RankedList";
 import type { RankChange } from "@/components/mission/AnalogPreferences";
 import { ErrorNote } from "@/components/ui/ErrorNote";
@@ -51,8 +48,6 @@ export default function App() {
   // Explore's site pane starts collapsed; selecting a site opens it (see the effect below)
   const [sitePanelWidth,setSitePanelWidth]=useState(COLLAPSED_SITE_WIDTH);
   const openPanelWidth=useRef(380);
-  // Find Earth Analogs keeps its own pane, open by default as before
-  const [discoveryPanelWidth,setDiscoveryPanelWidth]=useState(380);
   const [exploreOverlayMaxHeight,setExploreOverlayMaxHeight]=useState<number|undefined>(undefined);
   const [astroBounds,setAstroBounds]=useState<OverlayBounds|null>(null);
   const updateAstroBounds=useCallback((bounds:OverlayBounds)=>setAstroBounds(previous=>previous && previous.left===bounds.left && previous.right===bounds.right && previous.top===bounds.top && previous.bottom===bounds.bottom ? previous : bounds),[]);
@@ -66,10 +61,8 @@ export default function App() {
   const workspaceRef = useViewArrival(activeTab);
   const regionActive = regionTarget != null && (activeTab === "analyze" || activeTab === "compare");
   const setActiveTab = useAppStore((s) => s.setActiveTab);
-  const exploreMode = useAppStore((s) => s.exploreMode);
-  // "Find Earth Analogs" is the second Explore experience: the same three-column
-  // workspace, drawn by DiscoveryView itself, with its own run-scoped state
-  const findAnalogs = activeTab === "explore" && exploreMode === "find_analogs";
+  // Explore has a single experience, Find Earth Analogs (the discovery pilot page was removed)
+  const findAnalogs = false;
   const focusToken = useAppStore((s) => s.selectionRevision);
   const viewedBody = useAppStore((s) => s.viewedBody);
   const mapMode = useAppStore((s) => s.mapMode);
@@ -122,11 +115,6 @@ export default function App() {
   const referenceName = referenceId ? (refBody === "earth" ? earthNames.get(referenceId) : marsNames.get(referenceId)) ?? rankData?.reference.name ?? referenceId : null;
   const referenceOptions = useMemo(() => (refBody === "earth" ? earth.sites.map((s) => ({ id: s.id, name: s.name })) : (sites.data?.sites ?? []).map((s) => ({ id: s.id, name: s.name }))), [refBody, earth.sites, sites.data]);
 
-  // Workbook site roles (a display filter on markers and lists; ranks and colours come from the full pool)
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
-  const roleOf = useMemo(() => new Map((earth.data?.locations ?? []).filter((l) => l.role).map((l) => [roleKey(l.body, l.id), l.role!])), [earth.data]);
-  const shownOnBody = useCallback((body: string) => (id: string) => passesRole(roleFilter, roleOf.get(roleKey(body, id))), [roleFilter, roleOf]);
-
   const markers: MarkerDatum[] = useMemo(() => {
     if (taskMissionView) {
       const byId = new Map(assessment.data?.results.map(r=>[r.site_id,r])??[]);
@@ -157,12 +145,6 @@ export default function App() {
       return { id: s.id, name: s.name, region: s.region, lat: s.lat, lonEast: s.lon_east, mode: "landing" as const, score: r?.score ?? null, rank: r?.rank ?? null, status: r?.status ?? null, similarity: null, unrankableReason: null, appearance: r?.status === "ok" ? analogMarkerAppearance(missionRankPosition(r.rank,evaluation.data?.results.map(r=>r.rank)??[]),rankPalette) : markerAppearance(r?.status, r?.score) };
     });
   }, [viewedBody, analog, sites.data, evaluation.data, earth.sites, rankData, rankPalette, referenceId, earthMission, taskMissionView, assessment.data, earth.data]);
-
-  const visibleMarkers = useMemo(() => markers.filter((m) => shownOnBody(viewedBody)(m.id)), [markers, shownOnBody, viewedBody]);
-  const roleLegend = useMemo(() => {
-    const counts = roleCounts(markers.map((m) => roleOf.get(roleKey(viewedBody, m.id))));
-    return Object.values(counts).some((n) => n > 0) ? { counts, selected: roleFilter, onChange: setRoleFilter } : undefined;
-  }, [markers, roleOf, viewedBody, roleFilter]);
 
   // A deliberate trip to analogs opens the top match only if that body has no
   // selection. Consume the request once so clearing a site stays cleared.
@@ -232,8 +214,7 @@ export default function App() {
         overlayBounds={activeTab === "explore" ? astroBounds : null}
         onOverlayMaxHeightChange={setExploreOverlayMaxHeight}
         config={config}
-        markers={welcome ? [] : visibleMarkers}
-        roles={welcome ? undefined : roleLegend}
+        markers={welcome ? [] : markers}
         selectedId={selectedId}
         focusToken={focusToken}
         onSelect={onSelectVisible}
@@ -279,8 +260,6 @@ export default function App() {
   useEffect(() => { setListFilter(""); }, [exploreRevision, viewedBody]);
   const centre = activeTab === "home"
     ? <HomeView />
-    : findAnalogs
-    ? <DiscoveryView panelWidth={discoveryPanelWidth} onPanelWidthChange={setDiscoveryPanelWidth} />
     : activeTab === "explore"
     ? <ExploreView initialMissionId={initialMissionId} globe={globe} site={imagerySubject} analog={analogContext} />
     : activeTab === "analyze"
@@ -336,12 +315,11 @@ export default function App() {
       emptyReference={referenceSelector}
       filter={listFilter}
       onFilterChange={setListFilter}
-      shown={shownOnBody(viewedBody)}
     />
   ) : (
     <>
       {evaluation.error && <div className="p-3"><ErrorNote error={evaluation.error} context="scoring/evaluate" /></div>}
-      <RankedList results={evaluation.data?.results} palette={rankPalette} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} shown={shownOnBody("mars")} />
+      <RankedList results={evaluation.data?.results} palette={rankPalette} selectedId={selectedMarsId} onSelect={selectSite} isPending={evaluation.isPending} warnings={evaluation.data?.warnings} />
     </>
   );
 
@@ -358,10 +336,7 @@ export default function App() {
       </div>
       <TopNav active={activeTab} onChange={tab=>{
         if((tab==="compare" || tab==="analyze") && activeTab==="explore"){
-          const discovery=useDiscoveryStore.getState();
-          const id=discovery.runId ? discovery.runs[discovery.runId]?.selectedCandidateId : null;
-          if(exploreMode==="find_analogs" && discovery.runId && id)openRegion({kind:"discovered",id,runId:discovery.runId});
-          else if(exploreMode==="browse" && selectedId)openRegion({kind:"catalog",id:selectedId});
+          if(selectedId)openRegion({kind:"catalog",id:selectedId});
           else useRegionTarget.getState().choose();
         }
         setActiveTab(tab);
@@ -379,7 +354,7 @@ export default function App() {
           )}
         </div>
       )}
-      <div className="flex min-h-0 flex-1"><main ref={workspaceRef} style={{"--site-panel-width":`${sitePanelWidth}px`,"--active-panel-width":`${findAnalogs ? discoveryPanelWidth : sitePanelWidth}px`} as React.CSSProperties} id="workspace" data-view={activeTab} tabIndex={-1} className="relative min-w-0 min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1"><main ref={workspaceRef} style={{"--site-panel-width":`${sitePanelWidth}px`,"--active-panel-width":`${sitePanelWidth}px`} as React.CSSProperties} id="workspace" data-view={activeTab} tabIndex={-1} className="relative min-w-0 min-h-0 flex-1">
         {/* Mission Design stays mounted (only hidden) on other tabs, as the old
             drawer did, so a draft objective and the excluded-factor sync survive
             switching tabs. */}

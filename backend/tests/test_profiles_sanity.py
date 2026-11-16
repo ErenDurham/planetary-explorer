@@ -27,7 +27,7 @@ def profile(request) -> EnvironmentalProfile:
 
 
 def test_profile_counts():
-    # the Lesser-Known Mars Sites workbook: 17 Mars sites, each paired with one Earth location
+    # 17 Mars sites, each paired with one Earth location
     assert len(MARS["profiles"]) == 17 and len(EARTH["profiles"]) == 17
     assert MARS["profile_version"] == EARTH["profile_version"] == "v1"
 

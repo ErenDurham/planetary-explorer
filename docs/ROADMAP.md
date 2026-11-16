@@ -125,13 +125,13 @@ overwriting v1, and the harmonised baseline is stated on every terrain metric.
 | Earth imagery manifest (GIBS Landsat WELD/MODIS orbital context with exact bounds; NASA-library and Commons field photographs with recorded licences) | built; Atacama has no verifiable field photo |
 | Moon | deferred; catalogue data isolated, removed from Compare navigation |
 
-## Lesser-Known Mars Sites workbook (2026-11-15)
+## Lesser-known Mars sites (2026-11-15)
 
 | Area | Status |
 |---|---|
-| Site set replaced by the workbook's 17 Mars sites and 17 paired Earth locations; roles, notes, approximate-coordinate flags, pairing | done (`data/workbook/lesser_known_sites.v1.json`, `scripts/import_workbook.py`, `scripts/apply_workbook.py`) |
-| Literature-reported conditions per site and per pair, with approved sources and a verification status | done; shown in the site panels and Compare, never scored |
-| Approved sources added to the research corpus for the Mission Design assistant | done (95 documents); Plattner's NASA ECCA report is a PDF and needs `pypdf` to be ingested |
-| Role filter on the globe legend and candidate lists | done |
-| More approved sources for sites with location-only labels (Noctis, Utopia, Jaroso, Yilgarn, Sudbury, Lake Salda, Summit) and for Xanthe Terra | open |
-
+| 17 Mars sites and 17 paired Earth locations; project roles and notes; approximate-coordinate flags | done (`data/sites/site_conditions.v1.json`) |
+| Condition texts quoted from approved sources only (else "Could not be found in sources") | done; shown in the site panels and Compare, never scored |
+| Site labels and descriptions from approved sources only | done |
+| Approved sources in the Mission Design assistant's corpus | done; Plattner's NASA ECCA report is a PDF and needs `pypdf` |
+| Find Earth Analogs discovery page | removed; Explore's single mode is named Find Earth Analogs |
+| Owner approval of the measured datasets (MOLA, Copernicus DEM, NASA POWER) and of the site coordinates | open |

@@ -19,7 +19,7 @@ import { QualityBadge } from "@/components/sites/QualityBadge";
 import { BODY_NAME, analogFeatureLabel } from "@/lib/analogFeatures";
 import { formatLatLon, formatNumber, humanize } from "@/lib/format";
 import { NOT_RANKED_COLOR, rankColor, type RankPalette } from "@/lib/rankColor";
-import { ApproximateNote, ReportedConditionsPanel, RoleBadge } from "@/components/sites/WorkbookPanels";
+import { ApproximateNote, ReportedConditionsPanel, RoleBadge, SiteLabelsPanel } from "@/components/sites/SiteConditionPanels";
 import type { AnalogRankResponse, ComparisonLocation, RankedCandidate } from "@/types";
 
 export function EarthLocationPanel({ location }: { location: ComparisonLocation }) {
@@ -32,10 +32,11 @@ export function EarthLocationPanel({ location }: { location: ComparisonLocation 
         </p>
         {location.coverage && <p className="num mt-0.5 text-[10.5px] text-fg-faint">{location.coverage}</p>}
         <ApproximateNote approximate={location.coordinates_approximate} />
-        {location.role && <div className="mt-1.5 flex items-center gap-1.5 text-[10.5px] text-fg-faint"><RoleBadge role={location.role} /><span>role of its paired Mars site</span></div>}
+        {location.role && <div className="mt-1.5 flex items-center gap-1.5 text-[10.5px] text-fg-faint"><RoleBadge role={location.role} /><span>project role of its paired Mars site</span></div>}
         <p className="mt-1.5 text-xs leading-relaxed text-fg-muted">{location.description}</p>
-        {location.why_they_match && <p className="mt-1.5 text-xs text-fg-muted" data-testid="why-they-match"><span className="text-fg-faint">Why it is paired:</span> {location.why_they_match}</p>}
+        {location.analog_basis && <p className="mt-1.5 text-xs text-fg-muted" data-testid="analog-basis"><span className="text-fg-faint">Analog link stated by the source:</span> <q>{location.analog_basis.quote}</q>{location.condition_sources?.[location.analog_basis.source_id] && <span className="text-fg-faint"> ({location.condition_sources[location.analog_basis.source_id].cite})</span>}</p>}
       </Section>
+      <SiteLabelsPanel measurements={location.measurements} sources={location.sources} />
       <ReportedConditionsPanel conditions={location.reported_conditions} sources={location.condition_sources} />
       <details className="m-4 rounded-lg border border-line">
         <summary className="cursor-pointer p-3 text-sm text-fg">All environmental measurements and sources</summary>

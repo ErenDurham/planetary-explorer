@@ -14,7 +14,7 @@ outputs are committed and the app never fetches at request time
 
 Contents
 
-0. [Site set: the Lesser-Known Mars Sites workbook](#0-site-set-the-lesser-known-mars-sites-workbook-2026-11-15)
+0. [Site set and approved sources](#0-site-set-and-approved-sources-2026-11-15)
 1. [Mars topography: MOLA MEGDR 16 ppd](#1-mars-topography-mola-megdr-16-ppd)
 2. [Earth topography: Copernicus DEM GLO-90](#2-earth-topography-copernicus-dem-glo-90)
 3. [Earth climate: NASA POWER climatology](#3-earth-climate-nasa-power-climatology)
@@ -30,57 +30,38 @@ Contents
 
 ---
 
-## 0. Site set: the Lesser-Known Mars Sites workbook (2026-11-15)
+## 0. Site set and approved sources (2026-11-15)
 
-Since 2026-11-15 the app's sites come from the research workbook
-*Lesser-Known Mars Sites - Conditions Comparison* (17 candidate Mars base
-sites, each paired with one Earth location). `scripts/import_workbook.py`
-turns it into **`backend/data/workbook/lesser_known_sites.v1.json`**, and
-`scripts/apply_workbook.py` sets the site list, coordinates, roles,
-approximate-coordinate flags and the Mars <-> Earth pairing in
-`data/mars/sites.json` and `data/earth/candidates.json`. Profiles are then
-rebuilt with the usual scripts (sections 1-3).
+The app holds 17 Mars sites, each paired with one Earth location
+(`backend/data/sites/site_conditions.v1.json`, built by
+`scripts/build_site_conditions.py`; `scripts/apply_site_conditions.py` sets
+the site list, coordinates, roles, approximate-coordinate flags and the
+pairing in `data/mars/sites.json` and `data/earth/candidates.json`).
 
-* **Removed** with the change: Gale Crater, Gusev Crater (Mars); Atacama
-  Yungay, Death Valley, MDRS Utah, Mauna Kea (Earth), with their corpus
-  documents, literature labels, evidence-registry entries and curated imagery.
-  **Moved**: Utopia Planitia to the Zhurong area (25.07 N, 109.93 E) and
-  Meridiani Planum to the workbook's point (-3.17 N, -4.52 E), so their
-  Viking 2 / Opportunity material was dropped. Jezero, Elysium, Oxia, Chryse,
-  McMurdo (University Valley), Haughton and Holuhraun keep their published
-  coordinates (within ~20 km of the workbook's).
-* **Source rule** (set by the project owner): only research articles with a
-  DOI or official NASA / CSA / ESA / JAXA pages, plus sources the owner
-  approved by name (HiRISE ESP_094549_1655 and ESP_048036_2025). The 71
-  approved sources, and every workbook citation that was **not** used with the
-  reason, are in the workbook file (`sources`, `excluded_citations`). Owner
-  restrictions (Bultel et al. 2025: Granby/Mars content only; Aguilar et al.:
-  Galena Creek only; HiRISE ESP_048036_2025: Hebrus only) are enforced
+* **Source rule** (set by the project owner): site information comes only
+  from the owner-approved sources listed in `scripts/site_sources.py`:
+  research articles with a DOI, official NASA / ESA pages, and two pages the
+  owner approved by name (HiRISE ESP_094549_1655 and ESP_048036_2025). Owner
+  restrictions (Bultel et al. 2025: Granby / Mars content only; Aguilar et
+  al.: Galena Creek only; HiRISE ESP_048036_2025: Hebrus only) are enforced
   sentence by sentence when the corpus is built.
-* **Condition texts** (terrain, mineralogy, elevation, thermal, solar/power,
-  wind, water/ice) are literature-reported descriptions compiled by the
-  workbook author. They are stored as text, never parsed into numbers, never
-  scored, and shown apart from the measured profiles. "—" in the workbook is
-  `null` ("Not found in sources"); a value whose only source is excluded is
-  `null` with status `excluded_source`. `scripts/verify_workbook_conditions.py`
-  checks each remaining text against the corpus text of its sources:
-  `verified` (a quoted sentence states it), `cited_not_verified` (the open
-  text, often an abstract, does not state it) or `citation_only` (paywalled,
-  no public abstract). Solar+wind kWh figures are attributed to Darya, Bansal
-  & Jarndal (2024, IEEE EPECS), which has no public abstract.
-* **Roles** (`Base candidate`, `Resource site`, `To evaluate`, `Instrument
-  testing`, `Context only`) organise the site lists and the globe legend as a
-  display filter; they never change a score or a rank.
-* **Literature labels** for the new sites follow section 7 (verbatim quotes,
-  15-year window, NASA / ESA / DOI hosts). Sites whose approved sources name
-  no vocabulary term carry a `location` row only; Xanthe Terra (only source
-  2009) and Amundsen-Scott South Pole Station (only approved source is about
-  Concordia) carry none and say why (`evidence_gap`).
-* **Geographic South Pole footprint**: a lat/lon square collapses at -90, so
-  `build_earth_profiles.read_dem_polar()` reads the 0.25 deg cap from all 360
-  tiles of the S90 Copernicus row, reprojects it to an azimuthal equidistant
-  plane, bins it at 90 m and computes the statistics on the square inscribed
-  in the cap (median 2,831 m; the workbook's excluded COMNAP figure is 2,835 m).
+* **Conditions** (terrain, mineralogy, elevation, thermal, solar/power, wind,
+  water/ice): each is a sentence quoted from an approved source and cited to
+  it, or null ("Could not be found in sources"). Never parsed into numbers,
+  never scored, and shown apart from the measured profiles.
+* **Labels and descriptions** (`data/site_literature.v1.json`, section 7)
+  use only approved sources, each label backed by a verbatim quote.
+* **Roles and notes** are the project's own classification, not sourced
+  data. **Pairings** are the project's; where an approved source states the
+  analog link itself, that sentence is shown (`analog_basis`).
+* **Coordinates**: published mission points where the app already held one;
+  otherwise `project_site_coordinates` (selected by the project team; no
+  approved source states them), pending owner approval.
+* **Measured values** (MOLA, Copernicus DEM, NASA POWER, the insolation
+  model; sections 1-5) are pending owner approval as sources.
+* **Geographic South Pole footprint**: `build_earth_profiles.read_dem_polar()`
+  reprojects the 0.25 deg Copernicus cap to an azimuthal equidistant plane
+  (90 m bins) and uses the square inscribed in the cap.
 
 Sections 6, 7, 13 and 14 below still list some entries for sites that were
 removed; the data files are authoritative.

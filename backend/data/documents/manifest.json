@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-15T19:36:48+00:00",
+ "built_at": "2026-11-15T22:07:09+00:00",
  "pipeline": "scripts/ingest_documents.py",
  "chunking": {
   "target_chars": 900,
@@ -7,9 +7,9 @@
   "overlap_chars": 150,
   "boundary": "paragraph, then sentence"
  },
- "documents_ingested": 95,
+ "documents_ingested": 87,
  "documents_failed": 2,
- "chunks": 1141,
+ "chunks": 1265,
  "ingested": [
   {
    "document_id": "nasa_m2020_overview",
@@ -210,7 +210,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_marinova2022_university_valley",
+   "document_id": "src_marinova2022_university_valley",
    "title": "Climate and energy balance of the ground in University Valley, Antarctica",
    "institution": "Antarctic Science",
    "url": "https://doi.org/10.1017/S0954102022000025",
@@ -221,40 +221,40 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_mckay_marinova2025_ice_cemented_ground",
+   "document_id": "src_mckay_marinova2025_ice_cemented_ground",
    "title": "Summer snow determines the depth to ice-cemented ground under dry permafrost in Antarctica",
    "institution": "Antarctic Science",
    "url": "https://doi.org/10.1017/S0954102025100448",
    "publication_date": null,
    "retrieved_at": "2026-11-15",
-   "chars": 80846,
-   "chunks": 115,
+   "chars": 1661,
+   "chunks": 2,
    "kind": "html"
   },
   {
-   "document_id": "crossref_obryk2020_dry_valleys_climate",
-   "title": "Climate From the McMurdo Dry Valleys, Antarctica, 1986–2017: Surface Air Temperature Trends and Redefined Summer Season",
-   "institution": "Journal of Geophysical Research: Atmospheres / American Geophysical Union (AGU)",
+   "document_id": "src_obryk2020_dry_valleys_climate",
+   "title": "Climate from the McMurdo Dry Valleys, Antarctica, 1986-2017",
+   "institution": "Journal of Geophysical Research: Atmospheres",
    "url": "https://doi.org/10.1029/2019JD032180",
-   "publication_date": "2020-07-16",
+   "publication_date": null,
    "retrieved_at": "2026-11-15",
-   "chars": 1906,
+   "chars": 1873,
    "chunks": 3,
-   "kind": "crossref"
+   "kind": "html"
   },
   {
-   "document_id": "crossref_goordial2016_university_valley",
+   "document_id": "src_goordial2016_university_valley",
    "title": "Nearing the cold-arid limits of microbial life in permafrost of an upper dry valley, Antarctica",
-   "institution": "The ISME Journal / Oxford University Press (OUP)",
+   "institution": "The ISME Journal",
    "url": "https://doi.org/10.1038/ismej.2015.239",
-   "publication_date": "2016-07-01",
+   "publication_date": null,
    "retrieved_at": "2026-11-15",
-   "chars": 1923,
-   "chunks": 3,
-   "kind": "crossref"
+   "chars": 52997,
+   "chunks": 75,
+   "kind": "html"
   },
   {
-   "document_id": "wb_yoldi2020_greenland_old_ice",
+   "document_id": "src_yoldi2020_greenland_old_ice",
    "title": "Surface-exposed old ice along the Greenland ice sheet margin as an analogue for the north polar layered deposits",
    "institution": "Europlanet Science Congress 2020",
    "url": "https://doi.org/10.5194/epsc2020-1065",
@@ -276,7 +276,7 @@
    "kind": "crossref"
   },
   {
-   "document_id": "wb_bishop2025_painted_desert",
+   "document_id": "src_bishop2025_painted_desert",
    "title": "Constraining the ancient geochemical environments of Mawrth Vallis (EPSC-DPS 2025-1957)",
    "institution": "EPSC-DPS Joint Meeting 2025",
    "url": "https://doi.org/10.5194/epsc-dps2025-1957",
@@ -298,15 +298,15 @@
    "kind": "crossref"
   },
   {
-   "document_id": "crossref_demaret2022_jaroso_vents",
-   "title": "Fe-Rich Fossil Vents as Mars Analog Samples: Identification of Extinct Chimneys in Miocene Marine Sediments Using Raman Spectroscopy, X-Ray Diffraction, and Scanning Electron Microscopy–Energy Dispersive X-Ray Spectroscopy",
-   "institution": "Astrobiology / SAGE Publications",
+   "document_id": "src_demaret2022_jaroso_vents",
+   "title": "Fe-rich fossil vents as Mars analog samples: identification of extinct chimneys in Miocene marine sediments using Raman spectroscopy, X-ray diffraction, and scanning electron microscopy-energy dispersive X-ray analysis",
+   "institution": "Astrobiology",
    "url": "https://doi.org/10.1089/ast.2021.0128",
-   "publication_date": "2022-09",
+   "publication_date": null,
    "retrieved_at": "2026-11-15",
-   "chars": 3047,
-   "chunks": 5,
-   "kind": "crossref"
+   "chars": 24778,
+   "chunks": 33,
+   "kind": "html"
   },
   {
    "document_id": "crossref_krishnamoorthi2025_uae_dunes",
@@ -331,7 +331,7 @@
    "kind": "crossref"
   },
   {
-   "document_id": "wb_lambert_reimold2023_impact_analogs",
+   "document_id": "src_lambert_reimold2023_impact_analogs",
    "title": "Terrestrial impact sites as field analogs for planetary exploration",
    "institution": "Frontiers in Astronomy and Space Sciences",
    "url": "https://doi.org/10.3389/fspas.2023.1186173",
@@ -342,18 +342,18 @@
    "kind": "html"
   },
   {
-   "document_id": "crossref_aerts2019_yilgarn_lakes",
-   "title": "Microbial Communities in Sediments From Four Mildly Acidic Ephemeral Salt Lakes in the Yilgarn Craton (Australia) – Terrestrial Analogs to Ancient Mars",
-   "institution": "Frontiers in Microbiology / Frontiers Media SA",
+   "document_id": "src_aerts2019_yilgarn_lakes",
+   "title": "Microbial communities in sediments from four mildly acidic ephemeral salt lakes in the Yilgarn Craton (Australia)",
+   "institution": "Frontiers in Microbiology",
    "url": "https://doi.org/10.3389/fmicb.2019.00779",
    "publication_date": "2019-05-06",
    "retrieved_at": "2026-11-15",
-   "chars": 827,
-   "chunks": 1,
-   "kind": "crossref"
+   "chars": 84845,
+   "chunks": 118,
+   "kind": "html"
   },
   {
-   "document_id": "wb_krzesinska2021_oxia_granby",
+   "document_id": "src_krzesinska2021_oxia_granby",
    "title": "Mineralogy, aqueous history and biosignature preservation potential at Oxia Planum (EGU21-841)",
    "institution": "EGU General Assembly 2021",
    "url": "https://doi.org/10.5194/egusphere-egu21-841",
@@ -364,7 +364,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_bultel2022_granby_vermiculite",
+   "document_id": "src_bultel2022_granby_vermiculite",
    "title": "Micro-scale characterization of vermiculite-rich sample from Granby Tuff (EGU22-11272)",
    "institution": "EGU General Assembly 2022",
    "url": "https://doi.org/10.5194/egusphere-egu22-11272",
@@ -375,7 +375,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_bultel2025_granby_alteration",
+   "document_id": "src_bultel2025_granby_alteration",
    "title": "Deciphering the alteration processes of a vermiculite-rich sample (EPSC-DPS 2025-1550)",
    "institution": "EPSC-DPS Joint Meeting 2025",
    "url": "https://doi.org/10.5194/epsc-dps2025-1550",
@@ -386,7 +386,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_bultel2026_granby_modeling",
+   "document_id": "src_bultel2026_granby_modeling",
    "title": "Geochemical modeling on Granby Tuffs clays (EPSC 2026-842)",
    "institution": "Europlanet Science Congress 2026",
    "url": "https://doi.org/10.5194/epsc2026-842",
@@ -397,7 +397,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_petersen2019_galena_creek",
+   "document_id": "src_petersen2019_galena_creek",
    "title": "New insights into ice accumulation at Galena Creek Rock Glacier from radar imaging of its internal structure",
    "institution": "Journal of Glaciology",
    "url": "https://doi.org/10.1017/jog.2019.67",
@@ -408,7 +408,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_meng2022_rock_glacier_radio",
+   "document_id": "src_meng2022_rock_glacier_radio",
    "title": "Rock glacier composition and structure from radio wave speed analysis with dipping reflector correction",
    "institution": "Journal of Glaciology",
    "url": "https://doi.org/10.1017/jog.2022.90",
@@ -419,7 +419,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_aguilar2024_drone_gpr",
+   "document_id": "src_aguilar2024_drone_gpr",
    "title": "Subsurface investigations of debris-covered glaciers using drone-based ground penetrating radar (EPSC2024-1271)",
    "institution": "Europlanet Science Congress 2024",
    "url": "https://doi.org/10.5194/epsc2024-1271",
@@ -485,15 +485,15 @@
    "kind": "crossref"
   },
   {
-   "document_id": "crossref_kong2018_dalangtan",
-   "title": "Dalangtan Saline Playa in a Hyperarid Region on Tibet Plateau: I. Evolution and Environments",
-   "institution": "Astrobiology / SAGE Publications",
+   "document_id": "src_kong2018_dalangtan",
+   "title": "The Dalangtan saline playa in a hyperarid region on Tibet Plateau: I. Evolution and environments",
+   "institution": "Astrobiology",
    "url": "https://doi.org/10.1089/ast.2018.1830",
-   "publication_date": "2018-10",
+   "publication_date": null,
    "retrieved_at": "2026-11-15",
-   "chars": 1843,
-   "chunks": 3,
-   "kind": "crossref"
+   "chars": 32914,
+   "chunks": 46,
+   "kind": "html"
   },
   {
    "document_id": "crossref_angles_li2017_qaidam",
@@ -507,7 +507,7 @@
    "kind": "crossref"
   },
   {
-   "document_id": "wb_zhu2025_qaidam_polygons",
+   "document_id": "src_zhu2025_qaidam_polygons",
    "title": "Polygonal landforms in the western Qaidam Basin (EPSC-DPS 2025-244)",
    "institution": "EPSC-DPS Joint Meeting 2025",
    "url": "https://doi.org/10.5194/epsc-dps2025-244",
@@ -573,7 +573,7 @@
    "kind": "crossref"
   },
   {
-   "document_id": "wb_esa_concordia_analogue",
+   "document_id": "src_esa_concordia_analogue",
    "title": "An Antarctic analogue for space exploration (Concordia)",
    "institution": "ESA",
    "url": "https://explorationscience.esa.int/?p=473",
@@ -584,7 +584,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_ntrs_haughton_gullies",
+   "document_id": "src_ntrs_haughton_gullies",
    "title": "Gully Formation at the Haughton Impact Structure (Arctic Canada) Through the Melting of Snow and Ground Ice, with Implications for Gully Formation on Mars",
    "institution": "NASA Technical Reports Server",
    "url": "https://ntrs.nasa.gov/api/citations/20200001979",
@@ -595,7 +595,7 @@
    "kind": "ntrs"
   },
   {
-   "document_id": "wb_nasa_eo_channeled_scablands",
+   "document_id": "src_nasa_eo_channeled_scablands",
    "title": "Channeled Scablands",
    "institution": "NASA Earth Observatory",
    "url": "https://earthobservatory.nasa.gov/images/92025/channeled-scablands",
@@ -606,7 +606,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_pj_ares_vallis",
+   "document_id": "src_nasa_pj_ares_vallis",
    "title": "Ares Vallis",
    "institution": "NASA / JPL",
    "url": "https://science.nasa.gov/photojournal/pj-ares-vallis-9/",
@@ -617,7 +617,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_lmap_rio_tinto",
+   "document_id": "src_nasa_lmap_rio_tinto",
    "title": "Drilling for data: simulating the search for life on Mars (LMAP at Río Tinto)",
    "institution": "NASA Ames",
    "url": "https://www.nasa.gov/missions/analog-field-testing/drilling-for-data-simulating-the-search-for-life-on-mars",
@@ -705,7 +705,7 @@
    "kind": "crossref"
   },
   {
-   "document_id": "wb_chuang_crown2009_deuteronilus_map",
+   "document_id": "src_chuang_crown2009_deuteronilus_map",
    "title": "Geologic map of MTM 35337, 40337, and 45337 quadrangles, Deuteronilus Mensae region of Mars (USGS SIM 3079)",
    "institution": "USGS Scientific Investigations Map",
    "url": "https://doi.org/10.3133/sim3079",
@@ -760,7 +760,7 @@
    "kind": "crossref"
   },
   {
-   "document_id": "wb_hynek2017_meridiani",
+   "document_id": "src_hynek2017_meridiani",
    "title": "Geologic map of Meridiani Planum, Mars (USGS SIM 3356)",
    "institution": "USGS Scientific Investigations Map",
    "url": "https://doi.org/10.3133/sim3356",
@@ -815,7 +815,7 @@
    "kind": "crossref"
   },
   {
-   "document_id": "wb_nasa_pia10652_north_cap",
+   "document_id": "src_nasa_pia10652_north_cap",
    "title": "What lies below a Martian ice cap",
    "institution": "NASA / JPL",
    "url": "https://science.nasa.gov/photojournal/what-lies-below-a-martian-ice-cap/",
@@ -826,7 +826,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_pia03008_south_co2",
+   "document_id": "src_nasa_pia03008_south_co2",
    "title": "Frozen frozen CO2",
    "institution": "NASA / JPL",
    "url": "https://science.nasa.gov/photojournal/frozen-frozen-co2/",
@@ -837,7 +837,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_esa_mex_south_pole_water",
+   "document_id": "src_esa_mex_south_pole_water",
    "title": "Water at Martian south pole",
    "institution": "ESA",
    "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Water_at_Martian_south_pole",
@@ -848,7 +848,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_svs_767_mpl",
+   "document_id": "src_nasa_svs_767_mpl",
    "title": "Mars Polar Lander landing site",
    "institution": "NASA Goddard Scientific Visualization Studio",
    "url": "https://svs.gsfc.nasa.gov/767",
@@ -859,7 +859,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_pia26773_south_pole_psyche",
+   "document_id": "src_nasa_pia26773_south_pole_psyche",
    "title": "Psyche's high-resolution view of Mars' south pole",
    "institution": "NASA / JPL-Caltech / ASU",
    "url": "https://science.nasa.gov/photojournal/psyches-high-resolution-view-of-mars-south-pole/",
@@ -870,7 +870,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_esa_mex_mawrth_clays",
+   "document_id": "src_esa_mex_mawrth_clays",
    "title": "The clays of Mawrth Vallis",
    "institution": "ESA",
    "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/The_clays_of_Mawrth_Vallis",
@@ -881,7 +881,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_pia18632_noctis",
+   "document_id": "src_nasa_pia18632_noctis",
    "title": "Water-bearing rocks in Noctis Labyrinthus",
    "institution": "NASA / JPL",
    "url": "https://science.nasa.gov/photojournal/water-bearing-rocks-in-noctis-labyrinthus/",
@@ -892,7 +892,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_pia25359_hebrus",
+   "document_id": "src_nasa_pia25359_hebrus",
    "title": "Flooded impact craters in Hebrus Valles",
    "institution": "NASA / JPL",
    "url": "https://science.nasa.gov/photojournal/flooded-impact-craters-in-hebrus-valles/",
@@ -903,7 +903,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_hirise_esp_048036_2025_hebrus",
+   "document_id": "src_hirise_esp_048036_2025_hebrus",
    "title": "Pits and channels of Hebrus Valles",
    "institution": "HiRISE (University of Arizona, NASA MRO)",
    "url": "https://www.uahirise.org/ESP_048036_2025",
@@ -914,7 +914,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_pia26775_huygens_psyche",
+   "document_id": "src_nasa_pia26775_huygens_psyche",
    "title": "NASA's Psyche mission images Mars' Huygens crater",
    "institution": "NASA / JPL-Caltech / ASU",
    "url": "https://science.nasa.gov/photojournal/nasas-psyche-mission-images-mars-huygens-crater/",
@@ -925,7 +925,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_hirise_esp_094549_1655_huygens",
+   "document_id": "src_hirise_esp_094549_1655_huygens",
    "title": "Crater on floor of Huygens crater",
    "institution": "HiRISE (University of Arizona, NASA MRO)",
    "url": "https://www.uahirise.org/ESP_094549_1655",
@@ -936,7 +936,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_columbus_sulfates_clays",
+   "document_id": "src_nasa_columbus_sulfates_clays",
    "title": "Sulfates and clays in Columbus crater, Mars",
    "institution": "NASA / JPL",
    "url": "https://www.nasa.gov/image-article/sulfates-clays-columbus-crater-mars/",
@@ -947,7 +947,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_pia12996_deuteronilus",
+   "document_id": "src_nasa_pia12996_deuteronilus",
    "title": "Lobate debris apron in Deuteronilus Mensae",
    "institution": "NASA / JPL",
    "url": "https://science.nasa.gov/photojournal/lobate-debris-apron-in-deuteronilus-mensae/",
@@ -958,7 +958,7 @@
    "kind": "html"
   },
   {
-   "document_id": "wb_nasa_jezero_delta_panorama",
+   "document_id": "src_nasa_jezero_delta_panorama",
    "title": "Detailed panorama of Mars' Jezero crater delta",
    "institution": "NASA / JPL-Caltech",
    "url": "https://science.nasa.gov/resource/detailed-panorama-of-mars-jezero-crater-delta/",
@@ -967,94 +967,6 @@
    "chars": 2919,
    "chunks": 4,
    "kind": "html"
-  },
-  {
-   "document_id": "crossref_trowbridge2024_haughton",
-   "title": "Modeling of the Impact‐Generated Hydrothermal System at the Haughton Impact Structure",
-   "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-   "url": "https://doi.org/10.1029/2023JE008267",
-   "publication_date": "2024-07",
-   "retrieved_at": "2026-11-15",
-   "chars": 1855,
-   "chunks": 3,
-   "kind": "crossref"
-  },
-  {
-   "document_id": "crossref_izawa2011_haughton",
-   "title": "Weathering of Post-Impact Hydrothermal Deposits from the Haughton Impact Structure: Implications for Microbial Colonization and Biosignature Preservation",
-   "institution": "Astrobiology / SAGE Publications",
-   "url": "https://doi.org/10.1089/ast.2011.0612",
-   "publication_date": "2011-07",
-   "retrieved_at": "2026-11-15",
-   "chars": 785,
-   "chunks": 1,
-   "kind": "crossref"
-  },
-  {
-   "document_id": "crossref_parnell2012_haughton",
-   "title": "Evidence for life in the isotopic analysis of surface sulphates in the Haughton impact structure, and potential application on Mars",
-   "institution": "International Journal of Astrobiology / Cambridge University Press (CUP)",
-   "url": "https://doi.org/10.1017/S1473550411000395",
-   "publication_date": "2012-04",
-   "retrieved_at": "2026-11-15",
-   "chars": 2292,
-   "chunks": 4,
-   "kind": "crossref"
-  },
-  {
-   "document_id": "crossref_hartley2018_holuhraun",
-   "title": "Melt inclusion constraints on petrogenesis of the 2014–2015 Holuhraun eruption, Iceland",
-   "institution": "Contributions to Mineralogy and Petrology / Springer Science and Business Media LLC",
-   "url": "https://doi.org/10.1007/s00410-017-1435-0",
-   "publication_date": "2018-02",
-   "retrieved_at": "2026-11-15",
-   "chars": 763,
-   "chunks": 1,
-   "kind": "crossref"
-  },
-  {
-   "document_id": "crossref_lit_jezero_mineralogy",
-   "title": "Assessing the mineralogy of the watershed and fan deposits of the Jezero crater paleolake system, Mars",
-   "institution": "Journal of Geophysical Research: Planets / American Geophysical Union (AGU)",
-   "url": "https://doi.org/10.1002/2014JE004782",
-   "publication_date": "2015-04",
-   "retrieved_at": "2026-11-15",
-   "chars": 2429,
-   "chunks": 3,
-   "kind": "crossref"
-  },
-  {
-   "document_id": "crossref_farley2022_jezero",
-   "title": "Aqueously altered igneous rocks sampled on the floor of Jezero crater, Mars",
-   "institution": "Science / American Association for the Advancement of Science (AAAS)",
-   "url": "https://doi.org/10.1126/science.abo2196",
-   "publication_date": "2022-09-30",
-   "retrieved_at": "2026-11-15",
-   "chars": 3123,
-   "chunks": 4,
-   "kind": "crossref"
-  },
-  {
-   "document_id": "crossref_lit_oxia_clays",
-   "title": "Oxia Planum: The Landing Site for the ExoMars “Rosalind Franklin” Rover Mission: Geological Context and Prelanding Interpretation",
-   "institution": "Astrobiology / SAGE Publications",
-   "url": "https://doi.org/10.1089/ast.2019.2191",
-   "publication_date": "2021-03",
-   "retrieved_at": "2026-11-15",
-   "chars": 2755,
-   "chunks": 4,
-   "kind": "crossref"
-  },
-  {
-   "document_id": "crossref_rodriguez2022_chryse",
-   "title": "Evidence of an oceanic impact and megatsunami sedimentation in Chryse Planitia, Mars",
-   "institution": "Scientific Reports / Springer Science and Business Media LLC",
-   "url": "https://doi.org/10.1038/s41598-022-18082-2",
-   "publication_date": "2022-12-01",
-   "retrieved_at": "2026-11-15",
-   "chars": 2304,
-   "chunks": 3,
-   "kind": "crossref"
   }
  ],
  "failed": [
@@ -1064,7 +976,7 @@
    "reason": "offline and not in corpus/"
   },
   {
-   "document_id": "wb_nasa_ecca_plattner",
+   "document_id": "src_nasa_ecca_plattner",
    "url": "https://assets.science.nasa.gov/content/dam/science/psd/astrobiology/for-researchers/ecca/ECCA%20Plattner.pdf",
    "reason": "offline and not in corpus/"
   }

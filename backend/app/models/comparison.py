@@ -1,7 +1,7 @@
 """Read-only cross-body catalogue; separate from Mars mission scoring."""
 from typing import Literal
 from pydantic import BaseModel, Field
-from .common import Provenance, ReportedCondition, SiteRole, WorkbookSource
+from .common import AnalogBasis, Provenance, ReportedCondition, SiteRole, SiteSource
 from .site import EnvironmentalMeasurement
 
 BodyId = Literal["earth", "mars", "moon"]
@@ -19,11 +19,11 @@ class ComparisonLocation(BaseModel):
     sources: dict[str, Provenance]
     source_ids: list[str] = Field(default_factory=list)
     role: SiteRole | None = None
-    coordinates_approximate: bool | None = Field(None, description="True when the workbook marks the coordinates as approximate; null for locations outside the workbook")
-    paired_location_id: str | None = Field(None, description="The workbook's paired location on the other body")
-    why_they_match: str | None = None
-    reported_conditions: list[ReportedCondition] = Field(default_factory=list, description="Literature-reported condition texts (workbook); not measurements")
-    condition_sources: dict[str, WorkbookSource] = Field(default_factory=dict)
+    coordinates_approximate: bool | None = Field(None, description="True when the coordinates are approximate; null where not stated")
+    paired_location_id: str | None = Field(None, description="The project's paired location on the other body")
+    analog_basis: AnalogBasis | None = Field(None, description="An approved source's sentence linking the pair, if any")
+    reported_conditions: list[ReportedCondition] = Field(default_factory=list, description="What approved sources state about each condition; not measurements")
+    condition_sources: dict[str, SiteSource] = Field(default_factory=dict)
 
 class BodyReference(BaseModel):
     id: BodyId

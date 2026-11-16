@@ -111,9 +111,13 @@ class DocSpec:
     geographic_relevance: list[str] = field(default_factory=list)
     expect: list[str] = field(default_factory=list)   # at least one must appear in a sentence
     topic: str = ""
-    # Owner restriction (data/workbook): sentences naming any of these terms are dropped
+    # Owner restriction (see the source registry): sentences naming any of these terms are dropped
     # before chunking, so the assistant never sees the excluded part of the source.
     exclude_paragraphs: list[str] = field(default_factory=list)
+    # Where the text is read from when the cited URL (a DOI) does not serve it: an
+    # open copy of the SAME article (PubMed Central, the publisher's open HTML, an
+    # institutional repository or the USGS record). The citation stays `url`.
+    fetch_url: str | None = None
 
 
 def _doi_sources() -> dict[str, tuple[str, list[str]]]:
@@ -188,14 +192,13 @@ DOCUMENTS: list[DocSpec] = [
 ]
 
 
-# --- Lesser-Known Mars Sites workbook (data/workbook/lesser_known_sites.v1.json) ---
-# Every source the owner approved for the workbook's 17 Mars sites and their
-# Earth analogs. Open-access pages (DOI landing pages that serve the paper or
+# --- Approved sources for the 17 Mars sites and their Earth analogs (data/sites/site_conditions.v1.json) ---
+# Every source the owner approved for the sites. Open-access pages (DOI landing pages that serve the paper or
 # abstract, USGS map pages, NASA/ESA pages) are fetched as HTML; every other
 # DOI becomes its Crossref record. Each is tagged with the Mars site(s) and the
 # paired Earth site(s) that cite it.
-WORKBOOK_FILE = DATA / "workbook" / "lesser_known_sites.v1.json"
-WORKBOOK_HTML = {  # source_id -> expect terms (open access: the page carries the text)
+SITE_SOURCES_FILE = DATA / "sites" / "site_conditions.v1.json"
+SOURCE_HTML = {  # source_id -> expect terms (open access: the page carries the text)
     "marinova2022_university_valley": ["University Valley"], "mckay_marinova2025_ice_cemented_ground": ["ice-cemented"],
     "yoldi2020_greenland_old_ice": ["Greenland"], "bishop2025_painted_desert": ["Painted Desert", "Mawrth"],
     "lambert_reimold2023_impact_analogs": ["Sudbury"], "krzesinska2021_oxia_granby": ["Oxia"], "bultel2022_granby_vermiculite": ["Granby"],
@@ -204,10 +207,20 @@ WORKBOOK_HTML = {  # source_id -> expect terms (open access: the page carries th
     "zhu2025_qaidam_polygons": ["Qaidam"],
     "chuang_crown2009_deuteronilus_map": ["Deuteronilus"], "hynek2017_meridiani": ["Meridiani"],
 }
-WORKBOOK_NTRS = {  # the NTRS PDF's citation record (JSON with NASA's abstract) is read instead of the PDF
+# (eprints.ucm.es timed out and iopscience.iop.org served a bot-check page on 2026-11-15, so
+# Amils & Fernández-Remolar 2014 and Sharma et al. 2025 stay as their Crossref abstracts.)
+FULLTEXT = {  # source_id -> open copy of the same article (the DOI stays the citation)
+    "goordial2016_university_valley": ("https://pmc.ncbi.nlm.nih.gov/articles/PMC4918446/", ["University Valley"]),
+    "kong2018_dalangtan": ("https://pmc.ncbi.nlm.nih.gov/articles/PMC6205091/", ["Dalangtan"]),
+    "demaret2022_jaroso_vents": ("https://orbi.uliege.be/handle/2268/293625", ["Jaroso"]),
+    "obryk2020_dry_valleys_climate": ("https://pubs.usgs.gov/publication/70211853", ["Dry Valleys"]),
+    "mckay_marinova2025_ice_cemented_ground": ("https://www.usgs.gov/publications/summer-snow-determines-depth-ice-cemented-ground-under-dry-permafrost-antarctica", ["ice-cemented"]),
+    "aerts2019_yilgarn_lakes": ("https://www.frontiersin.org/journals/microbiology/articles/10.3389/fmicb.2019.00779/full", ["Yilgarn"]),
+}
+SOURCE_NTRS = {  # the NTRS PDF's citation record (JSON with NASA's abstract) is read instead of the PDF
     "ntrs_haughton_gullies": "https://ntrs.nasa.gov/api/citations/20200001979",
 }
-WORKBOOK_EXCLUDE = {  # owner restrictions (see data/workbook "restriction")
+SOURCE_EXCLUDE = {  # owner restrictions (see the "restriction" of each source)
     "bultel2025_granby_alteration": ["rover", "Rosalind Franklin", "launch", "ExoMars", "mission", "Ma_MISS", "MicrOmega", "instrument"],
     "aguilar2024_drone_gpr": ["Sourdough"], "aguilar2026_rock_glacier_continuum": ["Sourdough"],
 }
@@ -233,43 +246,47 @@ def apply_exclusions(text: str, terms: list[str]) -> str:
     return "\n\n".join(out)
 
 
-def _workbook_documents() -> list[DocSpec]:
-    if not WORKBOOK_FILE.exists():
+def _site_source_documents() -> list[DocSpec]:
+    if not SITE_SOURCES_FILE.exists():
         return []
-    wb = json.loads(WORKBOOK_FILE.read_text(encoding="utf-8"))
+    wb = json.loads(SITE_SOURCES_FILE.read_text(encoding="utf-8"))
     sites: dict[str, list[str]] = {}
     for m in wb["mars_sites"]:
         for sid in m["source_ids"]:
             sites.setdefault(sid, []).append(m["id"])
-        for c in m["conditions"] + m["pair"]["mars"]:
+        for c in m["conditions"]:
             for sid in c["source_ids"]:
                 sites.setdefault(sid, []).append(m["id"])
     for e in wb["earth_sites"]:
-        for sid in e["source_ids"]:
+        for sid in e["source_ids"] + [s for c in e["conditions"] for s in c["source_ids"]]:
             sites.setdefault(sid, []).extend([e["id"], e["paired_mars_site_id"]])
     docs = []
     for sid, src in wb["sources"].items():
         geo = list(dict.fromkeys(sites.get(sid, [])))
         topic = src["title"] + (f" (restriction: {src['restriction']})" if src.get("restriction") else "")
-        excl = WORKBOOK_EXCLUDE.get(sid, []) + (COPERNICUS_CHROME if src.get("doi", "").startswith("10.5194/") and sid in WORKBOOK_HTML else [])
-        if src["kind"] == "doi" and sid not in WORKBOOK_HTML:
+        excl = SOURCE_EXCLUDE.get(sid, []) + (COPERNICUS_CHROME if src.get("doi", "").startswith("10.5194/") and sid in SOURCE_HTML else [])
+        if sid in FULLTEXT:
+            mirror, expect = FULLTEXT[sid]
+            docs.append(DocSpec(f"src_{sid}", src["url"], src.get("venue") or "", title=src["title"], geographic_relevance=geo,
+                                expect=expect, topic=topic, exclude_paragraphs=excl, fetch_url=mirror))
+        elif src["kind"] == "doi" and sid not in SOURCE_HTML:
             docs.append(DocSpec(f"crossref_{sid}", f"https://api.crossref.org/works/{src['doi']}", "Crossref metadata", kind="crossref",
                                 geographic_relevance=geo, topic=topic, exclude_paragraphs=excl))
-        elif sid in WORKBOOK_NTRS:
-            docs.append(DocSpec(f"wb_{sid}", WORKBOOK_NTRS[sid], src.get("institution") or "", kind="ntrs", title=src["title"],
+        elif sid in SOURCE_NTRS:
+            docs.append(DocSpec(f"src_{sid}", SOURCE_NTRS[sid], src.get("institution") or "", kind="ntrs", title=src["title"],
                                 geographic_relevance=geo, topic=topic, exclude_paragraphs=excl))
         else:
-            docs.append(DocSpec(f"wb_{sid}", src["url"], src.get("venue") or src.get("institution") or "", title=src["title"],
-                                geographic_relevance=geo, expect=WORKBOOK_HTML.get(sid, []), topic=topic, exclude_paragraphs=excl))
+            docs.append(DocSpec(f"src_{sid}", src["url"], src.get("venue") or src.get("institution") or "", title=src["title"],
+                                geographic_relevance=geo, expect=SOURCE_HTML.get(sid, []), topic=topic, exclude_paragraphs=excl))
     return docs
 
 
-_WORKBOOK_DOCS = _workbook_documents()
-_WORKBOOK_IDS = {d.document_id.split("_", 1)[1] if d.document_id.startswith("wb_") else d.document_id.removeprefix("crossref_") for d in _WORKBOOK_DOCS}
+_SITE_SOURCE_DOCS = _site_source_documents()
+_SITE_SOURCE_IDS = {d.document_id.split("_", 1)[1] if d.document_id.startswith("src_") else d.document_id.removeprefix("crossref_") for d in _SITE_SOURCE_DOCS}
 _PRESENT = {d.document_id for d in DOCUMENTS}
-DOCUMENTS += [d for d in _WORKBOOK_DOCS if d.document_id not in _PRESENT and d.url not in {x.url for x in DOCUMENTS}]
+DOCUMENTS += [d for d in _SITE_SOURCE_DOCS if d.document_id not in _PRESENT and d.url not in {x.url for x in DOCUMENTS}]
 for _sid, (_doi, _geo) in DOI_SOURCES.items():
-    if _sid in _WORKBOOK_IDS:   # already ingested from the workbook list (same DOI)
+    if _sid in _SITE_SOURCE_IDS:   # already ingested from the approved site sources (same DOI)
         continue
     DOCUMENTS.append(DocSpec(f"crossref_{_sid}", f"https://api.crossref.org/works/{_doi}", "Crossref metadata", kind="crossref",
                              geographic_relevance=list(_geo), expect=[], topic=f"Bibliographic record for DOI {_doi}"))
@@ -534,7 +551,7 @@ def process(spec: DocSpec, aliases: dict[str, list[str]], regions: dict[str, str
         doc = json.loads(corpus_path.read_text(encoding="utf-8"))
     else:
         try:
-            body, ctype, final_url = fetch(spec.url)
+            body, ctype, final_url = fetch(spec.fetch_url or spec.url)
         except urllib.error.HTTPError as e:
             return None, [], f"HTTP {e.code}"
         except Exception as e:  # noqa: BLE001 - every network failure is logged, none is fatal

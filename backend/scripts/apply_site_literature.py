@@ -84,10 +84,8 @@ def _patch_profile(profile: dict, site: dict, lit: dict) -> None:
                 m.update(value=None, source_id=None, measurement_type="literature", quality_flag="missing", is_missing=True,
                          notes=site.get("evidence_gap") or "No NASA, USGS or peer-reviewed source from the last 15 years was found for this site, so no labels are given.")
         elif fid == "latitude_abs_deg" and site["planet"] == "earth":
-            # the build cites the site's first source here (candidates.json "sources"[0]);
-            # a site with no literature keeps the coordinate source the build used
-            if site_sources(site):
-                m["source_id"] = site_sources(site)[0]
+            # latitude is a property of the coordinates, so it cites the coordinate source, not a paper
+            m["source_id"] = "project_site_coordinates"
         elif fid == "water_ice_evidence" and site.get("water_ice_evidence"):
             m.update(value=site["water_ice_evidence"], source_id=primary_source(site, "mineralogy_tags") or primary_source(site, "terrain_morphology"))
         elif fid == "water_ice_evidence":
@@ -135,7 +133,7 @@ def apply() -> None:
         # keep the data sources (DEM, climate) and every source a site still cites; literature
         # sources come from the literature file, so an old or generic one no site uses is dropped
         keep = {k: v for k, v in cfg["sources"].items()
-                if (k in used or k in ("copernicus_glo90", "nasa_power", "workbook_lesser_known_sites")) and k not in all_lit}
+                if (k in used or k in ("copernicus_glo90", "nasa_power", "project_site_coordinates")) and k not in all_lit}
         for sid in sorted(used & all_lit):
             keep[sid] = provenance(sid, sources[sid])
         cfg["sources"] = keep

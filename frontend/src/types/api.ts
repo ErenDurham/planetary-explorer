@@ -481,6 +481,16 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /**
+         * AnalogBasis
+         * @description A sentence from an approved source that links a Mars site and an Earth analog.
+         */
+        AnalogBasis: {
+            /** Quote */
+            quote: string;
+            /** Source Id */
+            source_id: string;
+        };
+        /**
          * AnalogCheck
          * @description The cross-reference behind the priorities: an Earth site research shows
          *     suits the mission, a Mars site, and how their measured data compare.
@@ -877,24 +887,24 @@ export interface components {
             role?: ("Base candidate" | "Resource site" | "To evaluate" | "Instrument testing" | "Context only") | null;
             /**
              * Coordinates Approximate
-             * @description True when the workbook marks the coordinates as approximate; null for locations outside the workbook
+             * @description True when the coordinates are approximate; null where not stated
              */
             coordinates_approximate?: boolean | null;
             /**
              * Paired Location Id
-             * @description The workbook's paired location on the other body
+             * @description The project's paired location on the other body
              */
             paired_location_id?: string | null;
-            /** Why They Match */
-            why_they_match?: string | null;
+            /** @description An approved source's sentence linking the pair, if any */
+            analog_basis?: components["schemas"]["AnalogBasis"] | null;
             /**
              * Reported Conditions
-             * @description Literature-reported condition texts (workbook); not measurements
+             * @description What approved sources state about each condition; not measurements
              */
             reported_conditions?: components["schemas"]["ReportedCondition"][];
             /** Condition Sources */
             condition_sources?: {
-                [key: string]: components["schemas"]["WorkbookSource"];
+                [key: string]: components["schemas"]["SiteSource"];
             };
         };
         /** Completeness */
@@ -1393,36 +1403,6 @@ export interface components {
              */
             roughness_regional_m: number;
         };
-        /**
-         * EarthAnalogNote
-         * @description An additional Earth analog the workbook lists for a Mars site (not a ranked candidate).
-         */
-        EarthAnalogNote: {
-            /** Label */
-            label: string;
-            /** Analog */
-            analog: string;
-            /** Where */
-            where?: string | null;
-            /** Matches */
-            matches?: string | null;
-            /** Does Not Match */
-            does_not_match?: string | null;
-            /** Lat */
-            lat?: number | null;
-            /** Lon East */
-            lon_east?: number | null;
-            /**
-             * Coordinates Approximate
-             * @default true
-             */
-            coordinates_approximate: boolean;
-            /**
-             * Workbook Source Text
-             * @description The workbook's citation as written; may name sources outside the approved list
-             */
-            workbook_source_text?: string | null;
-        };
         /** EarthCandidate */
         EarthCandidate: {
             /** Id */
@@ -1451,33 +1431,30 @@ export interface components {
             sources?: string[];
             /**
              * Role
-             * @description Role of the Mars site this location is paired with
+             * @description The project's role for the Mars site this location is paired with
              */
             role?: ("Base candidate" | "Resource site" | "To evaluate" | "Instrument testing" | "Context only") | null;
             /**
              * Coordinates Approximate
-             * @description The workbook marks these coordinates as approximate
+             * @description The coordinates are approximate
              * @default false
              */
             coordinates_approximate: boolean;
             /**
              * Paired Mars Site Id
-             * @description The Mars site the workbook pairs with this location
+             * @description The Mars site the project pairs with this location
              */
             paired_mars_site_id?: string | null;
-            /**
-             * Why They Match
-             * @description The workbook author's reason for the pairing
-             */
-            why_they_match?: string | null;
+            /** @description An approved source's sentence linking this location to its paired Mars site, if any */
+            analog_basis?: components["schemas"]["AnalogBasis"] | null;
             /**
              * Reported Conditions
-             * @description Literature-reported condition texts; separate from measured profiles
+             * @description What approved sources state about each condition; separate from measured profiles
              */
             reported_conditions?: components["schemas"]["ReportedCondition"][];
             /** Condition Sources */
             condition_sources?: {
-                [key: string]: components["schemas"]["WorkbookSource"];
+                [key: string]: components["schemas"]["SiteSource"];
             };
         };
         /**
@@ -2671,10 +2648,9 @@ export interface components {
         };
         /**
          * ReportedCondition
-         * @description A literature-reported condition text compiled by the workbook author.
-         *     Descriptive text only: never parsed into numbers and never scored. `text`
-         *     is null when the workbook found nothing (`not_found_in_sources`) or when its
-         *     only source is not on the approved list (`excluded_source`).
+         * @description What an approved source says about one condition of a site. `text` is the
+         *     source's own sentence (cited by `source_ids`); it is null when no approved
+         *     source states the condition. Text only: never parsed into numbers, never scored.
          */
         ReportedCondition: {
             /**
@@ -2692,19 +2668,12 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "verified" | "cited_not_verified" | "citation_only" | "not_found_in_sources" | "excluded_source";
+            status: "quoted" | "not_found_in_sources";
             /** Source Ids */
             source_ids?: string[];
             /**
-             * Evidence Source Id
-             * @description Source whose sentence states the text (status verified)
-             */
-            evidence_source_id?: string | null;
-            /** Evidence Quote */
-            evidence_quote?: string | null;
-            /**
              * Provenance
-             * @default literature-reported (workbook author)
+             * @default approved source
              */
             provenance: string;
         };
@@ -3249,41 +3218,36 @@ export interface components {
             coordinate_sources?: string[];
             /**
              * Role
-             * @description How the workbook author classes the site; organises the site lists, never scored
+             * @description The project's own classification of the site; organises the site lists, never scored
              */
             role?: ("Base candidate" | "Resource site" | "To evaluate" | "Instrument testing" | "Context only") | null;
             /**
              * Notes
-             * @description The workbook author's note on the site
+             * @description The project's own note on the site
              */
             notes?: string | null;
             /**
              * Coordinates Approximate
-             * @description The workbook marks these coordinates as approximate
+             * @description The coordinates are approximate
              * @default false
              */
             coordinates_approximate: boolean;
             /**
              * Paired Earth Site Id
-             * @description The Earth location the workbook pairs with this site
+             * @description The Earth location the project pairs with this site
              */
             paired_earth_site_id?: string | null;
             /**
              * Reported Conditions
-             * @description Literature-reported condition texts; separate from measured profiles
+             * @description What approved sources state about each condition; separate from measured profiles
              */
             reported_conditions?: components["schemas"]["ReportedCondition"][];
-            /**
-             * Earth Analogs
-             * @description Further Earth analogs the workbook lists for this site
-             */
-            earth_analogs?: components["schemas"]["EarthAnalogNote"][];
             /**
              * Condition Sources
              * @description Every source cited by reported_conditions
              */
             condition_sources?: {
-                [key: string]: components["schemas"]["WorkbookSource"];
+                [key: string]: components["schemas"]["SiteSource"];
             };
         };
         /**
@@ -3344,6 +3308,32 @@ export interface components {
              * @description The words in the objective that named this site
              */
             matched_text: string;
+        };
+        /**
+         * SiteSource
+         * @description A source the owner approved for the sites (a DOI article or an official NASA / ESA page).
+         */
+        SiteSource: {
+            /** Source Id */
+            source_id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "doi" | "agency" | "approved_exception";
+            /** Cite */
+            cite: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+            /** Year */
+            year?: number | null;
+            /**
+             * Restriction
+             * @description Owner condition on how the source may be used
+             */
+            restriction?: string | null;
         };
         /** SiteWithProfile */
         SiteWithProfile: {
@@ -3666,32 +3656,6 @@ export interface components {
              * @description Research findings cited for this weight (0-3); empty = none in the registry applies
              */
             evidence?: components["schemas"]["EvidenceCitation"][];
-        };
-        /**
-         * WorkbookSource
-         * @description A source the owner approved for the workbook's condition texts.
-         */
-        WorkbookSource: {
-            /** Source Id */
-            source_id: string;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "doi" | "agency" | "approved_exception";
-            /** Cite */
-            cite: string;
-            /** Title */
-            title: string;
-            /** Url */
-            url: string;
-            /** Year */
-            year?: number | null;
-            /**
-             * Restriction
-             * @description Owner condition on how the source may be used
-             */
-            restriction?: string | null;
         };
     };
     responses: never;

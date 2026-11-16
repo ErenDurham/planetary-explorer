@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { CandidateResearchPanel } from "@/features/discovery/components/CandidateResearchPanel";
-import { useCandidateResearchTarget } from "@/features/discovery/store/useCandidateResearchTarget";
 // Research prospects for the selected Mars site: the citation-backed digest,
 // and from it the Expedition Planner (features/expedition), which opens in
-// place with the same region, body and research context.
+// place with the same region, body and research context. The Earth mode shows
+// the established analogs for that same site.
+import { useState } from "react";
 import { AtlasSurface } from "@/components/atlas/AtlasSurface";
 import atlasStyles from "@/components/atlas/atlas.module.css";
 import { ResearchAtlasCover } from "@/components/atlas/ResearchAtlasCover";
@@ -11,21 +10,22 @@ import { ExplanationPanel } from "@/components/intelligence/ExplanationPanel";
 import { EmptyNote } from "@/components/ui/Section";
 import { ExpeditionPlanner, PlanEntryCard, useExpeditionStore } from "@/features/expedition";
 import type { MissionProfile, Site } from "@/types";
+import { EarthAnalogDashboard } from "./EarthAnalogDashboard";
 
 export function ResearchView({ sites, selectedId, onSelect, mission }: { sites: Site[] | undefined; selectedId: string | null; onSelect: (id: string) => void; mission: MissionProfile | null }) {
-  const target = useCandidateResearchTarget(s => s.target);
-  const [researchMode, setResearchMode] = useState<"mars" | "earth">(target ? "earth" : "mars");
+  const [researchMode, setResearchMode] = useState<"mars" | "earth">("mars");
   const site = sites?.find(s => s.id === selectedId);
   const plannerOpen = useExpeditionStore(s => s.open);
   const openPlanner = useExpeditionStore(s => s.openPlanner);
   const planning = plannerOpen && !!site && researchMode === "mars";
   const modeControls = <div role="group" aria-label="Research subject" className="flex flex-wrap gap-3"><button type="button" aria-pressed={researchMode === "mars"} className={`rounded-lg border px-3 py-2 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper ${researchMode === "mars" ? "border-copper bg-copper/15 text-copper-bright" : "border-line-strong text-fg-muted hover:bg-bg-elev-2 hover:text-fg"}`} onClick={() => setResearchMode("mars")}>Mars site research</button><button type="button" aria-pressed={researchMode === "earth"} className={`rounded-lg border px-3 py-2 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-copper ${researchMode === "earth" ? "border-copper bg-copper/15 text-copper-bright" : "border-line-strong text-fg-muted hover:bg-bg-elev-2 hover:text-fg"}`} onClick={() => setResearchMode("earth")}>Earth candidate research</button></div>;
-  if (researchMode === "earth") return <div className="scroll-thin h-full overflow-y-auto"><div className="mx-auto max-w-7xl space-y-4 p-4"><h1 className="text-xl font-semibold text-fg">Research</h1>{modeControls}<CandidateResearchPanel /></div></div>;
+  if (researchMode === "earth") return <div className="scroll-thin h-full overflow-y-auto"><div className="border-b border-line bg-bg-elev p-4"><div className="mx-auto max-w-7xl">{modeControls}</div></div><EarthAnalogDashboard marsSiteId={selectedId} /></div>;
   return <AtlasSurface enabled={!planning}>
     <div className="border-b border-line bg-bg-elev p-4">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div><h1 className="text-xl font-semibold text-fg">Research</h1><p className="mt-1 text-sm text-fg-muted">{planning ? "Planning an expedition for the selected site." : "Investigate what a site could help us learn."}</p></div>
+          <div><h1 className="text-xl font-semibold text-fg">Research</h1><p className="mt-1 text-sm text-fg-muted">{planning ? "Planning an expedition for the selected site." : "Investigate what a site could help us learn."}</p>{/* The Earth analogs are a whole surface behind one quiet tab; announce it here rather than restyle the tabs. */}
+            {!planning && <p className="mt-1 text-xs text-fg-faint" data-testid="earth-mode-cue">The established Earth analogs for this site, and what each has been used to study, are under <span className="text-fg-muted">Earth candidate research</span>.</p>}</div>
           <div className="flex w-full min-w-0 flex-col gap-1.5 sm:w-80"><label htmlFor="research-site" className="text-xs font-medium text-fg-muted">Mars site</label><select id="research-site" value={selectedId ?? ""} onChange={e => onSelect(e.target.value)} className="w-full min-w-0 rounded-lg border border-line-strong bg-bg px-3 py-2.5 text-sm text-fg" disabled={!sites?.length}><option value="" disabled>Select a site…</option>{sites?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></div>
         </div>
         <div className="mt-3">{modeControls}</div>

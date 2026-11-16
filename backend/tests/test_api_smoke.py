@@ -15,7 +15,7 @@ def test_sites_and_profile(client):
     r = client.get("/api/v1/sites?planet=mars")
     assert r.status_code == 200
     sites = r.json()["sites"]
-    assert len(sites) == 17   # the Lesser-Known Mars Sites workbook
+    assert len(sites) == 17   # the 17 Mars sites
     assert all(s["role"] for s in sites) and {s["paired_earth_site_id"] for s in sites} and all(s["reported_conditions"] for s in sites)
     for s in sites:
         assert -180 <= s["lon_east"] <= 180 and -90 <= s["lat"] <= 90

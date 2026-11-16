@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from .common import GeographicFootprint, ReportedCondition, SiteRole, WorkbookSource
+from .common import AnalogBasis, GeographicFootprint, ReportedCondition, SiteRole, SiteSource
 
 
 class EarthCandidate(BaseModel):
@@ -18,13 +18,13 @@ class EarthCandidate(BaseModel):
     tags: list[str] = Field(default_factory=list)
     known_analog_use: list[str] = Field(default_factory=list, description="Documented analog programmes / field campaigns")
     sources: list[str] = Field(default_factory=list)
-    # Lesser-Known Mars Sites workbook (data/workbook/lesser_known_sites.v1.json)
-    role: SiteRole | None = Field(None, description="Role of the Mars site this location is paired with")
-    coordinates_approximate: bool = Field(False, description="The workbook marks these coordinates as approximate")
-    paired_mars_site_id: str | None = Field(None, description="The Mars site the workbook pairs with this location")
-    why_they_match: str | None = Field(None, description="The workbook author's reason for the pairing")
-    reported_conditions: list[ReportedCondition] = Field(default_factory=list, description="Literature-reported condition texts; separate from measured profiles")
-    condition_sources: dict[str, WorkbookSource] = Field(default_factory=dict)
+    # Project classification and source-based site information (data/sites/site_conditions.v1.json)
+    role: SiteRole | None = Field(None, description="The project's role for the Mars site this location is paired with")
+    coordinates_approximate: bool = Field(False, description="The coordinates are approximate")
+    paired_mars_site_id: str | None = Field(None, description="The Mars site the project pairs with this location")
+    analog_basis: AnalogBasis | None = Field(None, description="An approved source's sentence linking this location to its paired Mars site, if any")
+    reported_conditions: list[ReportedCondition] = Field(default_factory=list, description="What approved sources state about each condition; separate from measured profiles")
+    condition_sources: dict[str, SiteSource] = Field(default_factory=dict)
 
 
 class FeatureDistance(BaseModel):

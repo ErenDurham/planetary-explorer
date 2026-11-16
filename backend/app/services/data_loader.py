@@ -12,9 +12,9 @@ from pathlib import Path
 
 from app.config.settings import get_settings
 from app.models import EarthCandidate, EnvironmentalProfile, GeographicFootprint, Site
-from app.models.common import EarthAnalogNote, ReportedCondition, WorkbookSource
+from app.models.common import AnalogBasis, ReportedCondition, SiteSource
 
-WORKBOOK = "workbook/lesser_known_sites.v1.json"
+SITE_CONDITIONS = "sites/site_conditions.v1.json"
 
 
 class DataError(RuntimeError):
@@ -45,23 +45,24 @@ class DataStore:
             raise DataError(f"missing data file {p}; run the scripts in backend/scripts/ (see docs/DATA_SOURCES.md)")
         return json.loads(p.read_text(encoding="utf-8"))
 
-    def _workbook(self) -> tuple[dict, dict, dict]:
-        """(mars site id -> workbook row, earth id -> workbook row, source id -> WorkbookSource); empty without the file."""
-        if not (self.data_dir / WORKBOOK).exists():
+    def _site_conditions(self) -> tuple[dict, dict, dict]:
+        """(mars site id -> row, earth id -> row, source id -> SiteSource); empty without the file."""
+        if not (self.data_dir / SITE_CONDITIONS).exists():
             return {}, {}, {}
-        wb = self._read(WORKBOOK)
-        sources = {k: WorkbookSource.model_validate({f: v[f] for f in WorkbookSource.model_fields if f in v}) for k, v in wb["sources"].items()}
-        return {m["id"]: m for m in wb["mars_sites"]}, {e["id"]: e for e in wb["earth_sites"]}, sources
+        sc = self._read(SITE_CONDITIONS)
+        sources = {k: SiteSource.model_validate({f: v[f] for f in SiteSource.model_fields if f in v}) for k, v in sc["sources"].items()}
+        return {m["id"]: m for m in sc["mars_sites"]}, {e["id"]: e for e in sc["earth_sites"]}, sources
 
     @staticmethod
-    def _conditions(cells: list[dict], sources: dict[str, WorkbookSource]) -> tuple[list[ReportedCondition], dict[str, WorkbookSource]]:
+    def _conditions(cells: list[dict], sources: dict[str, SiteSource]) -> tuple[list[ReportedCondition], dict[str, SiteSource]]:
         conds = [ReportedCondition.model_validate({k: v for k, v in c.items() if k in ReportedCondition.model_fields}) for c in cells]
-        used = {sid for c in conds for sid in c.source_ids} | {c.evidence_source_id for c in conds if c.evidence_source_id}
+        used = {sid for c in conds for sid in c.source_ids}
         return conds, {k: sources[k] for k in sorted(used) if k in sources}
 
     def _load(self) -> None:
-        wb_mars, _wb_earth, wb_sources = self._workbook()
-        self._why: dict[str, str | None] = {k: v.get("why_they_match") for k, v in wb_mars.items()}
+        sc_mars, sc_earth, sc_sources = self._site_conditions()
+        self._basis: dict[str, AnalogBasis | None] = {
+            e["paired_mars_site_id"]: (AnalogBasis.model_validate(e["analog_basis"]) if e.get("analog_basis") else None) for e in sc_earth.values()}
         mars = self._read("mars/sites.json")
         prof = self._read(f"mars/site_profiles.{self.profile_version}.json")
         profiles = {p["site_id"]: EnvironmentalProfile.model_validate(p) for p in prof["profiles"]}
@@ -75,11 +76,11 @@ class DataStore:
                 role=s.get("role"), notes=s.get("notes"), coordinates_approximate=s.get("coordinates_approximate", False),
                 paired_earth_site_id=s.get("paired_earth_site_id"),
             )
-            w = wb_mars.get(s["id"])
+            w = sc_mars.get(s["id"])
             if w:
                 site = self._sites[s["id"]]
-                site.reported_conditions, site.condition_sources = self._conditions(w["conditions"], wb_sources)
-                site.earth_analogs = [EarthAnalogNote.model_validate(a) for a in w["earth_analogs"]]
+                site.reported_conditions, site.condition_sources = self._conditions(w["conditions"], sc_sources)
+
             if s["id"] not in profiles:
                 raise DataError(f"site {s['id']} has no profile in version {self.profile_version}")
         self._profiles = profiles
@@ -97,11 +98,12 @@ class DataStore:
                 known_analog_use=c.get("known_analog_use", []), sources=c.get("sources", []),
                 coordinates_approximate=c.get("coordinates_approximate", False), paired_mars_site_id=c.get("paired_mars_site_id"),
             )
-            pair = wb_mars.get(c.get("paired_mars_site_id") or "")
-            if pair and pair.get("paired_earth_site_id") == c["id"]:
+            row, pair = sc_earth.get(c["id"]), sc_mars.get(c.get("paired_mars_site_id") or "")
+            if row and pair:
                 e = self._earth[c["id"]]
-                e.role, e.why_they_match = pair["role"], pair.get("why_they_match")
-                e.reported_conditions, e.condition_sources = self._conditions(pair["pair"]["earth"], wb_sources)
+                e.role = pair["role"]
+                e.analog_basis = AnalogBasis.model_validate(row["analog_basis"]) if row.get("analog_basis") else None
+                e.reported_conditions, e.condition_sources = self._conditions(row["conditions"], sc_sources)
 
     # -- queries ---------------------------------------------------------
     def sites(self, planet: str = "mars") -> list[Site]:
@@ -124,8 +126,8 @@ class DataStore:
     def earth_profile(self, cid: str) -> EnvironmentalProfile | None:
         return self._earth_profiles.get(cid)
 
-    def why_they_match(self, mars_site_id: str) -> str | None:
-        return self._why.get(mars_site_id)
+    def analog_basis(self, mars_site_id: str) -> AnalogBasis | None:
+        return self._basis.get(mars_site_id)
 
     def feature_value(self, profile: EnvironmentalProfile, feature_id: str):
         """Return (value, measurement) or (None, measurement|None); never a fake zero."""

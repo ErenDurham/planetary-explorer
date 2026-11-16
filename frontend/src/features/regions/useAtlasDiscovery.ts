@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { discoveryEngine } from "@/services/discoveryEngine";
 import { useDiscoveryStore } from "@/features/discovery/store/useDiscoveryStore";
@@ -9,13 +8,10 @@ import { atlasLocation } from "./atlasAdapter";
 export function useAtlasDiscovery(){
   const target=useRegionTarget(s=>s.target);
   const storedRun=useDiscoveryStore(s=>s.runId);
-  const capabilities=useQuery({queryKey:["region-discovery-capabilities"],queryFn:({signal})=>discoveryEngine.capabilities(signal),staleTime:Infinity,retry:false});
-  // Both Explore workspaces share one weight store, so both must seed it: a survey
-  // declares the features it scores, and until they are seeded the sliders have nothing to move.
-  const seedDefaults=useDiscoveryStore(s=>s.seedDefaults);
-  const declaredDefaults=capabilities.data?.default_weights;
-  useEffect(()=>{if(declaredDefaults)seedDefaults(declaredDefaults);},[declaredDefaults,seedDefaults]);
-  const runId=target?.runId ?? storedRun ?? capabilities.data?.runs[0]?.run_id;
+  // The Find Earth Analogs discovery page was removed, so no survey run is loaded and no found
+  // regions are offered in Compare or Analyze; only the established catalog remains.
+  const capabilities=useQuery({queryKey:["region-discovery-capabilities"],queryFn:({signal})=>discoveryEngine.capabilities(signal),staleTime:Infinity,retry:false,enabled:false});
+  const runId=target?.kind==="discovered" ? target.runId ?? storedRun ?? undefined : undefined;
   const artifact=useQuery({queryKey:["region-artifact",runId],queryFn:({signal})=>discoveryEngine.export(runId!,signal),enabled:!!runId,retry:false});
   const rows=(artifact.data?.audit_rows ?? []).filter(r=>r.profile && !r.screening_reasons.length);
   const regions=rows.map(row=>{
