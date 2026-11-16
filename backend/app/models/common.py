@@ -88,13 +88,13 @@ class ApiError(BaseModel):
     error: ApiErrorBody
 
 
-# --- Lesser-Known Mars Sites workbook (data/workbook/lesser_known_sites.v1.json) ---
+# --- Site conditions from approved sources (data/sites/site_conditions.v1.json) ---
 SiteRole = Literal["Base candidate", "Resource site", "To evaluate", "Instrument testing", "Context only"]
-ConditionStatus = Literal["verified", "cited_not_verified", "citation_only", "not_found_in_sources", "excluded_source"]
+ConditionStatus = Literal["quoted", "not_found_in_sources"]
 
 
-class WorkbookSource(BaseModel):
-    """A source the owner approved for the workbook's condition texts."""
+class SiteSource(BaseModel):
+    """A source the owner approved for the sites (a DOI article or an official NASA / ESA page)."""
     source_id: str
     kind: Literal["doi", "agency", "approved_exception"]
     cite: str
@@ -105,29 +105,19 @@ class WorkbookSource(BaseModel):
 
 
 class ReportedCondition(BaseModel):
-    """A literature-reported condition text compiled by the workbook author.
-    Descriptive text only: never parsed into numbers and never scored. `text`
-    is null when the workbook found nothing (`not_found_in_sources`) or when its
-    only source is not on the approved list (`excluded_source`)."""
+    """What an approved source says about one condition of a site. `text` is the
+    source's own sentence (cited by `source_ids`); it is null when no approved
+    source states the condition. Text only: never parsed into numbers, never scored."""
     feature: Literal["terrain", "mineralogy", "elevation", "thermal", "solar", "wind", "water_ice"]
     label: str
     text: str | None = None
     note: str | None = None
     status: ConditionStatus
     source_ids: list[str] = Field(default_factory=list)
-    evidence_source_id: str | None = Field(None, description="Source whose sentence states the text (status verified)")
-    evidence_quote: str | None = None
-    provenance: str = "literature-reported (workbook author)"
+    provenance: str = "approved source"
 
 
-class EarthAnalogNote(BaseModel):
-    """An additional Earth analog the workbook lists for a Mars site (not a ranked candidate)."""
-    label: str
-    analog: str
-    where: str | None = None
-    matches: str | None = None
-    does_not_match: str | None = None
-    lat: float | None = None
-    lon_east: float | None = None
-    coordinates_approximate: bool = True
-    workbook_source_text: str | None = Field(None, description="The workbook's citation as written; may name sources outside the approved list")
+class AnalogBasis(BaseModel):
+    """A sentence from an approved source that links a Mars site and an Earth analog."""
+    quote: str
+    source_id: str

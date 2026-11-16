@@ -167,7 +167,7 @@ def test_same_cell_does_not_claim_resolved_route():
 def test_capabilities_and_terrain_api():
     response=client.get('/api/v1/expedition/capabilities')
     assert response.status_code==200
-    assert len([x for x in response.json()['regions'] if x['body']=='mars'])==17   # the workbook's Mars sites
+    assert len([x for x in response.json()['regions'] if x['body']=='mars'])==17   # the 17 Mars sites
     assert response.json()['objectives']==['terrain_survey','geological_sampling','research_traverse']
     response=client.get('/api/v1/expedition/terrain?body=moon&site_id=apollo_11')
     assert response.status_code==200 and response.json()['research_targets']==[]

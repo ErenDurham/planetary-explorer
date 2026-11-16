@@ -31,7 +31,7 @@ def test_pair_similarity_is_direction_independent_and_matches_match_endpoint(cli
 def test_a_feature_missing_for_one_candidate_is_dropped_pool_wide_and_disclosed():
     b = _rank(reference_body="earth", reference_id="rio_tinto")
     assert "mineralogy_tags" not in b.basis_features
-    # Huygens has no cited mineral label (its workbook mineral sources were not approved)
+    # Huygens has no cited mineral label (no approved source states its mineralogy)
     assert any(e.feature_id == "mineralogy_tags" and "huygens_crater" in e.reason for e in b.excluded_features)
 
 

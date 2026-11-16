@@ -1,6 +1,5 @@
-// Site roles from the Lesser-Known Mars Sites workbook. A role organises the
-// site lists and the globe (a display filter); it is never scored, and
-// filtering never changes a rank or a colour (those come from the full pool).
+// The project's own site roles. A role labels a site; it is never scored and
+// never changes a rank or a colour.
 import type { SiteRole } from "@/types";
 
 export const SITE_ROLES: SiteRole[] = ["Base candidate", "Resource site", "To evaluate", "Instrument testing", "Context only"];

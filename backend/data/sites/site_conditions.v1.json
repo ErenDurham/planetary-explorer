@@ -1,0 +1,3181 @@
+{
+  "version": "site-conditions-v1",
+  "note": "Every condition text is a sentence from an approved source (cited by source_ids); null means no approved source states it. Roles and notes are the project's own classification, not sourced data. Coordinates are listed in the site files with their source.",
+  "roles": [
+    "Base candidate",
+    "Resource site",
+    "To evaluate",
+    "Instrument testing",
+    "Context only"
+  ],
+  "sources": {
+    "marinova2022_university_valley": {
+      "source_id": "marinova2022_university_valley",
+      "kind": "doi",
+      "cite": "Marinova et al., 2022",
+      "title": "Climate and energy balance of the ground in University Valley, Antarctica",
+      "url": "https://doi.org/10.1017/S0954102022000025",
+      "doi": "10.1017/S0954102022000025",
+      "year": 2022,
+      "venue": "Antarctic Science"
+    },
+    "mckay_marinova2025_ice_cemented_ground": {
+      "source_id": "mckay_marinova2025_ice_cemented_ground",
+      "kind": "doi",
+      "cite": "McKay & Marinova, 2025",
+      "title": "Summer snow determines the depth to ice-cemented ground under dry permafrost in Antarctica",
+      "url": "https://doi.org/10.1017/S0954102025100448",
+      "doi": "10.1017/S0954102025100448",
+      "year": 2025,
+      "venue": "Antarctic Science"
+    },
+    "obryk2020_dry_valleys_climate": {
+      "source_id": "obryk2020_dry_valleys_climate",
+      "kind": "doi",
+      "cite": "Obryk et al., 2020",
+      "title": "Climate from the McMurdo Dry Valleys, Antarctica, 1986-2017",
+      "url": "https://doi.org/10.1029/2019JD032180",
+      "doi": "10.1029/2019JD032180",
+      "year": 2020,
+      "venue": "Journal of Geophysical Research: Atmospheres"
+    },
+    "goordial2016_university_valley": {
+      "source_id": "goordial2016_university_valley",
+      "kind": "doi",
+      "cite": "Goordial et al., 2016",
+      "title": "Nearing the cold-arid limits of microbial life in permafrost of an upper dry valley, Antarctica",
+      "url": "https://doi.org/10.1038/ismej.2015.239",
+      "doi": "10.1038/ismej.2015.239",
+      "year": 2016,
+      "venue": "The ISME Journal"
+    },
+    "yoldi2020_greenland_old_ice": {
+      "source_id": "yoldi2020_greenland_old_ice",
+      "kind": "doi",
+      "cite": "Yoldi et al., 2020",
+      "title": "Surface-exposed old ice along the Greenland ice sheet margin as an analogue for the north polar layered deposits",
+      "url": "https://doi.org/10.5194/epsc2020-1065",
+      "doi": "10.5194/epsc2020-1065",
+      "year": 2020,
+      "venue": "Europlanet Science Congress 2020"
+    },
+    "bishop2020_mawrth_horizons": {
+      "source_id": "bishop2020_mawrth_horizons",
+      "kind": "doi",
+      "cite": "Bishop et al., 2020",
+      "title": "Multiple mineral horizons in layered outcrops at Mawrth Vallis, Mars",
+      "url": "https://doi.org/10.1016/j.icarus.2020.113634",
+      "doi": "10.1016/j.icarus.2020.113634",
+      "year": 2020,
+      "venue": "Icarus"
+    },
+    "bishop2025_painted_desert": {
+      "source_id": "bishop2025_painted_desert",
+      "kind": "doi",
+      "cite": "Bishop et al., 2025",
+      "title": "Constraining the ancient geochemical environments of Mawrth Vallis (EPSC-DPS 2025-1957)",
+      "url": "https://doi.org/10.5194/epsc-dps2025-1957",
+      "doi": "10.5194/epsc-dps2025-1957",
+      "year": 2025,
+      "venue": "EPSC-DPS Joint Meeting 2025"
+    },
+    "rull2021_jaroso": {
+      "source_id": "rull2021_jaroso",
+      "kind": "doi",
+      "cite": "Rull et al., 2021",
+      "title": "Spectroscopic study of terrestrial analogues to support rover missions to Mars - a Raman-centred review",
+      "url": "https://doi.org/10.1016/j.aca.2021.339003",
+      "doi": "10.1016/j.aca.2021.339003",
+      "year": 2021,
+      "venue": "Analytica Chimica Acta"
+    },
+    "demaret2022_jaroso_vents": {
+      "source_id": "demaret2022_jaroso_vents",
+      "kind": "doi",
+      "cite": "Demaret et al., 2022",
+      "title": "Fe-rich fossil vents as Mars analog samples: identification of extinct chimneys in Miocene marine sediments using Raman spectroscopy, X-ray diffraction, and scanning electron microscopy-energy dispersive X-ray analysis",
+      "url": "https://doi.org/10.1089/ast.2021.0128",
+      "doi": "10.1089/ast.2021.0128",
+      "year": 2022,
+      "venue": "Astrobiology"
+    },
+    "krishnamoorthi2025_uae_dunes": {
+      "source_id": "krishnamoorthi2025_uae_dunes",
+      "kind": "doi",
+      "cite": "Krishnamoorthi, Atri et al., 2025",
+      "title": "Aeolian sediment lithification from late-stage aqueous activity",
+      "url": "https://doi.org/10.1029/2024JE008804",
+      "doi": "10.1029/2024JE008804",
+      "year": 2025,
+      "venue": "Journal of Geophysical Research: Planets"
+    },
+    "moores2012_sudbury_sample_return": {
+      "source_id": "moores2012_sudbury_sample_return",
+      "kind": "doi",
+      "cite": "Moores et al., 2012",
+      "title": "A mission control architecture for robotic lunar sample return as field tested in an analogue deployment to the Sudbury impact structure",
+      "url": "https://doi.org/10.1016/j.asr.2012.05.008",
+      "doi": "10.1016/j.asr.2012.05.008",
+      "year": 2012,
+      "venue": "Advances in Space Research"
+    },
+    "lambert_reimold2023_impact_analogs": {
+      "source_id": "lambert_reimold2023_impact_analogs",
+      "kind": "doi",
+      "cite": "Lambert & Reimold, 2023",
+      "title": "Terrestrial impact sites as field analogs for planetary exploration",
+      "url": "https://doi.org/10.3389/fspas.2023.1186173",
+      "doi": "10.3389/fspas.2023.1186173",
+      "year": 2023,
+      "venue": "Frontiers in Astronomy and Space Sciences"
+    },
+    "aerts2019_yilgarn_lakes": {
+      "source_id": "aerts2019_yilgarn_lakes",
+      "kind": "doi",
+      "cite": "Aerts et al., 2019",
+      "title": "Microbial communities in sediments from four mildly acidic ephemeral salt lakes in the Yilgarn Craton (Australia)",
+      "url": "https://doi.org/10.3389/fmicb.2019.00779",
+      "doi": "10.3389/fmicb.2019.00779",
+      "year": 2019,
+      "venue": "Frontiers in Microbiology"
+    },
+    "krzesinska2021_oxia_granby": {
+      "source_id": "krzesinska2021_oxia_granby",
+      "kind": "doi",
+      "cite": "Krzesińska et al., 2021",
+      "title": "Mineralogy, aqueous history and biosignature preservation potential at Oxia Planum (EGU21-841)",
+      "url": "https://doi.org/10.5194/egusphere-egu21-841",
+      "doi": "10.5194/egusphere-egu21-841",
+      "year": 2021,
+      "venue": "EGU General Assembly 2021"
+    },
+    "bultel2022_granby_vermiculite": {
+      "source_id": "bultel2022_granby_vermiculite",
+      "kind": "doi",
+      "cite": "Bultel et al., 2022",
+      "title": "Micro-scale characterization of vermiculite-rich sample from Granby Tuff (EGU22-11272)",
+      "url": "https://doi.org/10.5194/egusphere-egu22-11272",
+      "doi": "10.5194/egusphere-egu22-11272",
+      "year": 2022,
+      "venue": "EGU General Assembly 2022"
+    },
+    "bultel2025_granby_alteration": {
+      "source_id": "bultel2025_granby_alteration",
+      "kind": "doi",
+      "cite": "Bultel et al., 2025",
+      "title": "Deciphering the alteration processes of a vermiculite-rich sample (EPSC-DPS 2025-1550)",
+      "url": "https://doi.org/10.5194/epsc-dps2025-1550",
+      "doi": "10.5194/epsc-dps2025-1550",
+      "year": 2025,
+      "venue": "EPSC-DPS Joint Meeting 2025",
+      "restriction": "Use only what it says about the Granby tuff and how it relates to Mars; the mission it mentions has not launched, so no mission claims."
+    },
+    "bultel2026_granby_modeling": {
+      "source_id": "bultel2026_granby_modeling",
+      "kind": "doi",
+      "cite": "Bultel et al., 2026",
+      "title": "Geochemical modeling on Granby Tuffs clays (EPSC 2026-842)",
+      "url": "https://doi.org/10.5194/epsc2026-842",
+      "doi": "10.5194/epsc2026-842",
+      "year": 2026,
+      "venue": "Europlanet Science Congress 2026"
+    },
+    "petersen2019_galena_creek": {
+      "source_id": "petersen2019_galena_creek",
+      "kind": "doi",
+      "cite": "Petersen et al., 2019",
+      "title": "New insights into ice accumulation at Galena Creek Rock Glacier from radar imaging of its internal structure",
+      "url": "https://doi.org/10.1017/jog.2019.67",
+      "doi": "10.1017/jog.2019.67",
+      "year": 2019,
+      "venue": "Journal of Glaciology"
+    },
+    "meng2022_rock_glacier_radio": {
+      "source_id": "meng2022_rock_glacier_radio",
+      "kind": "doi",
+      "cite": "Meng, Petersen & Holt, 2022",
+      "title": "Rock glacier composition and structure from radio wave speed analysis with dipping reflector correction",
+      "url": "https://doi.org/10.1017/jog.2022.90",
+      "doi": "10.1017/jog.2022.90",
+      "year": 2022,
+      "venue": "Journal of Glaciology"
+    },
+    "aguilar2024_drone_gpr": {
+      "source_id": "aguilar2024_drone_gpr",
+      "kind": "doi",
+      "cite": "Aguilar et al., 2024",
+      "title": "Subsurface investigations of debris-covered glaciers using drone-based ground penetrating radar (EPSC2024-1271)",
+      "url": "https://doi.org/10.5194/epsc2024-1271",
+      "doi": "10.5194/epsc2024-1271",
+      "year": 2024,
+      "venue": "Europlanet Science Congress 2024",
+      "restriction": "Use only what it says about Galena Creek, not Sourdough (Alaska)."
+    },
+    "aguilar2026_rock_glacier_continuum": {
+      "source_id": "aguilar2026_rock_glacier_continuum",
+      "kind": "doi",
+      "cite": "Aguilar et al., 2026 (preprint)",
+      "title": "Revealing the internal structure of the rock glacier-debris-covered glacier continuum",
+      "url": "https://doi.org/10.22541/essoar.176729449.99810062/v1",
+      "doi": "10.22541/essoar.176729449.99810062/v1",
+      "year": 2026,
+      "venue": "ESS Open Archive (preprint)",
+      "restriction": "Use only what it says about Galena Creek, not Sourdough (Alaska)."
+    },
+    "amils2014_rio_tinto": {
+      "source_id": "amils2014_rio_tinto",
+      "kind": "doi",
+      "cite": "Amils & Fernández-Remolar, 2014",
+      "title": "Río Tinto: a geochemical and mineralogical terrestrial analogue of Mars",
+      "url": "https://doi.org/10.3390/life4030511",
+      "doi": "10.3390/life4030511",
+      "year": 2014,
+      "venue": "Life"
+    },
+    "sobron2014_rio_tinto": {
+      "source_id": "sobron2014_rio_tinto",
+      "kind": "doi",
+      "cite": "Sobron et al., 2014",
+      "title": "Natural Fe-bearing oxides and sulfates from the Rio Tinto Mars analog site: critical assessment of VNIR reflectance spectroscopy, laser Raman spectroscopy, and XRD as mineral identification tools",
+      "url": "https://doi.org/10.2138/am.2014.4595",
+      "doi": "10.2138/am.2014.4595",
+      "year": 2014,
+      "venue": "American Mineralogist"
+    },
+    "gunes2024_salda_microbialites": {
+      "source_id": "gunes2024_salda_microbialites",
+      "kind": "doi",
+      "cite": "Gunes et al., 2024",
+      "title": "Morphological and microbial diversity of hydromagnesite microbialites in Lake Salda",
+      "url": "https://doi.org/10.1111/gbi.12619",
+      "doi": "10.1111/gbi.12619",
+      "year": 2024,
+      "venue": "Geobiology"
+    },
+    "ustaoglu2023_salda_climate": {
+      "source_id": "ustaoglu2023_salda_climate",
+      "kind": "doi",
+      "cite": "Ustaoğlu et al., 2023",
+      "title": "Impacts of climate change on precipitation and temperature (book chapter)",
+      "url": "https://doi.org/10.1007/978-3-031-24767-5_18",
+      "doi": "10.1007/978-3-031-24767-5_18",
+      "year": 2023,
+      "venue": "Springer book chapter"
+    },
+    "kong2018_dalangtan": {
+      "source_id": "kong2018_dalangtan",
+      "kind": "doi",
+      "cite": "Kong et al., 2018",
+      "title": "The Dalangtan saline playa in a hyperarid region on Tibet Plateau: I. Evolution and environments",
+      "url": "https://doi.org/10.1089/ast.2018.1830",
+      "doi": "10.1089/ast.2018.1830",
+      "year": 2018,
+      "venue": "Astrobiology"
+    },
+    "angles_li2017_qaidam": {
+      "source_id": "angles_li2017_qaidam",
+      "kind": "doi",
+      "cite": "Anglés & Li, 2017",
+      "title": "The western Qaidam Basin as a potential Martian environmental analogue: an overview",
+      "url": "https://doi.org/10.1002/2017JE005293",
+      "doi": "10.1002/2017JE005293",
+      "year": 2017,
+      "venue": "Journal of Geophysical Research: Planets"
+    },
+    "zhu2025_qaidam_polygons": {
+      "source_id": "zhu2025_qaidam_polygons",
+      "kind": "doi",
+      "cite": "Zhu et al., 2025",
+      "title": "Polygonal landforms in the western Qaidam Basin (EPSC-DPS 2025-244)",
+      "url": "https://doi.org/10.5194/epsc-dps2025-244",
+      "doi": "10.5194/epsc-dps2025-244",
+      "year": 2025,
+      "venue": "EPSC-DPS Joint Meeting 2025"
+    },
+    "voigt2025_holuhraun": {
+      "source_id": "voigt2025_holuhraun",
+      "kind": "doi",
+      "cite": "Voigt et al., 2025",
+      "title": "The 2014-2015 Holuhraun lava flow-field as a planetary analog",
+      "url": "https://doi.org/10.3847/PSJ/adb5f1",
+      "doi": "10.3847/PSJ/adb5f1",
+      "year": 2025,
+      "venue": "The Planetary Science Journal"
+    },
+    "gwizd2024_holuhraun_raven": {
+      "source_id": "gwizd2024_holuhraun_raven",
+      "kind": "doi",
+      "cite": "Gwizd et al., 2024",
+      "title": "Comparing rover and helicopter mission architectures (RAVEN, Holuhraun)",
+      "url": "https://doi.org/10.3847/PSJ/ad55f4",
+      "doi": "10.3847/PSJ/ad55f4",
+      "year": 2024,
+      "venue": "The Planetary Science Journal"
+    },
+    "lit_holuhraun": {
+      "source_id": "lit_holuhraun",
+      "kind": "doi",
+      "cite": "Pedersen et al., 2017",
+      "title": "Lava field evolution and emplacement dynamics of the 2014-2015 basaltic fissure eruption at Holuhraun, Iceland",
+      "url": "https://doi.org/10.1016/j.jvolgeores.2017.02.027",
+      "doi": "10.1016/j.jvolgeores.2017.02.027",
+      "year": 2017,
+      "venue": "Journal of Volcanology and Geothermal Research"
+    },
+    "dundas2020_holuhraun_lava_water": {
+      "source_id": "dundas2020_holuhraun_lava_water",
+      "kind": "doi",
+      "cite": "Dundas et al., 2020",
+      "title": "Lava-water interaction and hydrothermal activity within the 2014-2015 Holuhraun lava flow field, Iceland",
+      "url": "https://doi.org/10.1016/j.jvolgeores.2020.107100",
+      "doi": "10.1016/j.jvolgeores.2020.107100",
+      "year": 2020,
+      "venue": "Journal of Volcanology and Geothermal Research"
+    },
+    "gilbert2018_svalbard_fjord_valley": {
+      "source_id": "gilbert2018_svalbard_fjord_valley",
+      "kind": "doi",
+      "cite": "Gilbert et al., 2018",
+      "title": "Late Quaternary sedimentation and permafrost development in a Svalbard fjord-valley, Norwegian high Arctic",
+      "url": "https://doi.org/10.1111/sed.12476",
+      "doi": "10.1111/sed.12476",
+      "year": 2018,
+      "venue": "Sedimentology"
+    },
+    "esa_concordia_analogue": {
+      "source_id": "esa_concordia_analogue",
+      "kind": "agency",
+      "cite": "ESA, 2025",
+      "title": "An Antarctic analogue for space exploration (Concordia)",
+      "url": "https://explorationscience.esa.int/?p=473",
+      "institution": "ESA",
+      "year": 2025
+    },
+    "nasa_ecca_plattner": {
+      "source_id": "nasa_ecca_plattner",
+      "kind": "agency",
+      "cite": "Plattner, NASA ECCA final report, 2023",
+      "title": "Plattner - Early Career Collaboration Award final report (acid saline lakes, Western Australia)",
+      "url": "https://assets.science.nasa.gov/content/dam/science/psd/astrobiology/for-researchers/ecca/ECCA%20Plattner.pdf",
+      "institution": "NASA Astrobiology / JPL",
+      "year": 2023
+    },
+    "ntrs_haughton_gullies": {
+      "source_id": "ntrs_haughton_gullies",
+      "kind": "agency",
+      "cite": "NASA NTRS (LPSC 2020)",
+      "title": "Haughton crater gullies (LPSC 2020)",
+      "url": "https://ntrs.nasa.gov/api/citations/20200001979/downloads/20200001979.pdf",
+      "institution": "NASA Technical Reports Server",
+      "year": 2020
+    },
+    "nasa_eo_channeled_scablands": {
+      "source_id": "nasa_eo_channeled_scablands",
+      "kind": "agency",
+      "cite": "NASA Earth Observatory, 2018",
+      "title": "Channeled Scablands",
+      "url": "https://earthobservatory.nasa.gov/images/92025/channeled-scablands",
+      "institution": "NASA Earth Observatory",
+      "year": 2018
+    },
+    "nasa_pj_ares_vallis": {
+      "source_id": "nasa_pj_ares_vallis",
+      "kind": "agency",
+      "cite": "NASA Photojournal",
+      "title": "Ares Vallis",
+      "url": "https://science.nasa.gov/photojournal/pj-ares-vallis-9/",
+      "institution": "NASA / JPL",
+      "year": null
+    },
+    "nasa_lmap_rio_tinto": {
+      "source_id": "nasa_lmap_rio_tinto",
+      "kind": "agency",
+      "cite": "NASA, 2015",
+      "title": "Drilling for data: simulating the search for life on Mars (LMAP at Río Tinto)",
+      "url": "https://www.nasa.gov/missions/analog-field-testing/drilling-for-data-simulating-the-search-for-life-on-mars",
+      "institution": "NASA Ames",
+      "year": 2015
+    },
+    "luzzi2025_ap8_ice": {
+      "source_id": "luzzi2025_ap8_ice",
+      "kind": "doi",
+      "cite": "Luzzi et al., 2025",
+      "title": "Geomorphological evidence of near-surface ice at candidate landing sites in northern Amazonis Planitia",
+      "url": "https://doi.org/10.1029/2024JE008724",
+      "doi": "10.1029/2024JE008724",
+      "year": 2025,
+      "venue": "Journal of Geophysical Research: Planets"
+    },
+    "sinha2022_npld_sediments": {
+      "source_id": "sinha2022_npld_sediments",
+      "kind": "doi",
+      "cite": "Sinha, Horgan et al., 2022",
+      "title": "Sediments within the icy north polar deposits of Mars",
+      "url": "https://doi.org/10.1029/2022GL097758",
+      "doi": "10.1029/2022GL097758",
+      "year": 2022,
+      "venue": "Geophysical Research Letters"
+    },
+    "darya2024_mars_pv_wind": {
+      "source_id": "darya2024_mars_pv_wind",
+      "kind": "doi",
+      "cite": "Darya, Bansal & Jarndal, 2024",
+      "title": "Seasonal performance evaluation of a hybrid PV-wind-battery power system for a Mars base",
+      "url": "https://doi.org/10.1109/EPECS62845.2024.10805508",
+      "doi": "10.1109/EPECS62845.2024.10805508",
+      "year": 2024,
+      "venue": "IEEE EPECS 2024"
+    },
+    "sharma2025_hebrus_caves": {
+      "source_id": "sharma2025_hebrus_caves",
+      "kind": "doi",
+      "cite": "Sharma et al., 2025",
+      "title": "Water-driven accessible potential karstic caves in Hebrus Valles",
+      "url": "https://doi.org/10.3847/2041-8213/ae0f1c",
+      "doi": "10.3847/2041-8213/ae0f1c",
+      "year": 2025,
+      "venue": "The Astrophysical Journal Letters"
+    },
+    "wray2011_columbus_paleolakes": {
+      "source_id": "wray2011_columbus_paleolakes",
+      "kind": "doi",
+      "cite": "Wray et al., 2011",
+      "title": "Columbus crater and other possible groundwater-fed paleolakes of Terra Sirenum, Mars",
+      "url": "https://doi.org/10.1029/2010JE003694",
+      "doi": "10.1029/2010JE003694",
+      "year": 2011,
+      "venue": "Journal of Geophysical Research: Planets"
+    },
+    "liu2018_columbus_gypsum": {
+      "source_id": "liu2018_columbus_gypsum",
+      "kind": "doi",
+      "cite": "Liu, 2018",
+      "title": "Raman, mid-IR and NIR spectroscopic study of calcium sulfates and mapping gypsum abundances in Columbus crater, Mars",
+      "url": "https://doi.org/10.1016/j.pss.2018.04.010",
+      "doi": "10.1016/j.pss.2018.04.010",
+      "year": 2018,
+      "venue": "Planetary and Space Science"
+    },
+    "mandon2021_oxia_clays": {
+      "source_id": "mandon2021_oxia_clays",
+      "kind": "doi",
+      "cite": "Mandon et al., 2021",
+      "title": "Morphological and spectral diversity of the clay-bearing unit at the ExoMars landing site Oxia Planum",
+      "url": "https://doi.org/10.1089/ast.2020.2292",
+      "doi": "10.1089/ast.2020.2292",
+      "year": 2021,
+      "venue": "Astrobiology"
+    },
+    "chuang_crown2009_deuteronilus_map": {
+      "source_id": "chuang_crown2009_deuteronilus_map",
+      "kind": "doi",
+      "cite": "Chuang & Crown, 2009",
+      "title": "Geologic map of MTM 35337, 40337, and 45337 quadrangles, Deuteronilus Mensae region of Mars (USGS SIM 3079)",
+      "url": "https://doi.org/10.3133/sim3079",
+      "doi": "10.3133/sim3079",
+      "year": 2009,
+      "venue": "USGS Scientific Investigations Map"
+    },
+    "levy2010_protonilus_gullies": {
+      "source_id": "levy2010_protonilus_gullies",
+      "kind": "doi",
+      "cite": "Levy, Head et al., 2010",
+      "title": "Identification of gully debris flow deposits in Protonilus Mensae, Mars",
+      "url": "https://doi.org/10.1016/j.epsl.2009.08.002",
+      "doi": "10.1016/j.epsl.2009.08.002",
+      "year": 2010,
+      "venue": "Earth and Planetary Science Letters"
+    },
+    "soare2022_protonilus_cycling": {
+      "source_id": "soare2022_protonilus_cycling",
+      "kind": "doi",
+      "cite": "Soare et al., 2022",
+      "title": "A billion or more years of possible periglacial/glacial cycling in Protonilus Mensae, Mars",
+      "url": "https://doi.org/10.1016/j.icarus.2022.115115",
+      "doi": "10.1016/j.icarus.2022.115115",
+      "year": 2022,
+      "venue": "Icarus"
+    },
+    "komatsu2016_chryse_edifices": {
+      "source_id": "komatsu2016_chryse_edifices",
+      "kind": "doi",
+      "cite": "Komatsu et al., 2016",
+      "title": "Small edifice features in Chryse Planitia, Mars: assessment of a mud volcano hypothesis",
+      "url": "https://doi.org/10.1016/j.icarus.2015.12.032",
+      "doi": "10.1016/j.icarus.2015.12.032",
+      "year": 2016,
+      "venue": "Icarus"
+    },
+    "bao2026_chryse_mafic": {
+      "source_id": "bao2026_chryse_mafic",
+      "kind": "doi",
+      "cite": "Bao, Zeng et al., 2026",
+      "title": "Crater-exposed mafic materials in Chryse Planitia",
+      "url": "https://doi.org/10.1029/2026JE010126",
+      "doi": "10.1029/2026JE010126",
+      "year": 2026,
+      "venue": "Journal of Geophysical Research: Planets"
+    },
+    "hynek2017_meridiani": {
+      "source_id": "hynek2017_meridiani",
+      "kind": "doi",
+      "cite": "Hynek & Di Achille, 2017",
+      "title": "Geologic map of Meridiani Planum, Mars (USGS SIM 3356)",
+      "url": "https://doi.org/10.3133/sim3356",
+      "doi": "10.3133/sim3356",
+      "year": 2017,
+      "venue": "USGS Scientific Investigations Map"
+    },
+    "brown2020_jezero_olivine_carbonate": {
+      "source_id": "brown2020_jezero_olivine_carbonate",
+      "kind": "doi",
+      "cite": "Brown et al., 2020",
+      "title": "Olivine-carbonate mineralogy of the Jezero crater region",
+      "url": "https://doi.org/10.1029/2019JE006011",
+      "doi": "10.1029/2019JE006011",
+      "year": 2020,
+      "venue": "Journal of Geophysical Research: Planets"
+    },
+    "hou2026_zhurong_mn_oxides": {
+      "source_id": "hou2026_zhurong_mn_oxides",
+      "kind": "doi",
+      "cite": "Hou, Sun, Hu et al., 2026",
+      "title": "Manganese (hydr)oxides record a Hesperian ocean in Utopia Planitia",
+      "url": "https://doi.org/10.1038/s41467-026-72858-y",
+      "doi": "10.1038/s41467-026-72858-y",
+      "year": 2026,
+      "venue": "Nature Communications"
+    },
+    "golombek2020_insight": {
+      "source_id": "golombek2020_insight",
+      "kind": "doi",
+      "cite": "Golombek et al., 2020",
+      "title": "Geology of the InSight landing site on Mars",
+      "url": "https://doi.org/10.1038/s41467-020-14679-1",
+      "doi": "10.1038/s41467-020-14679-1",
+      "year": 2020,
+      "venue": "Nature Communications"
+    },
+    "hauber2009_xanthe_deltas": {
+      "source_id": "hauber2009_xanthe_deltas",
+      "kind": "doi",
+      "cite": "Hauber et al., 2009",
+      "title": "Sedimentary deposits in Xanthe Terra: implications for the ancient climate on Mars",
+      "url": "https://doi.org/10.1016/j.pss.2008.06.009",
+      "doi": "10.1016/j.pss.2008.06.009",
+      "year": 2009,
+      "venue": "Planetary and Space Science"
+    },
+    "nasa_pia10652_north_cap": {
+      "source_id": "nasa_pia10652_north_cap",
+      "kind": "agency",
+      "cite": "NASA PIA10652",
+      "title": "What lies below a Martian ice cap",
+      "url": "https://science.nasa.gov/photojournal/what-lies-below-a-martian-ice-cap/",
+      "institution": "NASA / JPL",
+      "year": null
+    },
+    "nasa_pia03008_south_co2": {
+      "source_id": "nasa_pia03008_south_co2",
+      "kind": "agency",
+      "cite": "NASA PIA03008",
+      "title": "Frozen frozen CO2",
+      "url": "https://science.nasa.gov/photojournal/frozen-frozen-co2/",
+      "institution": "NASA / JPL",
+      "year": null
+    },
+    "esa_mex_south_pole_water": {
+      "source_id": "esa_mex_south_pole_water",
+      "kind": "agency",
+      "cite": "ESA Mars Express",
+      "title": "Water at Martian south pole",
+      "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Water_at_Martian_south_pole",
+      "institution": "ESA",
+      "year": null
+    },
+    "nasa_svs_767_mpl": {
+      "source_id": "nasa_svs_767_mpl",
+      "kind": "agency",
+      "cite": "NASA Goddard SVS 767",
+      "title": "Mars Polar Lander landing site",
+      "url": "https://svs.gsfc.nasa.gov/767",
+      "institution": "NASA Goddard Scientific Visualization Studio",
+      "year": null
+    },
+    "nasa_pia26773_south_pole_psyche": {
+      "source_id": "nasa_pia26773_south_pole_psyche",
+      "kind": "agency",
+      "cite": "NASA PIA26773, 2026",
+      "title": "Psyche's high-resolution view of Mars' south pole",
+      "url": "https://science.nasa.gov/photojournal/psyches-high-resolution-view-of-mars-south-pole/",
+      "institution": "NASA / JPL-Caltech / ASU",
+      "year": 2026
+    },
+    "esa_mex_mawrth_clays": {
+      "source_id": "esa_mex_mawrth_clays",
+      "kind": "agency",
+      "cite": "ESA Mars Express",
+      "title": "The clays of Mawrth Vallis",
+      "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/The_clays_of_Mawrth_Vallis",
+      "institution": "ESA",
+      "year": null
+    },
+    "nasa_pia18632_noctis": {
+      "source_id": "nasa_pia18632_noctis",
+      "kind": "agency",
+      "cite": "NASA PIA18632",
+      "title": "Water-bearing rocks in Noctis Labyrinthus",
+      "url": "https://science.nasa.gov/photojournal/water-bearing-rocks-in-noctis-labyrinthus/",
+      "institution": "NASA / JPL",
+      "year": null
+    },
+    "nasa_pia25359_hebrus": {
+      "source_id": "nasa_pia25359_hebrus",
+      "kind": "agency",
+      "cite": "NASA PIA25359",
+      "title": "Flooded impact craters in Hebrus Valles",
+      "url": "https://science.nasa.gov/photojournal/flooded-impact-craters-in-hebrus-valles/",
+      "institution": "NASA / JPL",
+      "year": null
+    },
+    "hirise_esp_048036_2025_hebrus": {
+      "source_id": "hirise_esp_048036_2025_hebrus",
+      "kind": "approved_exception",
+      "cite": "HiRISE ESP_048036_2025",
+      "title": "Pits and channels of Hebrus Valles",
+      "url": "https://www.uahirise.org/ESP_048036_2025",
+      "institution": "HiRISE (University of Arizona, NASA MRO)",
+      "year": null,
+      "restriction": "Use only what it says about Hebrus Valles."
+    },
+    "nasa_pia26775_huygens_psyche": {
+      "source_id": "nasa_pia26775_huygens_psyche",
+      "kind": "agency",
+      "cite": "NASA PIA26775, 2026",
+      "title": "NASA's Psyche mission images Mars' Huygens crater",
+      "url": "https://science.nasa.gov/photojournal/nasas-psyche-mission-images-mars-huygens-crater/",
+      "institution": "NASA / JPL-Caltech / ASU",
+      "year": 2026
+    },
+    "hirise_esp_094549_1655_huygens": {
+      "source_id": "hirise_esp_094549_1655_huygens",
+      "kind": "approved_exception",
+      "cite": "HiRISE ESP_094549_1655",
+      "title": "Crater on floor of Huygens crater",
+      "url": "https://www.uahirise.org/ESP_094549_1655",
+      "institution": "HiRISE (University of Arizona, NASA MRO)",
+      "year": 2026
+    },
+    "nasa_columbus_sulfates_clays": {
+      "source_id": "nasa_columbus_sulfates_clays",
+      "kind": "agency",
+      "cite": "NASA",
+      "title": "Sulfates and clays in Columbus crater, Mars",
+      "url": "https://www.nasa.gov/image-article/sulfates-clays-columbus-crater-mars/",
+      "institution": "NASA / JPL",
+      "year": null
+    },
+    "esa_oxia_planum": {
+      "source_id": "esa_oxia_planum",
+      "kind": "agency",
+      "cite": "ESA",
+      "title": "Oxia Planum favoured for ExoMars surface mission",
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Oxia_Planum_favoured_for_ExoMars_surface_mission",
+      "institution": "ESA",
+      "year": null
+    },
+    "nasa_pia12996_deuteronilus": {
+      "source_id": "nasa_pia12996_deuteronilus",
+      "kind": "agency",
+      "cite": "NASA PIA12996",
+      "title": "Lobate debris apron in Deuteronilus Mensae",
+      "url": "https://science.nasa.gov/photojournal/lobate-debris-apron-in-deuteronilus-mensae/",
+      "institution": "NASA / JPL",
+      "year": null
+    },
+    "nasa_jezero_delta_panorama": {
+      "source_id": "nasa_jezero_delta_panorama",
+      "kind": "agency",
+      "cite": "NASA",
+      "title": "Detailed panorama of Mars' Jezero crater delta",
+      "url": "https://science.nasa.gov/resource/detailed-panorama-of-mars-jezero-crater-delta/",
+      "institution": "NASA / JPL-Caltech",
+      "year": null
+    }
+  },
+  "mars_sites": [
+    {
+      "id": "amazonis_arcadia_ap8",
+      "name": "Amazonis / Arcadia Planitia (AP-8)",
+      "region": "Boundary of Arcadia and northern Amazonis Planitia",
+      "role": "Base candidate",
+      "notes": "Shallow-ice landing site",
+      "lat": 39.5,
+      "lon_east": -163.0,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "mcmurdo_dry_valleys",
+      "source_ids": [
+        "luzzi2025_ap8_ice"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "We have mapped and measured ∼9,000 thermal contraction polygons.",
+          "source_ids": [
+            "luzzi2025_ap8_ice"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "planum_boreum",
+      "name": "North Pole (Planum Boreum)",
+      "region": "North polar ice cap",
+      "role": "To evaluate",
+      "notes": null,
+      "lat": 87.0,
+      "lon_east": 0.0,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "summit_station_greenland",
+      "source_ids": [
+        "nasa_pia10652_north_cap",
+        "sinha2022_npld_sediments"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "BU stands for basal unit, an ice-sand deposit that lies beneath parts of the north polar layered deposits.",
+          "source_ids": [
+            "nasa_pia10652_north_cap"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": "The ice cap is about 2 kilometers (1.2 miles) thick.",
+          "source_ids": [
+            "nasa_pia10652_north_cap"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": "The radar image reveals four never-before-seen thick layers of ice and dust separated by layers of nearly pure ice.",
+          "source_ids": [
+            "nasa_pia10652_north_cap"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "planum_australe",
+      "name": "South Pole (Planum Australe)",
+      "region": "South polar cap",
+      "role": "To evaluate",
+      "notes": null,
+      "lat": -87.2,
+      "lon_east": -28.4,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "south_pole_station",
+      "source_ids": [
+        "esa_mex_south_pole_water",
+        "nasa_pia03008_south_co2",
+        "nasa_pia26773_south_pole_psyche",
+        "nasa_svs_767_mpl"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": "The elevation of the landing site is about 2.4 km, midway into the polar layered terrain.",
+          "source_ids": [
+            "nasa_svs_767_mpl"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "mawrth_vallis",
+      "name": "Mawrth Vallis",
+      "region": "Mawrth Vallis region",
+      "role": "Base candidate",
+      "notes": "24.7°N, 339.5°E",
+      "lat": 24.7,
+      "lon_east": -20.5,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "painted_desert",
+      "source_ids": [
+        "esa_mex_mawrth_clays"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "It is also older and more weathered, and is dominated by a large 25 km-wide impact crater with a partly collapsed wall and a smaller crater inside at its central point (a central pit).",
+          "source_ids": [
+            "esa_mex_mawrth_clays"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "The region is thickly coated in light-toned clays containing silicate minerals; these deposits – some 200 m deep in places – are the most widespread found on Mars, and are obviously visible in these new images (and clearest in the annotated version).",
+          "source_ids": [
+            "esa_mex_mawrth_clays"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": "In fact, we know that liquid water did once run through Mawrth Vallis around 3.6 billion years ago.",
+          "source_ids": [
+            "esa_mex_mawrth_clays"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "noctis_labyrinthus",
+      "name": "Noctis Labyrinthus",
+      "region": "Noctis Labyrinthus",
+      "role": "Resource site",
+      "notes": "Not optimal base, but water-optimal (7.2°S, 265.0°E)",
+      "lat": -7.2,
+      "lon_east": -95.0,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "jaroso_ravine",
+      "source_ids": [
+        "nasa_pia18632_noctis"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "hebrus_valles",
+      "name": "Hebrus Valles",
+      "region": "Northern lowlands west of the Elysium volcanic region",
+      "role": "Base candidate",
+      "notes": "20.2°N, 128.1°E",
+      "lat": 20.2,
+      "lon_east": 128.1,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "liwa_desert",
+      "source_ids": [
+        "hirise_esp_048036_2025_hebrus",
+        "nasa_pia25359_hebrus",
+        "sharma2025_hebrus_caves"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Using the shadow that the wall has cast on the floor of the pit, we can estimate that the pit is nearly 500 meters deep.",
+          "source_ids": [
+            "hirise_esp_048036_2025_hebrus"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "We evaluate whether these features are indicative of collapse entrances formed through dissolution of carbonate- and sulfate-rich lithologies.",
+          "source_ids": [
+            "sharma2025_hebrus_caves"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": "Hebrus Valles are a complex set of channels in the northern lowlands of Mars just to the west of the Elysium volcanic region.",
+          "source_ids": [
+            "nasa_pia25359_hebrus"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": "Pits such as these are of interest as possible candidate landing sites for human exploration because they might retain subsurface water ice that could be utilized by future long-term human settlements.",
+          "source_ids": [
+            "hirise_esp_048036_2025_hebrus"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "huygens_crater",
+      "name": "Huygens Crater",
+      "region": "Southern highlands",
+      "role": "Base candidate",
+      "notes": null,
+      "lat": -13.5,
+      "lon_east": 55.5,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "sudbury_impact_structure",
+      "source_ids": [
+        "hirise_esp_094549_1655_huygens",
+        "nasa_pia26775_huygens_psyche"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Captured by the multispectral imager instrument on NASA’s Psyche mission, this is an enhanced-color view of the large double-ring crater Huygens (upper right; about 290 miles, or 470 kilometers, in diameter) and the surrounding heavily cratered southern highlands near 15 degrees south latitude.",
+          "source_ids": [
+            "nasa_pia26775_huygens_psyche"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "columbus_crater",
+      "name": "Columbus Crater",
+      "region": "Terra Sirenum",
+      "role": "Base candidate",
+      "notes": null,
+      "lat": -28.6,
+      "lon_east": -165.7,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "yilgarn_salt_lakes",
+      "source_ids": [
+        "liu2018_columbus_gypsum",
+        "nasa_columbus_sulfates_clays",
+        "wray2011_columbus_paleolakes"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Sulfate salt deposits ring the crater like a bathtub ring and were deposited after the clays, as the lake dried out.",
+          "source_ids": [
+            "nasa_columbus_sulfates_clays"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "Sulfates are found overlying clay minerals in sediments within Columbus Crater, a depression that likely hosted a lake in the past.",
+          "source_ids": [
+            "nasa_columbus_sulfates_clays"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "oxia_planum",
+      "name": "Oxia Planum",
+      "region": null,
+      "role": "Base candidate",
+      "notes": null,
+      "lat": 18.2,
+      "lon_east": -24.55,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": true,
+      "paired_earth_site_id": "granby_tuff",
+      "source_ids": [
+        "esa_oxia_planum",
+        "mandon2021_oxia_clays"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "Observations from orbit show that the region exhibits layers of clay-rich minerals that were formed in wet conditions some four billion years ago, likely in a large body of standing water.",
+          "source_ids": [
+            "esa_oxia_planum"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "deuteronilus_mensae",
+      "name": "Deuteronilus Mensae",
+      "region": "Deuteronilus Mensae",
+      "role": "Base candidate",
+      "notes": null,
+      "lat": 41.0,
+      "lon_east": 22.0,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "galena_creek_rock_glacier",
+      "source_ids": [
+        "chuang_crown2009_deuteronilus_map",
+        "nasa_pia12996_deuteronilus"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Within Deuteronilus Mensae, polygonal mesas are prominent along with features diagnostic of Martian fretted terrain, including lobate debris aprons, lineated valley fill, and concentric crater fill.",
+          "source_ids": [
+            "chuang_crown2009_deuteronilus_map"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": "The northern lowlands have elevations that are several kilometers below the ancient cratered highlands with significantly younger surface ages.",
+          "source_ids": [
+            "chuang_crown2009_deuteronilus_map"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": "Recent radar data from the Shallow Radar instrument on the Mars Reconnaissance Orbiter has shown them to be composed of nearly pure ice.",
+          "source_ids": [
+            "nasa_pia12996_deuteronilus"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "protonilus_mensae",
+      "name": "Protonilus Mensae",
+      "region": "Protonilus Mensae",
+      "role": "Base candidate",
+      "notes": null,
+      "lat": 43.86,
+      "lon_east": 49.4,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "haughton_crater",
+      "source_ids": [
+        "levy2010_protonilus_gullies",
+        "soare2022_protonilus_cycling"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "chryse_planitia",
+      "name": "Chryse Planitia",
+      "region": null,
+      "role": "Context only",
+      "notes": "Not probable as base; good area data",
+      "lat": 22.3,
+      "lon_east": -48.3,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": true,
+      "paired_earth_site_id": "channeled_scablands",
+      "source_ids": [
+        "bao2026_chryse_mafic",
+        "komatsu2016_chryse_edifices"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "meridiani_planum",
+      "name": "Meridiani Planum",
+      "region": null,
+      "role": "Base candidate",
+      "notes": "Narrowed to NASA human exploration-zone point",
+      "lat": -3.17,
+      "lon_east": -4.52,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "rio_tinto",
+      "source_ids": [
+        "hynek2017_meridiani"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "The Meridiani Planum region of Mars—originally named due to its proximity to the Martian prime meridian—contains a variety of geologic units, including those that are crater‑related, that span the Early Noachian to Late Amazonian Epochs.",
+          "source_ids": [
+            "hynek2017_meridiani"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "Mars Global Surveyor (MGS) data indicate this area contains extensive layered deposits, some of which are rich in the mineral hematite.",
+          "source_ids": [
+            "hynek2017_meridiani"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": "A variety of water-altered bedrock outcrops have been studied and contain indications of prolonged surface and near-surface fluid/rock interactions.",
+          "source_ids": [
+            "hynek2017_meridiani"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "jezero_crater",
+      "name": "Jezero Crater",
+      "region": null,
+      "role": "Instrument testing",
+      "notes": "Not a base; good for instrument-test matches",
+      "lat": 18.4,
+      "lon_east": 77.5,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": true,
+      "paired_earth_site_id": "lake_salda",
+      "source_ids": [
+        "brown2020_jezero_olivine_carbonate",
+        "nasa_jezero_delta_panorama"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "The delta in Mars’ Jezero Crater is an area where scientists surmise that, billions of years ago, a river once flowed into a lake and deposited rocks and sediments in a fan shape.",
+          "source_ids": [
+            "nasa_jezero_delta_panorama"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "utopia_planitia",
+      "name": "Utopia Planitia",
+      "region": "Utopia Planitia",
+      "role": "Base candidate",
+      "notes": "Chosen spot: Zhurong landing region",
+      "lat": 25.07,
+      "lon_east": 109.93,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "dalangtan_playa",
+      "source_ids": [
+        "hou2026_zhurong_mn_oxides"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "elysium_planitia",
+      "name": "Elysium Planitia (InSight)",
+      "region": null,
+      "role": "Instrument testing",
+      "notes": "Seismic instrument testing",
+      "lat": 4.5,
+      "lon_east": 135.62,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": true,
+      "paired_earth_site_id": "holuhraun_iceland",
+      "source_ids": [
+        "golombek2020_insight"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Surface observations are consistent with expectations made from remote sensing data prior to landing indicating a surface composed of an impact-fragmented regolith overlying basaltic lava flows.",
+          "source_ids": [
+            "golombek2020_insight"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "Surface observations are consistent with expectations made from remote sensing data prior to landing indicating a surface composed of an impact-fragmented regolith overlying basaltic lava flows.",
+          "source_ids": [
+            "golombek2020_insight"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    },
+    {
+      "id": "xanthe_terra_tyras",
+      "name": "Xanthe Terra",
+      "region": "Xanthe Terra",
+      "role": "Instrument testing",
+      "notes": "Not a base; match with Earth sites for testing",
+      "lat": 8.43,
+      "lon_east": -49.71,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_earth_site_id": "svalbard_fan_delta",
+      "source_ids": [
+        "hauber2009_xanthe_deltas"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "water_ice",
+          "label": "Water / ice",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ]
+    }
+  ],
+  "earth_sites": [
+    {
+      "id": "mcmurdo_dry_valleys",
+      "name": null,
+      "region": null,
+      "country": null,
+      "lat": -77.87,
+      "lon_east": 160.75,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": true,
+      "paired_mars_site_id": "amazonis_arcadia_ap8",
+      "source_ids": [
+        "goordial2016_university_valley",
+        "marinova2022_university_valley",
+        "mckay_marinova2025_ice_cemented_ground",
+        "obryk2020_dry_valleys_climate"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "We report 3 years of data from one meteorological and three smaller stations in University Valley, a high-elevation (1677 m) site in the Dry Valleys of Antarctica with extensive dry permafrost.",
+          "source_ids": [
+            "marinova2022_university_valley"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "Some of the coldest and driest permafrost soils on Earth are located in the high-elevation McMurdo Dry Valleys (MDVs) of Antarctica",
+          "source_ids": [
+            "goordial2016_university_valley"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": "We report 3 years of data from one meteorological and three smaller stations in University Valley, a high-elevation (1677 m) site in the Dry Valleys of Antarctica with extensive dry permafrost.",
+          "source_ids": [
+            "marinova2022_university_valley"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": "The average air temperature at University Valley is -23.4°C, comparable to the values for similar elevations in Wright Valley (Friedmann et al.",
+          "source_ids": [
+            "marinova2022_university_valley"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "summit_station_greenland",
+      "name": "Summit Station, Greenland Ice Sheet",
+      "region": "Greenland Ice Sheet",
+      "country": "Greenland",
+      "lat": 72.596,
+      "lon_east": -38.422,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "planum_boreum",
+      "source_ids": [
+        "yoldi2020_greenland_old_ice"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "south_pole_station",
+      "name": "Amundsen–Scott South Pole Station",
+      "region": "Antarctica",
+      "country": "Antarctica",
+      "lat": -90.0,
+      "lon_east": 0.0,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "planum_australe",
+      "source_ids": [
+        "esa_concordia_analogue"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "painted_desert",
+      "name": "Painted Desert",
+      "region": "Arizona",
+      "country": "United States",
+      "lat": 35.088,
+      "lon_east": -109.806,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "mawrth_vallis",
+      "source_ids": [
+        "bishop2020_mawrth_horizons",
+        "bishop2025_painted_desert"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "jaroso_ravine",
+      "name": "Jaroso Ravine",
+      "region": "Jaroso hydrothermal system, SE Spain",
+      "country": "Spain",
+      "lat": 37.25,
+      "lon_east": -1.8,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "noctis_labyrinthus",
+      "source_ids": [
+        "demaret2022_jaroso_vents",
+        "rull2021_jaroso"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "liwa_desert",
+      "name": "Liwa Desert",
+      "region": "United Arab Emirates",
+      "country": "United Arab Emirates",
+      "lat": 23.1,
+      "lon_east": 53.8,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "hebrus_valles",
+      "source_ids": [
+        "krishnamoorthi2025_uae_dunes"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "sudbury_impact_structure",
+      "name": "Sudbury impact structure",
+      "region": "Ontario",
+      "country": "Canada",
+      "lat": 46.6,
+      "lon_east": -81.0,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "huygens_crater",
+      "source_ids": [
+        "lambert_reimold2023_impact_analogs",
+        "moores2012_sudbury_sample_return"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "considered the Sudbury structure one of the only three likely multi-ring basin-type impact structures in the terrestrial impact record",
+          "source_ids": [
+            "lambert_reimold2023_impact_analogs"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "yilgarn_salt_lakes",
+      "name": "Yilgarn Craton salt lakes",
+      "region": "Yilgarn Craton",
+      "country": "Australia",
+      "lat": -30.75,
+      "lon_east": 121.47,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "columbus_crater",
+      "source_ids": [
+        "aerts2019_yilgarn_lakes",
+        "nasa_ecca_plattner"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "granby_tuff",
+      "name": "Granby tuff",
+      "region": "Granby, Massachusetts",
+      "country": "United States",
+      "lat": 42.256,
+      "lon_east": -72.517,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "oxia_planum",
+      "source_ids": [
+        "bultel2022_granby_vermiculite",
+        "bultel2025_granby_alteration",
+        "bultel2026_granby_modeling",
+        "krzesinska2021_oxia_granby"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "As identified by previous research [4] based on spectral bands between 2.3 and 2.5 μm in the near-infrared region and characteristic X-ray diffraction peaks, Fe-rich clay in Granby rocks is vermiculite±saponite, Phyllosilicates are intergrowing in various proportions in amygdales and tuff.",
+          "source_ids": [
+            "bultel2025_granby_alteration"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": {
+        "quote": "Micro-scale characterization of vermiculite-rich sample from Granby Tuff, an analogue to Oxia Planum clays",
+        "source_id": "bultel2022_granby_vermiculite"
+      }
+    },
+    {
+      "id": "galena_creek_rock_glacier",
+      "name": "Galena Creek Rock Glacier",
+      "region": "Wyoming",
+      "country": "United States",
+      "lat": 44.64,
+      "lon_east": -109.8,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "deuteronilus_mensae",
+      "source_ids": [
+        "aguilar2024_drone_gpr",
+        "aguilar2026_rock_glacier_continuum",
+        "meng2022_rock_glacier_radio",
+        "petersen2019_galena_creek"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Galena Creek Rock Glacier is located in a north-facing valley in the Absaroka Mountains of northern Wyoming",
+          "source_ids": [
+            "petersen2019_galena_creek"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "haughton_crater",
+      "name": null,
+      "region": null,
+      "country": null,
+      "lat": 75.38,
+      "lon_east": -89.68,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": true,
+      "paired_mars_site_id": "protonilus_mensae",
+      "source_ids": [
+        "ntrs_haughton_gullies"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "channeled_scablands",
+      "name": "Channeled Scablands",
+      "region": "Columbia Plateau, eastern Washington",
+      "country": "United States",
+      "lat": 47.31,
+      "lon_east": -119.52,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "chryse_planitia",
+      "source_ids": [
+        "nasa_eo_channeled_scablands",
+        "nasa_pj_ares_vallis"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Through the eyes of a geologist, however, the landforms of the so-called Channeled Scablands reveal a past punctuated by violent floods.",
+          "source_ids": [
+            "nasa_eo_channeled_scablands"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": "these channels take on a dark color because the overlying loess has been eroded, exposing underlying volcanic basalt",
+          "source_ids": [
+            "nasa_eo_channeled_scablands"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "rio_tinto",
+      "name": "Río Tinto",
+      "region": "Tinto basin",
+      "country": "Spain",
+      "lat": 37.7,
+      "lon_east": -6.55,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "meridiani_planum",
+      "source_ids": [
+        "amils2014_rio_tinto",
+        "nasa_lmap_rio_tinto",
+        "sobron2014_rio_tinto"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "It has been proven that the extreme acidic conditions of Río Tinto basin are not the product of 5000 years of mining activity in the area, but the consequence of an active underground bioreactor that obtains its energy from the massive sulfidic minerals existing in the Iberian Pyrite Belt.",
+          "source_ids": [
+            "amils2014_rio_tinto"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "lake_salda",
+      "name": "Lake Salda",
+      "region": "Lake Salda",
+      "country": "Turkey",
+      "lat": 37.553,
+      "lon_east": 29.681,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "jezero_crater",
+      "source_ids": [
+        "gunes2024_salda_microbialites",
+        "ustaoglu2023_salda_climate"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": {
+        "quote": "ABSTRACT Lake Salda, a terrestrial analog for the paleolake in Jezero Crater on Mars, hosts active, subfossil, and fossil hydromagnesite microbialites, making it an ideal location to study microbialite formation and subsequent processes.",
+        "source_id": "gunes2024_salda_microbialites"
+      }
+    },
+    {
+      "id": "dalangtan_playa",
+      "name": "Dalangtan Playa",
+      "region": "Qaidam Basin, Tibetan Plateau",
+      "country": "China",
+      "lat": 38.4,
+      "lon_east": 91.4,
+      "coordinates_approximate": true,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "utopia_planitia",
+      "source_ids": [
+        "angles_li2017_qaidam",
+        "kong2018_dalangtan",
+        "zhu2025_qaidam_polygons"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Since 2008, we have been studying a saline lake, Dalangtan (DLT) Playa, and its surroundings in a hyperarid region of the Qaidam Basin on the Tibetan Plateau as a potential Mars analog site.",
+          "source_ids": [
+            "kong2018_dalangtan"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": "All three playas in the Qaidam Basin, as discussed in Section 2 , formed at local depressions and have quite similar elevations: 2690 m, 2670 m, and 2730 m for the DLT, Qarhan, and Kunteyi, respectively.",
+          "source_ids": [
+            "kong2018_dalangtan"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": "The high elevation of the Qaidam Basin (2700–3300 m) results in low mean annual temperatures (T), large diurnal and seasonal T variations, and high ultraviolet radiation.",
+          "source_ids": [
+            "kong2018_dalangtan"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    },
+    {
+      "id": "holuhraun_iceland",
+      "name": null,
+      "region": null,
+      "country": null,
+      "lat": 64.85,
+      "lon_east": -16.83,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": true,
+      "paired_mars_site_id": "elysium_planitia",
+      "source_ids": [
+        "dundas2020_holuhraun_lava_water",
+        "gwizd2024_holuhraun_raven",
+        "lit_holuhraun",
+        "voigt2025_holuhraun"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "Of particular importance are “transitional” lavas, which, at the Holuhraun site, are associated with different effusion rates and eruption stages.",
+          "source_ids": [
+            "voigt2025_holuhraun"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": {
+        "quote": "The 2014–2015 Holuhraun eruption in the Icelandic Highland provides a unique opportunity to study a large-volume, fissure-fed eruption—with associated lava–water interactions—that serves as a terrestrial analog for volcanic terrains in Elysium Planitia.",
+        "source_id": "voigt2025_holuhraun"
+      }
+    },
+    {
+      "id": "svalbard_fan_delta",
+      "name": "Adventdalen delta, Svalbard",
+      "region": "Adventdalen, Spitsbergen",
+      "country": "Norway",
+      "lat": 77.74,
+      "lon_east": 15.64,
+      "coordinates_approximate": false,
+      "keep_app_coordinates": false,
+      "paired_mars_site_id": "xanthe_terra_tyras",
+      "source_ids": [
+        "gilbert2018_svalbard_fjord_valley"
+      ],
+      "conditions": [
+        {
+          "feature": "terrain",
+          "label": "Terrain",
+          "text": "The fjord‐fill sedimentary succession includes the fjord‐bottom late Weichselian subglacial till of the Last Glacial Maximum, the early Holocene muddy glaciomarine deposits with ice‐rafted debris formed during the fjord deglaciation, and the younger Holocene deposits of a fjord‐head Gilbert‐type delta of which the fluvial distributary plain shows raised alluvial terraces hosting aeolian sedimentation.",
+          "source_ids": [
+            "gilbert2018_svalbard_fjord_valley"
+          ],
+          "status": "quoted",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "mineralogy",
+          "label": "Mineralogy",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "elevation",
+          "label": "Elevation",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "thermal",
+          "label": "Thermal",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "solar",
+          "label": "Solar / power",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        },
+        {
+          "feature": "wind",
+          "label": "Wind",
+          "text": null,
+          "source_ids": [],
+          "status": "not_found_in_sources",
+          "provenance": "approved source"
+        }
+      ],
+      "analog_basis": null
+    }
+  ]
+}

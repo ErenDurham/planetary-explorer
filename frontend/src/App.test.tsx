@@ -169,10 +169,10 @@ describe("App", () => {
     fireEvent.click(screen.getByRole("button", { name: "Start with a mission" }));
     expect(within(nav).getByRole("button", { name: "Mission Design" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByLabelText("Your mission objective")).toBeInTheDocument();
-    expect(screen.getByTestId("mission-lede")).toHaveTextContent(/installed discovery pilot/);
-    // Explore starts on Browse Regions; the explicit pilot entry remains available.
+    expect(screen.getByTestId("mission-lede")).toHaveTextContent(/established Earth analogs or Mars landing screening/);
+    // Explore opens on Find Earth Analogs (the single Explore mode)
     fireEvent.click(within(nav).getByRole("button", { name: "Explore" }));
-    expect(useAppStore.getState()).toMatchObject({ activeTab: "explore", exploreMode: "browse" });
+    expect(useAppStore.getState()).toMatchObject({ exploreMode: "browse" });
     expect(screen.queryByRole("dialog")).toBeNull();
     fireEvent.click(within(nav).getByRole("button", { name: "Research" }));
     expect(useAppStore.getState().activeTab).toBe("research");

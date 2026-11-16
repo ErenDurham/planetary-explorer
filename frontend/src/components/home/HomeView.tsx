@@ -15,7 +15,6 @@ const steps = [
 /** An orientation and entry surface, never a second mission editor or scoring model. */
 export function HomeView() {
   const setActiveTab = useAppStore(s => s.setActiveTab);
-  const openFindAnalogs = useAppStore(s => s.openFindAnalogs);
   const missionDesigned = useAppStore(s => s.missionDesigned);
   const objective = useAppStore(s => s.appliedObjective);
   const target = useCandidateResearchTarget(s => s.target);
@@ -36,19 +35,12 @@ export function HomeView() {
           <p className={styles.lede}>Compare worlds. Understand the evidence. Find a place to take your research further.</p>
           <div className={styles.actions}>
             <button type="button" className={styles.primary} onClick={() => navigate(() => setActiveTab("mission"))}>{missionDesigned ? "Continue your mission" : "Start with a mission"}<ArrowRight size={17} aria-hidden /></button>
-            <button type="button" className={styles.secondary} onClick={() => navigate(browse)}>Browse established regions<ArrowUpRight size={15} aria-hidden /></button>
+            <button type="button" className={styles.secondary} onClick={() => navigate(browse)}>Find Earth Analogs<ArrowUpRight size={15} aria-hidden /></button>
           </div>
           <p className={styles.definition}>An Earth analog shares specific properties with a planetary environment. It gives researchers a place to study a process or test an approach—not a replica of another world.</p>
         </div>
         <div className={styles.investigation}>
           <Suspense fallback={<div className={styles.previewLoading} aria-hidden="true" />}><HomePlanetPreview /></Suspense>
-          <div className={styles.pilot}>
-            <p className={styles.eyebrow}>Try a focused investigation</p>
-            <h2>Where on Earth is the terrain like Jezero?</h2>
-            <p>Compare surveyed Earth regions with Jezero Crater using each survey’s measured features. Inspect what matches, what differs, and what remains unmeasured.</p>
-            <button type="button" className={styles.textAction} onClick={() => navigate(openFindAnalogs)}>Explore the Jezero pilot<ArrowRight size={16} aria-hidden /></button>
-            <span className={styles.pilotLimit}>Installed surveys · measured features · not an exhaustive Earth search</span>
-          </div>
         </div>
       </section>
       {(missionDesigned || target) && <section className={styles.session} aria-label="Your current work">

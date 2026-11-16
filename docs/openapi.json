@@ -1468,6 +1468,25 @@
   },
   "components": {
     "schemas": {
+      "AnalogBasis": {
+        "properties": {
+          "quote": {
+            "type": "string",
+            "title": "Quote"
+          },
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quote",
+          "source_id"
+        ],
+        "title": "AnalogBasis",
+        "description": "A sentence from an approved source that links a Mars site and an Earth analog."
+      },
       "AnalogCheck": {
         "properties": {
           "earth_site_id": {
@@ -2528,7 +2547,7 @@
               }
             ],
             "title": "Coordinates Approximate",
-            "description": "True when the workbook marks the coordinates as approximate; null for locations outside the workbook"
+            "description": "True when the coordinates are approximate; null where not stated"
           },
           "paired_location_id": {
             "anyOf": [
@@ -2540,18 +2559,18 @@
               }
             ],
             "title": "Paired Location Id",
-            "description": "The workbook's paired location on the other body"
+            "description": "The project's paired location on the other body"
           },
-          "why_they_match": {
+          "analog_basis": {
             "anyOf": [
               {
-                "type": "string"
+                "$ref": "#/components/schemas/AnalogBasis"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Why They Match"
+            "description": "An approved source's sentence linking the pair, if any"
           },
           "reported_conditions": {
             "items": {
@@ -2559,11 +2578,11 @@
             },
             "type": "array",
             "title": "Reported Conditions",
-            "description": "Literature-reported condition texts (workbook); not measurements"
+            "description": "What approved sources state about each condition; not measurements"
           },
           "condition_sources": {
             "additionalProperties": {
-              "$ref": "#/components/schemas/WorkbookSource"
+              "$ref": "#/components/schemas/SiteSource"
             },
             "type": "object",
             "title": "Condition Sources"
@@ -3886,97 +3905,6 @@
         "type": "object",
         "title": "DiscoveryWeights"
       },
-      "EarthAnalogNote": {
-        "properties": {
-          "label": {
-            "type": "string",
-            "title": "Label"
-          },
-          "analog": {
-            "type": "string",
-            "title": "Analog"
-          },
-          "where": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Where"
-          },
-          "matches": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Matches"
-          },
-          "does_not_match": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Does Not Match"
-          },
-          "lat": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Lat"
-          },
-          "lon_east": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Lon East"
-          },
-          "coordinates_approximate": {
-            "type": "boolean",
-            "title": "Coordinates Approximate",
-            "default": true
-          },
-          "workbook_source_text": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workbook Source Text",
-            "description": "The workbook's citation as written; may name sources outside the approved list"
-          }
-        },
-        "type": "object",
-        "required": [
-          "label",
-          "analog"
-        ],
-        "title": "EarthAnalogNote",
-        "description": "An additional Earth analog the workbook lists for a Mars site (not a ranked candidate)."
-      },
       "EarthCandidate": {
         "properties": {
           "id": {
@@ -4054,12 +3982,12 @@
               }
             ],
             "title": "Role",
-            "description": "Role of the Mars site this location is paired with"
+            "description": "The project's role for the Mars site this location is paired with"
           },
           "coordinates_approximate": {
             "type": "boolean",
             "title": "Coordinates Approximate",
-            "description": "The workbook marks these coordinates as approximate",
+            "description": "The coordinates are approximate",
             "default": false
           },
           "paired_mars_site_id": {
@@ -4072,19 +4000,18 @@
               }
             ],
             "title": "Paired Mars Site Id",
-            "description": "The Mars site the workbook pairs with this location"
+            "description": "The Mars site the project pairs with this location"
           },
-          "why_they_match": {
+          "analog_basis": {
             "anyOf": [
               {
-                "type": "string"
+                "$ref": "#/components/schemas/AnalogBasis"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Why They Match",
-            "description": "The workbook author's reason for the pairing"
+            "description": "An approved source's sentence linking this location to its paired Mars site, if any"
           },
           "reported_conditions": {
             "items": {
@@ -4092,11 +4019,11 @@
             },
             "type": "array",
             "title": "Reported Conditions",
-            "description": "Literature-reported condition texts; separate from measured profiles"
+            "description": "What approved sources state about each condition; separate from measured profiles"
           },
           "condition_sources": {
             "additionalProperties": {
-              "$ref": "#/components/schemas/WorkbookSource"
+              "$ref": "#/components/schemas/SiteSource"
             },
             "type": "object",
             "title": "Condition Sources"
@@ -7401,11 +7328,8 @@
           "status": {
             "type": "string",
             "enum": [
-              "verified",
-              "cited_not_verified",
-              "citation_only",
-              "not_found_in_sources",
-              "excluded_source"
+              "quoted",
+              "not_found_in_sources"
             ],
             "title": "Status"
           },
@@ -7416,33 +7340,10 @@
             "type": "array",
             "title": "Source Ids"
           },
-          "evidence_source_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Evidence Source Id",
-            "description": "Source whose sentence states the text (status verified)"
-          },
-          "evidence_quote": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Evidence Quote"
-          },
           "provenance": {
             "type": "string",
             "title": "Provenance",
-            "default": "literature-reported (workbook author)"
+            "default": "approved source"
           }
         },
         "type": "object",
@@ -7452,7 +7353,7 @@
           "status"
         ],
         "title": "ReportedCondition",
-        "description": "A literature-reported condition text compiled by the workbook author.\nDescriptive text only: never parsed into numbers and never scored. `text`\nis null when the workbook found nothing (`not_found_in_sources`) or when its\nonly source is not on the approved list (`excluded_source`)."
+        "description": "What an approved source says about one condition of a site. `text` is the\nsource's own sentence (cited by `source_ids`); it is null when no approved\nsource states the condition. Text only: never parsed into numbers, never scored."
       },
       "ResearchBrief": {
         "properties": {
@@ -8820,7 +8721,7 @@
               }
             ],
             "title": "Role",
-            "description": "How the workbook author classes the site; organises the site lists, never scored"
+            "description": "The project's own classification of the site; organises the site lists, never scored"
           },
           "notes": {
             "anyOf": [
@@ -8832,12 +8733,12 @@
               }
             ],
             "title": "Notes",
-            "description": "The workbook author's note on the site"
+            "description": "The project's own note on the site"
           },
           "coordinates_approximate": {
             "type": "boolean",
             "title": "Coordinates Approximate",
-            "description": "The workbook marks these coordinates as approximate",
+            "description": "The coordinates are approximate",
             "default": false
           },
           "paired_earth_site_id": {
@@ -8850,7 +8751,7 @@
               }
             ],
             "title": "Paired Earth Site Id",
-            "description": "The Earth location the workbook pairs with this site"
+            "description": "The Earth location the project pairs with this site"
           },
           "reported_conditions": {
             "items": {
@@ -8858,19 +8759,11 @@
             },
             "type": "array",
             "title": "Reported Conditions",
-            "description": "Literature-reported condition texts; separate from measured profiles"
-          },
-          "earth_analogs": {
-            "items": {
-              "$ref": "#/components/schemas/EarthAnalogNote"
-            },
-            "type": "array",
-            "title": "Earth Analogs",
-            "description": "Further Earth analogs the workbook lists for this site"
+            "description": "What approved sources state about each condition; separate from measured profiles"
           },
           "condition_sources": {
             "additionalProperties": {
-              "$ref": "#/components/schemas/WorkbookSource"
+              "$ref": "#/components/schemas/SiteSource"
             },
             "type": "object",
             "title": "Condition Sources",
@@ -9023,6 +8916,68 @@
           "matched_text"
         ],
         "title": "SiteReference"
+      },
+      "SiteSource": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "doi",
+              "agency",
+              "approved_exception"
+            ],
+            "title": "Kind"
+          },
+          "cite": {
+            "type": "string",
+            "title": "Cite"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "restriction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Restriction",
+            "description": "Owner condition on how the source may be used"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id",
+          "kind",
+          "cite",
+          "title",
+          "url"
+        ],
+        "title": "SiteSource",
+        "description": "A source the owner approved for the sites (a DOI article or an official NASA / ESA page)."
       },
       "SiteWithProfile": {
         "properties": {
@@ -9914,68 +9869,6 @@
           "data_available"
         ],
         "title": "WeightSuggestion"
-      },
-      "WorkbookSource": {
-        "properties": {
-          "source_id": {
-            "type": "string",
-            "title": "Source Id"
-          },
-          "kind": {
-            "type": "string",
-            "enum": [
-              "doi",
-              "agency",
-              "approved_exception"
-            ],
-            "title": "Kind"
-          },
-          "cite": {
-            "type": "string",
-            "title": "Cite"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url"
-          },
-          "year": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Year"
-          },
-          "restriction": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Restriction",
-            "description": "Owner condition on how the source may be used"
-          }
-        },
-        "type": "object",
-        "required": [
-          "source_id",
-          "kind",
-          "cite",
-          "title",
-          "url"
-        ],
-        "title": "WorkbookSource",
-        "description": "A source the owner approved for the workbook's condition texts."
       }
     }
   }

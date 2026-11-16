@@ -155,9 +155,9 @@ def measurement(fid, label, category, value, unit, source_id, mtype, res, fp, un
 
 def build(c: dict, sources: dict, now: str) -> dict:
     lat, lon = c["lat"], c["lon_east"]
-    # a candidate with no literature source yet cites the workbook for its coordinates
-    lit_first = c["sources"][0] if c["sources"] else "workbook_lesser_known_sites"
-    lit_last = c["sources"][-1] if c["sources"] else "workbook_lesser_known_sites"
+    # a candidate with no literature source yet cites its coordinate source
+    lit_first = c["sources"][0] if c["sources"] else "project_site_coordinates"
+    lit_last = c["sources"][-1] if c["sources"] else "project_site_coordinates"
     fp = {"shape": "square", "center_lat": lat, "center_lon_east": lon, "half_width_deg": HALF_WIDTH_DEG, "radius_km": None,
           "crs": "EPSG:4326", "longitude_convention": "east_-180_180",
           "approx_width_km": round(footprint_width_km(HALF_WIDTH_DEG, lat, EARTH_RADIUS_KM), 1),
@@ -210,7 +210,7 @@ def build(c: dict, sources: dict, now: str) -> dict:
         measurement("slope_regional_p90_deg", "Regional slope (90th pct, harmonised)", "ground", round(coarse["slope_regional_p90_deg"], 3), "deg", "copernicus_glo90", "derived", res_c, fp, None, "regional_scale_only", harmon),
         measurement("roughness_regional_m", "Detrended relief (harmonised ~3.7 km)", "ground", round(coarse["roughness_regional_m"], 1), "m", "copernicus_glo90", "derived", res_c, fp, None, "regional_scale_only", harmon),
         measurement("slope_fine_median_deg", "Fine-scale slope (median, 90 m)", "ground", round(fine["slope_regional_median_deg"], 3), "deg", "copernicus_glo90", "derived", res_f, fp, None, "good", "Information only: Mars has no counterpart at this baseline in v1."),
-        measurement("latitude_abs_deg", "Absolute latitude", "light", round(abs(lat), 4), "deg", lit_first, "measured", "point", fp, None, "good"),
+        measurement("latitude_abs_deg", "Absolute latitude", "light", round(abs(lat), 4), "deg", "project_site_coordinates", "measured", "point", fp, None, "good"),
         measurement("insolation_toa_annual_mean_wm2", "Annual-mean insolation (top of atmosphere)", "light", round(toa_annual_mean_insolation_wm2(lat, "earth"), 1), "W/m2", "derived_toa_insolation", "derived", "latitude only", fp, "Model", "good"),
         measurement("surface_sw_annual_mean_wm2", "Surface shortwave irradiance (annual mean)", "light", round(clim["sw_kwh"] * 1000 / 24, 1), "W/m2", "nasa_power", "estimated", "1 deg grid", fp, "Satellite-derived reanalysis product; converted from kWh/m2/day", "good"),
         measurement("surface_temperature_mean_c", "Mean air temperature at 2 m (annual)", "atmosphere_thermal", round(clim["t2m_ann"], 2), "degC", "nasa_power", "estimated", "0.5 x 0.625 deg grid", fp, "MERRA-2 reanalysis; coarse grid may not resolve valley/summit microclimates", "good", "Air temperature at 2 m, not ground temperature."),
@@ -225,7 +225,7 @@ def build(c: dict, sources: dict, now: str) -> dict:
         if err:
             m.update(value=None, is_missing=True, quality_flag="missing",
                      notes=f"{'Copernicus GLO-90' if m['source_id'] == 'copernicus_glo90' else 'NASA POWER'} could not serve this footprint ({err[:160]}); not estimated.")
-    used = {"copernicus_glo90", "nasa_power", "derived_toa_insolation", lit_first, *c["sources"]}
+    used = {"copernicus_glo90", "nasa_power", "derived_toa_insolation", "project_site_coordinates", lit_first, *c["sources"]}
     missing = [m["feature_id"] for m in ms if m["is_missing"]]
     return {
         "site_id": c["id"], "planet": "earth", "profile_version": PROFILE_VERSION, "generated_at": now,
