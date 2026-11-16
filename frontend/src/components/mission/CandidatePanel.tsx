@@ -13,6 +13,7 @@ export function CandidatePanel({ title, subtitle, actions, controls, children }:
       </header>
       {controls}
     </div>
-    <div tabIndex={0} role="region" aria-label="Scrollable candidates" className="scroll-thin min-h-0 flex-1 overflow-y-auto overscroll-contain border-t border-line pt-2 focus-visible:outline focus-visible:outline-1 focus-visible:outline-copper-bright">{children}</div>
+    {/* right padding keeps the scores clear of the scrollbar, which macOS draws over the content */}
+    <div tabIndex={0} role="region" aria-label="Scrollable candidates" className="scroll-thin -mr-2 min-h-0 flex-1 overflow-y-auto overscroll-contain border-t border-line pr-3 pt-2 focus-visible:outline focus-visible:outline-1 focus-visible:outline-copper-bright">{children}</div>
   </section>;
 }
