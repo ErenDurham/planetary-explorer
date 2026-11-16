@@ -34,6 +34,16 @@ describe("guided Explore navigation", () => {
   fireEvent.click(screen.getByRole("button",{name:"View Earth"}));
   expect(useAppStore.getState()).toMatchObject({viewedBody:"earth",mapMode:"mission_browse"});
  });
+ it("shows a textured Moon that explains it is not implemented yet and changes nothing when clicked", () => {
+  mount();
+  const moon=screen.getByRole("button",{name:"View Moon"});
+  expect(moon).toHaveAccessibleDescription(/To be implemented/);
+  expect(screen.getByRole("tooltip")).toHaveTextContent("To be implemented");
+  expect(moon.querySelector("[aria-hidden]")?.getAttribute("style")).toContain("textures/moon_lroc_color_1k.jpg");
+  const before=useAppStore.getState();
+  fireEvent.click(moon);
+  expect(useAppStore.getState()).toBe(before);
+ });
  it("keeps the applied priorities unchanged during navigation", () => {
   useAppStore.setState({weights:{terrain_safety:70,solar_illumination:30},appliedObjective:"Survey Mars"});
   mount();fireEvent.click(screen.getByRole("button",{name:"View Earth"}));
