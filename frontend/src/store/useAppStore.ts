@@ -356,8 +356,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   // Home explains the purpose and offers entry points; mission drafts and selections survive returning.
   activeTab: "home",
   setActiveTab: (tab) => set({ activeTab: tab }),
-  // Explore opens on the supported discovery pilot; Browse Regions (established analogs, mission scoring) is the secondary mode
-  exploreMode: "find_analogs",
+  // Explore opens on Browse Regions (established analogs, mission scoring); Find Unresearched Analogs is one switch away
+  exploreMode: "browse",
   setExploreMode: (exploreMode) => set({ exploreMode }),
   openFindAnalogs: () => set({ activeTab: "explore", exploreMode: "find_analogs" }),
 
